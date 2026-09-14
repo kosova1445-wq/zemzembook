@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="sq">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>ZemZem Admin</title>
+  <link rel="stylesheet" href="assets/css/admin.css?v=1">
+</head>
+<body>
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <a class="admin-brand" href="index.html"><span class="admin-brand-mark"></span><span>ZemZem</span></a>
+      <div class="auth-badge">ADMINISTRATION</div>
+      <h1>Hyr në Admin Panel</h1>
+      <p class="muted">Qasje vetëm për administratorët e autorizuar.</p>
+      <form id="loginForm" class="auth-form">
+        <label>Email</label>
+        <input id="adminEmail" type="email" value="tamarillot@gmail.com" readonly>
+        <label>Fjalëkalimi</label>
+        <input id="adminPassword" type="password" minlength="8" autocomplete="current-password" required placeholder="Shkruaj fjalëkalimin">
+        <button class="primary-btn" type="submit" id="loginBtn">Hyr</button>
+        <button class="secondary-btn" type="button" id="signupBtn">Aktivizo llogarinë për herë të parë</button>
+      </form>
+      <div id="authMessage" class="auth-message" hidden></div>
+      <p class="auth-help">Në aktivizimin e parë, zgjidh vetë fjalëkalimin. Nëse Supabase kërkon konfirmim të emailit, kontrollo inbox-in e <strong>tamarillot@gmail.com</strong> dhe pastaj kthehu këtu për hyrje.</p>
+      <a href="index.html" class="back-store">← Kthehu në ZemZem.al</a>
+    </div>
+  </div>
+
+  <div id="adminApp" class="admin-app" hidden>
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <a class="admin-brand light" href="index.html"><span class="admin-brand-mark"></span><span>ZemZem</span></a>
+        <span class="owner-pill">OWNER</span>
+      </div>
+      <nav class="side-nav">
+        <button class="nav-item active" data-view="dashboard"><span>◫</span> Dashboard</button>
+        <button class="nav-item" data-view="orders"><span>▤</span> Porositë <span class="nav-badge" id="pendingBadge">0</span></button>
+        <button class="nav-item" data-view="books"><span>▥</span> Librat</button>
+      </nav>
+      <div class="sidebar-foot">
+        <a href="index.html" target="_blank">↗ Hape dyqanin</a>
+        <button id="logoutBtn">⎋ Dil</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="admin-topbar">
+        <div>
+          <div class="eyebrow">ZEMZEM ADMIN</div>
+          <h1 id="viewTitle">Dashboard</h1>
+        </div>
+        <div class="top-actions">
+          <button class="icon-action" id="refreshBtn" title="Rifresko">↻</button>
+          <div class="admin-user"><div class="avatar">T</div><div><strong>Owner</strong><span>tamarillot@gmail.com</span></div></div>
+        </div>
+      </header>
+
+      <section id="view-dashboard" class="view active-view">
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon">▤</div><div><span>Porosi gjithsej</span><strong id="statOrders">0</strong><small>në sistem</small></div></article>
+          <article class="stat-card"><div class="stat-icon warm">◷</div><div><span>Në pritje</span><strong id="statPending">0</strong><small>duan veprim</small></div></article>
+          <article class="stat-card"><div class="stat-icon green">€</div><div><span>Vlera e porosive</span><strong id="statRevenue">0.00 €</strong><small>pa të anuluarat</small></div></article>
+          <article class="stat-card"><div class="stat-icon red">!</div><div><span>Stok i ulët</span><strong id="statLowStock">0</strong><small>tituj</small></div></article>
+        </div>
+        <div class="dashboard-grid">
+          <section class="panel"><div class="panel-head"><div><h2>Porositë e fundit</h2><p>Porositë më të reja</p></div><button class="text-btn" data-go="orders">Shiko të gjitha →</button></div><div id="recentOrders" class="mini-orders"></div></section>
+          <section class="panel"><div class="panel-head"><div><h2>Stoku</h2><p>Titujt që duhen kontrolluar</p></div><button class="text-btn" data-go="books">Menaxho →</button></div><div id="stockAlerts" class="stock-list"></div></section>
+        </div>
+      </section>
+
+      <section id="view-orders" class="view">
+        <div class="toolbar">
+          <div class="searchbox">⌕ <input id="orderSearch" placeholder="Kërko porosi, emër, email ose telefon..."></div>
+          <select id="orderStatusFilter"><option value="">Të gjitha statuset</option><option value="pending">Pending</option><option value="confirmed">Confirmed</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select>
+        </div>
+        <div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Porosia</th><th>Klienti</th><th>Shteti</th><th>Pagesa</th><th>Totali</th><th>Statusi</th><th>Data</th><th></th></tr></thead><tbody id="ordersBody"></tbody></table></div><div id="ordersEmpty" class="empty-state" hidden>Nuk ka porosi për këtë filtër.</div></div>
+      </section>
+
+      <section id="view-books" class="view">
+        <div class="toolbar">
+          <div class="searchbox">⌕ <input id="bookSearch" placeholder="Kërko titull, SKU ose ISBN..."></div>
+          <select id="bookStatusFilter"><option value="">Të gjitha</option><option value="published">Published</option><option value="draft">Draft</option><option value="archived">Archived</option></select>
+          <button class="primary-btn compact" id="newBookBtn">＋ Libër i ri</button>
+        </div>
+        <div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Libri</th><th>SKU</th><th>Çmimi</th><th>Stoku</th><th>Statusi</th><th>Featured</th><th></th></tr></thead><tbody id="booksBody"></tbody></table></div><div id="booksEmpty" class="empty-state" hidden>Nuk u gjet asnjë libër.</div></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="orderDrawer" class="drawer-wrap" hidden>
+    <div class="drawer-backdrop" data-close="order"></div>
+    <aside class="drawer"><button class="drawer-close" data-close="order">×</button><div id="orderDetail"></div></aside>
+  </div>
+
+  <div id="bookModal" class="modal-wrap" hidden>
+    <div class="modal-backdrop" data-close="book"></div>
+    <div class="modal-card">
+      <div class="modal-head"><div><div class="eyebrow">KATALOGU</div><h2 id="bookModalTitle">Libër i ri</h2></div><button class="drawer-close" data-close="book">×</button></div>
+      <form id="bookForm" class="book-form">
+        <input type="hidden" id="bookId">
+        <div class="field span-2"><label>Titulli *</label><input id="bookTitle" required></div>
+        <div class="field"><label>SKU *</label><input id="bookSku" required></div>
+        <div class="field"><label>Slug *</label><input id="bookSlug" required></div>
+        <div class="field"><label>Çmimi € *</label><input id="bookPrice" type="number" min="0" step="0.01" required></div>
+        <div class="field"><label>Çmimi i vjetër €</label><input id="bookOldPrice" type="number" min="0" step="0.01"></div>
+        <div class="field"><label>Stoku</label><input id="bookStock" type="number" min="0" step="1" value="0"></div>
+        <div class="field"><label>Pragu i stokut të ulët</label><input id="bookLowStock" type="number" min="0" step="1" value="5"></div>
+        <div class="field"><label>Statusi</label><select id="bookStatus"><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></div>
+        <div class="field"><label>Formati</label><select id="bookFormat"><option value="physical">Physical</option><option value="ebook">eBook</option></select></div>
+        <div class="field"><label>Gjuha</label><input id="bookLanguage" value="sq"></div>
+        <div class="field"><label>Faqe</label><input id="bookPages" type="number" min="1"></div>
+        <div class="field"><label>Autori</label><select id="bookAuthor"><option value="">—</option></select></div>
+        <div class="field"><label>Kategoria</label><select id="bookCategory"><option value="">—</option></select></div>
+        <div class="field"><label>Botuesi</label><select id="bookPublisher"><option value="">—</option></select></div>
+        <div class="field"><label>ISBN</label><input id="bookIsbn"></div>
+        <div class="field span-2"><label>Përshkrimi i shkurtër</label><textarea id="bookShort" rows="2"></textarea></div>
+        <div class="field span-2"><label>Përshkrimi</label><textarea id="bookDescription" rows="4"></textarea></div>
+        <div class="checks span-2"><label><input type="checkbox" id="bookFeatured"> Featured</label><label><input type="checkbox" id="bookBestseller"> Bestseller</label><label><input type="checkbox" id="bookPreorder"> Preorder</label><label><input type="checkbox" id="bookTrackStock" checked> Track stock</label></div>
+        <div class="modal-actions span-2"><button type="button" class="secondary-btn" data-close="book">Anulo</button><button type="submit" class="primary-btn" id="saveBookBtn">Ruaj librin</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="admin-toast" hidden></div>
+  <script src="assets/js/admin.js?v=1"></script>
+</body>
+</html>
