@@ -29,7 +29,7 @@ async function fetchCatalog(){
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),8000);
   try{
-    const res=await fetch(`${SUPABASE_URL}/rest/v1/storefront_books?select=*&order=created_at.asc`,{headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${SUPABASE_PUBLISHABLE_KEY}`},signal:controller.signal,cache:'no-store'});
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/storefront_books?select=*&order=created_at.asc`,{headers:{apikey:SUPABASE_PUBLISHABLE_KEY},signal:controller.signal,cache:'no-store'});
     if(!res.ok)throw new Error(`Catalog HTTP ${res.status}`);
     const rows=await res.json();
     if(!Array.isArray(rows)||!rows.length)throw new Error('Catalog empty');
@@ -65,7 +65,72 @@ function updateCartSummary(){const s=cartSubtotal();const el=document.getElement
 
 function calcCheckout(){const subtotal=cartSubtotal();const country=document.getElementById('country')?.value||'KS';const method=document.querySelector('input[name="payment_method"]:checked')?.value||'paypal';const shipping=subtotal>0?(SHIPPING[country]??0):0;const discount=method==='paypal'?Number((subtotal*PAYPAL_DISCOUNT).toFixed(2)):0;const cod=method==='cod'&&subtotal>0?COD_FEE:0;return{subtotal,shipping,discount,cod,total:Math.max(0,Number((subtotal-discount+shipping+cod).toFixed(2))),country,method}}
 function renderCheckoutSummary(){if(!document.getElementById('coSubtotal'))return;const c=calcCheckout();document.getElementById('coSubtotal').textContent=money(c.subtotal);document.getElementById('coDiscount').textContent='− '+money(c.discount);document.getElementById('coShipping').textContent=money(c.shipping);document.getElementById('coCod').textContent=money(c.cod);document.getElementById('coTotal').textContent=money(c.total);document.querySelectorAll('.pay-option').forEach(x=>x.classList.toggle('active',x.querySelector('input')?.checked));const btn=document.getElementById('placeOrderBtn');if(btn){btn.disabled=c.subtotal<=0;btn.textContent=c.subtotal<=0?'Shporta është bosh':c.method==='paypal'?'Vazhdo me PayPal':'Porosit me Cash on Delivery'}}
-function bindCheckout(){document.getElementById('country')?.addEventListener('change',renderCheckoutSummary);document.querySelectorAll('input[name="payment_method"]').forEach(r=>r.addEventListener('change',renderCheckoutSummary));document.getElementById('checkoutForm')?.addEventListener('submit',e=>{e.preventDefault();if(cartSubtotal()<=0){toast('Shto së pari një libër në shportë');return}if(!e.currentTarget.reportValidity())return;const c=calcCheckout(),s=document.getElementById('successBox');s.innerHTML=c.method==='paypal'?`<strong>PayPal ende nuk është aktivizuar për pagesë reale.</strong><br>Totali aktual: ${money(c.total)} me 10% zbritje mbi librat.`:`<strong>Cash on Delivery po lidhet me backend-in.</strong><br>Totali aktual: ${money(c.total)}, përfshirë tarifën COD +2 €.`;s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'})});renderCheckoutSummary()}
+
+async function createCodOrder(form){
+  if(CATALOG_SOURCE!=='supabase')throw new Error('Katalogu nuk është lidhur me serverin. Rifresko faqen dhe provo përsëri.');
+  const fd=new FormData(form);
+  const items=cartDetails().map(x=>({book_id:String(x.book.id),quantity:Number(x.qty)}));
+  const payload={
+    payment_method:'cod',
+    first_name:String(fd.get('first_name')||'').trim(),
+    last_name:String(fd.get('last_name')||'').trim(),
+    email:String(fd.get('email')||'').trim(),
+    phone:String(fd.get('phone')||'').trim(),
+    address:String(fd.get('address')||'').trim(),
+    city:String(fd.get('city')||'').trim(),
+    country_code:document.getElementById('country')?.value||'KS',
+    items
+  };
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),15000);
+  try{
+    const res=await fetch(`${SUPABASE_URL}/functions/v1/create-order`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json',apikey:SUPABASE_PUBLISHABLE_KEY},
+      body:JSON.stringify(payload),
+      signal:controller.signal
+    });
+    let data={};
+    try{data=await res.json()}catch{}
+    if(!res.ok||!data?.ok)throw new Error(data?.message||'Porosia nuk u krijua. Provo përsëri.');
+    return data.order;
+  }catch(err){
+    if(err?.name==='AbortError')throw new Error('Serveri nuk u përgjigj me kohë. Provo përsëri.');
+    throw err;
+  }finally{clearTimeout(timer)}
+}
+
+function bindCheckout(){
+  document.getElementById('country')?.addEventListener('change',renderCheckoutSummary);
+  document.querySelectorAll('input[name="payment_method"]').forEach(r=>r.addEventListener('change',renderCheckoutSummary));
+  document.getElementById('checkoutForm')?.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const form=e.currentTarget;
+    if(cartSubtotal()<=0){toast('Shto së pari një libër në shportë');return}
+    if(!form.reportValidity())return;
+    const c=calcCheckout(),s=document.getElementById('successBox'),btn=document.getElementById('placeOrderBtn');
+    if(c.method==='paypal'){
+      s.innerHTML=`<strong>PayPal po përgatitet për aktivizim.</strong><br>Totali aktual: ${money(c.total)} me 10% zbritje mbi librat.`;
+      s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});return;
+    }
+    const previous=btn?.textContent||'';
+    if(btn){btn.disabled=true;btn.textContent='Duke dërguar porosinë...'}
+    try{
+      const order=await createCodOrder(form);
+      setCart([]);renderCart();renderCheckoutSummary();
+      s.innerHTML=`<strong>Porosia u pranua ✅</strong><br>Numri i porosisë: <strong>${esc(order.order_number)}</strong><br>Totali për pagesë në pranim: <strong>${money(order.total)}</strong>`;
+      s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});
+      form.querySelectorAll('input,select').forEach(el=>el.disabled=true);
+      if(btn){btn.disabled=true;btn.textContent='Porosia u pranua'}
+      await fetchCatalog();
+    }catch(err){
+      s.innerHTML=`<strong>Porosia nuk u dërgua.</strong><br>${esc(err?.message||'Provo përsëri.')}`;
+      s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});
+      if(btn){btn.disabled=false;btn.textContent=previous||'Porosit me Cash on Delivery'}
+    }
+  });
+  renderCheckoutSummary();
+}
 
 function applyShopFilters(){const grid=document.getElementById('shopBooks');if(!grid)return;const q=(document.getElementById('shopSearch')?.value||'').trim().toLowerCase();const cats=[...document.querySelectorAll('[data-category]:checked')].map(x=>x.dataset.category);const p=document.querySelector('input[name="price_filter"]:checked')?.value||'all';let items=BOOKS.filter(b=>(!q||(`${b.title} ${b.author} ${b.cat} ${b.isbn} ${b.sku}`).toLowerCase().includes(q)))&&(!cats.length||cats.includes(b.cat))&&(p==='all'||p==='10'&&b.price<=10||p==='20'&&b.price>10&&b.price<=20||p==='20plus'&&b.price>20));const sort=document.getElementById('sortBooks')?.value||'new';if(sort==='asc')items=[...items].sort((a,b)=>a.price-b.price);if(sort==='desc')items=[...items].sort((a,b)=>b.price-a.price);if(sort==='new')items=[...items].sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));renderBooks('#shopBooks',items);const c=document.getElementById('shopCount');if(c)c.textContent=items.length?`${items.length} tituj të gjetur.`:'Nuk u gjet asnjë libër me këto filtra.'}
 function initShopFromUrl(){if(!document.getElementById('shopBooks'))return;const p=new URLSearchParams(location.search);const q=p.get('q')||'';const cat=p.get('category')||'';const input=document.getElementById('shopSearch');if(input)input.value=q;if(cat){const cb=[...document.querySelectorAll('[data-category]')].find(x=>x.dataset.category===cat);if(cb)cb.checked=true}}
