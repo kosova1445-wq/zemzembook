@@ -57,14 +57,17 @@ jobs:
           upload shop.html shop.html
           upload checkout.html checkout.html
           upload product.html product.html
+          upload admin.html admin.html
           upload assets/css/style.css assets/css/style.css
           upload assets/css/product.css assets/css/product.css
+          upload assets/css/admin.css assets/css/admin.css
           upload assets/js/app.js assets/js/app.js
           upload assets/js/app-v2.js assets/js/app-v2.js
           upload assets/js/app-v3.js assets/js/app-v3.js
           upload assets/js/app-v4.js assets/js/app-v4.js
+          upload assets/js/admin.js assets/js/admin.js
 
-      - name: Verify live Supabase storefront
+      - name: Verify live Supabase storefront and admin
         run: |
           sleep 2
           curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/ -o /tmp/live.html
@@ -84,4 +87,12 @@ jobs:
           grep -q 'assets/js/app-v4.js' /tmp/product.html
           grep -q 'productDetail' /tmp/product.html
 
-          echo 'ZEMZEM_SUPABASE_STOREFRONT_OK=yes'
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/admin.html -o /tmp/admin.html
+          grep -q 'ZemZem Admin' /tmp/admin.html
+          grep -q 'assets/js/admin.js' /tmp/admin.html
+
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/assets/js/admin.js -o /tmp/admin.js
+          grep -q 'admin_me' /tmp/admin.js
+          grep -q 'tamarillot@gmail.com' /tmp/admin.js
+
+          echo 'ZEMZEM_STOREFRONT_AND_ADMIN_OK=yes'
