@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /account.html
+Disallow: /checkout.html
+Disallow: /paypal-return.html
+
+Sitemap: https://www.zemzem.al/sitemap.xml
