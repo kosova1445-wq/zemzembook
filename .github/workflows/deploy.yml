@@ -34,7 +34,7 @@ jobs:
           test -n "$FTP_PORT" || (echo "Missing FTP_PORT" && exit 1)
           test -n "$FTP_SERVER_DIR" || (echo "Missing FTP_SERVER_DIR" && exit 1)
 
-      - name: Deploy files via verified explicit FTPS
+      - name: Deploy files via explicit FTPS
         env:
           FTP_SERVER: quebec.us.hostns.io
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
@@ -49,7 +49,7 @@ jobs:
             set ftp:passive-mode true;
             set ftp:fix-pasv-address true;
             set ftp:ssl-force true;
-            set ftp:ssl-protect-data true;
+            set ftp:ssl-protect-data false;
             set ssl:verify-certificate yes;
             set xfer:clobber true;
             open -p ${FTP_PORT} -u \"${FTP_USERNAME}\",\"${FTP_PASSWORD}\" ftp://${FTP_SERVER};
