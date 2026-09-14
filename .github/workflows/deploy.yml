@@ -56,24 +56,22 @@ jobs:
           upload index.html index.html
           upload shop.html shop.html
           upload checkout.html checkout.html
+          upload product.html product.html
           upload assets/css/style.css assets/css/style.css
+          upload assets/css/product.css assets/css/product.css
           upload assets/js/app.js assets/js/app.js
           upload assets/js/app-v2.js assets/js/app-v2.js
+          upload assets/js/app-v3.js assets/js/app-v3.js
 
-      - name: Verify live homepage
+      - name: Verify live storefront
         run: |
           sleep 2
           curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/ -o /tmp/live.html
-          if grep -q 'assets/js/app-v2.js' /tmp/live.html; then
-            echo 'LIVE_USES_APP_V2=yes'
-          else
-            echo 'LIVE_USES_APP_V2=no'
-            exit 1
-          fi
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/assets/js/app-v2.js -o /tmp/app-v2.js
-          if grep -q 'Kurani Fisnik' /tmp/app-v2.js; then
-            echo 'APP_V2_HAS_SAMPLE_BOOKS=yes'
-          else
-            echo 'APP_V2_HAS_SAMPLE_BOOKS=no'
-            exit 1
-          fi
+          grep -q 'assets/js/app-v3.js' /tmp/live.html
+          grep -q 'Kurani Fisnik' /tmp/live.html
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/assets/js/app-v3.js -o /tmp/app-v3.js
+          grep -q 'bindHomeSearch' /tmp/app-v3.js
+          grep -q 'renderProduct' /tmp/app-v3.js
+          curl -L --fail --silent --show-error --max-time 20 'https://www.zemzem.al/product.html?id=1' -o /tmp/product.html
+          grep -q 'productDetail' /tmp/product.html
+          echo 'ZEMZEM_FUNCTIONAL_STOREFRONT_OK=yes'
