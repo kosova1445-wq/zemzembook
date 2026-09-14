@@ -54,8 +54,10 @@ jobs:
             set xfer:clobber true;
             open -p ${FTP_PORT} -u \"${FTP_USERNAME}\",\"${FTP_PASSWORD}\" ftp://${FTP_SERVER};
             cd \"${FTP_SERVER_DIR}\";
+            set cmd:fail-exit no;
             mkdir -p assets/css;
             mkdir -p assets/js;
+            set cmd:fail-exit yes;
             put index.html -o index.html;
             put shop.html -o shop.html;
             put checkout.html -o checkout.html;
