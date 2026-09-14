@@ -1,14 +1,14 @@
 const BOOKS=[
-{id:1,title:'Kronikë në gur',author:'Ismail Kadare',price:14.90,old:17.90,cover:'c1',cat:'Roman'},
-{id:2,title:'Pallati i ëndrrave',author:'Ismail Kadare',price:13.50,old:null,cover:'c2',cat:'Roman'},
-{id:3,title:'Prilli i thyer',author:'Ismail Kadare',price:12.90,old:15.00,cover:'c3',cat:'Roman'},
-{id:4,title:'Ura me tri harqe',author:'Ismail Kadare',price:11.90,old:null,cover:'c4',cat:'Roman'},
-{id:5,title:'Gjenerali i ushtrisë së vdekur',author:'Ismail Kadare',price:15.90,old:18.50,cover:'c5',cat:'Roman'},
-{id:6,title:'Historia e Skënderbeut',author:'Fan Noli',price:16.00,old:null,cover:'c6',cat:'Histori'},
-{id:7,title:'Lahuta e Malcís',author:'Gjergj Fishta',price:18.90,old:21.00,cover:'c7',cat:'Poezi'},
-{id:8,title:'Bagëti e Bujqësi',author:'Naim Frashëri',price:9.90,old:null,cover:'c8',cat:'Klasikë'},
-{id:9,title:'Libri i urtësisë',author:'Përmbledhje',price:10.50,old:12.00,cover:'c9',cat:'Edukim'},
-{id:10,title:'Rrëfime të zgjedhura',author:'Autorë shqiptarë',price:13.90,old:null,cover:'c10',cat:'Tregime'}
+{id:1,title:'Kurani Fisnik – Përkthim Shqip',author:'Botim shembull',price:12.90,old:15.90,cover:'c1',cat:'Fe & Edukim'},
+{id:2,title:'Rijadus Salihin',author:'Imam en-Nevevi',price:18.50,old:null,cover:'c2',cat:'Fe & Edukim'},
+{id:3,title:'Dyzet Hadithe',author:'Imam en-Nevevi',price:7.90,old:9.90,cover:'c3',cat:'Fe & Edukim'},
+{id:4,title:'Jeta e Profetit Muhamed ﷺ',author:'Botim shembull',price:14.90,old:null,cover:'c4',cat:'Histori'},
+{id:5,title:'Tefsiri i Shkurtër',author:'Botim shembull',price:16.90,old:19.90,cover:'c5',cat:'Fe & Edukim'},
+{id:6,title:'Edukimi i Fëmijëve',author:'Botim shembull',price:9.90,old:null,cover:'c6',cat:'Fëmijë'},
+{id:7,title:'Udhëzuesi i Namazit',author:'Botim shembull',price:6.90,old:8.50,cover:'c7',cat:'Fe & Edukim'},
+{id:8,title:'Etika Islame',author:'Botim shembull',price:11.90,old:null,cover:'c8',cat:'Fe & Edukim'},
+{id:9,title:'Histori nga Profetët',author:'Botim shembull',price:13.50,old:15.00,cover:'c9',cat:'Fëmijë'},
+{id:10,title:'Fjalori Arabisht–Shqip',author:'Botim shembull',price:21.90,old:null,cover:'c10',cat:'Gjuhë të huaja'}
 ];
 const SHIPPING={KS:3,AL:6,MK:6};
 const PAYPAL_DISCOUNT=.10;
@@ -18,7 +18,7 @@ function setCart(c){localStorage.setItem('zemzem_cart',JSON.stringify(c));update
 function addToCart(id){const cart=getCart();const found=cart.find(x=>x.id===id);if(found)found.qty+=1;else cart.push({id,qty:1});setCart(cart);toast('Libri u shtua në shportë')}
 function updateCartBadge(){const n=getCart().reduce((s,x)=>s+x.qty,0);document.querySelectorAll('[data-cart-count]').forEach(x=>x.textContent=n)}
 function money(n){return Number(n||0).toFixed(2)+' €'}
-function bookCard(b){return `<article class="book-card">${b.old?'<span class="sale-tag">OFERTË</span>':''}<div class="book-cover ${b.cover}"><span>${b.title}</span></div><div class="book-meta"><div class="rating">★★★★★</div><h3>${b.title}</h3><div class="author">${b.author}</div><div class="price-row"><div><span class="price">${money(b.price)}</span>${b.old?`<span class="old">${money(b.old)}</span>`:''}</div><button class="add-btn" onclick="addToCart(${b.id})" aria-label="Shto në shportë">＋</button></div></div></article>`}
+function bookCard(b){return `<article class="book-card">${b.old?'<span class="sale-tag">OFERTË</span>':'<span class="sample-tag">SHEMBULL</span>'}<div class="book-cover ${b.cover}"><small class="cover-brand">ZEMZEM</small><span>${b.title}</span></div><div class="book-meta"><div class="rating">★★★★★</div><h3>${b.title}</h3><div class="author">${b.author}</div><div class="price-row"><div><span class="price">${money(b.price)}</span>${b.old?`<span class="old">${money(b.old)}</span>`:''}</div><button class="add-btn" onclick="addToCart(${b.id})" aria-label="Shto në shportë">＋</button></div></div></article>`}
 function renderBooks(selector,items=BOOKS){const el=document.querySelector(selector);if(el)el.innerHTML=items.map(bookCard).join('')}
 function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';Object.assign(t.style,{position:'fixed',right:'18px',bottom:'18px',background:'#233a4a',color:'#fff',padding:'12px 16px',borderRadius:'12px',zIndex:9999,boxShadow:'0 15px 40px rgba(0,0,0,.2)',fontWeight:'700',fontSize:'13px'});document.body.appendChild(t)}t.textContent=msg;t.style.display='block';clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.style.display='none',1800)}
 function cartDetails(){return getCart().map(i=>({...i,book:BOOKS.find(b=>b.id===i.id)})).filter(x=>x.book)}
