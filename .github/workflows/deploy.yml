@@ -14,7 +14,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 6
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -58,41 +58,65 @@ jobs:
           upload checkout.html checkout.html
           upload product.html product.html
           upload admin.html admin.html
+          upload account.html account.html
+          upload paypal-return.html paypal-return.html
+          upload about.html about.html
+          upload contact.html contact.html
+          upload privacy.html privacy.html
+          upload terms.html terms.html
+          upload shipping-returns.html shipping-returns.html
+          upload robots.txt robots.txt
+          upload sitemap.xml sitemap.xml
+          upload favicon.svg favicon.svg
+
           upload assets/css/style.css assets/css/style.css
           upload assets/css/product.css assets/css/product.css
           upload assets/css/admin.css assets/css/admin.css
-          upload assets/js/app.js assets/js/app.js
-          upload assets/js/app-v2.js assets/js/app-v2.js
-          upload assets/js/app-v3.js assets/js/app-v3.js
-          upload assets/js/app-v4.js assets/js/app-v4.js
-          upload assets/js/admin.js assets/js/admin.js
+          upload assets/css/admin-v2.css assets/css/admin-v2.css
+          upload assets/css/account.css assets/css/account.css
+          upload assets/css/commerce.css assets/css/commerce.css
 
-      - name: Verify live Supabase storefront and admin
+          upload assets/js/app-v5.js assets/js/app-v5.js
+          upload assets/js/account.js assets/js/account.js
+          upload assets/js/checkout-v2.js assets/js/checkout-v2.js
+          upload assets/js/admin-v2.js assets/js/admin-v2.js
+
+      - name: Verify live ZemZem commerce v2
         run: |
-          sleep 2
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/ -o /tmp/live.html
-          grep -q 'assets/js/app-v4.js' /tmp/live.html
+          sleep 3
 
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/assets/js/app-v4.js -o /tmp/app-v4.js
-          grep -q 'fetchCatalog' /tmp/app-v4.js
-          grep -q 'storefront_books' /tmp/app-v4.js
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/ -o /tmp/index.html
+          grep -q 'assets/js/app-v5.js' /tmp/index.html
+          grep -q 'account.html' /tmp/index.html
+
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/assets/js/app-v5.js -o /tmp/app-v5.js
+          grep -q 'storefront_books' /tmp/app-v5.js
+          grep -q 'toggleWishlist' /tmp/app-v5.js
 
           curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/shop.html -o /tmp/shop.html
-          grep -q 'assets/js/app-v4.js' /tmp/shop.html
-
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/checkout.html -o /tmp/checkout.html
-          grep -q 'assets/js/app-v4.js' /tmp/checkout.html
+          grep -q 'assets/js/app-v5.js' /tmp/shop.html
 
           curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/product.html -o /tmp/product.html
-          grep -q 'assets/js/app-v4.js' /tmp/product.html
-          grep -q 'productDetail' /tmp/product.html
+          grep -q 'assets/js/app-v5.js' /tmp/product.html
+
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/checkout.html -o /tmp/checkout.html
+          grep -q 'assets/js/app-v5.js' /tmp/checkout.html
+          grep -q 'checkout-v2.js' /tmp/checkout.html
+          grep -q 'couponCode' /tmp/checkout.html
+
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/account.html -o /tmp/account.html
+          grep -q 'account.js' /tmp/account.html
+          grep -q 'Porositë e mia' /tmp/account.html
 
           curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/admin.html -o /tmp/admin.html
-          grep -q 'ZemZem Admin' /tmp/admin.html
-          grep -q 'assets/js/admin.js' /tmp/admin.html
+          grep -q 'admin-v2.js' /tmp/admin.html
+          grep -q 'Kuponët' /tmp/admin.html
 
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/assets/js/admin.js -o /tmp/admin.js
-          grep -q 'admin_me' /tmp/admin.js
-          grep -q 'tamarillot@gmail.com' /tmp/admin.js
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/paypal-return.html -o /tmp/paypal.html
+          grep -q 'paypal-capture' /tmp/paypal.html
 
-          echo 'ZEMZEM_STOREFRONT_AND_ADMIN_OK=yes'
+          for page in about.html contact.html privacy.html terms.html shipping-returns.html robots.txt sitemap.xml favicon.svg; do
+            curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/$page" -o "/tmp/$(basename "$page")"
+          done
+
+          echo 'ZEMZEM_COMMERCE_V2_LIVE_OK=yes'
