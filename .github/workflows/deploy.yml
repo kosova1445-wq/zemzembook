@@ -19,9 +19,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install lftp
-        run: sudo apt-get update -y && sudo apt-get install -y lftp
-
       - name: Validate deployment secrets
         env:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
@@ -34,7 +31,7 @@ jobs:
           test -n "$FTP_PORT" || (echo "Missing FTP_PORT" && exit 1)
           test -n "$FTP_SERVER_DIR" || (echo "Missing FTP_SERVER_DIR" && exit 1)
 
-      - name: Deploy files via explicit FTPS
+      - name: Deploy files via FTPS control and PASV
         env:
           FTP_SERVER: quebec.us.hostns.io
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
@@ -42,26 +39,22 @@ jobs:
           FTP_PORT: ${{ secrets.FTP_PORT }}
           FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
         run: |
-          lftp -c "
-            set cmd:fail-exit yes;
-            set net:max-retries 1;
-            set net:timeout 20;
-            set ftp:passive-mode true;
-            set ftp:fix-pasv-address true;
-            set ftp:ssl-force true;
-            set ftp:ssl-protect-data false;
-            set ssl:verify-certificate yes;
-            set xfer:clobber true;
-            open -p ${FTP_PORT} -u \"${FTP_USERNAME}\",\"${FTP_PASSWORD}\" ftp://${FTP_SERVER};
-            cd \"${FTP_SERVER_DIR}\";
-            set cmd:fail-exit no;
-            mkdir -p assets/css;
-            mkdir -p assets/js;
-            set cmd:fail-exit yes;
-            put index.html -o index.html;
-            put shop.html -o shop.html;
-            put checkout.html -o checkout.html;
-            put assets/css/style.css -o assets/css/style.css;
-            put assets/js/app.js -o assets/js/app.js;
-            bye;
-          "
+          upload() {
+            local src="$1"
+            local dst="$2"
+            curl --fail --show-error --silent \
+              --connect-timeout 20 --max-time 60 --retry 1 \
+              --ftp-ssl-control \
+              --disable-epsv \
+              --ftp-skip-pasv-ip \
+              --ftp-create-dirs \
+              --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              --upload-file "$src" \
+              "ftp://${FTP_SERVER}:${FTP_PORT}${FTP_SERVER_DIR}${dst}"
+          }
+
+          upload index.html index.html
+          upload shop.html shop.html
+          upload checkout.html checkout.html
+          upload assets/css/style.css assets/css/style.css
+          upload assets/js/app.js assets/js/app.js
