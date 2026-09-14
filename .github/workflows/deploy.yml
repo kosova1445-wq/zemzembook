@@ -58,3 +58,28 @@ jobs:
           upload checkout.html checkout.html
           upload assets/css/style.css assets/css/style.css
           upload assets/js/app.js assets/js/app.js
+
+      - name: Verify live homepage
+        run: |
+          sleep 2
+          echo "--- LIVE ROOT TITLE / MARKERS ---"
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/ -o /tmp/live.html
+          grep -o -m1 '<title>[^<]*</title>' /tmp/live.html || true
+          if grep -q 'Trending në ZemZem' /tmp/live.html; then
+            echo 'LIVE_ROOT_IS_NEW_ZEMZEM=yes'
+          else
+            echo 'LIVE_ROOT_IS_NEW_ZEMZEM=no'
+          fi
+          echo "--- DIRECT INDEX.HTML ---"
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/index.html -o /tmp/indexhtml
+          grep -o -m1 '<title>[^<]*</title>' /tmp/indexhtml || true
+          if grep -q 'Trending në ZemZem' /tmp/indexhtml; then
+            echo 'INDEX_HTML_IS_NEW_ZEMZEM=yes'
+          else
+            echo 'INDEX_HTML_IS_NEW_ZEMZEM=no'
+          fi
+          if grep -q 'Kurani Fisnik' https://www.zemzem.al/assets/js/app.js 2>/dev/null; then
+            echo 'APP_JS_HAS_SAMPLE_BOOKS=yes'
+          else
+            echo 'APP_JS_HAS_SAMPLE_BOOKS=no'
+          fi
