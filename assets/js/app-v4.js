@@ -19,11 +19,15 @@ let CATALOG_SOURCE='fallback';
 const SHIPPING={KS:3,AL:6,MK:6};
 const PAYPAL_DISCOUNT=.10;
 const COD_FEE=2;
+const CHECKOUT_TOKEN_KEY='zemzem_checkout_token';
 
 function esc(v=''){return String(v).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
 function money(n){return Number(n||0).toFixed(2)+' €'}
 function legacyIdFromSku(sku=''){const m=String(sku).match(/(\d+)$/);return m?Number(m[1]):null}
 function mapDbBook(r){return {id:String(r.id),legacyId:legacyIdFromSku(r.sku),sku:r.sku||'',title:r.title||'',author:r.author_name||'ZemZem',price:Number(r.price||0),old:r.compare_at_price===null?null:Number(r.compare_at_price),cover:r.cover_theme||'c1',cat:r.category_name||'Të tjera',stock:Number(r.stock_quantity||0),trackStock:r.track_stock!==false,isbn:r.isbn||'',description:r.description||r.short_description||'',featured:!!r.is_featured,bestseller:!!r.is_bestseller,preorder:!!r.is_preorder,slug:r.slug||'',createdAt:r.created_at||''}}
+function makeUuid(){if(globalThis.crypto?.randomUUID)return crypto.randomUUID();const b=crypto.getRandomValues(new Uint8Array(16));b[6]=(b[6]&15)|64;b[8]=(b[8]&63)|128;const h=[...b].map(x=>x.toString(16).padStart(2,'0')).join('');return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`}
+function getCheckoutToken(){const re=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;let t=localStorage.getItem(CHECKOUT_TOKEN_KEY)||'';if(!re.test(t)){t=makeUuid();localStorage.setItem(CHECKOUT_TOKEN_KEY,t)}return t}
+function clearCheckoutToken(){localStorage.removeItem(CHECKOUT_TOKEN_KEY)}
 
 async function fetchCatalog(){
   const controller=new AbortController();
@@ -35,11 +39,7 @@ async function fetchCatalog(){
     if(!Array.isArray(rows)||!rows.length)throw new Error('Catalog empty');
     BOOKS=rows.map(mapDbBook);
     CATALOG_SOURCE='supabase';
-  }catch(err){
-    console.warn('ZemZem catalog fallback:',err?.message||err);
-    BOOKS=[...FALLBACK_BOOKS];
-    CATALOG_SOURCE='fallback';
-  }finally{clearTimeout(timer)}
+  }catch(err){console.warn('ZemZem catalog fallback:',err?.message||err);BOOKS=[...FALLBACK_BOOKS];CATALOG_SOURCE='fallback'}finally{clearTimeout(timer)}
 }
 
 function getBook(id){const raw=String(id??'');let b=BOOKS.find(x=>String(x.id)===raw);if(!b&&/^\d+$/.test(raw))b=BOOKS.find(x=>x.legacyId===Number(raw));return b}
@@ -47,7 +47,6 @@ function getCart(){try{const c=JSON.parse(localStorage.getItem('zemzem_cart')||'
 function setCart(c){localStorage.setItem('zemzem_cart',JSON.stringify(c));updateCartBadge()}
 function normalizeCart(){const out=[];for(const item of getCart()){const b=getBook(item.id);if(!b)continue;const max=b.trackStock?Math.max(0,b.stock):9999;const qty=Math.min(max,Math.max(1,Number(item.qty)||1));if(qty>0)out.push({id:b.id,qty})}setCart(out)}
 function updateCartBadge(){const n=getCart().reduce((s,x)=>s+(Number(x.qty)||0),0);document.querySelectorAll('[data-cart-count]').forEach(x=>x.textContent=n)}
-
 function addToCart(id,qty=1){const b=getBook(id);if(!b)return;const max=b.trackStock?Math.max(0,b.stock):9999;if(max<=0){toast('Ky libër nuk është në stok');return}const cart=getCart();const found=cart.find(x=>String(x.id)===String(b.id));const add=Math.max(1,Number(qty)||1);if(found)found.qty=Math.min(max,Number(found.qty||0)+add);else cart.push({id:b.id,qty:Math.min(max,add)});setCart(cart);renderCart();renderCheckoutSummary();toast(`${b.title} u shtua në shportë`)}
 function buyNow(id){addToCart(id,Number(document.getElementById('productQty')?.value||1));location.href='checkout.html'}
 function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';Object.assign(t.style,{position:'fixed',right:'18px',bottom:'18px',background:'#233a4a',color:'#fff',padding:'12px 16px',borderRadius:'12px',zIndex:9999,boxShadow:'0 15px 40px rgba(0,0,0,.2)',fontWeight:'700',fontSize:'13px'});document.body.appendChild(t)}t.textContent=msg;t.style.display='block';clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.style.display='none',1800)}
@@ -70,64 +69,32 @@ async function createCodOrder(form){
   if(CATALOG_SOURCE!=='supabase')throw new Error('Katalogu nuk është lidhur me serverin. Rifresko faqen dhe provo përsëri.');
   const fd=new FormData(form);
   const items=cartDetails().map(x=>({book_id:String(x.book.id),quantity:Number(x.qty)}));
-  const payload={
-    payment_method:'cod',
-    first_name:String(fd.get('first_name')||'').trim(),
-    last_name:String(fd.get('last_name')||'').trim(),
-    email:String(fd.get('email')||'').trim(),
-    phone:String(fd.get('phone')||'').trim(),
-    address:String(fd.get('address')||'').trim(),
-    city:String(fd.get('city')||'').trim(),
-    country_code:document.getElementById('country')?.value||'KS',
-    items
-  };
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),15000);
+  const payload={payment_method:'cod',checkout_token:getCheckoutToken(),first_name:String(fd.get('first_name')||'').trim(),last_name:String(fd.get('last_name')||'').trim(),email:String(fd.get('email')||'').trim(),phone:String(fd.get('phone')||'').trim(),address:String(fd.get('address')||'').trim(),city:String(fd.get('city')||'').trim(),country_code:document.getElementById('country')?.value||'KS',items};
+  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),15000);
   try{
-    const res=await fetch(`${SUPABASE_URL}/functions/v1/create-order`,{
-      method:'POST',
-      headers:{'Content-Type':'application/json',apikey:SUPABASE_PUBLISHABLE_KEY},
-      body:JSON.stringify(payload),
-      signal:controller.signal
-    });
-    let data={};
-    try{data=await res.json()}catch{}
+    const res=await fetch(`${SUPABASE_URL}/functions/v1/create-order`,{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify(payload),signal:controller.signal});
+    let data={};try{data=await res.json()}catch{}
     if(!res.ok||!data?.ok)throw new Error(data?.message||'Porosia nuk u krijua. Provo përsëri.');
     return data.order;
-  }catch(err){
-    if(err?.name==='AbortError')throw new Error('Serveri nuk u përgjigj me kohë. Provo përsëri.');
-    throw err;
-  }finally{clearTimeout(timer)}
+  }catch(err){if(err?.name==='AbortError')throw new Error('Serveri nuk u përgjigj me kohë. Provo përsëri.');throw err}finally{clearTimeout(timer)}
 }
 
 function bindCheckout(){
   document.getElementById('country')?.addEventListener('change',renderCheckoutSummary);
   document.querySelectorAll('input[name="payment_method"]').forEach(r=>r.addEventListener('change',renderCheckoutSummary));
   document.getElementById('checkoutForm')?.addEventListener('submit',async e=>{
-    e.preventDefault();
-    const form=e.currentTarget;
+    e.preventDefault();const form=e.currentTarget;
     if(cartSubtotal()<=0){toast('Shto së pari një libër në shportë');return}
     if(!form.reportValidity())return;
     const c=calcCheckout(),s=document.getElementById('successBox'),btn=document.getElementById('placeOrderBtn');
-    if(c.method==='paypal'){
-      s.innerHTML=`<strong>PayPal po përgatitet për aktivizim.</strong><br>Totali aktual: ${money(c.total)} me 10% zbritje mbi librat.`;
-      s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});return;
-    }
-    const previous=btn?.textContent||'';
-    if(btn){btn.disabled=true;btn.textContent='Duke dërguar porosinë...'}
+    if(c.method==='paypal'){s.innerHTML=`<strong>PayPal po përgatitet për aktivizim.</strong><br>Totali aktual: ${money(c.total)} me 10% zbritje mbi librat.`;s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});return}
+    const previous=btn?.textContent||'';if(btn){btn.disabled=true;btn.textContent='Duke dërguar porosinë...'}
     try{
       const order=await createCodOrder(form);
-      setCart([]);renderCart();renderCheckoutSummary();
+      clearCheckoutToken();setCart([]);renderCart();renderCheckoutSummary();
       s.innerHTML=`<strong>Porosia u pranua ✅</strong><br>Numri i porosisë: <strong>${esc(order.order_number)}</strong><br>Totali për pagesë në pranim: <strong>${money(order.total)}</strong>`;
-      s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});
-      form.querySelectorAll('input,select').forEach(el=>el.disabled=true);
-      if(btn){btn.disabled=true;btn.textContent='Porosia u pranua'}
-      await fetchCatalog();
-    }catch(err){
-      s.innerHTML=`<strong>Porosia nuk u dërgua.</strong><br>${esc(err?.message||'Provo përsëri.')}`;
-      s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});
-      if(btn){btn.disabled=false;btn.textContent=previous||'Porosit me Cash on Delivery'}
-    }
+      s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});form.querySelectorAll('input,select').forEach(el=>el.disabled=true);if(btn){btn.disabled=true;btn.textContent='Porosia u pranua'}await fetchCatalog();
+    }catch(err){s.innerHTML=`<strong>Porosia nuk u dërgua.</strong><br>${esc(err?.message||'Provo përsëri.')}`;s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'center'});if(btn){btn.disabled=false;btn.textContent=previous||'Porosit me Cash on Delivery'}}
   });
   renderCheckoutSummary();
 }
@@ -142,8 +109,4 @@ function renderProduct(){const root=document.getElementById('productDetail');if(
 
 async function init(){updateCartBadge();bindHomeSearch();bindShop();await fetchCatalog();normalizeCart();renderHomeBooks();applyShopFilters();renderCart();bindCheckout();renderProduct();document.documentElement.dataset.catalogSource=CATALOG_SOURCE}
 document.addEventListener('DOMContentLoaded',init);
-
-window.addToCart=addToCart;
-window.changeQty=changeQty;
-window.removeItem=removeItem;
-window.buyNow=buyNow;
+window.addToCart=addToCart;window.changeQty=changeQty;window.removeItem=removeItem;window.buyNow=buyNow;
