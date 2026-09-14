@@ -35,6 +35,13 @@ jobs:
           test -n "$FTP_PORT" || (echo "Missing FTP_PORT" && exit 1)
           test -n "$FTP_SERVER_DIR" || (echo "Missing FTP_SERVER_DIR" && exit 1)
 
+      - name: Inspect FTPS certificate
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+        run: |
+          echo | openssl s_client -connect "${FTP_SERVER}:${FTP_PORT}" -starttls ftp -servername "${FTP_SERVER}" 2>/dev/null | openssl x509 -noout -subject -issuer -ext subjectAltName || true
+
       - name: Deploy via explicit FTPS
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
