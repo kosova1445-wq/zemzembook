@@ -62,16 +62,26 @@ jobs:
           upload assets/js/app.js assets/js/app.js
           upload assets/js/app-v2.js assets/js/app-v2.js
           upload assets/js/app-v3.js assets/js/app-v3.js
+          upload assets/js/app-v4.js assets/js/app-v4.js
 
-      - name: Verify live storefront
+      - name: Verify live Supabase storefront
         run: |
           sleep 2
           curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/ -o /tmp/live.html
-          grep -q 'assets/js/app-v3.js' /tmp/live.html
-          grep -q 'Kurani Fisnik' /tmp/live.html
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/assets/js/app-v3.js -o /tmp/app-v3.js
-          grep -q 'bindHomeSearch' /tmp/app-v3.js
-          grep -q 'renderProduct' /tmp/app-v3.js
-          curl -L --fail --silent --show-error --max-time 20 'https://www.zemzem.al/product.html?id=1' -o /tmp/product.html
+          grep -q 'assets/js/app-v4.js' /tmp/live.html
+
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/assets/js/app-v4.js -o /tmp/app-v4.js
+          grep -q 'fetchCatalog' /tmp/app-v4.js
+          grep -q 'storefront_books' /tmp/app-v4.js
+
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/shop.html -o /tmp/shop.html
+          grep -q 'assets/js/app-v4.js' /tmp/shop.html
+
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/checkout.html -o /tmp/checkout.html
+          grep -q 'assets/js/app-v4.js' /tmp/checkout.html
+
+          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/product.html -o /tmp/product.html
+          grep -q 'assets/js/app-v4.js' /tmp/product.html
           grep -q 'productDetail' /tmp/product.html
-          echo 'ZEMZEM_FUNCTIONAL_STOREFRONT_OK=yes'
+
+          echo 'ZEMZEM_SUPABASE_STOREFRONT_OK=yes'
