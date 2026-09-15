@@ -81,6 +81,17 @@ jobs:
             CHANGED="$(git diff --name-only HEAD~1 HEAD)"
           fi
 
+          # Inject the public analytics bootstrap at build time. Admin pages intentionally stay analytics-free.
+          ANALYTICS_TAG='<script src="assets/js/analytics.js?v=1"></script>'
+          for page in \
+            index.html shop.html product.html checkout.html paypal-return.html \
+            about.html contact.html shipping-returns.html privacy.html terms.html account.html \
+            ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html; do
+            if [ -f "$page" ] && ! grep -Fq 'assets/js/analytics.js' "$page"; then
+              sed -i "s#</head>#${ANALYTICS_TAG}</head>#" "$page"
+            fi
+          done
+
           # Always republish the complete protected production set. This prevents rapid
           # sequential commits from leaving production on an older storefront/admin version
           # when obsolete deploy jobs are intentionally skipped by the debounce step.
@@ -89,14 +100,18 @@ jobs:
           shop.html
           product.html
           checkout.html
+          paypal-return.html
           about.html
           contact.html
           shipping-returns.html
+          privacy.html
+          terms.html
           robots.txt
           sitemap.xml
           assets/js/app-v5.js
           assets/js/checkout-v2.js
           assets/js/seo-product.js
+          assets/js/analytics.js
           assets/css/style.css
           assets/css/product.css
           assets/css/commerce.css
@@ -114,8 +129,10 @@ jobs:
           ebooks.html
           ebook.html
           ebook-checkout.html
+          ebook-paypal-return.html
           assets/js/ebooks.js
           assets/js/ebook-checkout.js
+          assets/js/ebook-paypal-return.js
           assets/js/seo-ebook.js
           assets/css/ebooks.css
           assets/css/ebook-checkout.css"
@@ -145,28 +162,50 @@ jobs:
             return 1
           }
 
+          fetch_live https://www.zemzem.al/assets/js/analytics.js /tmp/analytics.js
+          grep -Fq 'G-M3KXR19CVC' /tmp/analytics.js
+          grep -Fq "event('purchase'" /tmp/analytics.js
+          grep -Fq "analytics_storage" /tmp/analytics.js
+
           fetch_live https://www.zemzem.al/ /tmp/index.html
           grep -Fq 'ZemZem.al – Libra Shqip, eBook & Librari Online' /tmp/index.html
           grep -Fq 'application/ld+json' /tmp/index.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/index.html
           fetch_live https://www.zemzem.al/shop.html /tmp/shop.html
           grep -Fq 'Libra në Shqip – Dyqani i Librave Fizikë | ZemZem' /tmp/shop.html
           grep -Fq 'application/ld+json' /tmp/shop.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/shop.html
           fetch_live https://www.zemzem.al/product.html /tmp/product.html
           grep -Fq 'seo-product.js?v=2' /tmp/product.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/product.html
           fetch_live https://www.zemzem.al/assets/js/seo-product.js /tmp/seo-product.js
           grep -Fq 'zemzemProductSchema' /tmp/seo-product.js
+          fetch_live https://www.zemzem.al/checkout.html /tmp/checkout.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/checkout.html
+          fetch_live https://www.zemzem.al/paypal-return.html /tmp/paypal-return.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/paypal-return.html
           fetch_live https://www.zemzem.al/about.html /tmp/about.html
           grep -Fq 'Rreth ZemZem.al – Librari Online për Libra në Shqip' /tmp/about.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/about.html
           fetch_live https://www.zemzem.al/contact.html /tmp/contact.html
           grep -Fq 'Kontakt & Ndihmë – Porosi, Libra dhe eBook | ZemZem' /tmp/contact.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/contact.html
           fetch_live https://www.zemzem.al/shipping-returns.html /tmp/shipping.html
           grep -Fq 'Transporti, Tracking & Kthimet e Porosive | ZemZem' /tmp/shipping.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/shipping.html
+          fetch_live https://www.zemzem.al/privacy.html /tmp/privacy.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/privacy.html
+          fetch_live https://www.zemzem.al/terms.html /tmp/terms.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/terms.html
           fetch_live https://www.zemzem.al/sitemap.xml /tmp/sitemap.xml
           grep -Fq 'product.html?id=' /tmp/sitemap.xml
           grep -Fq 'ebook.html?id=' /tmp/sitemap.xml
 
           fetch_live https://www.zemzem.al/admin.html /tmp/admin.html
           grep -Fq 'admin-v2.js?v=3' /tmp/admin.html
+          if grep -Fq 'assets/js/analytics.js' /tmp/admin.html; then
+            echo 'Analytics must not be loaded in admin.html'; exit 1
+          fi
           fetch_live https://www.zemzem.al/assets/js/admin-v2.js /tmp/admin-v2.js
           grep -Fq 'store-admin-ops' /tmp/admin-v2.js
           grep -Fq 'admin_update_physical_order' /tmp/admin-v2.js
@@ -175,6 +214,9 @@ jobs:
           fetch_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebooks.html
           grep -Fq 'admin-ebooks-orders.js?v=2' /tmp/admin-ebooks.html
           grep -Fq 'ebook-mobile.css?v=1' /tmp/admin-ebooks.html
+          if grep -Fq 'assets/js/analytics.js' /tmp/admin-ebooks.html; then
+            echo 'Analytics must not be loaded in admin-ebooks.html'; exit 1
+          fi
           fetch_live https://www.zemzem.al/assets/js/admin-ebooks-orders.js /tmp/admin-ebooks-orders.js
           grep -Fq 'refund_order' /tmp/admin-ebooks-orders.js
           grep -Fq 'cleanup_generated_inactive' /tmp/admin-ebooks-orders.js
@@ -183,6 +225,7 @@ jobs:
           grep -Fq 'account.js?v=2' /tmp/account.html
           grep -Fq 'ebook-mobile.css?v=1' /tmp/account.html
           grep -Fq '#authPanel[hidden]' /tmp/account.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/account.html
           if grep -Fq 'account-ebooks.js' /tmp/account.html; then
             echo 'Legacy account-ebooks.js is still referenced'; exit 1
           fi
@@ -194,9 +237,11 @@ jobs:
           grep -Fq 'eBook në Shqip – Libra Digjitalë PDF & EPUB | ZemZem' /tmp/ebooks.html
           grep -Fq 'ebooks.js?v=3' /tmp/ebooks.html
           grep -Fq 'ebook-mobile.css?v=1' /tmp/ebooks.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/ebooks.html
           fetch_live https://www.zemzem.al/ebook.html /tmp/ebook.html
           grep -Fq 'ebooks.js?v=3' /tmp/ebook.html
           grep -Fq 'seo-ebook.js?v=1' /tmp/ebook.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/ebook.html
           fetch_live https://www.zemzem.al/assets/js/ebooks.js /tmp/ebooks.js
           grep -Fq 'OWNED_EBOOK_IDS' /tmp/ebooks.js
           grep -Fq 'entitlementUsable' /tmp/ebooks.js
@@ -206,9 +251,12 @@ jobs:
           fetch_live https://www.zemzem.al/ebook-checkout.html /tmp/ebook-checkout.html
           grep -Fq 'ebook-checkout.js?v=2' /tmp/ebook-checkout.html
           grep -Fq 'ebook-mobile.css?v=1' /tmp/ebook-checkout.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/ebook-checkout.html
           fetch_live https://www.zemzem.al/assets/js/ebook-checkout.js /tmp/ebook-checkout.js
           grep -Fq 'cleanupOwnedCart' /tmp/ebook-checkout.js
           grep -Fq 'EBOOK_ALREADY_OWNED' /tmp/ebook-checkout.js
+          fetch_live https://www.zemzem.al/ebook-paypal-return.html /tmp/ebook-paypal-return.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/ebook-paypal-return.html
 
           fetch_live https://www.zemzem.al/assets/css/ebook-mobile.css /tmp/ebook-mobile.css
           grep -Fq 'ZemZem eBook responsive layer' /tmp/ebook-mobile.css
