@@ -120,10 +120,12 @@ jobs:
           assets/js/admin-booksto.js
           assets/css/admin-v2.css
           assets/css/admin-booksto.css
+          assets/css/admin-booksto-pages.css
           admin-ebooks.html
           assets/js/admin-ebooks.js
           assets/js/admin-ebooks-orders.js
           assets/css/admin-ebooks.css
+          assets/css/admin-ebooks-booksto.css
           assets/css/ebook-mobile.css
           account.html
           assets/js/account.js
@@ -206,6 +208,7 @@ jobs:
           fetch_live https://www.zemzem.al/admin.html /tmp/admin.html
           grep -Fq 'admin-v2.js?v=3' /tmp/admin.html
           grep -Fq 'admin-booksto.css?v=1' /tmp/admin.html
+          grep -Fq 'admin-booksto-pages.css?v=1' /tmp/admin.html
           grep -Fq 'admin-booksto.js?v=1' /tmp/admin.html
           if grep -Fq 'assets/js/analytics.js' /tmp/admin.html; then
             echo 'Analytics must not be loaded in admin.html'; exit 1
@@ -220,13 +223,20 @@ jobs:
           fetch_live https://www.zemzem.al/assets/css/admin-booksto.css /tmp/admin-booksto.css
           grep -Fq '.booksto-insight-grid' /tmp/admin-booksto.css
           grep -Fq '.side-section-label' /tmp/admin-booksto.css
+          fetch_live https://www.zemzem.al/assets/css/admin-booksto-pages.css /tmp/admin-booksto-pages.css
+          grep -Fq '#view-orders .table-panel' /tmp/admin-booksto-pages.css
+          grep -Fq '#view-books .table-thumb' /tmp/admin-booksto-pages.css
 
           fetch_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebooks.html
           grep -Fq 'admin-ebooks-orders.js?v=2' /tmp/admin-ebooks.html
+          grep -Fq 'admin-ebooks-booksto.css?v=1' /tmp/admin-ebooks.html
           grep -Fq 'ebook-mobile.css?v=1' /tmp/admin-ebooks.html
           if grep -Fq 'assets/js/analytics.js' /tmp/admin-ebooks.html; then
             echo 'Analytics must not be loaded in admin-ebooks.html'; exit 1
           fi
+          fetch_live https://www.zemzem.al/assets/css/admin-ebooks-booksto.css /tmp/admin-ebooks-booksto.css
+          grep -Fq '.ebook-admin-nav' /tmp/admin-ebooks-booksto.css
+          grep -Fq '.ebook-admin-table' /tmp/admin-ebooks-booksto.css
           fetch_live https://www.zemzem.al/assets/js/admin-ebooks-orders.js /tmp/admin-ebooks-orders.js
           grep -Fq 'refund_order' /tmp/admin-ebooks-orders.js
           grep -Fq 'cleanup_generated_inactive' /tmp/admin-ebooks-orders.js
