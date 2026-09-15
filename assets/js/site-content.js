@@ -14,6 +14,12 @@
       if(support){support.href=safeHref(c.support_href||'contact.html');support.textContent='☎ '+(c.support_label||'Porosit & Pyet')}
     });
   }
+  function dynamicCategoryCard(){
+    const a=document.createElement('a');
+    a.className='category-item category-item-dynamic';
+    a.innerHTML='<span class="category-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v17h4.5A2.5 2.5 0 0 1 20 22z"/></svg></span><span class="category-copy"><strong>Kategori</strong><small></small></span><span class="category-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7"/></svg></span>';
+    return a;
+  }
   function applyHomepage(c){
     setText('.topbar .container > span',c.topbar_text?'🚚 '+String(c.topbar_text).replace(/^\s*🚚\s*/,''):null);
     const h=c.hero||{};
@@ -25,8 +31,24 @@
     if(actions[1]){if(h.secondary_label)actions[1].textContent=h.secondary_label;if(h.secondary_href)actions[1].href=safeHref(h.secondary_href)}
     setText('.category-box-head h4',c.categories_heading);
     setText('.category-box-head .category-overline',c.categories_kicker);
-    const cards=[...document.querySelectorAll('.premium-category-list .category-item')],cats=Array.isArray(c.home_categories)?c.home_categories:[];
-    cards.forEach((card,i)=>{const x=cats[i];if(!x){card.hidden=true;return}card.hidden=x.visible===false;card.href=safeHref(x.href);const t=card.querySelector('.category-copy strong'),d=card.querySelector('.category-copy small');if(t&&x.label)t.textContent=x.label;if(d&&x.description)d.textContent=x.description||''});
+    const list=document.querySelector('.premium-category-list');
+    const cats=Array.isArray(c.home_categories)?c.home_categories:[];
+    if(list){
+      list.querySelectorAll('.category-item-dynamic').forEach(x=>x.remove());
+      const cards=[...list.querySelectorAll('.category-item')];
+      cats.forEach((x,i)=>{
+        let card=cards[i];
+        if(!card){card=dynamicCategoryCard();list.appendChild(card);cards.push(card)}
+        card.hidden=!x||x.visible===false||!String(x.label||'').trim();
+        card.href=safeHref(x?.href);
+        const t=card.querySelector('.category-copy strong'),d=card.querySelector('.category-copy small');
+        if(t)t.textContent=String(x?.label||'Kategori');
+        if(d)d.textContent=String(x?.description||'');
+        const isEbook=/ebook/i.test(String(x?.label||''))||/ebooks?\.html/i.test(String(x?.href||''));
+        card.classList.toggle('category-item-ebook',isEbook);
+      });
+      cards.slice(cats.length).forEach(card=>card.hidden=true);
+    }
   }
   async function load(){
     try{
