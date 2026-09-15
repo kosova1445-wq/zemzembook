@@ -1,8 +1,11 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /admin-ebooks.html
 Disallow: /account.html
 Disallow: /checkout.html
+Disallow: /ebook-checkout.html
 Disallow: /paypal-return.html
+Disallow: /ebook-paypal-return.html
 
 Sitemap: https://www.zemzem.al/sitemap.xml
