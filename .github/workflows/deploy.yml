@@ -86,7 +86,7 @@ jobs:
           for page in \
             index.html shop.html product.html checkout.html paypal-return.html \
             about.html contact.html shipping-returns.html privacy.html terms.html account.html \
-            ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html; do
+            ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html blog.html article.html; do
             if [ -f "$page" ] && ! grep -Fq 'assets/js/analytics.js' "$page"; then
               sed -i "s#</head>#${ANALYTICS_TAG}</head>#" "$page"
             fi
@@ -108,6 +108,10 @@ jobs:
           terms.html
           robots.txt
           sitemap.xml
+          blog.html
+          article.html
+          assets/js/blog.js
+          assets/css/blog.css
           assets/js/app-v5.js
           assets/js/checkout-v2.js
           assets/js/seo-product.js
@@ -118,6 +122,8 @@ jobs:
           admin.html
           assets/js/admin-v2.js
           assets/js/admin-booksto.js
+          assets/js/admin-blog.js
+          assets/css/admin-blog.css
           assets/css/admin-v2.css
           assets/css/admin-booksto.css
           assets/css/admin-booksto-pages.css
@@ -205,6 +211,17 @@ jobs:
           grep -Fq 'product.html?id=' /tmp/sitemap.xml
           grep -Fq 'ebook.html?id=' /tmp/sitemap.xml
 
+          fetch_live https://www.zemzem.al/blog.html /tmp/blog.html
+          grep -Fq 'assets/js/blog.js?v=1' /tmp/blog.html
+          grep -Fq 'assets/css/blog.css?v=1' /tmp/blog.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/blog.html
+          fetch_live https://www.zemzem.al/article.html /tmp/article.html
+          grep -Fq 'data-blog-page="article"' /tmp/article.html
+          grep -Fq 'assets/js/analytics.js?v=1' /tmp/article.html
+          fetch_live https://www.zemzem.al/assets/js/blog.js /tmp/blog.js
+          grep -Fq 'blog_categories' /tmp/blog.js
+          grep -Fq 'blog_posts' /tmp/blog.js
+
           fetch_live https://www.zemzem.al/admin.html /tmp/admin.html
           grep -Fq 'admin-v2.js?v=3' /tmp/admin.html
           grep -Fq 'admin-booksto.css?v=1' /tmp/admin.html
@@ -220,6 +237,12 @@ jobs:
           fetch_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto.js
           grep -Fq 'booksto-insight-grid' /tmp/admin-booksto.js
           grep -Fq 'Category Lists' /tmp/admin-booksto.js
+          grep -Fq 'admin-blog.js?v=1' /tmp/admin-booksto.js
+          fetch_live https://www.zemzem.al/assets/js/admin-blog.js /tmp/admin-blog.js
+          grep -Fq 'Kategoritë & Nënkategoritë' /tmp/admin-blog.js
+          grep -Fq 'blog_posts' /tmp/admin-blog.js
+          fetch_live https://www.zemzem.al/assets/css/admin-blog.css /tmp/admin-blog.css
+          grep -Fq '.blog-admin-wrap' /tmp/admin-blog.css
           fetch_live https://www.zemzem.al/assets/css/admin-booksto.css /tmp/admin-booksto.css
           grep -Fq '.booksto-insight-grid' /tmp/admin-booksto.css
           grep -Fq '.side-section-label' /tmp/admin-booksto.css
