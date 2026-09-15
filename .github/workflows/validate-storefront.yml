@@ -1,0 +1,38 @@
+name: Validate Physical Storefront
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/js/app-v5.js'
+      - 'assets/js/checkout-v2.js'
+      - 'assets/js/seo-product.js'
+      - 'checkout.html'
+      - 'product.html'
+      - 'shop.html'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - '.github/workflows/validate-storefront.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: |
+          node --check assets/js/app-v5.js
+          node --check assets/js/checkout-v2.js
+          node --check assets/js/seo-product.js
+      - name: Check public metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'Sitemap: https://www.zemzem.al/sitemap.xml' robots.txt
+          test -s sitemap.xml
+          echo 'ZEMZEM_STOREFRONT_VALIDATION_OK=yes'
