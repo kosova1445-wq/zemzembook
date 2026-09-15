@@ -81,9 +81,25 @@ jobs:
             CHANGED="$(git diff --name-only HEAD~1 HEAD)"
           fi
 
-          # Always republish the complete protected admin/eBook set so a stale or cancelled
-          # earlier deployment can never downgrade a production file.
+          # Always republish the complete protected production set. This prevents rapid
+          # sequential commits from leaving production on an older storefront/admin version
+          # when obsolete deploy jobs are intentionally skipped by the debounce step.
           CHANGED="$CHANGED
+          index.html
+          shop.html
+          product.html
+          checkout.html
+          about.html
+          contact.html
+          shipping-returns.html
+          robots.txt
+          sitemap.xml
+          assets/js/app-v5.js
+          assets/js/checkout-v2.js
+          assets/js/seo-product.js
+          assets/css/style.css
+          assets/css/product.css
+          assets/css/commerce.css
           admin.html
           assets/js/admin-v2.js
           assets/css/admin-v2.css
@@ -100,6 +116,7 @@ jobs:
           ebook-checkout.html
           assets/js/ebooks.js
           assets/js/ebook-checkout.js
+          assets/js/seo-ebook.js
           assets/css/ebooks.css
           assets/css/ebook-checkout.css"
 
@@ -128,6 +145,26 @@ jobs:
             return 1
           }
 
+          fetch_live https://www.zemzem.al/ /tmp/index.html
+          grep -Fq 'ZemZem.al – Libra Shqip, eBook & Librari Online' /tmp/index.html
+          grep -Fq 'application/ld+json' /tmp/index.html
+          fetch_live https://www.zemzem.al/shop.html /tmp/shop.html
+          grep -Fq 'Libra në Shqip – Dyqani i Librave Fizikë | ZemZem' /tmp/shop.html
+          grep -Fq 'application/ld+json' /tmp/shop.html
+          fetch_live https://www.zemzem.al/product.html /tmp/product.html
+          grep -Fq 'seo-product.js?v=2' /tmp/product.html
+          fetch_live https://www.zemzem.al/assets/js/seo-product.js /tmp/seo-product.js
+          grep -Fq 'zemzemProductSchema' /tmp/seo-product.js
+          fetch_live https://www.zemzem.al/about.html /tmp/about.html
+          grep -Fq 'Rreth ZemZem.al – Librari Online për Libra në Shqip' /tmp/about.html
+          fetch_live https://www.zemzem.al/contact.html /tmp/contact.html
+          grep -Fq 'Kontakt & Ndihmë – Porosi, Libra dhe eBook | ZemZem' /tmp/contact.html
+          fetch_live https://www.zemzem.al/shipping-returns.html /tmp/shipping.html
+          grep -Fq 'Transporti, Tracking & Kthimet e Porosive | ZemZem' /tmp/shipping.html
+          fetch_live https://www.zemzem.al/sitemap.xml /tmp/sitemap.xml
+          grep -Fq 'product.html?id=' /tmp/sitemap.xml
+          grep -Fq 'ebook.html?id=' /tmp/sitemap.xml
+
           fetch_live https://www.zemzem.al/admin.html /tmp/admin.html
           grep -Fq 'admin-v2.js?v=3' /tmp/admin.html
           fetch_live https://www.zemzem.al/assets/js/admin-v2.js /tmp/admin-v2.js
@@ -154,13 +191,17 @@ jobs:
           grep -Fq 'ebook-download' /tmp/account.js
 
           fetch_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html
+          grep -Fq 'eBook në Shqip – Libra Digjitalë PDF & EPUB | ZemZem' /tmp/ebooks.html
           grep -Fq 'ebooks.js?v=3' /tmp/ebooks.html
           grep -Fq 'ebook-mobile.css?v=1' /tmp/ebooks.html
           fetch_live https://www.zemzem.al/ebook.html /tmp/ebook.html
           grep -Fq 'ebooks.js?v=3' /tmp/ebook.html
+          grep -Fq 'seo-ebook.js?v=1' /tmp/ebook.html
           fetch_live https://www.zemzem.al/assets/js/ebooks.js /tmp/ebooks.js
           grep -Fq 'OWNED_EBOOK_IDS' /tmp/ebooks.js
           grep -Fq 'entitlementUsable' /tmp/ebooks.js
+          fetch_live https://www.zemzem.al/assets/js/seo-ebook.js /tmp/seo-ebook.js
+          grep -Fq 'zemzemEbookSchema' /tmp/seo-ebook.js
 
           fetch_live https://www.zemzem.al/ebook-checkout.html /tmp/ebook-checkout.html
           grep -Fq 'ebook-checkout.js?v=2' /tmp/ebook-checkout.html
