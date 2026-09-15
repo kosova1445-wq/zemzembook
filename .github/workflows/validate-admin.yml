@@ -1,0 +1,28 @@
+name: Validate ZemZem Admin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/js/admin-v2.js'
+      - 'admin.html'
+      - '.github/workflows/validate-admin.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: node --check assets/js/admin-v2.js
+      - name: Check required admin hooks
+        shell: bash
+        run: |
+          grep -q "store-admin-ops" assets/js/admin-v2.js
+          grep -q "admin_update_physical_order" assets/js/admin-v2.js
+          grep -q "admin_customer_detail" assets/js/admin-v2.js
+          grep -q "Audit Log" assets/js/admin-v2.js
+          grep -q "admin-v2.js?v=3" admin.html
+          echo "ZEMZEM_ADMIN_VALIDATION_OK=yes"
