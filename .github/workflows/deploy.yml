@@ -86,6 +86,8 @@ jobs:
           upload product.html product.html
           upload ebooks.html ebooks.html
           upload ebook.html ebook.html
+          upload ebook-checkout.html ebook-checkout.html
+          upload ebook-paypal-return.html ebook-paypal-return.html
           upload admin.html admin.html
           upload admin-ebooks.html admin-ebooks.html
           upload account.html account.html
@@ -107,6 +109,7 @@ jobs:
           upload assets/css/account.css assets/css/account.css
           upload assets/css/commerce.css assets/css/commerce.css
           upload assets/css/ebooks.css assets/css/ebooks.css
+          upload assets/css/ebook-checkout.css assets/css/ebook-checkout.css
 
           upload assets/js/app-v5.js assets/js/app-v5.js
           upload assets/js/account.js assets/js/account.js
@@ -115,6 +118,8 @@ jobs:
           upload assets/js/admin-v2.js assets/js/admin-v2.js
           upload assets/js/ebooks.js assets/js/ebooks.js
           upload assets/js/admin-ebooks.js assets/js/admin-ebooks.js
+          upload assets/js/ebook-checkout.js assets/js/ebook-checkout.js
+          upload assets/js/ebook-paypal-return.js assets/js/ebook-paypal-return.js
 
       - name: Verify live ZemZem commerce v2
         if: steps.latest.outputs.deploy == 'true'
@@ -167,9 +172,15 @@ jobs:
           check_contains https://www.zemzem.al/product.html 'assets/js/app-v5.js' /tmp/product.html
 
           check_contains https://www.zemzem.al/ebooks.html 'assets/js/ebooks.js' /tmp/ebooks.html
-          grep -q 'sektor i veçantë' /tmp/ebooks.html
+          grep -q 'ebook-checkout.html' /tmp/ebooks.html
           check_contains https://www.zemzem.al/ebook.html 'ebookDetail' /tmp/ebook.html
-          check_contains https://www.zemzem.al/assets/js/ebooks.js 'storefront_ebooks' /tmp/ebooks.js
+          check_contains https://www.zemzem.al/assets/js/ebooks.js 'zemzem_ebook_cart' /tmp/ebooks.js
+          grep -q 'storefront_ebooks' /tmp/ebooks.js
+
+          check_contains https://www.zemzem.al/ebook-checkout.html 'ebook-checkout.js' /tmp/ebook-checkout.html
+          check_contains https://www.zemzem.al/assets/js/ebook-checkout.js 'ebook-paypal-create' /tmp/ebook-checkout.js
+          check_contains https://www.zemzem.al/ebook-paypal-return.html 'ebook-paypal-return.js' /tmp/ebook-return.html
+          check_contains https://www.zemzem.al/assets/js/ebook-paypal-return.js 'ebook-paypal-capture' /tmp/ebook-return.js
 
           check_contains https://www.zemzem.al/checkout.html 'checkout-v2.js' /tmp/checkout.html
           grep -q 'couponCode' /tmp/checkout.html
