@@ -14,7 +14,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
           test -n "$FTP_PORT"
           test -n "$FTP_SERVER_DIR"
 
-      - name: Deploy changed files safely
+      - name: Deploy current protected release
         if: steps.latest.outputs.deploy == 'true'
         env:
           FTP_SERVER: quebec.us.hostns.io
@@ -74,18 +74,34 @@ jobs:
           }
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            CHANGED="admin.html assets/js/admin-v2.js assets/css/admin-v2.css"
+            CHANGED=""
           elif [ -n "${BEFORE_SHA:-}" ] && [ "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
             CHANGED="$(git diff --name-only "$BEFORE_SHA" "$GITHUB_SHA")"
           else
             CHANGED="$(git diff --name-only HEAD~1 HEAD)"
           fi
 
-          # This release must publish the new admin even though this commit mainly changes CI.
+          # Always republish the complete protected admin/eBook set so a stale or cancelled
+          # earlier deployment can never downgrade a production file.
           CHANGED="$CHANGED
           admin.html
           assets/js/admin-v2.js
-          assets/css/admin-v2.css"
+          assets/css/admin-v2.css
+          admin-ebooks.html
+          assets/js/admin-ebooks.js
+          assets/js/admin-ebooks-orders.js
+          assets/css/admin-ebooks.css
+          assets/css/ebook-mobile.css
+          account.html
+          assets/js/account.js
+          assets/css/account.css
+          ebooks.html
+          ebook.html
+          ebook-checkout.html
+          assets/js/ebooks.js
+          assets/js/ebook-checkout.js
+          assets/css/ebooks.css
+          assets/css/ebook-checkout.css"
 
           printf '%s\n' "$CHANGED" | sed '/^[[:space:]]*$/d' | sort -u | while IFS= read -r file; do
             case "$file" in
@@ -96,28 +112,67 @@ jobs:
             esac
           done
 
-      - name: Verify live admin release
+      - name: Verify live protected release
         if: steps.latest.outputs.deploy == 'true'
         shell: bash
         run: |
           set -euo pipefail
-          check_contains() {
-            local url="$1" pattern="$2" out="$3"
+          fetch_live() {
+            local url="$1" out="$2"
             for attempt in 1 2 3 4 5 6; do
-              if curl -L --fail --silent --show-error --max-time 20 "${url}?deploy=${GITHUB_SHA}&attempt=${attempt}" -o "$out" && grep -q "$pattern" "$out"; then
+              if curl -L --fail --silent --show-error --max-time 20 "${url}?deploy=${GITHUB_SHA}&attempt=${attempt}" -o "$out"; then
                 return 0
               fi
               sleep 3
             done
-            echo "Verification failed for $url; expected: $pattern"
             return 1
           }
-          check_contains https://www.zemzem.al/admin.html 'admin-v2.js?v=3' /tmp/admin.html
-          check_contains https://www.zemzem.al/assets/js/admin-v2.js 'store-admin-ops' /tmp/admin-v2.js
-          grep -q 'admin_update_physical_order' /tmp/admin-v2.js
-          grep -q 'admin_customer_detail' /tmp/admin-v2.js
-          echo 'ZEMZEM_ADMIN_LIVE_OK=yes'
+
+          fetch_live https://www.zemzem.al/admin.html /tmp/admin.html
+          grep -Fq 'admin-v2.js?v=3' /tmp/admin.html
+          fetch_live https://www.zemzem.al/assets/js/admin-v2.js /tmp/admin-v2.js
+          grep -Fq 'store-admin-ops' /tmp/admin-v2.js
+          grep -Fq 'admin_update_physical_order' /tmp/admin-v2.js
+          grep -Fq 'admin_customer_detail' /tmp/admin-v2.js
+
+          fetch_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebooks.html
+          grep -Fq 'admin-ebooks-orders.js?v=2' /tmp/admin-ebooks.html
+          grep -Fq 'ebook-mobile.css?v=1' /tmp/admin-ebooks.html
+          fetch_live https://www.zemzem.al/assets/js/admin-ebooks-orders.js /tmp/admin-ebooks-orders.js
+          grep -Fq 'refund_order' /tmp/admin-ebooks-orders.js
+          grep -Fq 'cleanup_generated_inactive' /tmp/admin-ebooks-orders.js
+
+          fetch_live https://www.zemzem.al/account.html /tmp/account.html
+          grep -Fq 'account.js?v=2' /tmp/account.html
+          grep -Fq 'ebook-mobile.css?v=1' /tmp/account.html
+          grep -Fq '#authPanel[hidden]' /tmp/account.html
+          if grep -Fq 'account-ebooks.js' /tmp/account.html; then
+            echo 'Legacy account-ebooks.js is still referenced'; exit 1
+          fi
+          fetch_live https://www.zemzem.al/assets/js/account.js /tmp/account.js
+          grep -Fq 'dedupeEntitlements' /tmp/account.js
+          grep -Fq 'ebook-download' /tmp/account.js
+
+          fetch_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html
+          grep -Fq 'ebooks.js?v=3' /tmp/ebooks.html
+          grep -Fq 'ebook-mobile.css?v=1' /tmp/ebooks.html
+          fetch_live https://www.zemzem.al/ebook.html /tmp/ebook.html
+          grep -Fq 'ebooks.js?v=3' /tmp/ebook.html
+          fetch_live https://www.zemzem.al/assets/js/ebooks.js /tmp/ebooks.js
+          grep -Fq 'OWNED_EBOOK_IDS' /tmp/ebooks.js
+          grep -Fq 'entitlementUsable' /tmp/ebooks.js
+
+          fetch_live https://www.zemzem.al/ebook-checkout.html /tmp/ebook-checkout.html
+          grep -Fq 'ebook-checkout.js?v=2' /tmp/ebook-checkout.html
+          grep -Fq 'ebook-mobile.css?v=1' /tmp/ebook-checkout.html
+          fetch_live https://www.zemzem.al/assets/js/ebook-checkout.js /tmp/ebook-checkout.js
+          grep -Fq 'cleanupOwnedCart' /tmp/ebook-checkout.js
+          grep -Fq 'EBOOK_ALREADY_OWNED' /tmp/ebook-checkout.js
+
+          fetch_live https://www.zemzem.al/assets/css/ebook-mobile.css /tmp/ebook-mobile.css
+          grep -Fq 'ZemZem eBook responsive layer' /tmp/ebook-mobile.css
+          echo 'ZEMZEM_PROTECTED_RELEASE_LIVE_OK=yes'
 
       - name: Obsolete commit skipped safely
         if: steps.latest.outputs.deploy != 'true'
-        run: echo "A newer commit is already on main; obsolete deployment skipped."
+        run: echo "A newer commit is already on main; obsolete deployment skipped safely."
