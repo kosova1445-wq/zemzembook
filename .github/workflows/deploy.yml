@@ -14,12 +14,39 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 8
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Debounce and keep only latest commit
+        id: latest
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+            echo "Manual deploy requested."
+            exit 0
+          fi
+
+          # Wait briefly so a burst of edits can settle before touching production.
+          sleep 20
+          LATEST_SHA="$(git ls-remote origin refs/heads/main | cut -f1)"
+
+          if [ -z "$LATEST_SHA" ]; then
+            echo "Could not resolve latest main SHA; continuing with current run."
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          elif [ "$LATEST_SHA" != "$GITHUB_SHA" ]; then
+            echo "Newer commit exists: $LATEST_SHA"
+            echo "Skipping obsolete deploy: $GITHUB_SHA"
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "This is the latest main commit: $GITHUB_SHA"
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Validate deployment secrets
+        if: steps.latest.outputs.deploy == 'true'
         env:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
@@ -32,6 +59,7 @@ jobs:
           test -n "$FTP_SERVER_DIR" || (echo "Missing FTP_SERVER_DIR" && exit 1)
 
       - name: Deploy files via FTPS control and PASV
+        if: steps.latest.outputs.deploy == 'true'
         env:
           FTP_SERVER: quebec.us.hostns.io
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
@@ -43,7 +71,7 @@ jobs:
             local src="$1"
             local dst="$2"
             curl --fail --show-error --silent \
-              --connect-timeout 20 --max-time 60 --retry 1 \
+              --connect-timeout 20 --max-time 60 --retry 2 --retry-delay 2 \
               --ftp-ssl-control \
               --disable-epsv \
               --ftp-skip-pasv-ip \
@@ -82,41 +110,71 @@ jobs:
           upload assets/js/admin-v2.js assets/js/admin-v2.js
 
       - name: Verify live ZemZem commerce v2
+        if: steps.latest.outputs.deploy == 'true'
+        shell: bash
         run: |
-          sleep 3
+          check_contains() {
+            local url="$1"
+            local pattern="$2"
+            local out="$3"
 
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/ -o /tmp/index.html
-          grep -q 'assets/js/app-v5.js' /tmp/index.html
+            for attempt in 1 2 3 4 5 6; do
+              if curl -L --fail --silent --show-error --max-time 20 \
+                "${url}?deploy=${GITHUB_SHA}&attempt=${attempt}" -o "$out" \
+                && grep -q "$pattern" "$out"; then
+                return 0
+              fi
+              echo "Waiting for live update: $url (attempt $attempt/6)"
+              sleep 3
+            done
+
+            echo "Verification failed for $url; expected: $pattern"
+            return 1
+          }
+
+          check_exists() {
+            local url="$1"
+            local out="$2"
+
+            for attempt in 1 2 3 4 5 6; do
+              if curl -L --fail --silent --show-error --max-time 20 \
+                "${url}?deploy=${GITHUB_SHA}&attempt=${attempt}" -o "$out"; then
+                return 0
+              fi
+              sleep 3
+            done
+
+            echo "Verification failed for $url"
+            return 1
+          }
+
+          check_contains https://www.zemzem.al/ 'assets/js/app-v5.js' /tmp/index.html
           grep -q 'account.html' /tmp/index.html
 
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/assets/js/app-v5.js -o /tmp/app-v5.js
-          grep -q 'storefront_books' /tmp/app-v5.js
+          check_contains https://www.zemzem.al/assets/js/app-v5.js 'storefront_books' /tmp/app-v5.js
           grep -q 'toggleWishlist' /tmp/app-v5.js
 
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/shop.html -o /tmp/shop.html
-          grep -q 'assets/js/app-v5.js' /tmp/shop.html
+          check_contains https://www.zemzem.al/shop.html 'assets/js/app-v5.js' /tmp/shop.html
+          check_contains https://www.zemzem.al/product.html 'assets/js/app-v5.js' /tmp/product.html
 
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/product.html -o /tmp/product.html
-          grep -q 'assets/js/app-v5.js' /tmp/product.html
-
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/checkout.html -o /tmp/checkout.html
-          grep -q 'assets/js/app-v5.js' /tmp/checkout.html
-          grep -q 'checkout-v2.js' /tmp/checkout.html
+          check_contains https://www.zemzem.al/checkout.html 'checkout-v2.js' /tmp/checkout.html
           grep -q 'couponCode' /tmp/checkout.html
 
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/account.html -o /tmp/account.html
-          grep -q 'account.js' /tmp/account.html
+          check_contains https://www.zemzem.al/account.html 'account.js' /tmp/account.html
           grep -q 'Porositë e mia' /tmp/account.html
 
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/admin.html -o /tmp/admin.html
-          grep -q 'admin-v2.js' /tmp/admin.html
+          check_contains https://www.zemzem.al/admin.html 'admin-v2.js' /tmp/admin.html
           grep -q 'Kuponët' /tmp/admin.html
 
-          curl -L --fail --silent --show-error --max-time 20 https://www.zemzem.al/paypal-return.html -o /tmp/paypal.html
-          grep -q 'paypal-capture' /tmp/paypal.html
+          check_contains https://www.zemzem.al/paypal-return.html 'paypal-capture' /tmp/paypal.html
 
           for page in about.html contact.html privacy.html terms.html shipping-returns.html robots.txt sitemap.xml favicon.svg; do
-            curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/$page" -o "/tmp/$(basename "$page")"
+            check_exists "https://www.zemzem.al/$page" "/tmp/$(basename "$page")"
           done
 
           echo 'ZEMZEM_COMMERCE_V2_LIVE_OK=yes'
+
+      - name: Obsolete commit skipped safely
+        if: steps.latest.outputs.deploy != 'true'
+        run: |
+          echo "A newer commit is already on main. This old deployment was skipped successfully."
