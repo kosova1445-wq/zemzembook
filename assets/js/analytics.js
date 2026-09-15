@@ -1,6 +1,13 @@
 (function(){
   'use strict';
 
+  if(!document.querySelector('script[src*="site-content.js"]')){
+    const siteContent=document.createElement('script');
+    siteContent.src='assets/js/site-content.js?v=1';
+    siteContent.async=true;
+    document.head.appendChild(siteContent);
+  }
+
   const MEASUREMENT_ID='G-9TPM62WY0G';
   const CONSENT_KEY='zemzem_analytics_consent';
   const PURCHASE_KEY='zemzem_ga4_purchases';
