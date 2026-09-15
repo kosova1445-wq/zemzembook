@@ -1,0 +1,29 @@
+/* ZemZem eBook responsive layer */
+@media (max-width: 900px){
+  .header .header-row{gap:10px;flex-wrap:wrap}
+  .header .brand{order:1}.header .header-actions{order:2;margin-left:auto}.header .search{order:3;width:100%;max-width:none}
+  .nav{overflow-x:auto;-webkit-overflow-scrolling:touch}.nav-row{min-width:max-content;gap:8px}.nav-row a{white-space:nowrap}
+  .ebook-hero-grid,.ebook-detail-grid{grid-template-columns:1fr!important}.ebook-device{max-width:340px;margin:0 auto}
+  .ebook-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .ebook-toolbar{align-items:flex-start;gap:10px;flex-wrap:wrap}.ebook-toolbar select{width:100%;max-width:280px}
+  .digital-info-grid{grid-template-columns:1fr!important}
+  .ebook-checkout-grid,.checkout-grid{grid-template-columns:1fr!important}
+  .ebook-admin-top{align-items:flex-start;gap:12px;flex-wrap:wrap}.ebook-admin-top .left{align-items:flex-start;flex-wrap:wrap}.ebook-admin-main{padding:14px!important}.ebook-admin-nav{overflow-x:auto;white-space:nowrap;padding-bottom:4px}.ebook-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}.ebook-admin-toolbar{gap:8px;flex-wrap:wrap}.ebook-admin-toolbar input,.ebook-admin-toolbar select{min-width:0!important;width:100%!important}
+  .account-grid{grid-template-columns:1fr!important}.account-nav{display:flex!important;overflow-x:auto;gap:7px;padding-bottom:6px}.account-nav button{white-space:nowrap;flex:0 0 auto}.account-top{align-items:flex-start;gap:10px;flex-wrap:wrap}
+  .wish-card,.ebook-cart-row{gap:12px;align-items:flex-start!important}
+}
+@media (max-width: 620px){
+  .topbar .container{gap:8px;align-items:flex-start;flex-direction:column}.tiny-links{display:flex;gap:10px;flex-wrap:wrap}
+  .simple-head{gap:12px;align-items:flex-start;flex-direction:column}.simple-head nav{display:flex;gap:8px;overflow-x:auto;width:100%;padding-bottom:4px}.simple-head nav a{white-space:nowrap}
+  .ebook-hero{padding:34px 0!important}.ebook-hero h1{font-size:36px!important;line-height:1.04}.ebook-badges{gap:6px;flex-wrap:wrap}
+  .ebook-grid{grid-template-columns:1fr!important}.ebook-card{max-width:460px;margin:0 auto;width:100%}
+  .ebook-detail-info h1{font-size:34px!important}.ebook-facts{grid-template-columns:1fr!important}.ebook-buy-panel .btn{width:100%;justify-content:center}
+  .ebook-checkout-shell{padding:20px 0!important}.ebook-cart-row{grid-template-columns:64px minmax(0,1fr)!important}.ebook-cart-price{grid-column:2;text-align:left!important}.ebook-cart-thumb{width:64px!important;height:88px!important}
+  .ebook-login-form{grid-template-columns:1fr!important}.ebook-login-form .btn{width:100%}
+  .ebook-admin-login{padding:18px}.ebook-admin-login-card{width:100%;padding:22px!important}.ebook-admin-stats{grid-template-columns:1fr!important}.ebook-admin-table{min-width:740px}.ebook-modal-card{width:96vw!important;max-height:92vh;overflow:auto}.ebook-form{grid-template-columns:1fr!important}.ebook-span-2,.ebook-span-3{grid-column:auto!important}.ebook-actions{position:sticky;bottom:0;background:#fff;padding-top:10px;z-index:2;flex-wrap:wrap}
+  .account-shell{padding:18px 12px!important}.account-auth{grid-template-columns:1fr!important}.account-content{min-width:0}.section-head{gap:8px;align-items:flex-start;flex-wrap:wrap}.wish-card{flex-direction:column!important}.wish-main{align-items:flex-start!important}.book-thumb{width:62px!important;height:82px!important}
+  .two{grid-template-columns:1fr!important}.form-actions{flex-wrap:wrap}.form-actions .btn{flex:1}
+}
+@media (max-width: 390px){
+  .ebook-hero h1,.ebook-detail-info h1{font-size:31px!important}.header-actions{gap:5px}.icon-btn{width:40px!important;height:40px!important}.ebook-admin-main{padding:10px!important}.ebook-panel{padding:12px!important}.account-shell{padding:14px 9px!important}
+}
