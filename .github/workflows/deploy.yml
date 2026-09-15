@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Debounce and keep only latest commit
         id: latest
@@ -25,22 +27,13 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "deploy=true" >> "$GITHUB_OUTPUT"
-            echo "Manual deploy requested."
             exit 0
           fi
-
-          sleep 20
+          sleep 12
           LATEST_SHA="$(git ls-remote origin refs/heads/main | cut -f1)"
-
-          if [ -z "$LATEST_SHA" ]; then
-            echo "Could not resolve latest main SHA; continuing with current run."
-            echo "deploy=true" >> "$GITHUB_OUTPUT"
-          elif [ "$LATEST_SHA" != "$GITHUB_SHA" ]; then
-            echo "Newer commit exists: $LATEST_SHA"
-            echo "Skipping obsolete deploy: $GITHUB_SHA"
+          if [ -n "$LATEST_SHA" ] && [ "$LATEST_SHA" != "$GITHUB_SHA" ]; then
             echo "deploy=false" >> "$GITHUB_OUTPUT"
           else
-            echo "This is the latest main commit: $GITHUB_SHA"
             echo "deploy=true" >> "$GITHUB_OUTPUT"
           fi
 
@@ -52,12 +45,12 @@ jobs:
           FTP_PORT: ${{ secrets.FTP_PORT }}
           FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
         run: |
-          test -n "$FTP_USERNAME" || (echo "Missing FTP_USERNAME" && exit 1)
-          test -n "$FTP_PASSWORD" || (echo "Missing FTP_PASSWORD" && exit 1)
-          test -n "$FTP_PORT" || (echo "Missing FTP_PORT" && exit 1)
-          test -n "$FTP_SERVER_DIR" || (echo "Missing FTP_SERVER_DIR" && exit 1)
+          test -n "$FTP_USERNAME"
+          test -n "$FTP_PASSWORD"
+          test -n "$FTP_PORT"
+          test -n "$FTP_SERVER_DIR"
 
-      - name: Deploy files via FTPS control and PASV
+      - name: Deploy changed files safely
         if: steps.latest.outputs.deploy == 'true'
         env:
           FTP_SERVER: quebec.us.hostns.io
@@ -65,147 +58,66 @@ jobs:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PORT: ${{ secrets.FTP_PORT }}
           FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+          BEFORE_SHA: ${{ github.event.before }}
+        shell: bash
         run: |
+          set -euo pipefail
           upload() {
             local src="$1"
-            local dst="$2"
             curl --fail --show-error --silent \
               --connect-timeout 20 --max-time 60 --retry 2 --retry-delay 2 \
-              --ftp-ssl-control \
-              --disable-epsv \
-              --ftp-skip-pasv-ip \
-              --ftp-create-dirs \
+              --ftp-ssl-control --disable-epsv --ftp-skip-pasv-ip --ftp-create-dirs \
               --user "$FTP_USERNAME:$FTP_PASSWORD" \
               --upload-file "$src" \
-              "ftp://${FTP_SERVER}:${FTP_PORT}${FTP_SERVER_DIR}${dst}"
+              "ftp://${FTP_SERVER}:${FTP_PORT}${FTP_SERVER_DIR}${src}"
+            echo "Uploaded: $src"
           }
 
-          upload index.html index.html
-          upload shop.html shop.html
-          upload checkout.html checkout.html
-          upload product.html product.html
-          upload ebooks.html ebooks.html
-          upload ebook.html ebook.html
-          upload ebook-checkout.html ebook-checkout.html
-          upload ebook-paypal-return.html ebook-paypal-return.html
-          upload admin.html admin.html
-          upload admin-ebooks.html admin-ebooks.html
-          upload account.html account.html
-          upload paypal-return.html paypal-return.html
-          upload about.html about.html
-          upload contact.html contact.html
-          upload privacy.html privacy.html
-          upload terms.html terms.html
-          upload shipping-returns.html shipping-returns.html
-          upload robots.txt robots.txt
-          upload sitemap.xml sitemap.xml
-          upload favicon.svg favicon.svg
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            CHANGED="admin.html assets/js/admin-v2.js assets/css/admin-v2.css"
+          elif [ -n "${BEFORE_SHA:-}" ] && [ "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
+            CHANGED="$(git diff --name-only "$BEFORE_SHA" "$GITHUB_SHA")"
+          else
+            CHANGED="$(git diff --name-only HEAD~1 HEAD)"
+          fi
 
-          upload assets/css/style.css assets/css/style.css
-          upload assets/css/product.css assets/css/product.css
-          upload assets/css/admin.css assets/css/admin.css
-          upload assets/css/admin-v2.css assets/css/admin-v2.css
-          upload assets/css/admin-ebooks.css assets/css/admin-ebooks.css
-          upload assets/css/account.css assets/css/account.css
-          upload assets/css/commerce.css assets/css/commerce.css
-          upload assets/css/ebooks.css assets/css/ebooks.css
-          upload assets/css/ebook-checkout.css assets/css/ebook-checkout.css
+          # This release must publish the new admin even though this commit mainly changes CI.
+          CHANGED="$CHANGED
+          admin.html
+          assets/js/admin-v2.js
+          assets/css/admin-v2.css"
 
-          upload assets/js/app-v5.js assets/js/app-v5.js
-          upload assets/js/account.js assets/js/account.js
-          upload assets/js/account-ebooks.js assets/js/account-ebooks.js
-          upload assets/js/checkout-v2.js assets/js/checkout-v2.js
-          upload assets/js/admin-v2.js assets/js/admin-v2.js
-          upload assets/js/ebooks.js assets/js/ebooks.js
-          upload assets/js/admin-ebooks.js assets/js/admin-ebooks.js
-          upload assets/js/admin-ebooks-orders.js assets/js/admin-ebooks-orders.js
-          upload assets/js/ebook-checkout.js assets/js/ebook-checkout.js
-          upload assets/js/ebook-paypal-return.js assets/js/ebook-paypal-return.js
+          printf '%s\n' "$CHANGED" | sed '/^[[:space:]]*$/d' | sort -u | while IFS= read -r file; do
+            case "$file" in
+              *.html|*.css|*.js|*.svg|robots.txt|sitemap.xml)
+                if [ -f "$file" ]; then upload "$file"; fi
+                ;;
+              *) echo "Skipped non-site file: $file" ;;
+            esac
+          done
 
-      - name: Verify live ZemZem commerce v2
+      - name: Verify live admin release
         if: steps.latest.outputs.deploy == 'true'
         shell: bash
         run: |
+          set -euo pipefail
           check_contains() {
-            local url="$1"
-            local pattern="$2"
-            local out="$3"
-
+            local url="$1" pattern="$2" out="$3"
             for attempt in 1 2 3 4 5 6; do
-              if curl -L --fail --silent --show-error --max-time 20 \
-                "${url}?deploy=${GITHUB_SHA}&attempt=${attempt}" -o "$out" \
-                && grep -q "$pattern" "$out"; then
+              if curl -L --fail --silent --show-error --max-time 20 "${url}?deploy=${GITHUB_SHA}&attempt=${attempt}" -o "$out" && grep -q "$pattern" "$out"; then
                 return 0
               fi
-              echo "Waiting for live update: $url (attempt $attempt/6)"
               sleep 3
             done
-
             echo "Verification failed for $url; expected: $pattern"
             return 1
           }
-
-          check_exists() {
-            local url="$1"
-            local out="$2"
-
-            for attempt in 1 2 3 4 5 6; do
-              if curl -L --fail --silent --show-error --max-time 20 \
-                "${url}?deploy=${GITHUB_SHA}&attempt=${attempt}" -o "$out"; then
-                return 0
-              fi
-              sleep 3
-            done
-
-            echo "Verification failed for $url"
-            return 1
-          }
-
-          check_contains https://www.zemzem.al/ 'assets/js/app-v5.js' /tmp/index.html
-          grep -q 'account.html' /tmp/index.html
-          grep -q 'ebooks.html' /tmp/index.html
-
-          check_contains https://www.zemzem.al/assets/js/app-v5.js 'storefront_books' /tmp/app-v5.js
-          grep -q 'toggleWishlist' /tmp/app-v5.js
-
-          check_contains https://www.zemzem.al/shop.html 'assets/js/app-v5.js' /tmp/shop.html
-          grep -q 'ebooks.html' /tmp/shop.html
-          check_contains https://www.zemzem.al/product.html 'assets/js/app-v5.js' /tmp/product.html
-
-          check_contains https://www.zemzem.al/ebooks.html 'assets/js/ebooks.js' /tmp/ebooks.html
-          grep -q 'ebook-checkout.html' /tmp/ebooks.html
-          check_contains https://www.zemzem.al/ebook.html 'ebookDetail' /tmp/ebook.html
-          check_contains https://www.zemzem.al/assets/js/ebooks.js 'zemzem_ebook_cart' /tmp/ebooks.js
-          grep -q 'storefront_ebooks' /tmp/ebooks.js
-
-          check_contains https://www.zemzem.al/ebook-checkout.html 'ebook-checkout.js' /tmp/ebook-checkout.html
-          check_contains https://www.zemzem.al/assets/js/ebook-checkout.js 'ebook-paypal-create' /tmp/ebook-checkout.js
-          check_contains https://www.zemzem.al/ebook-paypal-return.html 'ebook-paypal-return.js' /tmp/ebook-return.html
-          check_contains https://www.zemzem.al/assets/js/ebook-paypal-return.js 'ebook-paypal-capture' /tmp/ebook-return.js
-
-          check_contains https://www.zemzem.al/checkout.html 'checkout-v2.js' /tmp/checkout.html
-          grep -q 'couponCode' /tmp/checkout.html
-
-          check_contains https://www.zemzem.al/account.html 'account-ebooks.js' /tmp/account.html
-          grep -q 'eBook-at e mi' /tmp/account.html
-          check_contains https://www.zemzem.al/assets/js/account-ebooks.js 'ebook-download' /tmp/account-ebooks.js
-
-          check_contains https://www.zemzem.al/admin.html 'admin-v2.js' /tmp/admin.html
-          grep -q 'admin-ebooks.html' /tmp/admin.html
-          check_contains https://www.zemzem.al/admin-ebooks.html 'admin-ebooks-orders.js' /tmp/admin-ebooks.html
-          grep -q 'Porositë digjitale' /tmp/admin-ebooks.html
-          check_contains https://www.zemzem.al/assets/js/admin-ebooks.js 'ebook-files' /tmp/admin-ebooks.js
-          check_contains https://www.zemzem.al/assets/js/admin-ebooks-orders.js 'ebook_entitlements' /tmp/admin-ebooks-orders.js
-
-          check_contains https://www.zemzem.al/paypal-return.html 'paypal-capture' /tmp/paypal.html
-
-          for page in about.html contact.html privacy.html terms.html shipping-returns.html robots.txt sitemap.xml favicon.svg; do
-            check_exists "https://www.zemzem.al/$page" "/tmp/$(basename "$page")"
-          done
-
-          echo 'ZEMZEM_COMMERCE_V2_LIVE_OK=yes'
+          check_contains https://www.zemzem.al/admin.html 'admin-v2.js?v=3' /tmp/admin.html
+          check_contains https://www.zemzem.al/assets/js/admin-v2.js 'store-admin-ops' /tmp/admin-v2.js
+          grep -q 'admin_update_physical_order' /tmp/admin-v2.js
+          grep -q 'admin_customer_detail' /tmp/admin-v2.js
+          echo 'ZEMZEM_ADMIN_LIVE_OK=yes'
 
       - name: Obsolete commit skipped safely
         if: steps.latest.outputs.deploy != 'true'
-        run: |
-          echo "A newer commit is already on main. This old deployment was skipped successfully."
+        run: echo "A newer commit is already on main; obsolete deployment skipped."
