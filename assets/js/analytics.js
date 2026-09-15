@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  const MEASUREMENT_ID='G-M3KXR19CVC';
+  const MEASUREMENT_ID='G-9TPM62WY0G';
   const CONSENT_KEY='zemzem_analytics_consent';
   const PURCHASE_KEY='zemzem_ga4_purchases';
   const PENDING_PREFIX='zemzem_ga4_checkout_';
