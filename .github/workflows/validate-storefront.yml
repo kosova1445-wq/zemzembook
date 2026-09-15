@@ -1,4 +1,4 @@
-name: Validate Physical Storefront
+name: Validate Storefront SEO
 
 on:
   push:
@@ -7,9 +7,16 @@ on:
       - 'assets/js/app-v5.js'
       - 'assets/js/checkout-v2.js'
       - 'assets/js/seo-product.js'
+      - 'assets/js/seo-ebook.js'
+      - 'index.html'
       - 'checkout.html'
       - 'product.html'
       - 'shop.html'
+      - 'ebooks.html'
+      - 'ebook.html'
+      - 'about.html'
+      - 'contact.html'
+      - 'shipping-returns.html'
       - 'robots.txt'
       - 'sitemap.xml'
       - '.github/workflows/validate-storefront.yml'
@@ -21,7 +28,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@v4
       - name: Check JavaScript syntax
@@ -29,10 +36,18 @@ jobs:
           node --check assets/js/app-v5.js
           node --check assets/js/checkout-v2.js
           node --check assets/js/seo-product.js
-      - name: Check public metadata
+          node --check assets/js/seo-ebook.js
+      - name: Check SEO metadata and sitemap
         shell: bash
         run: |
           set -euo pipefail
           grep -q 'Sitemap: https://www.zemzem.al/sitemap.xml' robots.txt
+          grep -q 'application/ld+json' index.html
+          grep -q 'application/ld+json' shop.html
+          grep -q 'application/ld+json' ebooks.html
+          grep -q 'seo-product.js?v=2' product.html
+          grep -q 'seo-ebook.js?v=1' ebook.html
+          grep -q 'product.html?id=' sitemap.xml
+          grep -q 'ebook.html?id=' sitemap.xml
           test -s sitemap.xml
-          echo 'ZEMZEM_STOREFRONT_VALIDATION_OK=yes'
+          echo 'ZEMZEM_STOREFRONT_SEO_VALIDATION_OK=yes'
