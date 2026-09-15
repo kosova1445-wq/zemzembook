@@ -1,28 +1,62 @@
-name: Validate ZemZem Admin
+name: Validate ZemZem Frontend
 
 on:
   push:
     branches: [main]
     paths:
       - 'assets/js/admin-v2.js'
+      - 'assets/js/admin-ebooks-orders.js'
+      - 'assets/js/account.js'
+      - 'assets/js/ebooks.js'
+      - 'assets/js/ebook-checkout.js'
       - 'admin.html'
+      - 'admin-ebooks.html'
+      - 'account.html'
+      - 'ebooks.html'
+      - 'ebook.html'
+      - 'ebook-checkout.html'
       - '.github/workflows/validate-admin.yml'
   workflow_dispatch:
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@v4
       - name: Check JavaScript syntax
-        run: node --check assets/js/admin-v2.js
-      - name: Check required admin hooks
+        run: |
+          node --check assets/js/admin-v2.js
+          node --check assets/js/admin-ebooks-orders.js
+          node --check assets/js/account.js
+          node --check assets/js/ebooks.js
+          node --check assets/js/ebook-checkout.js
+      - name: Check required admin and eBook hooks
         shell: bash
         run: |
-          grep -q "store-admin-ops" assets/js/admin-v2.js
-          grep -q "admin_update_physical_order" assets/js/admin-v2.js
-          grep -q "admin_customer_detail" assets/js/admin-v2.js
-          grep -q "Audit Log" assets/js/admin-v2.js
-          grep -q "admin-v2.js?v=3" admin.html
-          echo "ZEMZEM_ADMIN_VALIDATION_OK=yes"
+          set -euo pipefail
+          grep -q 'store-admin-ops' assets/js/admin-v2.js
+          grep -q 'admin_update_physical_order' assets/js/admin-v2.js
+          grep -q 'admin_customer_detail' assets/js/admin-v2.js
+          grep -q 'Audit Log' assets/js/admin-v2.js
+          grep -q 'refund_order' assets/js/admin-ebooks-orders.js
+          grep -q 'cleanup_generated_inactive' assets/js/admin-ebooks-orders.js
+          grep -q 'admin-ebooks-orders.js?v=2' admin-ebooks.html
+          grep -q 'ebook-mobile.css?v=1' admin-ebooks.html
+          grep -q 'ebook_entitlements' assets/js/account.js
+          grep -q 'dedupeEntitlements' assets/js/account.js
+          grep -q 'account.js?v=2' account.html
+          grep -q '#authPanel\[hidden\]' account.html
+          ! grep -q 'account-ebooks.js' account.html
+          grep -q 'entitlementUsable' assets/js/ebooks.js
+          grep -q 'OWNED_EBOOK_IDS' assets/js/ebooks.js
+          grep -q 'ebooks.js?v=3' ebooks.html
+          grep -q 'ebooks.js?v=3' ebook.html
+          grep -q 'cleanupOwnedCart' assets/js/ebook-checkout.js
+          grep -q 'EBOOK_ALREADY_OWNED' assets/js/ebook-checkout.js
+          grep -q 'ebook-checkout.js?v=2' ebook-checkout.html
+          grep -q 'ebook-mobile.css?v=1' account.html
+          grep -q 'ebook-mobile.css?v=1' ebooks.html
+          grep -q 'ebook-mobile.css?v=1' ebook.html
+          grep -q 'ebook-mobile.css?v=1' ebook-checkout.html
+          echo 'ZEMZEM_FRONTEND_VALIDATION_OK=yes'
