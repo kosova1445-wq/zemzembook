@@ -29,7 +29,6 @@ jobs:
             exit 0
           fi
 
-          # Wait briefly so a burst of edits can settle before touching production.
           sleep 20
           LATEST_SHA="$(git ls-remote origin refs/heads/main | cut -f1)"
 
@@ -85,7 +84,10 @@ jobs:
           upload shop.html shop.html
           upload checkout.html checkout.html
           upload product.html product.html
+          upload ebooks.html ebooks.html
+          upload ebook.html ebook.html
           upload admin.html admin.html
+          upload admin-ebooks.html admin-ebooks.html
           upload account.html account.html
           upload paypal-return.html paypal-return.html
           upload about.html about.html
@@ -101,13 +103,17 @@ jobs:
           upload assets/css/product.css assets/css/product.css
           upload assets/css/admin.css assets/css/admin.css
           upload assets/css/admin-v2.css assets/css/admin-v2.css
+          upload assets/css/admin-ebooks.css assets/css/admin-ebooks.css
           upload assets/css/account.css assets/css/account.css
           upload assets/css/commerce.css assets/css/commerce.css
+          upload assets/css/ebooks.css assets/css/ebooks.css
 
           upload assets/js/app-v5.js assets/js/app-v5.js
           upload assets/js/account.js assets/js/account.js
           upload assets/js/checkout-v2.js assets/js/checkout-v2.js
           upload assets/js/admin-v2.js assets/js/admin-v2.js
+          upload assets/js/ebooks.js assets/js/ebooks.js
+          upload assets/js/admin-ebooks.js assets/js/admin-ebooks.js
 
       - name: Verify live ZemZem commerce v2
         if: steps.latest.outputs.deploy == 'true'
@@ -150,12 +156,19 @@ jobs:
 
           check_contains https://www.zemzem.al/ 'assets/js/app-v5.js' /tmp/index.html
           grep -q 'account.html' /tmp/index.html
+          grep -q 'ebooks.html' /tmp/index.html
 
           check_contains https://www.zemzem.al/assets/js/app-v5.js 'storefront_books' /tmp/app-v5.js
           grep -q 'toggleWishlist' /tmp/app-v5.js
 
           check_contains https://www.zemzem.al/shop.html 'assets/js/app-v5.js' /tmp/shop.html
+          grep -q 'ebooks.html' /tmp/shop.html
           check_contains https://www.zemzem.al/product.html 'assets/js/app-v5.js' /tmp/product.html
+
+          check_contains https://www.zemzem.al/ebooks.html 'assets/js/ebooks.js' /tmp/ebooks.html
+          grep -q 'sektor i veçantë' /tmp/ebooks.html
+          check_contains https://www.zemzem.al/ebook.html 'ebookDetail' /tmp/ebook.html
+          check_contains https://www.zemzem.al/assets/js/ebooks.js 'storefront_ebooks' /tmp/ebooks.js
 
           check_contains https://www.zemzem.al/checkout.html 'checkout-v2.js' /tmp/checkout.html
           grep -q 'couponCode' /tmp/checkout.html
@@ -165,6 +178,9 @@ jobs:
 
           check_contains https://www.zemzem.al/admin.html 'admin-v2.js' /tmp/admin.html
           grep -q 'Kuponët' /tmp/admin.html
+          check_contains https://www.zemzem.al/admin-ebooks.html 'admin-ebooks.js' /tmp/admin-ebooks.html
+          grep -q 'Storage privat PDF / EPUB' /tmp/admin-ebooks.html
+          check_contains https://www.zemzem.al/assets/js/admin-ebooks.js 'ebook-files' /tmp/admin-ebooks.js
 
           check_contains https://www.zemzem.al/paypal-return.html 'paypal-capture' /tmp/paypal.html
 
