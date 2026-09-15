@@ -118,6 +118,7 @@ jobs:
           upload assets/js/admin-v2.js assets/js/admin-v2.js
           upload assets/js/ebooks.js assets/js/ebooks.js
           upload assets/js/admin-ebooks.js assets/js/admin-ebooks.js
+          upload assets/js/admin-ebooks-orders.js assets/js/admin-ebooks-orders.js
           upload assets/js/ebook-checkout.js assets/js/ebook-checkout.js
           upload assets/js/ebook-paypal-return.js assets/js/ebook-paypal-return.js
 
@@ -191,9 +192,10 @@ jobs:
 
           check_contains https://www.zemzem.al/admin.html 'admin-v2.js' /tmp/admin.html
           grep -q 'admin-ebooks.html' /tmp/admin.html
-          check_contains https://www.zemzem.al/admin-ebooks.html 'admin-ebooks.js' /tmp/admin-ebooks.html
-          grep -q 'Storage privat PDF / EPUB' /tmp/admin-ebooks.html
+          check_contains https://www.zemzem.al/admin-ebooks.html 'admin-ebooks-orders.js' /tmp/admin-ebooks.html
+          grep -q 'Porositë digjitale' /tmp/admin-ebooks.html
           check_contains https://www.zemzem.al/assets/js/admin-ebooks.js 'ebook-files' /tmp/admin-ebooks.js
+          check_contains https://www.zemzem.al/assets/js/admin-ebooks-orders.js 'ebook_entitlements' /tmp/admin-ebooks-orders.js
 
           check_contains https://www.zemzem.al/paypal-return.html 'paypal-capture' /tmp/paypal.html
 
