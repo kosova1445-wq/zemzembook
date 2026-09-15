@@ -110,6 +110,7 @@ jobs:
 
           upload assets/js/app-v5.js assets/js/app-v5.js
           upload assets/js/account.js assets/js/account.js
+          upload assets/js/account-ebooks.js assets/js/account-ebooks.js
           upload assets/js/checkout-v2.js assets/js/checkout-v2.js
           upload assets/js/admin-v2.js assets/js/admin-v2.js
           upload assets/js/ebooks.js assets/js/ebooks.js
@@ -173,11 +174,12 @@ jobs:
           check_contains https://www.zemzem.al/checkout.html 'checkout-v2.js' /tmp/checkout.html
           grep -q 'couponCode' /tmp/checkout.html
 
-          check_contains https://www.zemzem.al/account.html 'account.js' /tmp/account.html
-          grep -q 'Porositë e mia' /tmp/account.html
+          check_contains https://www.zemzem.al/account.html 'account-ebooks.js' /tmp/account.html
+          grep -q 'eBook-at e mi' /tmp/account.html
+          check_contains https://www.zemzem.al/assets/js/account-ebooks.js 'ebook-download' /tmp/account-ebooks.js
 
           check_contains https://www.zemzem.al/admin.html 'admin-v2.js' /tmp/admin.html
-          grep -q 'Kuponët' /tmp/admin.html
+          grep -q 'admin-ebooks.html' /tmp/admin.html
           check_contains https://www.zemzem.al/admin-ebooks.html 'admin-ebooks.js' /tmp/admin-ebooks.html
           grep -q 'Storage privat PDF / EPUB' /tmp/admin-ebooks.html
           check_contains https://www.zemzem.al/assets/js/admin-ebooks.js 'ebook-files' /tmp/admin-ebooks.js
