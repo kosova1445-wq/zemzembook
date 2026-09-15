@@ -163,7 +163,7 @@ jobs:
           }
 
           fetch_live https://www.zemzem.al/assets/js/analytics.js /tmp/analytics.js
-          grep -Fq 'G-M3KXR19CVC' /tmp/analytics.js
+          grep -Fq 'G-9TPM62WY0G' /tmp/analytics.js
           grep -Fq "event('purchase'" /tmp/analytics.js
           grep -Fq "analytics_storage" /tmp/analytics.js
 
