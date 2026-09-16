@@ -39,13 +39,22 @@ jobs:
             fi
           done
 
+          HOME_LABELS_JS='<script src="assets/js/home-labels.js?v=1"></script>'
+          if [ -f index.html ] && ! grep -Fq 'assets/js/home-labels.js' index.html; then
+            sed -i "s#</body>#${HOME_LABELS_JS}</body>#" index.html
+          fi
+
           ADMIN_BRAND_CSS='<link rel="stylesheet" href="assets/css/admin-branding.css?v=1">'
           ADMIN_BRAND_JS='<script src="assets/js/admin-branding.js?v=1"></script>'
+          ADMIN_HOME_LABELS_JS='<script src="assets/js/admin-home-labels.js?v=1"></script>'
           if [ -f admin.html ] && ! grep -Fq 'assets/css/admin-branding.css' admin.html; then
             sed -i "s#</head>#${ADMIN_BRAND_CSS}</head>#" admin.html
           fi
           if [ -f admin.html ] && ! grep -Fq 'assets/js/admin-branding.js' admin.html; then
             sed -i "s#</body>#${ADMIN_BRAND_JS}</body>#" admin.html
+          fi
+          if [ -f admin.html ] && ! grep -Fq 'assets/js/admin-home-labels.js' admin.html; then
+            sed -i "s#</body>#${ADMIN_HOME_LABELS_JS}</body>#" admin.html
           fi
 
       - name: Upload branded public release
@@ -74,6 +83,8 @@ jobs:
             assets/js/branding.js \
             assets/css/admin-branding.css \
             assets/js/admin-branding.js \
+            assets/js/home-labels.js \
+            assets/js/admin-home-labels.js \
             assets/brand/zemzem-logo.svg \
             assets/brand/zemzem-watermark.svg \
             favicon.svg \
@@ -101,12 +112,21 @@ jobs:
           grep -Fq 'Logo & Brand' /tmp/admin-branding.js
           grep -Fq 'site-branding' /tmp/admin-branding.js
 
+          curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/js/home-labels.js?brand=${GITHUB_RUN_ID}" -o /tmp/home-labels.js
+          grep -Fq 'ZemZem Select' /tmp/home-labels.js
+          grep -Fq 'site_content?key=eq.home_labels' /tmp/home-labels.js
+
+          curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/js/admin-home-labels.js?brand=${GITHUB_RUN_ID}" -o /tmp/admin-home-labels.js
+          grep -Fq 'Tekstet e dizajnit të Ballinës' /tmp/admin-home-labels.js
+          grep -Fq 'Ruaj tekstet e Ballinës' /tmp/admin-home-labels.js
+
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/brand/zemzem-logo.svg?brand=${GITHUB_RUN_ID}" -o /tmp/logo.svg
           grep -Fq 'Shtëpi botuese dhe shpërndarëse' /tmp/logo.svg
 
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/?brand=${GITHUB_RUN_ID}" -o /tmp/index.html
           grep -Fq 'assets/css/brand.css?v=2' /tmp/index.html
           grep -Fq 'assets/js/branding.js?v=1' /tmp/index.html
+          grep -Fq 'assets/js/home-labels.js?v=1' /tmp/index.html
 
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/product.html?brand=${GITHUB_RUN_ID}" -o /tmp/product.html
           grep -Fq 'assets/css/brand.css?v=2' /tmp/product.html
@@ -119,5 +139,6 @@ jobs:
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/admin.html?brand=${GITHUB_RUN_ID}" -o /tmp/admin.html
           grep -Fq 'assets/css/admin-branding.css?v=1' /tmp/admin.html
           grep -Fq 'assets/js/admin-branding.js?v=1' /tmp/admin.html
+          grep -Fq 'assets/js/admin-home-labels.js?v=1' /tmp/admin.html
 
-          echo 'ZEMZEM_ADMIN_BRANDING_LIVE_OK=yes'
+          echo 'ZEMZEM_ADMIN_HOME_LABELS_LIVE_OK=yes'
