@@ -1,4 +1,4 @@
-// ZemZem homepage featured books manager v1
+// ZemZem homepage featured books manager v2
 (()=>{
   const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
