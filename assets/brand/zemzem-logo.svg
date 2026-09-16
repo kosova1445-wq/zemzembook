@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 170" role="img" aria-labelledby="title desc">
+  <title id="title">ZemZem</title>
+  <desc id="desc">Shtëpi botuese dhe shpërndarëse</desc>
+  <g fill="#159DA8">
+    <path d="M28 30h21v79h67c17 0 29 7 36 20H28V30Z"/>
+    <path d="M164 30h21v99h-124c7-13 19-20 36-20h67V30Z"/>
+    <path d="M61 17h55c20 0 34 13 34 33v58c-8-10-19-15-34-15H61V17Z"/>
+    <path d="M153 50c0-20 14-33 34-33h55v76h-55c-15 0-26 5-34 15V50Z"/>
+  </g>
+  <text x="270" y="82" fill="#159DA8" font-family="Arial, Helvetica, sans-serif" font-size="55" font-weight="400" letter-spacing="5">ZEMZEM</text>
+  <text x="273" y="116" fill="#159DA8" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="400">Shtëpi botuese dhe shpërndarëse</text>
+</svg>
