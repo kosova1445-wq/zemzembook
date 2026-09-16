@@ -1,0 +1,94 @@
+/* ZemZem Home typography restore — keeps the eBukz-inspired layout, restores readable standard sizes. */
+body.zemzem-bookstore-v2{font-size:15px!important;line-height:1.55}
+
+/* Header and navigation */
+.zemzem-bookstore-v2 .topbar{font-size:13px!important}
+.zemzem-bookstore-v2 .header .search select{font-size:13px!important}
+.zemzem-bookstore-v2 .header .search input{font-size:13px!important}
+.zemzem-bookstore-v2 .nav-row>a{font-size:14px!important}
+.zemzem-bookstore-v2 .nav .support{font-size:14px!important}
+
+/* Hero */
+.zemzem-bookstore-v2 .home-slide-copy .eyebrow{font-size:12px!important}
+.zemzem-bookstore-v2 .home-slide-copy p{font-size:15px!important;line-height:1.7!important}
+.zemzem-bookstore-v2 .home-slide-meta span{font-size:11px!important}
+.zemzem-bookstore-v2 .btn{font-size:13px!important}
+.zemzem-bookstore-v2 .home-slide-price{font-size:21px!important}
+
+/* Service / trust cards */
+.zemzem-bookstore-v2 .feature strong{font-size:13px!important}
+.zemzem-bookstore-v2 .feature span{font-size:12px!important;line-height:1.45!important}
+
+/* Section titles and descriptions */
+.zemzem-bookstore-v2 .section-head h2{font-size:30px!important;line-height:1.12!important}
+.zemzem-bookstore-v2 .section-head p{font-size:14px!important;line-height:1.55!important}
+.zemzem-bookstore-v2 .section-kicker{font-size:10px!important}
+.zemzem-bookstore-v2 .link-more{font-size:12px!important;padding:8px 14px!important}
+.zemzem-bookstore-v2 .new-badge{font-size:11px!important}
+
+/* Book cards — same visual layout, readable text */
+.zemzem-bookstore-v2 .book-meta h3{font-size:14px!important;line-height:1.38!important;margin-top:7px!important}
+.zemzem-bookstore-v2 .book-meta .author,
+.zemzem-bookstore-v2 .author{font-size:12px!important;line-height:1.4!important}
+.zemzem-bookstore-v2 .rating{font-size:11px!important}
+.zemzem-bookstore-v2 .price,
+.zemzem-bookstore-v2 .book-price{font-size:14px!important}
+.zemzem-bookstore-v2 .old{font-size:11px!important}
+.zemzem-bookstore-v2 .sale-tag{font-size:9px!important;padding:5px 7px!important}
+.zemzem-bookstore-v2 .wow-card-tool{font-size:13px!important}
+
+/* Why ZemZem */
+.zemzem-bookstore-v2 .why-card h3{font-size:15px!important}
+.zemzem-bookstore-v2 .why-card p{font-size:13px!important;line-height:1.6!important}
+
+/* Promotional/editorial blocks */
+.zemzem-bookstore-v2 .home-promo-banner h3{font-size:30px!important}
+.zemzem-bookstore-v2 .home-promo-banner p{font-size:14px!important;line-height:1.6!important}
+.zemzem-bookstore-v2 .promo h3{font-size:24px!important}
+.zemzem-bookstore-v2 .promo p{font-size:14px!important;line-height:1.55!important}
+.zemzem-bookstore-v2 .wow-featured-copy p{font-size:14px!important;line-height:1.7!important}
+.zemzem-bookstore-v2 .wow-editorial-copy p{font-size:14px!important;line-height:1.7!important}
+.zemzem-bookstore-v2 .wow-editorial-quote span{font-size:11px!important}
+
+/* Authors */
+.zemzem-bookstore-v2 .author-card strong{font-size:12px!important}
+.zemzem-bookstore-v2 .author-card small{font-size:11px!important}
+
+/* Blog */
+.zemzem-bookstore-v2 .home-blog-date{font-size:11px!important}
+.zemzem-bookstore-v2 .home-blog-body h3{font-size:17px!important;line-height:1.38!important}
+.zemzem-bookstore-v2 .home-blog-body p{font-size:13px!important;line-height:1.6!important}
+.zemzem-bookstore-v2 .home-blog-more{font-size:12px!important}
+
+/* Newsletter / footer */
+.zemzem-bookstore-v2 .zv2-newsletter h3{font-size:34px!important}
+.zemzem-bookstore-v2 .zv2-newsletter p{font-size:14px!important;line-height:1.55!important}
+.zemzem-bookstore-v2 .zv2-newsletter-form input,
+.zemzem-bookstore-v2 .zv2-newsletter-form button{font-size:13px!important}
+.zemzem-bookstore-v2 .footer p,
+.zemzem-bookstore-v2 .footer a{font-size:14px!important;line-height:1.7!important}
+.zemzem-bookstore-v2 .footer h4{font-size:16px!important}
+.zemzem-bookstore-v2 .copyright{font-size:12px!important}
+.zemzem-bookstore-v2 .footer-trust span{font-size:11px!important}
+.zemzem-bookstore-v2 .footer-cta strong{font-size:14px!important}
+.zemzem-bookstore-v2 .footer-cta span{font-size:12px!important}
+
+/* Quick view / mega menu */
+.zemzem-bookstore-v2 .mega-title{font-size:20px!important}
+.zemzem-bookstore-v2 .mega-cat-list a{font-size:13px!important}
+.zemzem-bookstore-v2 .mega-cat-list small{font-size:11px!important}
+.zemzem-bookstore-v2 .mega-book strong{font-size:12px!important}
+.zemzem-bookstore-v2 .mega-book span{font-size:11px!important}
+.zemzem-bookstore-v2 .mega-promo p{font-size:13px!important}
+.zemzem-bookstore-v2 .wow-quickview-author{font-size:13px!important}
+.zemzem-bookstore-v2 .wow-quickview-desc{font-size:14px!important;line-height:1.7!important}
+.zemzem-bookstore-v2 .wow-quickview-facts span{font-size:11px!important}
+
+/* Category design intentionally remains controlled by home-category-preserve.css. */
+
+@media(max-width:700px){
+  .zemzem-bookstore-v2 .nav-row>a{font-size:13px!important}
+  .zemzem-bookstore-v2 .home-slide-copy p{font-size:14px!important}
+  .zemzem-bookstore-v2 .book-meta h3{font-size:14px!important}
+  .zemzem-bookstore-v2 .section-head p{font-size:13px!important}
+}
