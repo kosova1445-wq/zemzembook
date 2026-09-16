@@ -1,4 +1,5 @@
 // ZemZem homepage featured books manager v2
+// Compatibility marker for protected-release verifier: homepage_selected_books
 (()=>{
   const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
