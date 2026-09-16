@@ -1,0 +1,47 @@
+(()=>{
+  'use strict';
+  const SB_URL='https://ysvtrhizgcioyycwlkrk.supabase.co';
+  const SB_KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
+  const defaults={
+    logo_url:'assets/brand/zemzem-logo.svg',
+    watermark_url:'assets/brand/zemzem-watermark.svg',
+    logo_width:206,logo_height:58,
+    logo_mobile_width:164,logo_mobile_height:50,
+    footer_logo_width:206,footer_logo_height:58,
+    watermark_enabled:true,watermark_size:34,watermark_opacity:20,
+    watermark_position:'bottom-right'
+  };
+  const clamp=(v,min,max,fallback)=>{const n=Number(v);return Number.isFinite(n)?Math.min(max,Math.max(min,n)):fallback};
+  const safeUrl=v=>{const s=String(v||'').trim();if(!s)return'';if(/^https:\/\//i.test(s)||/^assets\//i.test(s)||/^\.\.?\//.test(s))return s;return''};
+  const cssUrl=v=>`url("${String(v||'').replace(/["\\\n\r]/g,'')}")`;
+  function apply(raw={}){
+    const c={...defaults,...raw};
+    const root=document.documentElement.style;
+    const logo=safeUrl(c.logo_url)||defaults.logo_url;
+    const wm=safeUrl(c.watermark_url)||logo||defaults.watermark_url;
+    root.setProperty('--zemzem-logo-bg',cssUrl(logo));
+    root.setProperty('--zemzem-watermark-bg',cssUrl(wm));
+    root.setProperty('--zemzem-logo-width',clamp(c.logo_width,120,360,206)+'px');
+    root.setProperty('--zemzem-logo-height',clamp(c.logo_height,40,140,58)+'px');
+    root.setProperty('--zemzem-mobile-logo-width',clamp(c.logo_mobile_width,110,280,164)+'px');
+    root.setProperty('--zemzem-mobile-logo-height',clamp(c.logo_mobile_height,36,110,50)+'px');
+    root.setProperty('--zemzem-footer-logo-width',clamp(c.footer_logo_width,120,360,206)+'px');
+    root.setProperty('--zemzem-footer-logo-height',clamp(c.footer_logo_height,40,140,58)+'px');
+    root.setProperty('--zemzem-watermark-size',clamp(c.watermark_size,10,70,34)+'%');
+    root.setProperty('--zemzem-watermark-opacity',(clamp(c.watermark_opacity,0,70,20)/100).toFixed(2));
+    root.setProperty('--zemzem-watermark-display',c.watermark_enabled===false?'none':'block');
+    const pos=['bottom-right','bottom-left','top-right','top-left','center'].includes(c.watermark_position)?c.watermark_position:'bottom-right';
+    document.documentElement.dataset.zemzemWatermarkPosition=pos;
+    window.ZemZemBranding=c;
+    window.dispatchEvent(new CustomEvent('zemzem:branding-ready',{detail:c}));
+  }
+  async function load(){
+    try{
+      const r=await fetch(`${SB_URL}/rest/v1/site_content?key=eq.branding&select=content&limit=1`,{headers:{apikey:SB_KEY,Accept:'application/json'},cache:'no-store'});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      const rows=await r.json();
+      apply(rows?.[0]?.content||defaults);
+    }catch(e){console.warn('ZemZem branding fallback',e);apply(defaults)}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
+})();
