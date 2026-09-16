@@ -1,4 +1,5 @@
 (()=>{
+  'use strict';
   const SB_URL='https://ysvtrhizgcioyycwlkrk.supabase.co';
   const SB_KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
   const defaults={
@@ -14,10 +15,13 @@
   };
   let labels={...defaults};
   const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
-  function setText(sel,value,root=document){const el=q(sel,root);if(el&&value!==undefined&&value!==null)el.textContent=String(value)}
+  function setText(sel,value,root=document){
+    const el=q(sel,root);if(!el||value===undefined||value===null)return;
+    const next=String(value);if(el.textContent!==next)el.textContent=next;
+  }
   function apply(){
     const hero=[labels.hero_label_1,labels.hero_label_2,labels.hero_label_3];
-    qa('.home-slide .wow-hero-label').forEach((el,i)=>{if(hero[i])el.textContent=hero[i]});
+    qa('.home-slide .wow-hero-label').forEach((el,i)=>{const next=hero[i];if(next&&el.textContent!==String(next))el.textContent=String(next)});
     const panels=qa('.mega-menu .mega-panel');
     if(panels[0]){setText('.mega-eyebrow',labels.mega_categories_kicker,panels[0]);setText('.mega-title',labels.mega_categories_title,panels[0])}
     if(panels[1]){setText('.mega-eyebrow',labels.mega_picks_kicker,panels[1]);setText('.mega-title',labels.mega_picks_title,panels[1])}
@@ -31,10 +35,10 @@
     try{
       const r=await fetch(`${SB_URL}/rest/v1/site_content?key=eq.home_labels&select=content&limit=1`,{headers:{apikey:SB_KEY},cache:'no-store'});
       if(r.ok){const rows=await r.json();labels={...defaults,...(rows?.[0]?.content||{})}}
-    }catch{}
+    }catch(e){console.warn('ZemZem home labels fallback',e)}
     apply();
-    let n=0;const t=setInterval(()=>{apply();if(++n>12)clearInterval(t)},500);
-    if('MutationObserver'in window){const mo=new MutationObserver(()=>apply());mo.observe(document.body,{childList:true,subtree:true});setTimeout(()=>mo.disconnect(),12000)}
+    let n=0;
+    const t=setInterval(()=>{apply();if(++n>=12)clearInterval(t)},500);
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});else load();
 })();
