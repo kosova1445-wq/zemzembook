@@ -1,11 +1,11 @@
 (()=>{
   const q=s=>document.querySelector(s);
   const oldReset=window.resetBookForm;
-  const oldSave=window.saveBook;
   const normIsbn=v=>String(v||'').toUpperCase().replace(/[^0-9X]/g,'');
+  const makeSlug=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 
   async function bookKeys(){
-    try{return await window.api('books?select=id,sku,slug,isbn&order=created_at.asc&limit=2000')||[]}catch{return[]}
+    try{return await window.api('books?select=id,sku,slug,isbn,title&order=created_at.asc&limit=2000')||[]}catch{return[]}
   }
   function nextSku(rows=[]){
     let max=0;
@@ -16,7 +16,7 @@
     return sku;
   }
   function uniqueSlug(base,rows=[],currentId=''){
-    const root=(window.slugify?window.slugify(base):String(base||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))||'liber';
+    const root=makeSlug(base)||'liber';
     const used=new Set(rows.filter(r=>String(r.id)!==String(currentId||'')).map(r=>String(r.slug||'').trim()));
     if(!used.has(root))return root;
     let n=2;while(used.has(`${root}-${n}`))n++;
@@ -35,7 +35,7 @@
     sku.insertAdjacentHTML('afterend','<div id="bookSkuHelp" class="muted-small" style="margin-top:5px">SKU gjenerohet automatikisht. Mund ta ndryshosh manualisht. <button type="button" class="table-action small-btn" id="regenBookSku" style="margin-left:6px">Gjenero SKU</button></div>');
     sku.addEventListener('blur',()=>sku.value=sku.value.trim().toUpperCase());
     q('#regenBookSku').onclick=async()=>{const rows=await bookKeys();sku.value=nextSku(rows)};
-    const isbn=q('#bookIsbn');if(isbn)isbn.insertAdjacentHTML('afterend','<div class="muted-small" style="margin-top:5px">ISBN duhet të jetë unik. Nëse libri nuk ka ISBN, lëre bosh.</div>');
+    const isbn=q('#bookIsbn');if(isbn&&!q('#bookIsbnHelp'))isbn.insertAdjacentHTML('afterend','<div id="bookIsbnHelp" class="muted-small" style="margin-top:5px">ISBN duhet të jetë unik. Nëse libri nuk ka ISBN, lëre bosh.</div>');
   }
   async function fillNewSku(){
     const sku=q('#bookSku');if(!sku||q('#bookId')?.value)return;
@@ -64,7 +64,7 @@
     const skuDup=currentRows.find(r=>String(r.sku||'').trim().toUpperCase()===sku);
     if(skuDup){
       if(!id){sku=nextSku(rows);q('#bookSku').value=sku}
-      else{window.toast?.('Ky SKU përdoret nga një libër tjetër.','error');q('#bookSku')?.focus();return}
+      else{window.toast?.(`Ky SKU përdoret nga “${skuDup.title||'një libër tjetër'}”.`,'error');q('#bookSku')?.focus();return}
     }
     slug=uniqueSlug(slug||title,rows,id);
     q('#bookSku').value=sku;
