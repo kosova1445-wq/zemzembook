@@ -1,19 +1,27 @@
 /* Official ZemZem branding layer — visual only. */
-:root{--zemzem-teal:#159da8;--zemzem-teal-dark:#0d7f88}
+:root{
+  --zemzem-teal:#159da8;--zemzem-teal-dark:#0d7f88;
+  --zemzem-logo-bg:url('../brand/zemzem-logo.svg');
+  --zemzem-watermark-bg:url('../brand/zemzem-watermark.svg');
+  --zemzem-logo-width:206px;--zemzem-logo-height:58px;
+  --zemzem-mobile-logo-width:164px;--zemzem-mobile-logo-height:50px;
+  --zemzem-footer-logo-width:206px;--zemzem-footer-logo-height:58px;
+  --zemzem-watermark-size:34%;--zemzem-watermark-opacity:.20;--zemzem-watermark-display:block
+}
 
-/* Official logo in every public header/footer. The original text stays in the DOM for accessibility. */
+/* Official logo in every public header/footer. Values can be changed from Admin → Logo & Brand. */
 .brand{
   position:relative!important;
-  width:206px!important;
-  min-width:206px!important;
-  height:58px!important;
+  width:var(--zemzem-logo-width)!important;
+  min-width:var(--zemzem-logo-width)!important;
+  height:var(--zemzem-logo-height)!important;
   padding:0!important;
   border-radius:14px!important;
   background-color:#fff!important;
-  background-image:url('../brand/zemzem-logo.svg')!important;
+  background-image:var(--zemzem-logo-bg)!important;
   background-repeat:no-repeat!important;
   background-position:center!important;
-  background-size:190px auto!important;
+  background-size:contain!important;
   box-shadow:0 7px 18px rgba(28,56,64,.10)!important;
   overflow:hidden!important;
 }
@@ -21,9 +29,14 @@
   position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;
   overflow:hidden!important;clip:rect(0,0,0,0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important
 }
-.footer .brand{background-color:rgba(255,255,255,.97)!important;box-shadow:none!important;margin-bottom:14px!important}
+.footer .brand{
+  width:var(--zemzem-footer-logo-width)!important;
+  min-width:var(--zemzem-footer-logo-width)!important;
+  height:var(--zemzem-footer-logo-height)!important;
+  background-color:rgba(255,255,255,.97)!important;box-shadow:none!important;margin-bottom:14px!important
+}
 
-/* Automatic watermark for all physical and digital book covers. This also applies to future books from Admin. */
+/* Automatic watermark for every physical/digital cover, including future Admin additions. */
 .book-card>a:first-of-type,
 .product-cover-wrap,
 .ebook-cover-wrap,
@@ -46,27 +59,54 @@
 .wow-stage-card::after,
 .wow-editorial-book::after{
   content:"";
+  display:var(--zemzem-watermark-display)!important;
   position:absolute;
-  right:8px;
-  bottom:8px;
-  width:34%;
-  max-width:132px;
-  min-width:54px;
-  aspect-ratio:460/150;
-  background:url('../brand/zemzem-watermark.svg') center/contain no-repeat;
-  opacity:.20;
+  right:8px;bottom:8px;left:auto;top:auto;
+  width:var(--zemzem-watermark-size);
+  aspect-ratio:1/1;
+  background:var(--zemzem-watermark-bg) center/contain no-repeat;
+  opacity:var(--zemzem-watermark-opacity);
   filter:drop-shadow(0 1px 1px rgba(0,0,0,.22));
   pointer-events:none;
   z-index:6;
+  transform:none
 }
-.product-cover-wrap::after,.ebook-detail-cover::after{right:16px;bottom:16px;width:38%;max-width:180px;opacity:.22}
-.home-slide-cover::after,.wow-stage-main::after{opacity:.16}
-.wow-stage-card::after{width:52%;min-width:40px;right:4px;bottom:4px;opacity:.17}
+html[data-zemzem-watermark-position="bottom-left"] .book-card>a:first-of-type::after,
+html[data-zemzem-watermark-position="bottom-left"] .product-cover-wrap::after,
+html[data-zemzem-watermark-position="bottom-left"] .ebook-cover-wrap::after,
+html[data-zemzem-watermark-position="bottom-left"] .ebook-detail-cover::after,
+html[data-zemzem-watermark-position="bottom-left"] .home-slide-cover::after,
+html[data-zemzem-watermark-position="bottom-left"] .wow-stage-main::after,
+html[data-zemzem-watermark-position="bottom-left"] .wow-stage-card::after,
+html[data-zemzem-watermark-position="bottom-left"] .wow-editorial-book::after{left:8px;right:auto;bottom:8px;top:auto}
+html[data-zemzem-watermark-position="top-right"] .book-card>a:first-of-type::after,
+html[data-zemzem-watermark-position="top-right"] .product-cover-wrap::after,
+html[data-zemzem-watermark-position="top-right"] .ebook-cover-wrap::after,
+html[data-zemzem-watermark-position="top-right"] .ebook-detail-cover::after,
+html[data-zemzem-watermark-position="top-right"] .home-slide-cover::after,
+html[data-zemzem-watermark-position="top-right"] .wow-stage-main::after,
+html[data-zemzem-watermark-position="top-right"] .wow-stage-card::after,
+html[data-zemzem-watermark-position="top-right"] .wow-editorial-book::after{right:8px;left:auto;top:8px;bottom:auto}
+html[data-zemzem-watermark-position="top-left"] .book-card>a:first-of-type::after,
+html[data-zemzem-watermark-position="top-left"] .product-cover-wrap::after,
+html[data-zemzem-watermark-position="top-left"] .ebook-cover-wrap::after,
+html[data-zemzem-watermark-position="top-left"] .ebook-detail-cover::after,
+html[data-zemzem-watermark-position="top-left"] .home-slide-cover::after,
+html[data-zemzem-watermark-position="top-left"] .wow-stage-main::after,
+html[data-zemzem-watermark-position="top-left"] .wow-stage-card::after,
+html[data-zemzem-watermark-position="top-left"] .wow-editorial-book::after{left:8px;right:auto;top:8px;bottom:auto}
+html[data-zemzem-watermark-position="center"] .book-card>a:first-of-type::after,
+html[data-zemzem-watermark-position="center"] .product-cover-wrap::after,
+html[data-zemzem-watermark-position="center"] .ebook-cover-wrap::after,
+html[data-zemzem-watermark-position="center"] .ebook-detail-cover::after,
+html[data-zemzem-watermark-position="center"] .home-slide-cover::after,
+html[data-zemzem-watermark-position="center"] .wow-stage-main::after,
+html[data-zemzem-watermark-position="center"] .wow-stage-card::after,
+html[data-zemzem-watermark-position="center"] .wow-editorial-book::after{left:50%;right:auto;top:50%;bottom:auto;transform:translate(-50%,-50%)}
 
 /* Keep cover overlays from affecting interaction. */
 .book-card>a:first-of-type img,.ebook-cover-wrap img,.ebook-detail-cover img,.product-cover-wrap img{position:relative;z-index:1}
 
 @media(max-width:720px){
-  .brand{width:164px!important;min-width:164px!important;height:50px!important;background-size:152px auto!important;border-radius:12px!important}
-  .book-card>a:first-of-type::after,.ebook-cover-wrap::after{width:40%;right:6px;bottom:6px}
+  .brand{width:var(--zemzem-mobile-logo-width)!important;min-width:var(--zemzem-mobile-logo-width)!important;height:var(--zemzem-mobile-logo-height)!important;border-radius:12px!important}
 }
