@@ -1,0 +1,81 @@
+(()=>{
+  const q=s=>document.querySelector(s);
+  const qa=s=>[...document.querySelectorAll(s)];
+  const KEY='homepage_selected_books';
+  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  let allBooks=[],selectedIds=[],loaded=false,exists=false;
+
+  function injectStyle(){
+    if(q('#homeBooksAdminStyle'))return;
+    document.head.insertAdjacentHTML('beforeend',`<style id="homeBooksAdminStyle">
+      .home-books-admin{display:grid;gap:13px}.home-books-toolbar{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:end}.home-books-picker-wrap{display:grid;gap:6px}.home-books-picker-wrap label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#657686}.home-books-picker-wrap select{width:100%;border:1px solid #e2e8ec;background:#fff;border-radius:7px;padding:10px 11px;color:#344658;font-size:12px;outline:0}.home-books-selected{display:grid;gap:8px}.home-book-row{display:grid;grid-template-columns:34px 46px 1fr auto;gap:10px;align-items:center;padding:9px 10px;border:1px solid #edf1f4;border-radius:8px;background:#fbfcfd}.home-book-order{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#eafbf7;color:#0baa93;font-size:10px;font-weight:900}.home-book-thumb{width:42px;height:54px;border-radius:5px;overflow:hidden;background:#f1f3f5;border:1px solid #e4e9ed}.home-book-thumb img{width:100%;height:100%;object-fit:cover;display:block}.home-book-copy{min-width:0}.home-book-copy strong{display:block;font-size:12px;color:#2f4151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.home-book-copy small{display:block;margin-top:3px;font-size:10px;color:#85929e}.home-book-actions{display:flex;gap:5px}.home-book-actions button{width:28px;height:28px;border:1px solid #e2e8ec;background:#fff;border-radius:6px;color:#667786;font-weight:900;cursor:pointer}.home-book-actions button:hover{border-color:#bfeee7;color:#0baa93}.home-book-actions .danger:hover{border-color:#f0cccc;color:#c84b4b;background:#fff6f6}.home-books-note{font-size:10px;color:#87939e;line-height:1.45}.home-books-empty{padding:18px;border:1px dashed #dce4e8;border-radius:8px;text-align:center;color:#8996a1;font-size:11px}.home-books-savebar{display:flex;justify-content:space-between;gap:10px;align-items:center;padding-top:4px}.home-books-state{font-size:10px;color:#7f8d99}.home-books-state.ok{color:#16836f}.home-books-state.err{color:#ad3f3f}@media(max-width:720px){.home-books-toolbar{grid-template-columns:1fr}.home-book-row{grid-template-columns:30px 40px 1fr}.home-book-actions{grid-column:3;justify-content:flex-start}.home-books-savebar{align-items:flex-start;flex-direction:column}}
+    </style>`);
+  }
+
+  function buildCard(){
+    const grid=q('#view-site .site-editor-grid');if(!grid||q('#homeBooksAdminCard'))return false;
+    const card=document.createElement('article');card.id='homeBooksAdminCard';card.className='site-editor-card span-2';card.innerHTML=`<div class="site-card-head"><div><h3>Libra të zgjedhur në Ballinë</h3><p>Zgjidh saktë cilët libra do të shfaqen te seksioni “Libra të zgjedhur” dhe rregullo renditjen.</p></div><a class="secondary-btn" href="index.html#trending" target="_blank" rel="noopener">↗ Shiko seksionin</a></div><div class="home-books-admin"><div class="home-books-toolbar"><div class="home-books-picker-wrap"><label>Shto libër</label><select id="homeBookPicker"><option value="">Zgjidh një libër të publikuar…</option></select></div><button type="button" class="secondary-btn" id="homeBookAdd">＋ Shto</button></div><div class="home-books-note">Mund të zgjedhësh deri në 10 libra. Renditja këtu është e njëjtë me renditjen në Ballinë. Nëse nuk ruan asnjë përzgjedhje, Ballina përdor automatikisht librat me shenjën Featured.</div><div id="homeBooksSelected" class="home-books-selected"></div><div class="home-books-savebar"><span id="homeBooksState" class="home-books-state">—</span><button type="button" class="primary-btn" id="homeBooksSave">Ruaj librat e zgjedhur</button></div></div>`;
+    grid.appendChild(card);
+    q('#homeBookAdd').onclick=addPicked;
+    q('#homeBooksSave').onclick=saveSelection;
+    return true;
+  }
+
+  async function loadData(){
+    if(typeof window.api!=='function')return;
+    const state=q('#homeBooksState');if(state){state.textContent='Duke ngarkuar…';state.className='home-books-state'}
+    try{
+      const [booksRows,configRows]=await Promise.all([
+        window.api('books?select=id,title,sku,cover_url,status,is_featured,price&status=eq.published&order=title.asc&limit=2000'),
+        window.api(`site_content?key=eq.${KEY}&select=content,updated_at&limit=1`)
+      ]);
+      allBooks=booksRows||[];
+      const row=configRows?.[0];exists=!!row;
+      const ids=row?.content?.book_ids;
+      if(Array.isArray(ids))selectedIds=ids.map(String).filter(id=>allBooks.some(b=>String(b.id)===id));
+      else selectedIds=allBooks.filter(b=>b.is_featured).map(b=>String(b.id)).slice(0,10);
+      renderPicker();renderSelected();loaded=true;
+      if(state){state.textContent=row?.updated_at?'Ngarkuar · përditësuar '+new Intl.DateTimeFormat('sq-AL',{dateStyle:'medium',timeStyle:'short'}).format(new Date(row.updated_at)):'Po shfaqet përzgjedhja aktuale nga Featured.';state.className='home-books-state ok'}
+    }catch(e){if(state){state.textContent='Nuk u ngarkua: '+e.message;state.className='home-books-state err'}window.toast?.(e.message,'error')}
+  }
+
+  function renderPicker(){
+    const s=q('#homeBookPicker');if(!s)return;
+    const available=allBooks.filter(b=>!selectedIds.includes(String(b.id)));
+    s.innerHTML='<option value="">Zgjidh një libër të publikuar…</option>'+available.map(b=>`<option value="${esc(b.id)}">${esc(b.title)}${b.sku?` · ${esc(b.sku)}`:''}</option>`).join('');
+  }
+  function renderSelected(){
+    const host=q('#homeBooksSelected');if(!host)return;
+    const items=selectedIds.map(id=>allBooks.find(b=>String(b.id)===String(id))).filter(Boolean);
+    if(!items.length){host.innerHTML='<div class="home-books-empty">Nuk ke zgjedhur ende libra. Shto librat që dëshiron të dalin në Ballinë.</div>';renderPicker();return}
+    host.innerHTML=items.map((b,i)=>`<div class="home-book-row" data-id="${esc(b.id)}"><span class="home-book-order">${i+1}</span><span class="home-book-thumb">${b.cover_url?`<img src="${esc(b.cover_url)}" alt="">`:''}</span><span class="home-book-copy"><strong>${esc(b.title)}</strong><small>${esc(b.sku||'Pa SKU')} · ${Number(b.price||0).toFixed(2)} €</small></span><span class="home-book-actions"><button type="button" data-home-up title="Lart">↑</button><button type="button" data-home-down title="Poshtë">↓</button><button type="button" data-home-remove class="danger" title="Hiqe">×</button></span></div>`).join('');
+    qa('#homeBooksSelected .home-book-row').forEach((row,i)=>{row.querySelector('[data-home-up]').onclick=()=>move(i,-1);row.querySelector('[data-home-down]').onclick=()=>move(i,1);row.querySelector('[data-home-remove]').onclick=()=>removeAt(i)});renderPicker();
+  }
+  function addPicked(){
+    const s=q('#homeBookPicker'),id=String(s?.value||'');if(!id)return;
+    if(selectedIds.length>=10){window.toast?.('Mund të zgjedhësh deri në 10 libra.','error');return}
+    if(!selectedIds.includes(id))selectedIds.push(id);renderSelected();
+  }
+  function move(i,d){const j=i+d;if(j<0||j>=selectedIds.length)return;[selectedIds[i],selectedIds[j]]=[selectedIds[j],selectedIds[i]];renderSelected()}
+  function removeAt(i){selectedIds.splice(i,1);renderSelected()}
+
+  async function saveSelection(){
+    const btn=q('#homeBooksSave'),state=q('#homeBooksState');if(btn)btn.disabled=true;if(state){state.textContent='Duke ruajtur…';state.className='home-books-state'}
+    try{
+      const body={content:{book_ids:selectedIds},updated_at:new Date().toISOString()};
+      if(exists)await window.api(`site_content?key=eq.${KEY}`,{method:'PATCH',body,prefer:'return=minimal'});
+      else{await window.api('site_content',{method:'POST',body:{key:KEY,...body},prefer:'return=minimal'});exists=true}
+      if(state){state.textContent='U ruajt. Ballina do ta përdorë këtë përzgjedhje.';state.className='home-books-state ok'}
+      window.toast?.('Librat e zgjedhur u ruajtën');
+    }catch(e){if(state){state.textContent='Ruajtja dështoi: '+e.message;state.className='home-books-state err'}window.toast?.(e.message,'error')}finally{if(btn)btn.disabled=false}
+  }
+
+  function attach(){
+    injectStyle();
+    if(!buildCard()){setTimeout(attach,180);return}
+    const siteBtn=q('[data-view="site"]');if(siteBtn&&!siteBtn.dataset.homeBooksBound){siteBtn.dataset.homeBooksBound='1';siteBtn.addEventListener('click',()=>setTimeout(loadData,220))}
+    const reload=q('#siteReload');if(reload&&!reload.dataset.homeBooksBound){reload.dataset.homeBooksBound='1';reload.addEventListener('click',()=>setTimeout(loadData,520))}
+    if(q('#view-site')?.classList.contains('active-view'))loadData();
+  }
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(attach,300));
+})();
