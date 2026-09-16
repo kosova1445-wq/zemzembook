@@ -27,6 +27,8 @@ function authMessage(msg,type='ok'){
   const e=$('#authMessage');if(!e)return;
   e.textContent=msg;e.className='auth-message'+(type==='error'?' error':'');e.hidden=false;
 }
+function setAdminSync(text,ok=true){const e=$('#adminSync');if(!e)return;e.textContent=text;e.classList.toggle('error',!ok)}
+function setButtonBusy(button,busy,text='Duke punuar…'){if(!button)return;if(busy)button.dataset.label=button.textContent;button.disabled=busy;button.textContent=busy?text:(button.dataset.label||button.textContent)}
 function saveSession(d){
   if(!d?.access_token)return;
   session={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+(Number(d.expires_in)||3600),user:d.user||null};
@@ -161,8 +163,10 @@ async function enterAdmin(){
   }catch(e){clearSession();$('#authScreen').hidden=false;$('#adminApp').hidden=true;authMessage(e.message,'error')}
 }
 async function loadAll(){
+  setAdminSync('Duke sinkronizuar…');
   await Promise.all([loadOrders(),loadBooks(),loadRefs(),loadCustomers(),loadCoupons(),loadReviews(),loadEbookOrders(),loadAudit(),loadIntegrations()]);
   renderDashboard();renderOrders();renderBooks();renderEntities();renderCustomers();renderCoupons();renderReviews();renderAudit();renderIntegrations();
+  setAdminSync(`Përditësuar ${new Intl.DateTimeFormat('sq-AL',{hour:'2-digit',minute:'2-digit'}).format(new Date())}`);
 }
 async function loadOrders(){orders=await api('orders?select=*&order=created_at.desc&limit=700')||[]}
 async function loadBooks(){books=await api('books?select=*&order=created_at.desc&limit=1000')||[]}
@@ -291,12 +295,14 @@ async function testStoreEmail(){const b=$('#storeEmailTestBtn');if(b)b.disabled=
 
 function setView(name){if(!name)return;$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));$$('.view').forEach(v=>v.classList.toggle('active-view',v.id===`view-${name}`));$('#viewTitle').textContent={dashboard:'Dashboard',orders:'Porositë',books:'Librat fizikë',catalog:'Katalogu',customers:'Klientët',coupons:'Kuponët',reviews:'Review',audit:'Audit Log',integrations:'Integrimet'}[name]||name;if(window.innerWidth<=760)$('.sidebar')?.classList.remove('mobile-open')}
 function bind(){
-  $('#loginForm').addEventListener('submit',async e=>{e.preventDefault();try{saveSession(await login(ADMIN_EMAIL,$('#adminPassword').value));await enterAdmin()}catch(err){authMessage(err.message,'error')}});$('#logoutBtn').onclick=logout;
+  $('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=$('#loginBtn');setButtonBusy(b,true,'Duke hyrë…');try{saveSession(await login(ADMIN_EMAIL,$('#adminPassword').value));await enterAdmin()}catch(err){authMessage(String(err.message||'').includes('Invalid login credentials')?'Fjalëkalimi nuk është i saktë.':err.message,'error')}finally{setButtonBusy(b,false)}});$('#logoutBtn').onclick=logout;
+  $('#adminPasswordToggle')?.addEventListener('click',()=>{const input=$('#adminPassword'),button=$('#adminPasswordToggle'),show=input.type==='password';input.type=show?'text':'password';button.textContent=show?'Fshih':'Shfaq';button.setAttribute('aria-label',show?'Fshih fjalëkalimin':'Shfaq fjalëkalimin')});
   $$('.nav-item[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));$$('[data-go]').forEach(b=>b.onclick=()=>setView(b.dataset.go));
-  $('#refreshBtn').onclick=async()=>{try{await loadAll();toast('U rifreskua')}catch(e){toast(e.message,'error')}};
+  $('#refreshBtn').onclick=async()=>{const b=$('#refreshBtn');setButtonBusy(b,true,'…');try{await loadAll();toast('Të dhënat u rifreskuan')}catch(e){setAdminSync('Sinkronizimi dështoi',false);toast(e.message,'error')}finally{setButtonBusy(b,false)}};
   $('#orderSearch').oninput=renderOrders;$('#orderStatusFilter').onchange=renderOrders;if($('#paymentStatusFilter'))$('#paymentStatusFilter').onchange=renderOrders;$('#bookSearch').oninput=renderBooks;$('#bookStatusFilter').onchange=renderBooks;$('#customerSearch').oninput=renderCustomers;if($('#auditSearch'))$('#auditSearch').oninput=renderAudit;if($('#refreshAuditBtn'))$('#refreshAuditBtn').onclick=async()=>{await loadAudit();renderAudit();renderDashboard();toast('Audit u rifreskua')};if($('#storeEmailTestBtn'))$('#storeEmailTestBtn').onclick=testStoreEmail;
   $('#newBookBtn').onclick=()=>{resetBookForm();$('#bookModal').hidden=false};$('#bookTitle').addEventListener('input',()=>{if(!$('#bookId').value&&!$('#bookSlug').dataset.manual)$('#bookSlug').value=slugify($('#bookTitle').value)});$('#bookSlug').addEventListener('input',()=>$('#bookSlug').dataset.manual='1');$('#bookForm').addEventListener('submit',saveBook);$('#deleteBookBtn').onclick=deleteBook;$('#bookCover').addEventListener('change',()=>{const f=$('#bookCover').files?.[0];if(f){const u=URL.createObjectURL(f);$('#coverPreview').innerHTML=`<img src="${u}" alt="">`}});
   $$('[data-close]').forEach(b=>b.onclick=()=>{if(b.dataset.close==='book')$('#bookModal').hidden=true;if(b.dataset.close==='order')$('#orderDrawer').hidden=true;if(b.dataset.close==='customer')$('#customerDrawer').hidden=true});$$('[data-add-entity]').forEach(b=>b.onclick=()=>addEntity(b.dataset.addEntity));$('#couponForm').addEventListener('submit',saveCoupon);$('#resetCouponBtn').onclick=resetCoupon;$('.mobile-menu-btn').onclick=()=>$('.sidebar')?.classList.toggle('mobile-open');
+  document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(!$('#bookModal')?.hidden)$('#bookModal').hidden=true;else if(!$('#orderDrawer')?.hidden)$('#orderDrawer').hidden=true;else if(!$('#customerDrawer')?.hidden)$('#customerDrawer').hidden=true;else $('.sidebar')?.classList.remove('mobile-open')});
 }
 async function init(){injectAdminPro();loadSession();bind();if(session)await enterAdmin();else{$('#authScreen').hidden=false;$('#adminApp').hidden=true}}
 document.addEventListener('DOMContentLoaded',init);
