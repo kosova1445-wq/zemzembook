@@ -42,6 +42,10 @@
     const rows=await bookKeys();
     if(!q('#bookId')?.value&&!sku.value.trim())sku.value=nextSku(rows);
   }
+  function loadReviewManager(){
+    if(document.querySelector('script[data-admin-reviews]'))return;
+    const s=document.createElement('script');s.src='assets/js/admin-reviews.js?v=1';s.defer=true;s.dataset.adminReviews='1';document.head.appendChild(s);
+  }
 
   if(typeof oldReset==='function')window.resetBookForm=function(){
     oldReset();
@@ -96,7 +100,7 @@
   };
 
   document.addEventListener('DOMContentLoaded',()=>{
-    installHelpers();
+    installHelpers();loadReviewManager();
     const title=q('#bookTitle');
     if(title)title.addEventListener('blur',async()=>{
       if(q('#bookId')?.value||q('#bookSlug')?.dataset.manual)return;
