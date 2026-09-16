@@ -1,0 +1,11 @@
+html{overflow-x:hidden}
+body{min-width:320px}
+img{max-width:100%}
+button:disabled{cursor:not-allowed;opacity:.58}
+a,button,input,select,textarea{touch-action:manipulation}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(219,114,95,.3);outline-offset:3px}
+.summary-box{align-self:start}
+@media(min-width:981px){.checkout-grid>.summary-box{position:sticky;top:96px}}
+@media(max-width:980px){.nav-row{scrollbar-width:none;padding-bottom:14px}.nav-row::-webkit-scrollbar{display:none}.summary-box{position:static}.checkout-box,.cart-box,.summary-box{padding:18px}.page-hero{padding:32px 0}}
+@media(max-width:640px){.container{width:min(100% - 24px,1180px)}.header{position:relative}.header-actions{gap:6px}.icon-btn{width:40px;height:40px}.section-head{align-items:flex-start;flex-direction:column}.book-card{padding:10px;border-radius:14px}.book-meta h3{font-size:14px}.cart-item{grid-template-columns:58px 1fr;align-items:start}.cart-item>strong{grid-column:2}.cart-thumb,.cart-thumb-img{width:58px;height:78px}.qty{flex-wrap:wrap}.hero-actions{flex-wrap:wrap}.btn{min-height:44px}.footer{padding-top:38px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
