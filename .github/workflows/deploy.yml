@@ -289,7 +289,7 @@ jobs:
           fetch_live https://www.zemzem.al/assets/js/app-v5.js /tmp/app-v5.js
           grep -Fq 'production-polish.css?v=1' /tmp/app-v5.js
           fetch_live https://www.zemzem.al/assets/css/production-polish.css /tmp/production-polish.css
-          grep -Fq 'ZemZem production polish' /tmp/production-polish.css
+          grep -Fq 'html{overflow-x:hidden}' /tmp/production-polish.css
           fetch_live https://www.zemzem.al/assets/js/admin-book-helper.js /tmp/admin-book-helper.js
           grep -Fq 'books_sku_key' /tmp/admin-book-helper.js
           grep -Fq 'Gjenero SKU' /tmp/admin-book-helper.js
