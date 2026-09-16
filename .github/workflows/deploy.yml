@@ -268,7 +268,9 @@ jobs:
           grep -Fq 'blog_posts' /tmp/blog.js
 
           fetch_live https://www.zemzem.al/admin.html /tmp/admin.html
-          grep -Fq 'admin-v2.js?v=3' /tmp/admin.html
+          grep -Fq 'admin-v2.js?v=4' /tmp/admin.html
+          grep -Fq 'assets/css/admin-polish.css?v=1' /tmp/admin.html
+          grep -Fq 'id="adminSync"' /tmp/admin.html
           grep -Fq 'admin-booksto.css?v=1' /tmp/admin.html
           grep -Fq 'admin-booksto-pages.css?v=1' /tmp/admin.html
           grep -Fq 'admin-booksto.js?v=1' /tmp/admin.html
@@ -281,6 +283,13 @@ jobs:
           grep -Fq 'store-admin-ops' /tmp/admin-v2.js
           grep -Fq 'admin_update_physical_order' /tmp/admin-v2.js
           grep -Fq 'admin_customer_detail' /tmp/admin-v2.js
+          grep -Fq 'setAdminSync' /tmp/admin-v2.js
+          fetch_live https://www.zemzem.al/assets/css/admin-polish.css /tmp/admin-polish.css
+          grep -Fq '.admin-password-field' /tmp/admin-polish.css
+          fetch_live https://www.zemzem.al/assets/js/app-v5.js /tmp/app-v5.js
+          grep -Fq 'production-polish.css?v=1' /tmp/app-v5.js
+          fetch_live https://www.zemzem.al/assets/css/production-polish.css /tmp/production-polish.css
+          grep -Fq 'ZemZem production polish' /tmp/production-polish.css
           fetch_live https://www.zemzem.al/assets/js/admin-book-helper.js /tmp/admin-book-helper.js
           grep -Fq 'books_sku_key' /tmp/admin-book-helper.js
           grep -Fq 'Gjenero SKU' /tmp/admin-book-helper.js
