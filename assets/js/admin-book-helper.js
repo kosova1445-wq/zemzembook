@@ -45,6 +45,7 @@
 
   if(typeof oldReset==='function')window.resetBookForm=function(){
     oldReset();
+    if(q('#bookStatus'))q('#bookStatus').value='published';
     installHelpers();
     fillNewSku();
   };
