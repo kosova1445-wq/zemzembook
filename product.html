@@ -187,13 +187,13 @@
     async function loadReviews(b){
       try{
         const s=window.ZemZemStore;if(!s)return;
-        const url=`${s.SUPABASE_URL}/rest/v1/reviews?book_id=eq.${encodeURIComponent(b.id)}&status=eq.approved&select=id,rating,title,body,created_at&order=created_at.desc&limit=30`;
+        const url=`${s.SUPABASE_URL}/rest/v1/reviews?book_id=eq.${encodeURIComponent(b.id)}&status=eq.approved&select=id,reviewer_name,rating,title,body,created_at&order=created_at.desc&limit=30`;
         const r=await fetch(url,{headers:{apikey:s.SUPABASE_PUBLISHABLE_KEY},cache:'no-store'});if(!r.ok)return;
         reviews=await r.json()||[];
         const count=reviews.length,avg=count?reviews.reduce((n,x)=>n+Number(x.rating||0),0)/count:0;
         const stars=q('#premiumStars'),text=q('#premiumRatingText'),tab=q('#reviewsCountTab');
         if(stars)stars.innerHTML=ratingStars(avg);if(text)text.textContent=count?`${avg.toFixed(1)} · ${count} recension${count===1?'':'e'}`:'Pa recensione';if(tab)tab.textContent=count?`(${count})`:'';
-        const box=q('#premiumReviews');if(box&&count)box.innerHTML=reviews.map(x=>`<article class="premium-review-card"><div class="premium-review-stars">${ratingStars(x.rating)}</div><h3>${esc(x.title||'Recension')}</h3><p>${esc(x.body||'')}</p><small>${x.created_at?new Intl.DateTimeFormat('sq-AL',{dateStyle:'medium'}).format(new Date(x.created_at)):''}</small></article>`).join('');
+        const box=q('#premiumReviews');if(box&&count)box.innerHTML=reviews.map(x=>`<article class="premium-review-card"><div class="premium-review-stars">${ratingStars(x.rating)}</div><h3>${esc(x.title||'Recension')}</h3><p>${esc(x.body||'')}</p><small>${x.reviewer_name?`<strong>${esc(x.reviewer_name)}</strong> · `:''}${x.created_at?new Intl.DateTimeFormat('sq-AL',{dateStyle:'medium'}).format(new Date(x.created_at)):''}</small></article>`).join('');
       }catch{}
     }
     async function loadRelated(b){
