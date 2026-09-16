@@ -6,3 +6,4 @@
 button:disabled{cursor:not-allowed;opacity:.62}
 :focus-visible{outline:3px solid rgba(18,203,176,.28);outline-offset:2px}
 @media(max-width:760px){.admin-sync{display:none}.admin-topbar h1{font-size:20px}.top-actions{margin-left:auto}}
+/* Production admin polish v1 */
