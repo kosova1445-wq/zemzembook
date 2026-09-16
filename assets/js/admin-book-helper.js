@@ -46,6 +46,10 @@
     if(document.querySelector('script[data-admin-reviews]'))return;
     const s=document.createElement('script');s.src='assets/js/admin-reviews.js?v=1';s.defer=true;s.dataset.adminReviews='1';document.head.appendChild(s);
   }
+  function loadHomeBooksManager(){
+    if(document.querySelector('script[data-admin-home-books]'))return;
+    const s=document.createElement('script');s.src='assets/js/admin-home-books.js?v=1';s.defer=true;s.dataset.adminHomeBooks='1';document.head.appendChild(s);
+  }
 
   if(typeof oldReset==='function')window.resetBookForm=function(){
     oldReset();
@@ -100,7 +104,7 @@
   };
 
   document.addEventListener('DOMContentLoaded',()=>{
-    installHelpers();loadReviewManager();
+    installHelpers();loadReviewManager();loadHomeBooksManager();
     const title=q('#bookTitle');
     if(title)title.addEventListener('blur',async()=>{
       if(q('#bookId')?.value||q('#bookSlug')?.dataset.manual)return;
