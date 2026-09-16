@@ -21,11 +21,12 @@ jobs:
         with:
           ref: main
 
-      - name: Inject official brand stylesheet
+      - name: Inject storefront and Admin branding controls
         shell: bash
         run: |
           set -euo pipefail
-          BRAND_TAG='<link rel="stylesheet" href="assets/css/brand.css?v=1">'
+          BRAND_TAG='<link rel="stylesheet" href="assets/css/brand.css?v=2">'
+          BRAND_SCRIPT='<script src="assets/js/branding.js?v=1" defer></script>'
           for page in \
             index.html shop.html product.html checkout.html paypal-return.html \
             about.html contact.html shipping-returns.html privacy.html terms.html account.html \
@@ -33,7 +34,19 @@ jobs:
             if [ -f "$page" ] && ! grep -Fq 'assets/css/brand.css' "$page"; then
               sed -i "s#</head>#${BRAND_TAG}</head>#" "$page"
             fi
+            if [ -f "$page" ] && ! grep -Fq 'assets/js/branding.js' "$page"; then
+              sed -i "s#</head>#${BRAND_SCRIPT}</head>#" "$page"
+            fi
           done
+
+          ADMIN_BRAND_CSS='<link rel="stylesheet" href="assets/css/admin-branding.css?v=1">'
+          ADMIN_BRAND_JS='<script src="assets/js/admin-branding.js?v=1"></script>'
+          if [ -f admin.html ] && ! grep -Fq 'assets/css/admin-branding.css' admin.html; then
+            sed -i "s#</head>#${ADMIN_BRAND_CSS}</head>#" admin.html
+          fi
+          if [ -f admin.html ] && ! grep -Fq 'assets/js/admin-branding.js' admin.html; then
+            sed -i "s#</body>#${ADMIN_BRAND_JS}</body>#" admin.html
+          fi
 
       - name: Upload branded public release
         env:
@@ -58,12 +71,16 @@ jobs:
 
           for file in \
             assets/css/brand.css \
+            assets/js/branding.js \
+            assets/css/admin-branding.css \
+            assets/js/admin-branding.js \
             assets/brand/zemzem-logo.svg \
             assets/brand/zemzem-watermark.svg \
             favicon.svg \
             index.html shop.html product.html checkout.html paypal-return.html \
             about.html contact.html shipping-returns.html privacy.html terms.html account.html \
-            ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html blog.html article.html; do
+            ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html blog.html article.html \
+            admin.html; do
             upload "$file"
           done
 
@@ -73,18 +90,34 @@ jobs:
           set -euo pipefail
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/css/brand.css?brand=${GITHUB_RUN_ID}" -o /tmp/brand.css
           grep -Fq 'Official ZemZem branding layer' /tmp/brand.css
-          grep -Fq 'zemzem-watermark.svg' /tmp/brand.css
+          grep -Fq -- '--zemzem-logo-width' /tmp/brand.css
+          grep -Fq -- '--zemzem-watermark-size' /tmp/brand.css
+
+          curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/js/branding.js?brand=${GITHUB_RUN_ID}" -o /tmp/branding.js
+          grep -Fq 'site_content?key=eq.branding' /tmp/branding.js
+          grep -Fq 'zemzem:branding-ready' /tmp/branding.js
+
+          curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/js/admin-branding.js?brand=${GITHUB_RUN_ID}" -o /tmp/admin-branding.js
+          grep -Fq 'Logo & Brand' /tmp/admin-branding.js
+          grep -Fq 'site-branding' /tmp/admin-branding.js
 
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/brand/zemzem-logo.svg?brand=${GITHUB_RUN_ID}" -o /tmp/logo.svg
           grep -Fq 'Shtëpi botuese dhe shpërndarëse' /tmp/logo.svg
 
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/?brand=${GITHUB_RUN_ID}" -o /tmp/index.html
-          grep -Fq 'assets/css/brand.css?v=1' /tmp/index.html
+          grep -Fq 'assets/css/brand.css?v=2' /tmp/index.html
+          grep -Fq 'assets/js/branding.js?v=1' /tmp/index.html
 
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/product.html?brand=${GITHUB_RUN_ID}" -o /tmp/product.html
-          grep -Fq 'assets/css/brand.css?v=1' /tmp/product.html
+          grep -Fq 'assets/css/brand.css?v=2' /tmp/product.html
+          grep -Fq 'assets/js/branding.js?v=1' /tmp/product.html
 
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/ebooks.html?brand=${GITHUB_RUN_ID}" -o /tmp/ebooks.html
-          grep -Fq 'assets/css/brand.css?v=1' /tmp/ebooks.html
+          grep -Fq 'assets/css/brand.css?v=2' /tmp/ebooks.html
+          grep -Fq 'assets/js/branding.js?v=1' /tmp/ebooks.html
 
-          echo 'ZEMZEM_OFFICIAL_BRANDING_LIVE_OK=yes'
+          curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/admin.html?brand=${GITHUB_RUN_ID}" -o /tmp/admin.html
+          grep -Fq 'assets/css/admin-branding.css?v=1' /tmp/admin.html
+          grep -Fq 'assets/js/admin-branding.js?v=1' /tmp/admin.html
+
+          echo 'ZEMZEM_ADMIN_BRANDING_LIVE_OK=yes'
