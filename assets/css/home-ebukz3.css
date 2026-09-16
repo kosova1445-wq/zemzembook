@@ -1,0 +1,173 @@
+/* ZemZem Home visual theme inspired by the supplied bookstore reference screenshot.
+   Visual-only layer: no catalog, cart, admin, payment or data logic is changed. */
+:root{
+  --e3-coral:#d76655;--e3-coral-dark:#bd5547;--e3-navy:#29495a;--e3-navy-2:#203c4b;
+  --e3-peach:#f8e7e1;--e3-peach-2:#f4d7cf;--e3-soft:#fff8f4;--e3-ink:#243744;--e3-muted:#7b858b;
+  --e3-line:#eadfd9;--e3-green:#2d8c72;--e3-shadow:0 18px 44px rgba(44,60,68,.08)
+}
+body.zemzem-bookstore-v2{background:#fff;color:var(--e3-ink)}
+.zemzem-bookstore-v2 .container{width:min(1160px,calc(100% - 34px))!important}
+
+/* top / header */
+.zemzem-bookstore-v2 .topbar{background:var(--e3-navy-2)!important;color:#fff!important;padding:6px 0!important;font-size:11px!important}
+.zemzem-bookstore-v2 .topbar .container{min-height:26px!important}
+.zemzem-bookstore-v2 .header{background:var(--e3-coral)!important;box-shadow:none!important;border:0!important}
+.zemzem-bookstore-v2 .header-row{min-height:68px!important;grid-template-columns:190px minmax(360px,1fr) auto!important;gap:24px!important}
+.zemzem-bookstore-v2 .header .brand{color:#fff!important;font-size:25px!important}
+.zemzem-bookstore-v2 .header .brand-mark{filter:brightness(0) invert(1);opacity:.95}
+.zemzem-bookstore-v2 .header .search{min-height:42px!important;height:42px!important;border:0!important;background:#fff!important;box-shadow:0 4px 16px rgba(100,48,42,.11)!important}
+.zemzem-bookstore-v2 .header .search select,.zemzem-bookstore-v2 .header .search input{height:40px!important}
+.zemzem-bookstore-v2 .header .search select{font-size:10px!important;background:#fff!important}
+.zemzem-bookstore-v2 .header .search input{font-size:11px!important}
+.zemzem-bookstore-v2 .header .search button{width:36px!important;height:36px!important;margin:3px!important;background:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .header-actions .icon-btn{width:38px!important;height:38px!important;background:rgba(255,255,255,.14)!important;border:1px solid rgba(255,255,255,.28)!important;color:#fff!important}
+.zemzem-bookstore-v2 .header-actions .icon-btn:hover{background:#fff!important;color:var(--e3-coral)!important}
+.zemzem-bookstore-v2 .header .badge{background:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .nav{background:#fff!important;border:0!important;border-bottom:1px solid var(--e3-line)!important}
+.zemzem-bookstore-v2 .nav-row{min-height:44px!important;gap:22px!important}
+.zemzem-bookstore-v2 .nav-row>a{font-size:11px!important;color:#364b57!important}
+.zemzem-bookstore-v2 .nav-row>a:hover{color:var(--e3-coral)!important}
+.zemzem-bookstore-v2 .nav .support{color:var(--e3-coral-dark)!important;background:transparent!important;padding:0!important}
+
+/* hero */
+.zemzem-bookstore-v2 .hero-wrap{padding:28px 0 24px!important;background:#fff!important}
+.zemzem-bookstore-v2 .home-hero{min-height:420px!important;border-radius:0!important;background:linear-gradient(102deg,#f8e8e2 0%,#f5d7d0 100%)!important;box-shadow:none!important}
+.zemzem-bookstore-v2 .home-hero:before{background:radial-gradient(circle at 79% 40%,rgba(255,255,255,.72),transparent 42%)!important}
+.zemzem-bookstore-v2 .home-slide{min-height:420px!important;padding:44px 42px 54px!important;grid-template-columns:minmax(0,1fr) 300px!important}
+.zemzem-bookstore-v2 .home-slide-copy{max-width:500px!important}
+.zemzem-bookstore-v2 .home-slide-copy .eyebrow{background:transparent!important;padding:0!important;color:var(--e3-coral-dark)!important;font-size:10px!important}
+.zemzem-bookstore-v2 .home-slide-copy h1{font-family:"Trebuchet MS",Inter,system-ui,sans-serif!important;color:var(--e3-navy)!important;font-size:clamp(38px,4.2vw,58px)!important;line-height:1!important;letter-spacing:-1.8px!important;margin:8px 0 12px!important}
+.zemzem-bookstore-v2 .home-slide-copy p{font-size:11px!important;line-height:1.7!important;color:#667279!important;max-width:460px!important}
+.zemzem-bookstore-v2 .home-slide-meta span{font-size:9px!important;background:rgba(255,255,255,.6)!important;color:#6e7478!important}
+.zemzem-bookstore-v2 .btn{border-radius:999px!important;padding:10px 16px!important;font-size:10px!important}
+.zemzem-bookstore-v2 .btn-primary{background:var(--e3-coral)!important;border-color:var(--e3-coral)!important}
+.zemzem-bookstore-v2 .btn-primary:hover{background:var(--e3-coral-dark)!important}
+.zemzem-bookstore-v2 .home-slide-price{font-size:18px!important;color:var(--e3-coral-dark)!important}
+.zemzem-bookstore-v2 .home-slide-cover .book-cover,.zemzem-bookstore-v2 .home-slide-cover .book-cover-img{width:195px!important;height:278px!important;border-radius:3px!important;box-shadow:0 22px 38px rgba(79,52,47,.18)!important;transform:rotate(0deg)!important}
+.zemzem-bookstore-v2 .home-slide-cover:before{width:245px!important;height:245px!important;background:rgba(255,255,255,.34)!important}
+.zemzem-bookstore-v2 .wow-hero-label{top:24px!important;right:24px!important;border:0!important;background:rgba(255,255,255,.76)!important;color:var(--e3-coral-dark)!important}
+.zemzem-bookstore-v2 .home-slider-controls{bottom:18px!important}
+
+/* service strip */
+.zemzem-bookstore-v2 .feature-strip{margin:0!important;padding:10px 0 22px!important;background:#fff!important}
+.zemzem-bookstore-v2 .feature-grid{gap:10px!important}
+.zemzem-bookstore-v2 .feature{padding:13px 15px!important;border-radius:8px!important;border:1px solid #f0dfd8!important;background:#fff6f2!important;box-shadow:none!important}
+.zemzem-bookstore-v2 .feature .ico{width:34px!important;height:34px!important;border-radius:8px!important;background:#fff!important;color:var(--e3-coral)!important;font-size:16px!important}
+.zemzem-bookstore-v2 .feature strong{font-size:10px!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .feature span{font-size:9px!important}
+
+/* content rhythm */
+.zemzem-bookstore-v2 .section{padding:50px 0!important}
+.zemzem-bookstore-v2 .section.soft,.zemzem-bookstore-v2 .new-arrivals{background:#fff!important}
+.zemzem-bookstore-v2 .section-head{margin-bottom:20px!important;align-items:center!important}
+.zemzem-bookstore-v2 .section-head h2{font-family:"Trebuchet MS",Inter,system-ui,sans-serif!important;font-size:24px!important;letter-spacing:-.6px!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .section-head p{font-size:10px!important;color:var(--e3-muted)!important;margin-top:4px!important}
+.zemzem-bookstore-v2 .section-kicker{font-size:8px!important;letter-spacing:.12em!important;color:#99a1a5!important}
+.zemzem-bookstore-v2 .link-more{display:inline-flex!important;align-items:center!important;justify-content:center!important;border:0!important;border-radius:999px!important;background:var(--e3-coral)!important;color:#fff!important;padding:7px 12px!important;font-size:9px!important}
+.zemzem-bookstore-v2 .link-more:hover{background:var(--e3-coral-dark)!important}
+
+/* books: flatter, compact bookstore cards like the reference */
+.zemzem-bookstore-v2 .book-grid{gap:14px!important}
+.zemzem-bookstore-v2 .book-card{border:0!important;border-radius:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important}
+.zemzem-bookstore-v2 .book-card:hover{transform:translateY(-3px)!important;box-shadow:none!important}
+.zemzem-bookstore-v2 .book-cover,.zemzem-bookstore-v2 .book-card .book-cover-img{border-radius:3px!important;box-shadow:0 7px 18px rgba(44,53,59,.10)!important}
+.zemzem-bookstore-v2 .book-meta{padding:9px 1px 0!important}
+.zemzem-bookstore-v2 .book-meta h3{font-size:10px!important;line-height:1.28!important;margin:4px 0 2px!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .book-meta .author,.zemzem-bookstore-v2 .author{font-size:8px!important;color:#8a9195!important}
+.zemzem-bookstore-v2 .rating{font-size:8px!important}
+.zemzem-bookstore-v2 .price-row{margin-top:6px!important}
+.zemzem-bookstore-v2 .price,.zemzem-bookstore-v2 .book-price{font-size:10px!important;color:var(--e3-coral-dark)!important}
+.zemzem-bookstore-v2 .add-btn{width:28px!important;height:28px!important;background:#fff0ec!important;color:var(--e3-coral)!important}
+.zemzem-bookstore-v2 .sale-tag{top:5px!important;left:5px!important;border-radius:4px!important;padding:4px 6px!important;font-size:7px!important;background:var(--e3-coral)!important}
+.zemzem-bookstore-v2 .wow-card-tools{right:4px!important;top:6px!important;gap:4px!important}
+.zemzem-bookstore-v2 .wow-card-tool{width:28px!important;height:28px!important;font-size:11px!important;background:#fff!important;box-shadow:0 4px 14px rgba(41,63,74,.12)!important}
+.zemzem-bookstore-v2 .home-carousel-track .book-card{min-width:150px!important}
+
+/* promo areas */
+.zemzem-bookstore-v2 .home-promo-banner{background:#fff!important;margin:0!important;padding-top:10px!important}
+.zemzem-bookstore-v2 .home-promo-banner-inner{border-radius:0!important;background:#f7e7e1!important;padding:30px 34px!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .home-promo-banner h3{font-family:"Trebuchet MS",Inter,sans-serif!important;font-size:24px!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .home-promo-banner p{font-size:10px!important;color:#6e777c!important}
+.zemzem-bookstore-v2 .home-promo-banner .eyebrow{color:var(--e3-coral-dark)!important}
+.zemzem-bookstore-v2 .promo-grid{gap:14px!important}
+.zemzem-bookstore-v2 .promo{min-height:150px!important;border-radius:0!important;padding:24px!important;background:#f9e5df!important}
+.zemzem-bookstore-v2 .promo.alt{background:#e4f1ed!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .promo h3{font-family:"Trebuchet MS",Inter,sans-serif!important;font-size:20px!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .promo p{font-size:10px!important}
+.zemzem-bookstore-v2 .promo .mini-book{border-radius:3px!important}
+
+/* authors like the round author row in reference */
+.zemzem-bookstore-v2 .home-authors{background:#fff!important}
+.zemzem-bookstore-v2 .author-grid{grid-template-columns:repeat(6,1fr)!important;gap:18px!important}
+.zemzem-bookstore-v2 .author-card{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;padding:0!important;display:flex!important;flex-direction:column!important;text-align:center!important;gap:8px!important}
+.zemzem-bookstore-v2 .author-card:hover{box-shadow:none!important;transform:translateY(-3px)!important}
+.zemzem-bookstore-v2 .author-avatar{width:72px!important;height:72px!important;flex:0 0 72px!important;background:linear-gradient(145deg,#f0d2c9,#f8ece8)!important;border:4px solid #fff!important;box-shadow:0 0 0 1px #eadbd5,0 8px 18px rgba(50,65,73,.08)!important;color:var(--e3-coral-dark)!important}
+.zemzem-bookstore-v2 .author-card strong{font-size:9px!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .author-card small{font-size:8px!important}
+
+/* dark featured author/book style band */
+.zemzem-bookstore-v2 .wow-featured{padding:56px 0!important;background:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .wow-featured:before,.zemzem-bookstore-v2 .wow-featured:after{opacity:.22!important}
+.zemzem-bookstore-v2 .wow-featured-inner{gap:40px!important}
+.zemzem-bookstore-v2 .wow-featured-copy h2{font-family:"Trebuchet MS",Inter,sans-serif!important;font-size:36px!important;letter-spacing:-1px!important}
+.zemzem-bookstore-v2 .wow-featured-copy p{font-size:10px!important;line-height:1.65!important;color:#d6e0e5!important}
+.zemzem-bookstore-v2 .wow-stage{min-height:300px!important}
+.zemzem-bookstore-v2 .wow-stage-main .book-cover,.zemzem-bookstore-v2 .wow-stage-main .book-cover-img{width:170px!important;height:245px!important;border-radius:3px!important}
+.zemzem-bookstore-v2 .wow-stage-card{border-radius:4px!important;width:100px!important;padding:5px!important}
+.zemzem-bookstore-v2 .wow-stage-card .book-cover,.zemzem-bookstore-v2 .wow-stage-card .book-cover-img{height:128px!important;border-radius:2px!important}
+
+/* editorial / blog */
+.zemzem-bookstore-v2 .wow-editorial{padding:52px 0!important;background:#faebe5!important}
+.zemzem-bookstore-v2 .wow-editorial-copy h2{font-family:"Trebuchet MS",Inter,sans-serif!important;font-size:34px!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .wow-editorial-copy p{font-size:10px!important}
+.zemzem-bookstore-v2 .wow-editorial-book .book-cover,.zemzem-bookstore-v2 .wow-editorial-book .book-cover-img{border-radius:3px!important}
+.zemzem-bookstore-v2 .home-blog{background:#fff!important}
+.zemzem-bookstore-v2 .home-blog-grid{gap:14px!important}
+.zemzem-bookstore-v2 .home-blog-card{border:1px solid var(--e3-line)!important;border-radius:6px!important;box-shadow:none!important}
+.zemzem-bookstore-v2 .home-blog-card:hover{box-shadow:var(--e3-shadow)!important}
+.zemzem-bookstore-v2 .home-blog-image{height:150px!important}
+.zemzem-bookstore-v2 .home-blog-body{padding:14px!important}
+.zemzem-bookstore-v2 .home-blog-body h3{font-family:"Trebuchet MS",Inter,sans-serif!important;font-size:12px!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .home-blog-body p{font-size:9px!important}
+.zemzem-bookstore-v2 .home-blog-more{font-size:9px!important;color:var(--e3-coral)!important}
+
+/* why / small service tiles */
+.zemzem-bookstore-v2 .home-why{background:#fff!important}
+.zemzem-bookstore-v2 .why-grid{gap:10px!important}
+.zemzem-bookstore-v2 .why-card{border:1px solid #f0dfd8!important;border-radius:8px!important;background:#fff6f2!important;padding:16px!important;box-shadow:none!important}
+.zemzem-bookstore-v2 .why-icon{width:36px!important;height:36px!important;border-radius:8px!important;background:#fff!important;color:var(--e3-coral)!important;font-size:16px!important}
+.zemzem-bookstore-v2 .why-card h3{font-size:10px!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .why-card p{font-size:8px!important}
+
+/* newsletter and footer */
+.zemzem-bookstore-v2 .zv2-newsletter{padding:0!important;background:#fff!important}
+.zemzem-bookstore-v2 .zv2-newsletter-card{border-radius:0!important;background:#c97878!important;padding:18px 28px!important;grid-template-columns:1fr minmax(300px,440px)!important}
+.zemzem-bookstore-v2 .zv2-newsletter h3{font-family:"Trebuchet MS",Inter,sans-serif!important;font-size:18px!important;letter-spacing:-.3px!important;margin:0 0 4px!important}
+.zemzem-bookstore-v2 .zv2-newsletter p{font-size:9px!important}
+.zemzem-bookstore-v2 .zv2-newsletter-form input{min-height:38px!important;font-size:10px!important}
+.zemzem-bookstore-v2 .zv2-newsletter-form button{min-height:38px!important;background:var(--e3-navy)!important;font-size:9px!important}
+.zemzem-bookstore-v2 .footer{background:var(--e3-navy)!important;padding:42px 0 18px!important}
+.zemzem-bookstore-v2 .footer .brand{color:#fff!important;font-size:22px!important}
+.zemzem-bookstore-v2 .footer h4{font-size:11px!important}
+.zemzem-bookstore-v2 .footer p,.zemzem-bookstore-v2 .footer a{font-size:9px!important;color:#d4e0e5!important}
+.zemzem-bookstore-v2 .footer-grid{gap:26px!important}
+.zemzem-bookstore-v2 .footer-premium-row{margin-top:18px!important;padding:16px 0!important}
+.zemzem-bookstore-v2 .footer-trust span{font-size:8px!important;padding:6px 8px!important}
+.zemzem-bookstore-v2 .copyright{font-size:9px!important;margin-top:20px!important;padding-top:12px!important}
+
+/* quick view follows same palette */
+.zemzem-bookstore-v2 .wow-quickview{border-radius:8px!important}
+.zemzem-bookstore-v2 .wow-quickview-media{background:#f8e9e4!important}
+.zemzem-bookstore-v2 .wow-quickview-body h2{font-family:"Trebuchet MS",Inter,sans-serif!important;color:var(--e3-navy)!important}
+.zemzem-bookstore-v2 .wow-quickview-price{color:var(--e3-coral)!important}
+
+@media(max-width:980px){
+  .zemzem-bookstore-v2 .header-row{grid-template-columns:1fr auto!important}.zemzem-bookstore-v2 .header .search{grid-column:1/-1!important}
+  .zemzem-bookstore-v2 .home-slide{grid-template-columns:1fr 220px!important}.zemzem-bookstore-v2 .author-grid{grid-template-columns:repeat(3,1fr)!important}
+}
+@media(max-width:700px){
+  .zemzem-bookstore-v2 .container{width:min(100% - 24px,1160px)!important}.zemzem-bookstore-v2 .header-row{min-height:58px!important}
+  .zemzem-bookstore-v2 .home-slide{grid-template-columns:1fr!important;padding:34px 24px 68px!important}.zemzem-bookstore-v2 .home-slide-cover{display:none!important}
+  .zemzem-bookstore-v2 .feature-grid{grid-template-columns:1fr!important}.zemzem-bookstore-v2 .author-grid{display:flex!important;overflow:auto!important}
+  .zemzem-bookstore-v2 .author-card{min-width:110px!important}.zemzem-bookstore-v2 .zv2-newsletter-card{grid-template-columns:1fr!important;padding:22px!important}
+}
