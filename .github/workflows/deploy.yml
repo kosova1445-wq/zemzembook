@@ -104,9 +104,7 @@ jobs:
             sed -i "s#<script src=\"assets/js/admin-book-helper.js?v=1\"></script>#<script src=\"assets/js/admin-book-helper.js?v=1\"></script>${ADMIN_HOME_BOOKS_TAG}#" admin.html
           fi
 
-          # Always republish the complete protected production set. This prevents rapid
-          # sequential commits from leaving production on an older storefront/admin version
-          # when obsolete deploy jobs are intentionally skipped by the debounce step.
+          # Always republish the complete protected production set.
           CHANGED="$CHANGED
           index.html
           shop.html
@@ -127,8 +125,10 @@ jobs:
           assets/js/app-v5.js
           assets/js/home-modern.js
           assets/js/home-wow.js
+          assets/js/home-bookstore-v2.js
           assets/css/home-modern.css
           assets/css/home-wow.css
+          assets/css/home-bookstore-v2.css
           assets/js/checkout-v2.js
           assets/js/seo-product.js
           assets/js/analytics.js
@@ -201,13 +201,22 @@ jobs:
           grep -Fq 'assets/js/analytics.js?v=1' /tmp/index.html
           grep -Fq 'assets/css/home-modern.css?v=1' /tmp/index.html
           grep -Fq 'assets/css/home-wow.css?v=1' /tmp/index.html
+          grep -Fq 'assets/css/home-bookstore-v2.css?v=1' /tmp/index.html
           grep -Fq 'assets/js/home-wow.js?v=1' /tmp/index.html
+          grep -Fq 'assets/js/home-bookstore-v2.js?v=1' /tmp/index.html
           fetch_live https://www.zemzem.al/assets/js/home-wow.js /tmp/home-wow.js
           grep -Fq 'wow-featured' /tmp/home-wow.js
           grep -Fq 'mega-menu-shell' /tmp/home-wow.js
           fetch_live https://www.zemzem.al/assets/css/home-wow.css /tmp/home-wow.css
           grep -Fq '.wow-featured' /tmp/home-wow.css
           grep -Fq '.wow-quickview' /tmp/home-wow.css
+          fetch_live https://www.zemzem.al/assets/css/home-bookstore-v2.css /tmp/home-bookstore-v2.css
+          grep -Fq 'ZemZem bookstore v2' /tmp/home-bookstore-v2.css
+          grep -Fq '.zv2-newsletter' /tmp/home-bookstore-v2.css
+          fetch_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js
+          grep -Fq 'zemzem-bookstore-v2' /tmp/home-bookstore-v2.js
+          grep -Fq 'zv2Newsletter' /tmp/home-bookstore-v2.js
+
           fetch_live https://www.zemzem.al/shop.html /tmp/shop.html
           grep -Fq 'Libra në Shqip – Dyqani i Librave Fizikë | ZemZem' /tmp/shop.html
           grep -Fq 'application/ld+json' /tmp/shop.html
