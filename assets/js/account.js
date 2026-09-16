@@ -7,6 +7,7 @@ let accProfile = null;
 let accAddresses = [];
 let accOrders = [];
 let accEntitlements = [];
+let accRecoveryMode = false;
 
 const aq = (s) => document.querySelector(s);
 const aqq = (s) => [...document.querySelectorAll(s)];
@@ -14,6 +15,23 @@ const aesc = (v) => String(v ?? '').replace(/[&<>'"]/g, (m) => ({'&':'&amp;','<'
 const amoney = (n) => `${Number(n || 0).toFixed(2)} €`;
 const adate = (v) => v ? new Intl.DateTimeFormat('sq-AL', {dateStyle:'medium', timeStyle:'short'}).format(new Date(v)) : '—';
 const aday = (v) => v ? new Intl.DateTimeFormat('sq-AL', {dateStyle:'medium'}).format(new Date(v)) : 'Pa afat';
+const statusLabels = {pending:'Në pritje',processing:'Në përpunim',paid:'E paguar',confirmed:'E konfirmuar',shipped:'E dërguar',delivered:'E dorëzuar',cancelled:'E anuluar',refunded:'E rimbursuar',failed:'E dështuar'};
+const authErrors = {
+  'Invalid login credentials':'Emaili ose fjalëkalimi nuk është i saktë.',
+  'Email not confirmed':'Emaili nuk është verifikuar ende. Kontrollo mesazhin që të kemi dërguar.',
+  'User already registered':'Ky email është regjistruar më parë.',
+  'Password should be at least 6 characters':'Fjalëkalimi duhet të ketë së paku 8 karaktere.'
+};
+const friendlyError = (error) => authErrors[String(error?.message || error)] || String(error?.message || error || 'Ndodhi një gabim. Provo përsëri.');
+
+function setBusy(form, busy, busyText) {
+  const btn = form?.querySelector('button[type="submit"]');
+  if (!btn) return;
+  if (busy) btn.dataset.label = btn.textContent;
+  btn.disabled = busy;
+  btn.textContent = busy ? busyText : (btn.dataset.label || btn.textContent);
+  form?.setAttribute('aria-busy', busy ? 'true' : 'false');
+}
 
 function msg(text, error = false) {
   const el = aq('#authMsg');
@@ -136,6 +154,7 @@ function parseAuthHash() {
   const refresh_token = p.get('refresh_token');
   const expires_in = Number(p.get('expires_in') || 3600);
   if (access_token) {
+    accRecoveryMode = p.get('type') === 'recovery';
     storeSession({access_token, refresh_token, expires_in, user: null});
     history.replaceState({}, '', location.pathname + location.search);
   }
@@ -159,6 +178,15 @@ async function getUser() {
 }
 
 async function loadAccount() {
+  if (accRecoveryMode) {
+    showAuth();
+    aq('#loginForm').hidden = true;
+    aq('#signupForm').hidden = true;
+    aq('#forgotForm').hidden = true;
+    aq('#resetPasswordForm').hidden = false;
+    aqq('[data-auth-tab]').forEach((x) => x.classList.remove('active'));
+    return;
+  }
   if (!await ensureAcc()) { showAuth(); return; }
   try {
     const user = await getUser();
@@ -194,9 +222,9 @@ async function loadOrders() {
     <article class="order-card">
       <div class="order-card-top">
         <div><strong>${aesc(o.order_number)}</strong><div class="order-meta"><span>${adate(o.created_at)}</span><span>${aesc((o.payment_method || '').toUpperCase())}</span><span>${amoney(o.total)}</span></div></div>
-        <span class="status-chip status-${aesc(o.order_status)}">${aesc(o.order_status)}</span>
+        <span class="status-chip status-${aesc(o.order_status)}">${aesc(statusLabels[o.order_status] || o.order_status || 'Në pritje')}</span>
       </div>
-      ${o.tracking_number ? `<div class="order-meta"><strong>Tracking:</strong> ${aesc(o.shipping_carrier || '')} ${aesc(o.tracking_number)}</div>` : ''}
+      ${o.tracking_number ? `<div class="order-meta"><strong>Gjurmimi:</strong> ${aesc(o.shipping_carrier || '')} <span class="tracking-number">${aesc(o.tracking_number)}</span></div>` : ''}
       <button class="text-btn" data-order-detail="${o.id}">Shiko artikujt</button>
       <div id="od-${o.id}" hidden></div>
     </article>`).join('');
@@ -385,14 +413,40 @@ function bindAuthTabs() {
     aqq('[data-auth-tab]').forEach((x) => x.classList.toggle('active', x === b));
     aq('#loginForm').hidden = b.dataset.authTab !== 'login';
     aq('#signupForm').hidden = b.dataset.authTab !== 'signup';
+    aq('#forgotForm').hidden = true;
+    aq('#resetPasswordForm').hidden = true;
     aq('#authMsg').hidden = true;
   });
+}
+
+function bindAuthHelpers() {
+  aqq('.password-toggle').forEach((button) => button.addEventListener('click', () => {
+    const input = button.parentElement?.querySelector('input');
+    if (!input) return;
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    button.textContent = show ? 'Fshih' : 'Shfaq';
+    button.setAttribute('aria-label', show ? 'Fshih fjalëkalimin' : 'Shfaq fjalëkalimin');
+  }));
+  aq('[data-forgot-password]')?.addEventListener('click', () => {
+    aq('#loginForm').hidden = true;
+    aq('#signupForm').hidden = true;
+    aq('#forgotForm').hidden = false;
+    aq('#authMsg').hidden = true;
+    aqq('[data-auth-tab]').forEach((x) => x.classList.remove('active'));
+    const loginEmail = aq('#loginForm input[name="email"]')?.value || '';
+    aq('#forgotForm input[name="email"]').value = loginEmail;
+    aq('#forgotForm input[name="email"]').focus();
+  });
+  aq('[data-back-login]')?.addEventListener('click', () => aq('[data-auth-tab="login"]')?.click());
 }
 
 function bindForms() {
   aq('#loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const form = e.currentTarget;
     const f = new FormData(e.currentTarget);
+    setBusy(form, true, 'Duke hyrë…');
     try {
       const d = await araw('/auth/v1/token?grant_type=password', {
         method:'POST',
@@ -400,7 +454,8 @@ function bindForms() {
       });
       storeSession(d);
       await loadAccount();
-    } catch (err) { msg(err.message, true); }
+    } catch (err) { msg(friendlyError(err), true); }
+    finally { setBusy(form, false); }
   });
 
   aq('#signupForm').addEventListener('submit', async (e) => {
@@ -408,6 +463,8 @@ function bindForms() {
     const f = new FormData(e.currentTarget);
     const email = String(f.get('email')).trim();
     const password = String(f.get('password'));
+    const form = e.currentTarget;
+    setBusy(form, true, 'Duke krijuar…');
     try {
       const d = await araw('/auth/v1/signup?redirect_to=' + encodeURIComponent('https://www.zemzem.al/account.html'), {
         method:'POST',
@@ -415,7 +472,37 @@ function bindForms() {
       });
       if (d?.access_token) { storeSession(d); await loadAccount(); }
       else msg('Llogaria u krijua. Kontrollo emailin dhe kliko linkun e verifikimit; pastaj do të kthehesh te ZemZem.');
-    } catch (err) { msg(err.message, true); }
+    } catch (err) { msg(friendlyError(err), true); }
+    finally { setBusy(form, false); }
+  });
+
+  aq('#forgotForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const email = String(new FormData(form).get('email') || '').trim();
+    setBusy(form, true, 'Duke dërguar…');
+    try {
+      await araw('/auth/v1/recover?redirect_to=' + encodeURIComponent('https://www.zemzem.al/account.html'), {method:'POST', body:{email}});
+      msg('Nëse ky email është i regjistruar, udhëzimet për rivendosjen e fjalëkalimit janë dërguar.');
+    } catch (err) { msg(friendlyError(err), true); }
+    finally { setBusy(form, false); }
+  });
+
+  aq('#resetPasswordForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const fields = new FormData(form);
+    const password = String(fields.get('password') || '');
+    const confirmation = String(fields.get('password_confirm') || '');
+    if (password !== confirmation) return msg('Fjalëkalimet nuk përputhen.', true);
+    setBusy(form, true, 'Duke ruajtur…');
+    try {
+      await araw('/auth/v1/user', {method:'PUT', body:{password}, token:accSession?.access_token});
+      accRecoveryMode = false;
+      msg('Fjalëkalimi u ndryshua me sukses. Po hapim llogarinë tënde…');
+      setTimeout(loadAccount, 700);
+    } catch (err) { msg(friendlyError(err), true); }
+    finally { setBusy(form, false); }
   });
 
   aq('#logoutBtn').onclick = async () => {
@@ -479,6 +566,7 @@ async function initAccount() {
   loadStored();
   bindViews();
   bindAuthTabs();
+  bindAuthHelpers();
   bindForms();
   await loadAccount();
 }
