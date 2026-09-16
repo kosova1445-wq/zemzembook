@@ -211,6 +211,8 @@ async function openOrder(id){
 }
 async function saveOrderChanges(){
   if(!activeOrder)return;const body={p_order_id:activeOrder.id,p_order_status:$('#detailOrderStatus').value,p_shipping_carrier:$('#detailCarrier').value.trim()||null,p_tracking_number:$('#detailTracking').value.trim()||null,p_cancellation_reason:$('#detailCancelReason').value.trim()||null,p_notes:$('#detailNotes').value.trim()||null},oldStatus=activeOrder.order_status;
+  if(body.p_order_status==='shipped'&&(!body.p_shipping_carrier||!body.p_tracking_number)){toast('Për statusin “E dërguar” plotëso transportuesin dhe numrin e gjurmimit.','error');return}
+  if(body.p_order_status==='cancelled'&&!body.p_cancellation_reason){toast('Shkruaj arsyen e anulimit para se ta ruash.','error');return}
   try{const d=await api('rpc/admin_update_physical_order',{method:'POST',body}),row=Array.isArray(d)?d[0]:d;if(row)activeOrder=row;if(oldStatus!==body.p_order_status){try{await edge('process-notifications',{order_id:activeOrder.id})}catch(e){if(!String(e.message).includes('EMAIL_NOT_CONFIGURED'))console.warn(e)}}await Promise.all([loadOrders(),loadAudit()]);renderDashboard();renderOrders();renderAudit();toast('Porosia u përditësua');await openOrder(activeOrder.id)}catch(e){toast(e.message,'error')}
 }
 async function resendOrderEmail(){
