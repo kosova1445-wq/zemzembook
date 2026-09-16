@@ -129,6 +129,8 @@ jobs:
           assets/css/home-modern.css
           assets/css/home-wow.css
           assets/css/home-bookstore-v2.css
+          assets/css/home-ebukz3.css
+          assets/css/home-category-preserve.css
           assets/js/checkout-v2.js
           assets/js/seo-product.js
           assets/js/analytics.js
@@ -215,7 +217,14 @@ jobs:
           grep -Fq '.zv2-newsletter' /tmp/home-bookstore-v2.css
           fetch_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js
           grep -Fq 'zemzem-bookstore-v2' /tmp/home-bookstore-v2.js
-          grep -Fq 'zv2Newsletter' /tmp/home-bookstore-v2.js
+          grep -Fq 'home-ebukz3.css?v=1' /tmp/home-bookstore-v2.js
+          grep -Fq 'home-category-preserve.css?v=1' /tmp/home-bookstore-v2.js
+          fetch_live https://www.zemzem.al/assets/css/home-ebukz3.css /tmp/home-ebukz3.css
+          grep -Fq 'supplied bookstore reference screenshot' /tmp/home-ebukz3.css
+          grep -Fq '.wow-featured' /tmp/home-ebukz3.css
+          fetch_live https://www.zemzem.al/assets/css/home-category-preserve.css /tmp/home-category-preserve.css
+          grep -Fq 'Keep the ZemZem category UI' /tmp/home-category-preserve.css
+          grep -Fq '.category-box-premium' /tmp/home-category-preserve.css
 
           fetch_live https://www.zemzem.al/shop.html /tmp/shop.html
           grep -Fq 'Libra në Shqip – Dyqani i Librave Fizikë | ZemZem' /tmp/shop.html
