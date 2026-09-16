@@ -176,6 +176,11 @@ jobs:
             esac
           done
 
+          # Storefront design files are released as one visual unit.
+          upload "index.html"
+          upload "assets/js/app-v5.js"
+          upload "assets/css/site-premium-v3.css"
+
       - name: Verify live protected release
         if: steps.latest.outputs.deploy == 'true'
         shell: bash
@@ -290,6 +295,10 @@ jobs:
           grep -Fq 'production-polish.css?v=1' /tmp/app-v5.js
           fetch_live https://www.zemzem.al/assets/css/production-polish.css /tmp/production-polish.css
           grep -Fq 'html{overflow-x:hidden}' /tmp/production-polish.css
+          fetch_live https://www.zemzem.al/assets/css/site-premium-v3.css /tmp/site-premium-v3.css
+          grep -Fq 'ZemZem premium v3' /tmp/site-premium-v3.css
+          grep -Fq 'collection-rail' /tmp/index.html
+          grep -Fq 'data-premium-v3' /tmp/app-v5.js
           fetch_live https://www.zemzem.al/assets/js/admin-book-helper.js /tmp/admin-book-helper.js
           grep -Fq 'books_sku_key' /tmp/admin-book-helper.js
           grep -Fq 'Gjenero SKU' /tmp/admin-book-helper.js
