@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 150" role="img" aria-label="ZemZem watermark">
+  <g fill="#159DA8">
+    <path d="M18 26h16v72h54c14 0 24 6 30 16H18V26Z"/>
+    <path d="M126 26h16v88H42c6-10 16-16 30-16h54V26Z"/>
+    <path d="M44 15h44c16 0 27 10 27 27v48c-6-8-15-12-27-12H44V15Z"/>
+    <path d="M117 42c0-17 11-27 27-27h44v63h-44c-12 0-21 4-27 12V42Z"/>
+  </g>
+  <text x="215" y="76" fill="#159DA8" font-family="Arial, Helvetica, sans-serif" font-size="43" font-weight="500" letter-spacing="3">ZEMZEM</text>
+  <text x="217" y="103" fill="#159DA8" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="400">Shtëpi botuese dhe shpërndarëse</text>
+</svg>
