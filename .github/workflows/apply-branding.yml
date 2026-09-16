@@ -1,0 +1,90 @@
+name: Apply Official ZemZem Branding
+
+on:
+  workflow_run:
+    workflows: ["Deploy ZemZem to cPanel"]
+    types: [completed]
+    branches: [main]
+
+concurrency:
+  group: zemzem-official-branding
+  cancel-in-progress: true
+
+jobs:
+  branding:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Inject official brand stylesheet
+        shell: bash
+        run: |
+          set -euo pipefail
+          BRAND_TAG='<link rel="stylesheet" href="assets/css/brand.css?v=1">'
+          for page in \
+            index.html shop.html product.html checkout.html paypal-return.html \
+            about.html contact.html shipping-returns.html privacy.html terms.html account.html \
+            ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html blog.html article.html; do
+            if [ -f "$page" ] && ! grep -Fq 'assets/css/brand.css' "$page"; then
+              sed -i "s#</head>#${BRAND_TAG}</head>#" "$page"
+            fi
+          done
+
+      - name: Upload branded public release
+        env:
+          FTP_SERVER: quebec.us.hostns.io
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          upload() {
+            local src="$1"
+            curl --fail --show-error --silent \
+              --connect-timeout 20 --max-time 60 --retry 2 --retry-delay 2 \
+              --ftp-ssl-control --disable-epsv --ftp-skip-pasv-ip --ftp-create-dirs \
+              --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              --upload-file "$src" \
+              "ftp://${FTP_SERVER}:${FTP_PORT}${FTP_SERVER_DIR}${src}"
+            echo "Uploaded: $src"
+          }
+
+          for file in \
+            assets/css/brand.css \
+            assets/brand/zemzem-logo.svg \
+            assets/brand/zemzem-watermark.svg \
+            favicon.svg \
+            index.html shop.html product.html checkout.html paypal-return.html \
+            about.html contact.html shipping-returns.html privacy.html terms.html account.html \
+            ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html blog.html article.html; do
+            upload "$file"
+          done
+
+      - name: Verify official branding live
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/css/brand.css?brand=${GITHUB_RUN_ID}" -o /tmp/brand.css
+          grep -Fq 'Official ZemZem branding layer' /tmp/brand.css
+          grep -Fq 'zemzem-watermark.svg' /tmp/brand.css
+
+          curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/brand/zemzem-logo.svg?brand=${GITHUB_RUN_ID}" -o /tmp/logo.svg
+          grep -Fq 'Shtëpi botuese dhe shpërndarëse' /tmp/logo.svg
+
+          curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/?brand=${GITHUB_RUN_ID}" -o /tmp/index.html
+          grep -Fq 'assets/css/brand.css?v=1' /tmp/index.html
+
+          curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/product.html?brand=${GITHUB_RUN_ID}" -o /tmp/product.html
+          grep -Fq 'assets/css/brand.css?v=1' /tmp/product.html
+
+          curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/ebooks.html?brand=${GITHUB_RUN_ID}" -o /tmp/ebooks.html
+          grep -Fq 'assets/css/brand.css?v=1' /tmp/ebooks.html
+
+          echo 'ZEMZEM_OFFICIAL_BRANDING_LIVE_OK=yes'
