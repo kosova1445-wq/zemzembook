@@ -39,9 +39,13 @@ jobs:
             fi
           done
 
-          HOME_LABELS_JS='<script src="assets/js/home-labels.js?v=1"></script>'
-          if [ -f index.html ] && ! grep -Fq 'assets/js/home-labels.js' index.html; then
-            sed -i "s#</body>#${HOME_LABELS_JS}</body>#" index.html
+          HOME_LABELS_JS='<script src="assets/js/home-labels.js?v=2"></script>'
+          if [ -f index.html ]; then
+            if grep -Fq 'assets/js/home-labels.js' index.html; then
+              sed -i 's#assets/js/home-labels.js?v=[0-9]*#assets/js/home-labels.js?v=2#g' index.html
+            else
+              sed -i "s#</body>#${HOME_LABELS_JS}</body>#" index.html
+            fi
           fi
 
           ADMIN_BRAND_CSS='<link rel="stylesheet" href="assets/css/admin-branding.css?v=1">'
@@ -115,6 +119,7 @@ jobs:
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/js/home-labels.js?brand=${GITHUB_RUN_ID}" -o /tmp/home-labels.js
           grep -Fq 'ZemZem Select' /tmp/home-labels.js
           grep -Fq 'site_content?key=eq.home_labels' /tmp/home-labels.js
+          ! grep -Fq 'new MutationObserver' /tmp/home-labels.js
 
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/assets/js/admin-home-labels.js?brand=${GITHUB_RUN_ID}" -o /tmp/admin-home-labels.js
           grep -Fq 'Tekstet e dizajnit të Ballinës' /tmp/admin-home-labels.js
@@ -126,7 +131,7 @@ jobs:
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/?brand=${GITHUB_RUN_ID}" -o /tmp/index.html
           grep -Fq 'assets/css/brand.css?v=2' /tmp/index.html
           grep -Fq 'assets/js/branding.js?v=1' /tmp/index.html
-          grep -Fq 'assets/js/home-labels.js?v=1' /tmp/index.html
+          grep -Fq 'assets/js/home-labels.js?v=2' /tmp/index.html
 
           curl -L --fail --silent --show-error --max-time 20 "https://www.zemzem.al/product.html?brand=${GITHUB_RUN_ID}" -o /tmp/product.html
           grep -Fq 'assets/css/brand.css?v=2' /tmp/product.html
