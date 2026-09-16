@@ -92,6 +92,12 @@ jobs:
             fi
           done
 
+          # Keep the safe book-create helper in the live admin without changing the classic admin design.
+          ADMIN_BOOK_HELPER_TAG='<script src="assets/js/admin-book-helper.js?v=1"></script>'
+          if [ -f admin.html ] && ! grep -Fq 'assets/js/admin-book-helper.js' admin.html; then
+            sed -i "s#<script src=\"assets/js/admin-booksto.js?v=1\"></script>#<script src=\"assets/js/admin-booksto.js?v=1\"></script>${ADMIN_BOOK_HELPER_TAG}#" admin.html
+          fi
+
           # Always republish the complete protected production set. This prevents rapid
           # sequential commits from leaving production on an older storefront/admin version
           # when obsolete deploy jobs are intentionally skipped by the debounce step.
@@ -126,6 +132,7 @@ jobs:
           admin.html
           assets/js/admin-v2.js
           assets/js/admin-booksto.js
+          assets/js/admin-book-helper.js
           assets/js/admin-blog.js
           assets/css/admin-blog.css
           assets/css/admin-v2.css
@@ -240,6 +247,7 @@ jobs:
           grep -Fq 'admin-booksto.css?v=1' /tmp/admin.html
           grep -Fq 'admin-booksto-pages.css?v=1' /tmp/admin.html
           grep -Fq 'admin-booksto.js?v=1' /tmp/admin.html
+          grep -Fq 'admin-book-helper.js?v=1' /tmp/admin.html
           if grep -Fq 'assets/js/analytics.js' /tmp/admin.html; then
             echo 'Analytics must not be loaded in admin.html'; exit 1
           fi
@@ -247,6 +255,9 @@ jobs:
           grep -Fq 'store-admin-ops' /tmp/admin-v2.js
           grep -Fq 'admin_update_physical_order' /tmp/admin-v2.js
           grep -Fq 'admin_customer_detail' /tmp/admin-v2.js
+          fetch_live https://www.zemzem.al/assets/js/admin-book-helper.js /tmp/admin-book-helper.js
+          grep -Fq 'books_sku_key' /tmp/admin-book-helper.js
+          grep -Fq 'Gjenero SKU' /tmp/admin-book-helper.js
           fetch_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto.js
           grep -Fq 'booksto-insight-grid' /tmp/admin-booksto.js
           grep -Fq 'Category Lists' /tmp/admin-booksto.js
