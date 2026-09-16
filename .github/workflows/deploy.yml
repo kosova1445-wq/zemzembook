@@ -99,7 +99,7 @@ jobs:
           fi
 
           # Homepage featured-books manager: load it directly in admin so it is always visible in Faqja & Menu.
-          ADMIN_HOME_BOOKS_TAG='<script src="assets/js/admin-home-books.js?v=2" data-admin-home-books="1"></script>'
+          ADMIN_HOME_BOOKS_TAG='<script src="assets/js/admin-home-books.js?v=3" data-admin-home-books="1"></script>'
           if [ -f admin.html ] && ! grep -Fq 'assets/js/admin-home-books.js' admin.html; then
             sed -i "s#<script src=\"assets/js/admin-book-helper.js?v=1\"></script>#<script src=\"assets/js/admin-book-helper.js?v=1\"></script>${ADMIN_HOME_BOOKS_TAG}#" admin.html
           fi
@@ -179,7 +179,10 @@ jobs:
           # Storefront design files are released as one visual unit.
           upload "index.html"
           upload "assets/js/app-v5.js"
+          upload "assets/js/home-modern.js"
           upload "assets/css/site-premium-v3.css"
+          upload "admin.html"
+          upload "assets/js/admin-home-books.js"
 
       - name: Verify live protected release
         if: steps.latest.outputs.deploy == 'true'
@@ -280,7 +283,7 @@ jobs:
           grep -Fq 'admin-booksto-pages.css?v=1' /tmp/admin.html
           grep -Fq 'admin-booksto.js?v=1' /tmp/admin.html
           grep -Fq 'admin-book-helper.js?v=1' /tmp/admin.html
-          grep -Fq 'admin-home-books.js?v=2' /tmp/admin.html
+          grep -Fq 'admin-home-books.js?v=3' /tmp/admin.html
           if grep -Fq 'assets/js/analytics.js' /tmp/admin.html; then
             echo 'Analytics must not be loaded in admin.html'; exit 1
           fi
@@ -303,7 +306,7 @@ jobs:
           grep -Fq 'books_sku_key' /tmp/admin-book-helper.js
           grep -Fq 'Gjenero SKU' /tmp/admin-book-helper.js
           fetch_live https://www.zemzem.al/assets/js/admin-home-books.js /tmp/admin-home-books.js
-          grep -Fq 'Libra të zgjedhur në Ballinë' /tmp/admin-home-books.js
+          grep -Fq 'Seksionet e librave në Ballinë' /tmp/admin-home-books.js
           grep -Fq 'homepage_selected_books' /tmp/admin-home-books.js
           fetch_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto.js
           grep -Fq 'booksto-insight-grid' /tmp/admin-booksto.js
