@@ -113,6 +113,10 @@ jobs:
           assets/js/blog.js
           assets/css/blog.css
           assets/js/app-v5.js
+          assets/js/home-modern.js
+          assets/js/home-wow.js
+          assets/css/home-modern.css
+          assets/css/home-wow.css
           assets/js/checkout-v2.js
           assets/js/seo-product.js
           assets/js/analytics.js
@@ -181,6 +185,15 @@ jobs:
           grep -Fq 'ZemZem.al – Libra Shqip, eBook & Librari Online' /tmp/index.html
           grep -Fq 'application/ld+json' /tmp/index.html
           grep -Fq 'assets/js/analytics.js?v=1' /tmp/index.html
+          grep -Fq 'assets/css/home-modern.css?v=1' /tmp/index.html
+          grep -Fq 'assets/css/home-wow.css?v=1' /tmp/index.html
+          grep -Fq 'assets/js/home-wow.js?v=1' /tmp/index.html
+          fetch_live https://www.zemzem.al/assets/js/home-wow.js /tmp/home-wow.js
+          grep -Fq 'wow-featured' /tmp/home-wow.js
+          grep -Fq 'mega-menu-shell' /tmp/home-wow.js
+          fetch_live https://www.zemzem.al/assets/css/home-wow.css /tmp/home-wow.css
+          grep -Fq '.wow-featured' /tmp/home-wow.css
+          grep -Fq '.wow-quickview' /tmp/home-wow.css
           fetch_live https://www.zemzem.al/shop.html /tmp/shop.html
           grep -Fq 'Libra në Shqip – Dyqani i Librave Fizikë | ZemZem' /tmp/shop.html
           grep -Fq 'application/ld+json' /tmp/shop.html
