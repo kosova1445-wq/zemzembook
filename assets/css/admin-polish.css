@@ -1,0 +1,8 @@
+.admin-password-field{position:relative}
+.admin-password-field input{width:100%;padding-right:72px}
+.admin-password-field button{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:#24583f;font-weight:800;cursor:pointer;padding:7px}
+.admin-sync{font-size:11px;color:#6e7b73;white-space:nowrap}
+.admin-sync.error{color:#b42318}
+button:disabled{cursor:not-allowed;opacity:.62}
+:focus-visible{outline:3px solid rgba(18,203,176,.28);outline-offset:2px}
+@media(max-width:760px){.admin-sync{display:none}.admin-topbar h1{font-size:20px}.top-actions{margin-left:auto}}
