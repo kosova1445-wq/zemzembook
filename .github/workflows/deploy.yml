@@ -328,7 +328,7 @@ jobs:
           grep -Fq 'ZemZem WhatsApp and Facebook contact buttons v2' /tmp/whatsapp-chat.js
           grep -Fq '41786044792' /tmp/whatsapp-chat.js
           grep -Fq '.zemzem-whatsapp{display:flex' /tmp/whatsapp-chat.js
-          grep -Fq 'https://www.facebook.com/zemzemhouse' /tmp/whatsapp-chat.js
+          grep -Fq 'https://m.me/zemzemhouse' /tmp/whatsapp-chat.js
           grep -Fq '.zemzem-facebook{display:flex' /tmp/whatsapp-chat.js
           fetch_live https://www.zemzem.al/assets/css/production-polish.css /tmp/production-polish.css
           grep -Fq 'html{overflow-x:hidden}' /tmp/production-polish.css
