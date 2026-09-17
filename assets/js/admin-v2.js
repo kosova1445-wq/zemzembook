@@ -306,3 +306,4 @@ function bind(){
 }
 async function init(){injectAdminPro();loadSession();bind();if(session)await enterAdmin();else{$('#authScreen').hidden=false;$('#adminApp').hidden=true}}
 document.addEventListener('DOMContentLoaded',init);
+if(!document.querySelector('script[data-admin-advanced]')){const s=document.createElement('script');s.src='assets/js/admin-advanced.js?v=1';s.dataset.adminAdvanced='1';document.body.appendChild(s)}
