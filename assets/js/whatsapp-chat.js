@@ -1,4 +1,4 @@
-// ZemZem WhatsApp and Facebook contact buttons v2
+// ZemZem WhatsApp, Messenger, Telegram and Viber contact buttons v3
 (()=>{
   if(document.querySelector('[data-zemzem-whatsapp]'))return;
   const phone='41786044792';
@@ -17,6 +17,18 @@
   facebook.className='zemzem-facebook'; facebook.dataset.zemzemFacebook='1';
   facebook.setAttribute('aria-label','Na shkruaj në Messenger');
   facebook.innerHTML='<span class="zemzem-facebook-label">Messenger</span><span class="zemzem-facebook-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.82 3 3 8.39 3 15.04c0 3.79 1.89 7.17 4.84 9.38V29l4.42-2.43c1.18.33 2.43.51 3.74.51 7.18 0 13-5.39 13-12.04C29 8.39 23.18 3 16 3Zm1.29 16.21-3.31-3.53-6.46 3.53 7.1-7.54 3.4 3.53 6.37-3.53-7.1 7.54Z"/></svg></span>';
+  const telegram=document.createElement('a');
+  telegram.href=`https://t.me/+${phone}?text=${encodeURIComponent('Përshëndetje ZemZem! Kam një pyetje.')}`;
+  telegram.target='_blank'; telegram.rel='noopener noreferrer';
+  telegram.className='zemzem-telegram'; telegram.dataset.zemzemTelegram='1';
+  telegram.setAttribute('aria-label','Na shkruaj në Telegram');
+  telegram.innerHTML='<span class="zemzem-social-label">Telegram</span><span class="zemzem-telegram-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path fill="currentColor" d="M27.7 5.1 23.9 26c-.28 1.48-1.07 1.84-2.17 1.15l-5.78-4.26-2.79 2.69c-.31.31-.57.57-1.17.57l.42-5.89L23.13 10.6c.47-.42-.1-.65-.73-.23L9.15 18.71l-5.7-1.78c-1.24-.39-1.26-1.24.26-1.84L26 6.5c1.03-.38 1.93.23 1.7-1.4Z"/></svg></span>';
+  const viber=document.createElement('a');
+  viber.href=`viber://chat?number=%2B${phone}`;
+  viber.className='zemzem-viber'; viber.dataset.zemzemViber='1';
+  viber.setAttribute('aria-label','Na shkruaj në Viber');
+  viber.innerHTML='<span class="zemzem-social-label">Viber</span><span class="zemzem-viber-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path fill="currentColor" d="M25.8 5.9C23.2 3.3 13.1 2.2 8.7 4.3 5.3 5.9 4.1 9.8 4 14.5c-.1 4.7-.2 13.5 8.1 15.8v-3.6s-.1-.1-.2-.1c-1.1-.3-2.1-.7-3-1.3-2.9-1.8-3.2-5.6-3.1-10.7.1-4.1 1-6.9 3.6-8.1 3.7-1.8 12.5-.8 14.7 1.4 2.1 2.1 2.7 9.1.9 12.7-1 2-2.8 3.2-5.3 3.8l-1.1.3-1.4 1.4c-1.2 1.2-2.3 2.3-3.4 3.3v-5.1c-4.8-.8-5.7-3.4-5.9-6.3h2.3c.1 2.2.8 3.5 3.6 4.1V12h2.3v10.2c.6-.1 1.2-.3 1.8-.5.5-.2 1-.4 1.4-.7l1.6-1.6c.7-2.5.3-7.4-1.2-8.8-1.2-1.2-5.7-2-8.2-1.2l-.7-2.2c3.3-1 8.7 0 10.5 1.8 2.2 2.2 2.7 8.5 1.5 11.6-.6 1.4-1.8 2.5-3.5 3.2l-4.7 4.7v2.2c0 .9 1.1 1.3 1.7.7l6.6-6.6c3.4-.9 5.7-2.6 6.9-5.2 2.1-4.4 1.5-11.2-1.2-13.7Z"/></svg></span>';
   style.textContent+= '.zemzem-facebook{display:flex;position:fixed;right:20px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:9998;align-items:center;gap:9px;color:#fff!important;text-decoration:none!important;font:800 14px/1 system-ui,-apple-system,Segoe UI,sans-serif;filter:drop-shadow(0 8px 18px rgba(18,48,88,.25))}.zemzem-facebook-label{background:#173f35;padding:11px 13px;border-radius:999px}.zemzem-facebook-icon{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#1877f2;border:2px solid #fff;box-shadow:0 7px 22px rgba(24,119,242,.3)}.zemzem-facebook-icon svg{width:32px;height:32px}.zemzem-facebook:focus-visible{outline:3px solid #f5a623;outline-offset:4px;border-radius:999px}@media(max-width:820px){.zemzem-facebook{right:16px;bottom:calc(84px + env(safe-area-inset-bottom))}}@media(max-width:390px){.zemzem-facebook-label{display:none}}';
-  document.head.appendChild(style); document.body.append(facebook,link);
+  style.textContent+= '.zemzem-telegram,.zemzem-viber{display:flex;position:fixed;right:20px;z-index:9998;align-items:center;gap:9px;color:#fff!important;text-decoration:none!important;font:800 14px/1 system-ui,-apple-system,Segoe UI,sans-serif;filter:drop-shadow(0 8px 18px rgba(18,48,88,.22))}.zemzem-telegram{bottom:calc(152px + env(safe-area-inset-bottom))}.zemzem-viber{bottom:calc(218px + env(safe-area-inset-bottom))}.zemzem-social-label{background:#173f35;padding:11px 13px;border-radius:999px}.zemzem-telegram-icon,.zemzem-viber-icon{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;border:2px solid #fff}.zemzem-telegram-icon{background:#229ed9}.zemzem-viber-icon{background:#7360f2}.zemzem-telegram-icon svg,.zemzem-viber-icon svg{width:31px;height:31px}.zemzem-telegram:focus-visible,.zemzem-viber:focus-visible{outline:3px solid #f5a623;outline-offset:4px;border-radius:999px}@media(max-width:820px){.zemzem-telegram,.zemzem-viber{right:16px}.zemzem-telegram{bottom:calc(150px + env(safe-area-inset-bottom))}.zemzem-viber{bottom:calc(216px + env(safe-area-inset-bottom))}}@media(max-width:390px){.zemzem-social-label{display:none}}';
+  document.head.appendChild(style); document.body.append(viber,telegram,facebook,link);
 })();
