@@ -149,6 +149,7 @@ jobs:
           assets/js/admin-enterprise-config.js
           assets/js/admin-marketing-suite.js
           assets/js/admin-stock-forecast.js
+          assets/js/admin-social-contacts.js
           assets/js/admin-blog.js
           assets/css/admin-blog.css
           assets/css/admin-v2.css
@@ -194,6 +195,7 @@ jobs:
           upload "admin.html"
           upload "assets/js/admin-v2.js"
           upload "assets/js/admin-home-books.js"
+          upload "assets/js/admin-social-contacts.js"
           upload "assets/js/admin-enterprise.js"
           upload "assets/js/admin-enterprise-tools.js"
           upload "assets/js/admin-enterprise-config.js"
@@ -310,6 +312,7 @@ jobs:
           grep -Fq 'admin-enterprise-config.js?v=1' /tmp/admin.html
           grep -Fq 'admin-marketing-suite.js?v=1' /tmp/admin.html
           grep -Fq 'admin-stock-forecast.js?v=1' /tmp/admin.html
+          grep -Fq 'admin-social-contacts.js?v=1' /tmp/admin.html
           if grep -Fq 'assets/js/analytics.js' /tmp/admin.html; then
             echo 'Analytics must not be loaded in admin.html'; exit 1
           fi
@@ -323,7 +326,7 @@ jobs:
           grep -Fq '.admin-password-field' /tmp/admin-polish.css
           fetch_live https://www.zemzem.al/assets/js/app-v5.js /tmp/app-v5.js
           grep -Fq 'production-polish.css?v=1' /tmp/app-v5.js
-          grep -Fq 'whatsapp-chat.js?v=3' /tmp/app-v5.js
+          grep -Fq 'whatsapp-chat.js?v=4' /tmp/app-v5.js
           fetch_live https://www.zemzem.al/assets/js/whatsapp-chat.js /tmp/whatsapp-chat.js
           grep -Fq 'ZemZem WhatsApp, Messenger, Telegram and Viber contact buttons v3' /tmp/whatsapp-chat.js
           grep -Fq '41786044792' /tmp/whatsapp-chat.js
@@ -357,6 +360,9 @@ jobs:
           grep -Fq 'ZemZem newsletter manager v1' /tmp/admin-marketing-suite.js
           fetch_live https://www.zemzem.al/assets/js/admin-stock-forecast.js /tmp/admin-stock-forecast.js
           grep -Fq 'predictive stock forecasting v1' /tmp/admin-stock-forecast.js
+          fetch_live https://www.zemzem.al/assets/js/admin-social-contacts.js /tmp/admin-social-contacts.js
+          grep -Fq 'ZemZem admin social contacts manager v1' /tmp/admin-social-contacts.js
+          grep -Fq 'site_content?key=eq.social_contacts' /tmp/admin-social-contacts.js
           fetch_live https://www.zemzem.al/assets/js/admin-advanced.js /tmp/admin-advanced.js
           grep -Fq 'period statistics and publication year' /tmp/admin-advanced.js
           fetch_live https://www.zemzem.al/assets/js/account-advanced.js /tmp/account-advanced.js
