@@ -23,8 +23,8 @@ jobs:
           set -euxo pipefail
           stamp="${GITHUB_SHA}-$(date +%s)"
           curl -L --fail --silent --show-error --max-time 25 "https://www.zemzem.al/admin.html?verify=${stamp}" -o /tmp/admin.html
-          grep -Fq 'assets/js/admin-home-books.js?v=2' /tmp/admin.html
+          grep -Fq 'assets/js/admin-home-books.js?v=3' /tmp/admin.html
           curl -L --fail --silent --show-error --max-time 25 "https://www.zemzem.al/assets/js/admin-home-books.js?verify=${stamp}" -o /tmp/admin-home-books.js
-          grep -Fq 'Libra të zgjedhur në Ballinë' /tmp/admin-home-books.js
-          grep -Fq 'Menaxho direkt cilët 5 libra' /tmp/admin-home-books.js
+          grep -Fq 'Seksionet e librave në Ballinë' /tmp/admin-home-books.js
+          grep -Fq 'Ruaj të gjitha seksionet' /tmp/admin-home-books.js
           echo 'HOMEPAGE_BOOKS_MANAGER_LIVE=yes'
