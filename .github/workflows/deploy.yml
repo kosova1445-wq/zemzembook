@@ -123,6 +123,7 @@ jobs:
           assets/js/blog.js
           assets/css/blog.css
           assets/js/app-v5.js
+          assets/js/whatsapp-chat.js
           assets/js/home-modern.js
           assets/js/home-wow.js
           assets/js/home-bookstore-v2.js
@@ -186,6 +187,7 @@ jobs:
           # Storefront design files are released as one visual unit.
           upload "index.html"
           upload "assets/js/app-v5.js"
+          upload "assets/js/whatsapp-chat.js"
           upload "assets/js/home-modern.js"
           upload "assets/js/home-wow.js"
           upload "assets/css/site-premium-v3.css"
@@ -321,6 +323,10 @@ jobs:
           grep -Fq '.admin-password-field' /tmp/admin-polish.css
           fetch_live https://www.zemzem.al/assets/js/app-v5.js /tmp/app-v5.js
           grep -Fq 'production-polish.css?v=1' /tmp/app-v5.js
+          grep -Fq 'whatsapp-chat.js?v=1' /tmp/app-v5.js
+          fetch_live https://www.zemzem.al/assets/js/whatsapp-chat.js /tmp/whatsapp-chat.js
+          grep -Fq 'ZemZem mobile WhatsApp contact button v1' /tmp/whatsapp-chat.js
+          grep -Fq '38345436144' /tmp/whatsapp-chat.js
           fetch_live https://www.zemzem.al/assets/css/production-polish.css /tmp/production-polish.css
           grep -Fq 'html{overflow-x:hidden}' /tmp/production-polish.css
           fetch_live https://www.zemzem.al/assets/css/site-premium-v3.css /tmp/site-premium-v3.css
