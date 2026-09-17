@@ -144,6 +144,7 @@ jobs:
           assets/js/admin-home-books.js
           assets/js/admin-enterprise.js
           assets/js/admin-enterprise-tools.js
+          assets/js/admin-enterprise-config.js
           assets/js/admin-blog.js
           assets/css/admin-blog.css
           assets/css/admin-v2.css
@@ -190,6 +191,7 @@ jobs:
           upload "assets/js/admin-home-books.js"
           upload "assets/js/admin-enterprise.js"
           upload "assets/js/admin-enterprise-tools.js"
+          upload "assets/js/admin-enterprise-config.js"
           upload "assets/js/admin-advanced.js"
           upload "assets/js/account.js"
           upload "assets/js/account-enterprise.js"
@@ -297,6 +299,7 @@ jobs:
           grep -Fq 'admin-home-books.js?v=4' /tmp/admin.html
           grep -Fq 'admin-enterprise.js?v=1' /tmp/admin.html
           grep -Fq 'admin-enterprise-tools.js?v=1' /tmp/admin.html
+          grep -Fq 'admin-enterprise-config.js?v=1' /tmp/admin.html
           if grep -Fq 'assets/js/analytics.js' /tmp/admin.html; then
             echo 'Analytics must not be loaded in admin.html'; exit 1
           fi
@@ -328,6 +331,9 @@ jobs:
           fetch_live https://www.zemzem.al/assets/js/admin-enterprise-tools.js /tmp/admin-enterprise-tools.js
           grep -Fq 'ZemZem Enterprise operational tools v1' /tmp/admin-enterprise-tools.js
           grep -Fq 'content_moderation_queue' /tmp/admin-enterprise-tools.js
+          fetch_live https://www.zemzem.al/assets/js/admin-enterprise-config.js /tmp/admin-enterprise-config.js
+          grep -Fq 'ZemZem Enterprise configuration editor v1' /tmp/admin-enterprise-config.js
+          grep -Fq 'author_royalty_percent' /tmp/admin-enterprise-config.js
           fetch_live https://www.zemzem.al/assets/js/admin-advanced.js /tmp/admin-advanced.js
           grep -Fq 'period statistics and publication year' /tmp/admin-advanced.js
           fetch_live https://www.zemzem.al/assets/js/account-advanced.js /tmp/account-advanced.js
