@@ -461,3 +461,15 @@ drop policy if exists enterprise_audio_admin_update on storage.objects;
 create policy enterprise_audio_admin_update on storage.objects for update to authenticated using (bucket_id='enterprise-audio' and (select private.is_admin())) with check (bucket_id='enterprise-audio' and (select private.is_admin()));
 drop policy if exists enterprise_audio_admin_delete on storage.objects;
 create policy enterprise_audio_admin_delete on storage.objects for delete to authenticated using (bucket_id='enterprise-audio' and (select private.is_admin()));
+
+-- Safe initial configuration; never overwrite settings already customized in Admin.
+update public.enterprise_modules set config='{"expiry_alert_days":90,"royalty_reminder_days":30,"default_currency":"EUR","default_territory":"Kosovë, Shqipëri, Maqedoni e Veriut"}'::jsonb where key='copyright' and config='{}'::jsonb;
+update public.enterprise_modules set config='{"inventory_age_days":180,"default_discount_percent":10,"maximum_discount_percent":30,"automatic_application":false}'::jsonb where key='dynamic_pricing' and config='{}'::jsonb;
+update public.enterprise_modules set config='{"minimum_bulk_quantity":20,"default_discount_percent":10,"approval_required":true,"proforma_enabled":true}'::jsonb where key='b2b' and config='{}'::jsonb;
+update public.enterprise_modules set config='{"risk_threshold":50,"block_external_links":true,"minimum_review_length":8,"blocked_words":""}'::jsonb where key='moderation' and config='{}'::jsonb;
+update public.enterprise_modules set config='{"default_weight_kg":0.5,"handling_fee":0,"selection_mode":"cheapest","free_shipping_threshold":50}'::jsonb where key='logistics' and config='{}'::jsonb;
+update public.enterprise_modules set config='{"allowed_amounts":"10,25,50,100","expiry_months":12,"gift_wrap_price":2,"message_max_length":300}'::jsonb where key='gifting' and config='{}'::jsonb;
+update public.enterprise_modules set config='{"commission_percent":10,"credit_eur_rate":1,"approval_required":true,"maximum_images":5}'::jsonb where key='used_marketplace' and config='{}'::jsonb;
+update public.enterprise_modules set config='{"default_annual_goal":12,"reminders_enabled":false,"streak_enabled":true,"week_starts_monday":true}'::jsonb where key='reading_analytics' and config='{}'::jsonb;
+update public.enterprise_modules set config='{"author_royalty_percent":70,"maximum_file_mb":25,"manual_approval":true,"payout_minimum":50}'::jsonb where key='self_publishing' and config='{}'::jsonb;
+update public.enterprise_modules set config='{"progress_save_seconds":10,"preview_seconds":60,"maximum_file_mb":500,"playback_speed_enabled":true}'::jsonb where key='audio' and config='{}'::jsonb;
