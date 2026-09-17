@@ -427,3 +427,37 @@ revoke all on function private.queue_review_moderation() from public,anon,authen
 drop trigger if exists reviews_enterprise_moderation on public.reviews;
 create trigger reviews_enterprise_moderation after insert or update of title,body,rating on public.reviews
 for each row execute function private.queue_review_moderation();
+
+-- Secure upload areas. User files are isolated under their auth.uid() folder.
+insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types) values
+('used-book-images','used-book-images',true,5242880,array['image/jpeg','image/png','image/webp']),
+('manuscripts','manuscripts',false,26214400,array['application/pdf','application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
+('enterprise-audio','enterprise-audio',true,524288000,array['audio/mpeg','audio/mp4','audio/ogg','audio/wav','audio/x-m4a'])
+on conflict(id) do update set file_size_limit=excluded.file_size_limit,allowed_mime_types=excluded.allowed_mime_types;
+
+drop policy if exists enterprise_used_images_public on storage.objects;
+create policy enterprise_used_images_public on storage.objects for select to anon,authenticated using (bucket_id='used-book-images');
+drop policy if exists enterprise_used_images_owner_insert on storage.objects;
+create policy enterprise_used_images_owner_insert on storage.objects for insert to authenticated with check (bucket_id='used-book-images' and (storage.foldername(name))[1]=(select auth.uid())::text);
+drop policy if exists enterprise_used_images_owner_update on storage.objects;
+create policy enterprise_used_images_owner_update on storage.objects for update to authenticated using (bucket_id='used-book-images' and (storage.foldername(name))[1]=(select auth.uid())::text) with check (bucket_id='used-book-images' and (storage.foldername(name))[1]=(select auth.uid())::text);
+drop policy if exists enterprise_used_images_owner_delete on storage.objects;
+create policy enterprise_used_images_owner_delete on storage.objects for delete to authenticated using (bucket_id='used-book-images' and (storage.foldername(name))[1]=(select auth.uid())::text);
+
+drop policy if exists enterprise_manuscripts_owner_select on storage.objects;
+create policy enterprise_manuscripts_owner_select on storage.objects for select to authenticated using (bucket_id='manuscripts' and ((storage.foldername(name))[1]=(select auth.uid())::text or (select private.is_admin())));
+drop policy if exists enterprise_manuscripts_owner_insert on storage.objects;
+create policy enterprise_manuscripts_owner_insert on storage.objects for insert to authenticated with check (bucket_id='manuscripts' and (storage.foldername(name))[1]=(select auth.uid())::text);
+drop policy if exists enterprise_manuscripts_owner_update on storage.objects;
+create policy enterprise_manuscripts_owner_update on storage.objects for update to authenticated using (bucket_id='manuscripts' and ((storage.foldername(name))[1]=(select auth.uid())::text or (select private.is_admin()))) with check (bucket_id='manuscripts' and ((storage.foldername(name))[1]=(select auth.uid())::text or (select private.is_admin())));
+drop policy if exists enterprise_manuscripts_owner_delete on storage.objects;
+create policy enterprise_manuscripts_owner_delete on storage.objects for delete to authenticated using (bucket_id='manuscripts' and ((storage.foldername(name))[1]=(select auth.uid())::text or (select private.is_admin())));
+
+drop policy if exists enterprise_audio_public on storage.objects;
+create policy enterprise_audio_public on storage.objects for select to anon,authenticated using (bucket_id='enterprise-audio');
+drop policy if exists enterprise_audio_admin_insert on storage.objects;
+create policy enterprise_audio_admin_insert on storage.objects for insert to authenticated with check (bucket_id='enterprise-audio' and (select private.is_admin()));
+drop policy if exists enterprise_audio_admin_update on storage.objects;
+create policy enterprise_audio_admin_update on storage.objects for update to authenticated using (bucket_id='enterprise-audio' and (select private.is_admin())) with check (bucket_id='enterprise-audio' and (select private.is_admin()));
+drop policy if exists enterprise_audio_admin_delete on storage.objects;
+create policy enterprise_audio_admin_delete on storage.objects for delete to authenticated using (bucket_id='enterprise-audio' and (select private.is_admin()));
