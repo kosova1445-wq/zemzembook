@@ -99,7 +99,7 @@ jobs:
           fi
 
           # Homepage featured-books manager: load it directly in admin so it is always visible in Faqja & Menu.
-          ADMIN_HOME_BOOKS_TAG='<script src="assets/js/admin-home-books.js?v=3" data-admin-home-books="1"></script>'
+          ADMIN_HOME_BOOKS_TAG='<script src="assets/js/admin-home-books.js?v=4" data-admin-home-books="1"></script>'
           if [ -f admin.html ] && ! grep -Fq 'assets/js/admin-home-books.js' admin.html; then
             sed -i "s#<script src=\"assets/js/admin-book-helper.js?v=1\"></script>#<script src=\"assets/js/admin-book-helper.js?v=1\"></script>${ADMIN_HOME_BOOKS_TAG}#" admin.html
           fi
@@ -180,6 +180,7 @@ jobs:
           upload "index.html"
           upload "assets/js/app-v5.js"
           upload "assets/js/home-modern.js"
+          upload "assets/js/home-wow.js"
           upload "assets/css/site-premium-v3.css"
           upload "admin.html"
           upload "assets/js/admin-v2.js"
@@ -287,7 +288,7 @@ jobs:
           grep -Fq 'admin-booksto-pages.css?v=1' /tmp/admin.html
           grep -Fq 'admin-booksto.js?v=1' /tmp/admin.html
           grep -Fq 'admin-book-helper.js?v=1' /tmp/admin.html
-          grep -Fq 'admin-home-books.js?v=3' /tmp/admin.html
+          grep -Fq 'admin-home-books.js?v=4' /tmp/admin.html
           if grep -Fq 'assets/js/analytics.js' /tmp/admin.html; then
             echo 'Analytics must not be loaded in admin.html'; exit 1
           fi
@@ -296,6 +297,7 @@ jobs:
           grep -Fq 'admin_update_physical_order' /tmp/admin-v2.js
           grep -Fq 'admin_customer_detail' /tmp/admin-v2.js
           grep -Fq 'setAdminSync' /tmp/admin-v2.js
+          grep -Fq 'featured_collection' /tmp/home-wow.js
           fetch_live https://www.zemzem.al/assets/css/admin-polish.css /tmp/admin-polish.css
           grep -Fq '.admin-password-field' /tmp/admin-polish.css
           fetch_live https://www.zemzem.al/assets/js/app-v5.js /tmp/app-v5.js
