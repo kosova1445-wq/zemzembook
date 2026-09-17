@@ -1,7 +1,11 @@
 // ZemZem WhatsApp, Messenger, Telegram and Viber contact buttons v3
-(()=>{
+(async()=>{
   if(document.querySelector('[data-zemzem-whatsapp]'))return;
-  const phone='41786044792';
+  const defaults={whatsapp:{enabled:true,label:'Na shkruaj',value:'41786044792'},messenger:{enabled:true,label:'Messenger',value:'https://m.me/zemzemhouse'},telegram:{enabled:true,label:'Telegram',value:'41786044792'},viber:{enabled:true,label:'Viber',value:'41786044792'}};
+  let settings=defaults;
+  try{const r=await fetch('https://ysvtrhizgcioyycwlkrk.supabase.co/rest/v1/site_content?key=eq.social_contacts&select=content&limit=1',{headers:{apikey:'sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD'},cache:'no-store'});if(r.ok){const rows=await r.json(),saved=rows?.[0]?.content||{};settings=Object.fromEntries(Object.keys(defaults).map(k=>[k,{...defaults[k],...(saved[k]||{})}]))}}catch(e){console.warn('Social contacts fallback',e)}
+  const digits=v=>String(v||'').replace(/\D/g,'');
+  const phone=digits(settings.whatsapp.value)||defaults.whatsapp.value;
   const message=`Përshëndetje ZemZem! Kam një pyetje rreth: ${document.title}\n${location.href}`;
   const link=document.createElement('a');
   link.href=`https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
@@ -9,26 +13,30 @@
   link.className='zemzem-whatsapp'; link.dataset.zemzemWhatsapp='1';
   link.setAttribute('aria-label','Na shkruaj në WhatsApp');
   link.innerHTML='<span class="zemzem-whatsapp-label">Na shkruaj</span><span class="zemzem-whatsapp-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path fill="currentColor" d="M16.04 3a12.7 12.7 0 0 0-10.9 19.22L3.45 28.4l6.33-1.66A12.7 12.7 0 1 0 16.04 3Zm0 22.86c-2 0-3.95-.58-5.62-1.67l-.4-.24-3.75.98 1-3.65-.26-.42a10.17 10.17 0 1 1 9.03 5Zm5.58-7.62c-.3-.15-1.81-.9-2.09-1-.28-.1-.48-.15-.69.15-.2.3-.78 1-.96 1.2-.18.2-.36.23-.66.08-1.8-.9-2.98-1.6-4.17-3.64-.31-.54.32-.5.9-1.66.1-.2.05-.38-.02-.53-.08-.15-.69-1.65-.94-2.26-.25-.6-.5-.52-.69-.53h-.58c-.2 0-.53.08-.81.38-.28.3-1.06 1.04-1.06 2.54s1.09 2.94 1.24 3.15c.15.2 2.14 3.27 5.19 4.59 1.93.83 2.68.9 3.64.76 1.1-.16 1.81-.74 2.07-1.45.25-.71.25-1.32.18-1.45-.08-.13-.28-.2-.59-.36Z"/></svg></span>';
+  link.querySelector('.zemzem-whatsapp-label').textContent=settings.whatsapp.label||'Na shkruaj';
   const style=document.createElement('style');
   style.textContent='.zemzem-whatsapp{display:flex;position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:9998;align-items:center;gap:9px;color:#fff!important;text-decoration:none!important;font:800 14px/1 system-ui,-apple-system,Segoe UI,sans-serif;filter:drop-shadow(0 8px 18px rgba(18,58,42,.28))}.zemzem-whatsapp-label{background:#173f35;padding:11px 13px;border-radius:999px}.zemzem-whatsapp-icon{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#25d366;border:2px solid #fff;box-shadow:0 7px 22px rgba(37,211,102,.35)}.zemzem-whatsapp-icon svg{width:31px;height:31px}.zemzem-whatsapp:focus-visible{outline:3px solid #f5a623;outline-offset:4px;border-radius:999px}@media(max-width:820px){.zemzem-whatsapp{right:16px;bottom:calc(18px + env(safe-area-inset-bottom))}}@media(max-width:390px){.zemzem-whatsapp-label{display:none}}@media(prefers-reduced-motion:no-preference){.zemzem-whatsapp-icon{animation:zemzem-wa-pulse 2.8s ease-in-out infinite}@keyframes zemzem-wa-pulse{0%,72%,100%{transform:scale(1)}82%{transform:scale(1.08)}}}';
   const facebook=document.createElement('a');
-  facebook.href='https://m.me/zemzemhouse';
+  facebook.href=settings.messenger.value||defaults.messenger.value;
   facebook.target='_blank'; facebook.rel='noopener noreferrer';
   facebook.className='zemzem-facebook'; facebook.dataset.zemzemFacebook='1';
   facebook.setAttribute('aria-label','Na shkruaj në Messenger');
   facebook.innerHTML='<span class="zemzem-facebook-label">Messenger</span><span class="zemzem-facebook-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C8.82 3 3 8.39 3 15.04c0 3.79 1.89 7.17 4.84 9.38V29l4.42-2.43c1.18.33 2.43.51 3.74.51 7.18 0 13-5.39 13-12.04C29 8.39 23.18 3 16 3Zm1.29 16.21-3.31-3.53-6.46 3.53 7.1-7.54 3.4 3.53 6.37-3.53-7.1 7.54Z"/></svg></span>';
+  facebook.querySelector('.zemzem-facebook-label').textContent=settings.messenger.label||'Messenger';
   const telegram=document.createElement('a');
-  telegram.href=`https://t.me/+${phone}?text=${encodeURIComponent('Përshëndetje ZemZem! Kam një pyetje.')}`;
+  telegram.href=`https://t.me/+${digits(settings.telegram.value)||defaults.telegram.value}?text=${encodeURIComponent('Përshëndetje ZemZem! Kam një pyetje.')}`;
   telegram.target='_blank'; telegram.rel='noopener noreferrer';
   telegram.className='zemzem-telegram'; telegram.dataset.zemzemTelegram='1';
   telegram.setAttribute('aria-label','Na shkruaj në Telegram');
   telegram.innerHTML='<span class="zemzem-social-label">Telegram</span><span class="zemzem-telegram-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path fill="currentColor" d="M27.7 5.1 23.9 26c-.28 1.48-1.07 1.84-2.17 1.15l-5.78-4.26-2.79 2.69c-.31.31-.57.57-1.17.57l.42-5.89L23.13 10.6c.47-.42-.1-.65-.73-.23L9.15 18.71l-5.7-1.78c-1.24-.39-1.26-1.24.26-1.84L26 6.5c1.03-.38 1.93.23 1.7-1.4Z"/></svg></span>';
+  telegram.querySelector('.zemzem-social-label').textContent=settings.telegram.label||'Telegram';
   const viber=document.createElement('a');
-  viber.href=`viber://chat?number=%2B${phone}`;
+  viber.href=`viber://chat?number=%2B${digits(settings.viber.value)||defaults.viber.value}`;
   viber.className='zemzem-viber'; viber.dataset.zemzemViber='1';
   viber.setAttribute('aria-label','Na shkruaj në Viber');
   viber.innerHTML='<span class="zemzem-social-label">Viber</span><span class="zemzem-viber-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path fill="currentColor" d="M25.8 5.9C23.2 3.3 13.1 2.2 8.7 4.3 5.3 5.9 4.1 9.8 4 14.5c-.1 4.7-.2 13.5 8.1 15.8v-3.6s-.1-.1-.2-.1c-1.1-.3-2.1-.7-3-1.3-2.9-1.8-3.2-5.6-3.1-10.7.1-4.1 1-6.9 3.6-8.1 3.7-1.8 12.5-.8 14.7 1.4 2.1 2.1 2.7 9.1.9 12.7-1 2-2.8 3.2-5.3 3.8l-1.1.3-1.4 1.4c-1.2 1.2-2.3 2.3-3.4 3.3v-5.1c-4.8-.8-5.7-3.4-5.9-6.3h2.3c.1 2.2.8 3.5 3.6 4.1V12h2.3v10.2c.6-.1 1.2-.3 1.8-.5.5-.2 1-.4 1.4-.7l1.6-1.6c.7-2.5.3-7.4-1.2-8.8-1.2-1.2-5.7-2-8.2-1.2l-.7-2.2c3.3-1 8.7 0 10.5 1.8 2.2 2.2 2.7 8.5 1.5 11.6-.6 1.4-1.8 2.5-3.5 3.2l-4.7 4.7v2.2c0 .9 1.1 1.3 1.7.7l6.6-6.6c3.4-.9 5.7-2.6 6.9-5.2 2.1-4.4 1.5-11.2-1.2-13.7Z"/></svg></span>';
+  viber.querySelector('.zemzem-social-label').textContent=settings.viber.label||'Viber';
   style.textContent+= '.zemzem-facebook{display:flex;position:fixed;right:20px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:9998;align-items:center;gap:9px;color:#fff!important;text-decoration:none!important;font:800 14px/1 system-ui,-apple-system,Segoe UI,sans-serif;filter:drop-shadow(0 8px 18px rgba(18,48,88,.25))}.zemzem-facebook-label{background:#173f35;padding:11px 13px;border-radius:999px}.zemzem-facebook-icon{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#1877f2;border:2px solid #fff;box-shadow:0 7px 22px rgba(24,119,242,.3)}.zemzem-facebook-icon svg{width:32px;height:32px}.zemzem-facebook:focus-visible{outline:3px solid #f5a623;outline-offset:4px;border-radius:999px}@media(max-width:820px){.zemzem-facebook{right:16px;bottom:calc(84px + env(safe-area-inset-bottom))}}@media(max-width:390px){.zemzem-facebook-label{display:none}}';
   style.textContent+= '.zemzem-telegram,.zemzem-viber{display:flex;position:fixed;right:20px;z-index:9998;align-items:center;gap:9px;color:#fff!important;text-decoration:none!important;font:800 14px/1 system-ui,-apple-system,Segoe UI,sans-serif;filter:drop-shadow(0 8px 18px rgba(18,48,88,.22))}.zemzem-telegram{bottom:calc(152px + env(safe-area-inset-bottom))}.zemzem-viber{bottom:calc(218px + env(safe-area-inset-bottom))}.zemzem-social-label{background:#173f35;padding:11px 13px;border-radius:999px}.zemzem-telegram-icon,.zemzem-viber-icon{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;border:2px solid #fff}.zemzem-telegram-icon{background:#229ed9}.zemzem-viber-icon{background:#7360f2}.zemzem-telegram-icon svg,.zemzem-viber-icon svg{width:31px;height:31px}.zemzem-telegram:focus-visible,.zemzem-viber:focus-visible{outline:3px solid #f5a623;outline-offset:4px;border-radius:999px}@media(max-width:820px){.zemzem-telegram,.zemzem-viber{right:16px}.zemzem-telegram{bottom:calc(150px + env(safe-area-inset-bottom))}.zemzem-viber{bottom:calc(216px + env(safe-area-inset-bottom))}}@media(max-width:390px){.zemzem-social-label{display:none}}';
-  document.head.appendChild(style); document.body.append(viber,telegram,facebook,link);
+  document.head.appendChild(style); const buttons=[[viber,settings.viber],[telegram,settings.telegram],[facebook,settings.messenger],[link,settings.whatsapp]].filter(([,cfg])=>cfg.enabled!==false).map(([el])=>el);document.body.append(...buttons);
 })();
