@@ -1,7 +1,7 @@
 // ZemZem mobile WhatsApp contact button v1
 (()=>{
   if(document.querySelector('[data-zemzem-whatsapp]'))return;
-  const phone='38345436144';
+  const phone='41786044792';
   const message=`Përshëndetje ZemZem! Kam një pyetje rreth: ${document.title}\n${location.href}`;
   const link=document.createElement('a');
   link.href=`https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
