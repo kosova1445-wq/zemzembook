@@ -182,7 +182,11 @@ jobs:
           upload "assets/js/home-modern.js"
           upload "assets/css/site-premium-v3.css"
           upload "admin.html"
+          upload "assets/js/admin-v2.js"
           upload "assets/js/admin-home-books.js"
+          upload "assets/js/admin-advanced.js"
+          upload "assets/js/account.js"
+          upload "assets/js/account-advanced.js"
 
       - name: Verify live protected release
         if: steps.latest.outputs.deploy == 'true'
@@ -308,6 +312,10 @@ jobs:
           fetch_live https://www.zemzem.al/assets/js/admin-home-books.js /tmp/admin-home-books.js
           grep -Fq 'Seksionet e librave në Ballinë' /tmp/admin-home-books.js
           grep -Fq 'homepage_selected_books' /tmp/admin-home-books.js
+          fetch_live https://www.zemzem.al/assets/js/admin-advanced.js /tmp/admin-advanced.js
+          grep -Fq 'period statistics and publication year' /tmp/admin-advanced.js
+          fetch_live https://www.zemzem.al/assets/js/account-advanced.js /tmp/account-advanced.js
+          grep -Fq 'password change and invoice/PDF' /tmp/account-advanced.js
           fetch_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto.js
           grep -Fq 'booksto-insight-grid' /tmp/admin-booksto.js
           grep -Fq 'Category Lists' /tmp/admin-booksto.js
