@@ -385,7 +385,7 @@ jobs:
           grep -Fq 'ebook-mobile.css?v=1' /tmp/account.html
           grep -Fq '#authPanel[hidden]' /tmp/account.html
           grep -Fq 'assets/js/analytics.js?v=1' /tmp/account.html
-          grep -Fq 'account-enterprise.js?v=1' /tmp/account.html
+          grep -Fq 'account-enterprise.js?v=2' /tmp/account.html
           if grep -Fq 'account-ebooks.js' /tmp/account.html; then
             echo 'Legacy account-ebooks.js is still referenced'; exit 1
           fi
@@ -393,8 +393,9 @@ jobs:
           grep -Fq 'dedupeEntitlements' /tmp/account.js
           grep -Fq 'ebook-download' /tmp/account.js
           fetch_live https://www.zemzem.al/assets/js/account-enterprise.js /tmp/account-enterprise.js
-          grep -Fq 'ZemZem customer enterprise modules v1' /tmp/account-enterprise.js
+          grep -Fq 'ZemZem customer enterprise modules v2 — smart librarian' /tmp/account-enterprise.js
           grep -Fq 'reading_sessions' /tmp/account-enterprise.js
+          grep -Fq 'data-librarian-cart' /tmp/account-enterprise.js
 
           fetch_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html
           grep -Fq 'eBook në Shqip – Libra Digjitalë PDF & EPUB | ZemZem' /tmp/ebooks.html
