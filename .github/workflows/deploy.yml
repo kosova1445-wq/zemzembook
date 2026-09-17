@@ -156,6 +156,7 @@ jobs:
           assets/css/ebook-mobile.css
           account.html
           assets/js/account.js
+          assets/js/account-enterprise.js
           assets/css/account.css
           ebooks.html
           ebook.html
@@ -189,6 +190,7 @@ jobs:
           upload "assets/js/admin-enterprise.js"
           upload "assets/js/admin-advanced.js"
           upload "assets/js/account.js"
+          upload "assets/js/account-enterprise.js"
           upload "assets/js/account-advanced.js"
 
       - name: Verify live protected release
@@ -359,12 +361,16 @@ jobs:
           grep -Fq 'ebook-mobile.css?v=1' /tmp/account.html
           grep -Fq '#authPanel[hidden]' /tmp/account.html
           grep -Fq 'assets/js/analytics.js?v=1' /tmp/account.html
+          grep -Fq 'account-enterprise.js?v=1' /tmp/account.html
           if grep -Fq 'account-ebooks.js' /tmp/account.html; then
             echo 'Legacy account-ebooks.js is still referenced'; exit 1
           fi
           fetch_live https://www.zemzem.al/assets/js/account.js /tmp/account.js
           grep -Fq 'dedupeEntitlements' /tmp/account.js
           grep -Fq 'ebook-download' /tmp/account.js
+          fetch_live https://www.zemzem.al/assets/js/account-enterprise.js /tmp/account-enterprise.js
+          grep -Fq 'ZemZem customer enterprise modules v1' /tmp/account-enterprise.js
+          grep -Fq 'reading_sessions' /tmp/account-enterprise.js
 
           fetch_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html
           grep -Fq 'eBook në Shqip – Libra Digjitalë PDF & EPUB | ZemZem' /tmp/ebooks.html
