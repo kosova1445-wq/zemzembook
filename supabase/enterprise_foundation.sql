@@ -302,6 +302,7 @@ create index if not exists manuscripts_user_idx on public.manuscripts(user_id,st
 create index if not exists audio_progress_user_idx on public.audio_progress(user_id,updated_at desc);
 
 -- Consolidate owner/admin access to avoid duplicate permissive policies.
+drop policy if exists enterprise_customer_used_listings on public.used_book_listings;
 do $$
 declare t text;
 begin
@@ -317,6 +318,7 @@ drop policy if exists enterprise_admin_all_b2b_accounts on public.b2b_accounts;
 drop policy if exists enterprise_customer_b2b_accounts on public.b2b_accounts;
 drop policy if exists enterprise_b2b_accounts_select on public.b2b_accounts;
 drop policy if exists enterprise_b2b_accounts_insert_admin on public.b2b_accounts;
+drop policy if exists enterprise_b2b_accounts_insert_admin_or_owner on public.b2b_accounts;
 drop policy if exists enterprise_b2b_accounts_update_admin on public.b2b_accounts;
 drop policy if exists enterprise_b2b_accounts_delete_admin on public.b2b_accounts;
 create policy enterprise_b2b_accounts_select on public.b2b_accounts for select to authenticated using ((select private.is_admin()) or (select auth.uid())=user_id);
@@ -328,6 +330,7 @@ drop policy if exists enterprise_admin_all_b2b_requests on public.b2b_requests;
 drop policy if exists enterprise_customer_b2b_requests on public.b2b_requests;
 drop policy if exists enterprise_b2b_requests_select on public.b2b_requests;
 drop policy if exists enterprise_b2b_requests_insert_admin on public.b2b_requests;
+drop policy if exists enterprise_b2b_requests_insert_admin_or_owner on public.b2b_requests;
 drop policy if exists enterprise_b2b_requests_update_admin on public.b2b_requests;
 drop policy if exists enterprise_b2b_requests_delete_admin on public.b2b_requests;
 create policy enterprise_b2b_requests_select on public.b2b_requests for select to authenticated using ((select private.is_admin()) or (select auth.uid())=user_id);
@@ -371,3 +374,27 @@ create index if not exists manuscripts_author_idx on public.manuscripts(author_p
 create index if not exists pricing_rules_book_idx on public.pricing_rules(book_id);
 create index if not exists pricing_rules_category_idx on public.pricing_rules(category_id);
 create index if not exists reading_sessions_book_idx on public.reading_sessions(book_id);
+
+-- Customer module discovery and safe self-service onboarding.
+drop policy if exists enterprise_admin_all_enterprise_modules on public.enterprise_modules;
+drop policy if exists enterprise_modules_anon_read_active on public.enterprise_modules;
+drop policy if exists enterprise_modules_auth_read on public.enterprise_modules;
+drop policy if exists enterprise_modules_insert_admin on public.enterprise_modules;
+drop policy if exists enterprise_modules_update_admin on public.enterprise_modules;
+drop policy if exists enterprise_modules_delete_admin on public.enterprise_modules;
+create policy enterprise_modules_anon_read_active on public.enterprise_modules for select to anon
+using (status='active' and customer_enabled);
+create policy enterprise_modules_auth_read on public.enterprise_modules for select to authenticated
+using ((status='active' and customer_enabled) or (select private.is_admin()));
+create policy enterprise_modules_insert_admin on public.enterprise_modules for insert to authenticated with check ((select private.is_admin()));
+create policy enterprise_modules_update_admin on public.enterprise_modules for update to authenticated using ((select private.is_admin())) with check ((select private.is_admin()));
+create policy enterprise_modules_delete_admin on public.enterprise_modules for delete to authenticated using ((select private.is_admin()));
+grant select on public.enterprise_modules to anon,authenticated;
+
+drop policy if exists enterprise_b2b_accounts_insert_admin on public.b2b_accounts;
+create policy enterprise_b2b_accounts_insert_admin_or_owner on public.b2b_accounts for insert to authenticated
+with check ((select private.is_admin()) or ((select auth.uid())=user_id and status='pending'));
+drop policy if exists enterprise_b2b_requests_insert_admin on public.b2b_requests;
+create policy enterprise_b2b_requests_insert_admin_or_owner on public.b2b_requests for insert to authenticated
+with check ((select private.is_admin()) or ((select auth.uid())=user_id and status='submitted'));
+grant insert on public.b2b_accounts,public.b2b_requests to authenticated;
