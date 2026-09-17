@@ -221,6 +221,7 @@ create table if not exists public.audio_titles (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+alter table public.audio_titles add column if not exists audio_url text;
 
 create table if not exists public.audio_progress (
   id uuid primary key default gen_random_uuid(),
@@ -398,3 +399,31 @@ drop policy if exists enterprise_b2b_requests_insert_admin on public.b2b_request
 create policy enterprise_b2b_requests_insert_admin_or_owner on public.b2b_requests for insert to authenticated
 with check ((select private.is_admin()) or ((select auth.uid())=user_id and status='submitted'));
 grant insert on public.b2b_accounts,public.b2b_requests to authenticated;
+
+-- Automatic first-pass moderation for new/edited reviews. Human approval remains authoritative.
+create or replace function private.queue_review_moderation()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog, public, private
+as $$
+declare
+  body_text text := lower(coalesce(new.title,'') || ' ' || coalesce(new.body,''));
+  found_flags text[] := '{}';
+  score numeric(5,2) := 0;
+begin
+  if body_text ~ '(https?://|www\.)' then found_flags := array_append(found_flags,'link'); score := score + 35; end if;
+  if body_text ~ '(.)\1{7,}' then found_flags := array_append(found_flags,'spam'); score := score + 30; end if;
+  if length(body_text) > 2500 then found_flags := array_append(found_flags,'very_long'); score := score + 20; end if;
+  if new.rating <= 1 and length(trim(body_text)) < 8 then found_flags := array_append(found_flags,'low_context'); score := score + 15; end if;
+  if cardinality(found_flags) > 0 then
+    insert into public.content_moderation_queue(source_type,source_id,user_id,content_excerpt,risk_score,flags,decision)
+    values('review',new.id,new.user_id,left(body_text,500),least(score,100),found_flags,'pending');
+  end if;
+  return new;
+end;
+$$;
+revoke all on function private.queue_review_moderation() from public,anon,authenticated;
+drop trigger if exists reviews_enterprise_moderation on public.reviews;
+create trigger reviews_enterprise_moderation after insert or update of title,body,rating on public.reviews
+for each row execute function private.queue_review_moderation();
