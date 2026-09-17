@@ -573,3 +573,4 @@ async function initAccount() {
 
 document.addEventListener('DOMContentLoaded', initAccount);
 window.loadMyEbooks = loadMyEbooks;
+if(!document.querySelector('script[data-account-advanced]')){const s=document.createElement('script');s.src='assets/js/account-advanced.js?v=1';s.dataset.accountAdvanced='1';document.body.appendChild(s)}
