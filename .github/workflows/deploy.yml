@@ -323,11 +323,13 @@ jobs:
           grep -Fq '.admin-password-field' /tmp/admin-polish.css
           fetch_live https://www.zemzem.al/assets/js/app-v5.js /tmp/app-v5.js
           grep -Fq 'production-polish.css?v=1' /tmp/app-v5.js
-          grep -Fq 'whatsapp-chat.js?v=1' /tmp/app-v5.js
+          grep -Fq 'whatsapp-chat.js?v=2' /tmp/app-v5.js
           fetch_live https://www.zemzem.al/assets/js/whatsapp-chat.js /tmp/whatsapp-chat.js
-          grep -Fq 'ZemZem mobile WhatsApp contact button v1' /tmp/whatsapp-chat.js
+          grep -Fq 'ZemZem WhatsApp and Facebook contact buttons v2' /tmp/whatsapp-chat.js
           grep -Fq '41786044792' /tmp/whatsapp-chat.js
           grep -Fq '.zemzem-whatsapp{display:flex' /tmp/whatsapp-chat.js
+          grep -Fq 'https://www.facebook.com/zemzemhouse' /tmp/whatsapp-chat.js
+          grep -Fq '.zemzem-facebook{display:flex' /tmp/whatsapp-chat.js
           fetch_live https://www.zemzem.al/assets/css/production-polish.css /tmp/production-polish.css
           grep -Fq 'html{overflow-x:hidden}' /tmp/production-polish.css
           fetch_live https://www.zemzem.al/assets/css/site-premium-v3.css /tmp/site-premium-v3.css
