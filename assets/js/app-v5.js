@@ -1,4 +1,5 @@
 const SUPABASE_URL='https://ysvtrhizgcioyycwlkrk.supabase.co';
+// Mobile commerce release 2026-09-18.
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
 if(['shop.html','product.html','checkout.html'].includes(location.pathname.split('/').pop()||'index.html')){
   if(!document.querySelector('link[data-mobile-commerce-v3]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/mobile-commerce-v3.css?v=1';l.dataset.mobileCommerceV3='1';document.head.appendChild(l)}
