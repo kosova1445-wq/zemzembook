@@ -123,6 +123,8 @@ jobs:
           assets/js/blog.js
           assets/css/blog.css
           assets/js/app-v5.js
+          assets/js/storefront-funnel.js
+          assets/js/admin-funnel.js
           assets/js/mobile-commerce-v3.js
           assets/css/mobile-commerce-v3.css
           assets/js/whatsapp-chat.js
@@ -192,6 +194,8 @@ jobs:
           # Storefront design files are released as one visual unit.
           upload "index.html"
           upload "assets/js/app-v5.js"
+          upload "assets/js/storefront-funnel.js"
+          upload "assets/js/admin-funnel.js"
           upload "assets/js/mobile-commerce-v3.js"
           upload "assets/css/mobile-commerce-v3.css"
           upload "assets/js/whatsapp-chat.js"
@@ -336,6 +340,9 @@ jobs:
           grep -Fq 'admin_update_physical_order' /tmp/admin-v2.js
           grep -Fq 'admin_customer_detail' /tmp/admin-v2.js
           grep -Fq 'setAdminSync' /tmp/admin-v2.js
+          grep -Fq 'admin-funnel.js?v=1' /tmp/admin-v2.js
+          fetch_live https://www.zemzem.al/assets/js/admin-funnel.js /tmp/admin-funnel.js
+          grep -Fq 'ZemZem Admin sales funnel v1' /tmp/admin-funnel.js
           grep -Fq 'featured_collection' /tmp/home-wow.js
           fetch_live https://www.zemzem.al/assets/css/admin-polish.css /tmp/admin-polish.css
           grep -Fq '.admin-password-field' /tmp/admin-polish.css
@@ -343,6 +350,9 @@ jobs:
           grep -Fq 'production-polish.css?v=1' /tmp/app-v5.js
           grep -Fq 'mobile-commerce-v3.css?v=1' /tmp/app-v5.js
           grep -Fq 'mobile-commerce-v3.js?v=1' /tmp/app-v5.js
+          grep -Fq 'storefront-funnel.js?v=1' /tmp/app-v5.js
+          fetch_live https://www.zemzem.al/assets/js/storefront-funnel.js /tmp/storefront-funnel.js
+          grep -Fq 'ZemZem consent-aware storefront funnel v1' /tmp/storefront-funnel.js
           fetch_live https://www.zemzem.al/assets/css/mobile-commerce-v3.css /tmp/mobile-commerce-v3.css
           grep -Fq 'ZemZem mobile commerce v3' /tmp/mobile-commerce-v3.css
           grep -Fq '.zz-product-buy-dock' /tmp/mobile-commerce-v3.css
