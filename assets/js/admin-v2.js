@@ -3,6 +3,7 @@ const SB_KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
 const ADMIN_EMAIL='tamarillot@gmail.com';
 const SESSION_KEY='zemzem_admin_session';
 if(!document.querySelector('script[data-admin-funnel]')){const s=document.createElement('script');s.src='assets/js/admin-funnel.js?v=1';s.dataset.adminFunnel='1';s.defer=true;document.head.appendChild(s)}
+if(!document.querySelector('script[data-admin-paypal]')){const s=document.createElement('script');s.src='assets/js/admin-paypal.js?v=1';s.dataset.adminPaypal='1';s.defer=true;document.head.appendChild(s)}
 
 let session=null;
 let orders=[],books=[],authors=[],categories=[],publishers=[],customers=[],coupons=[],reviews=[],ebookOrders=[],auditRows=[];
