@@ -123,6 +123,8 @@ jobs:
           assets/js/blog.js
           assets/css/blog.css
           assets/js/app-v5.js
+          assets/js/mobile-commerce-v3.js
+          assets/css/mobile-commerce-v3.css
           assets/js/whatsapp-chat.js
           assets/js/home-modern.js
           assets/js/home-wow.js
@@ -190,6 +192,8 @@ jobs:
           # Storefront design files are released as one visual unit.
           upload "index.html"
           upload "assets/js/app-v5.js"
+          upload "assets/js/mobile-commerce-v3.js"
+          upload "assets/css/mobile-commerce-v3.css"
           upload "assets/js/whatsapp-chat.js"
           upload "assets/js/home-modern.js"
           upload "assets/js/home-wow.js"
@@ -337,6 +341,14 @@ jobs:
           grep -Fq '.admin-password-field' /tmp/admin-polish.css
           fetch_live https://www.zemzem.al/assets/js/app-v5.js /tmp/app-v5.js
           grep -Fq 'production-polish.css?v=1' /tmp/app-v5.js
+          grep -Fq 'mobile-commerce-v3.css?v=1' /tmp/app-v5.js
+          grep -Fq 'mobile-commerce-v3.js?v=1' /tmp/app-v5.js
+          fetch_live https://www.zemzem.al/assets/css/mobile-commerce-v3.css /tmp/mobile-commerce-v3.css
+          grep -Fq 'ZemZem mobile commerce v3' /tmp/mobile-commerce-v3.css
+          grep -Fq '.zz-product-buy-dock' /tmp/mobile-commerce-v3.css
+          fetch_live https://www.zemzem.al/assets/js/mobile-commerce-v3.js /tmp/mobile-commerce-v3.js
+          grep -Fq 'ZemZem mobile commerce enhancements v3' /tmp/mobile-commerce-v3.js
+          grep -Fq 'zz-checkout-dock' /tmp/mobile-commerce-v3.js
           grep -Fq 'whatsapp-chat.js?v=5' /tmp/app-v5.js
           fetch_live https://www.zemzem.al/assets/js/whatsapp-chat.js /tmp/whatsapp-chat.js
           grep -Fq 'ZemZem admin-managed communication buttons v4' /tmp/whatsapp-chat.js
