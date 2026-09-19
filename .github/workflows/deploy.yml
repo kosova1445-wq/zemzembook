@@ -46,6 +46,63 @@ jobs:
           test -n "$FTP_PORT"
           test -n "$FTP_SERVER_DIR"
 
+      - name: Generate dynamic sitemap
+        if: steps.latest.outputs.deploy == 'true'
+        shell: bash
+        env:
+          SB_URL: https://ysvtrhizgcioyycwlkrk.supabase.co
+          SB_KEY: sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.parse, xml.etree.ElementTree as ET
+          base='https://www.zemzem.al'
+          sb=os.environ['SB_URL']; key=os.environ['SB_KEY']
+          headers={'apikey':key,'Accept':'application/json'}
+          def get(path):
+              req=urllib.request.Request(sb+path,headers=headers)
+              try:
+                  with urllib.request.urlopen(req,timeout=25) as r:
+                      return json.load(r)
+              except Exception as e:
+                  print('sitemap fetch warning:', path, e)
+                  return []
+          urls=[
+              ('/', 'daily','1.0'),('/shop.html','daily','0.9'),('/ebooks.html','daily','0.9'),
+              ('/blog.html','daily','0.8'),('/about.html','monthly','0.5'),('/contact.html','monthly','0.5'),
+              ('/shipping-returns.html','monthly','0.4'),('/privacy.html','yearly','0.3'),('/terms.html','yearly','0.3')
+          ]
+          for b in get('/rest/v1/storefront_books?select=id,created_at&order=created_at.desc'):
+              urls.append((f"/product.html?id={urllib.parse.quote(str(b['id']))}",'weekly','0.8',str(b.get('created_at') or '')[:10]))
+          for e in get('/rest/v1/storefront_ebooks?select=id,created_at&order=created_at.desc'):
+              urls.append((f"/ebook.html?id={urllib.parse.quote(str(e['id']))}",'weekly','0.8',str(e.get('created_at') or '')[:10]))
+          for a in get('/rest/v1/blog_posts?status=eq.published&select=slug,published_at,updated_at&order=published_at.desc'):
+              if a.get('slug'):
+                  urls.append((f"/article.html?slug={urllib.parse.quote(str(a['slug']))}",'weekly','0.7',str(a.get('updated_at') or a.get('published_at') or '')[:10]))
+          for a in get('/rest/v1/authors?is_active=eq.true&select=slug,updated_at&order=name.asc'):
+              if a.get('slug'):
+                  urls.append((f"/author.html?slug={urllib.parse.quote(str(a['slug']))}",'weekly','0.6',str(a.get('updated_at') or '')[:10]))
+          for p in get('/rest/v1/publishers?is_active=eq.true&select=slug,updated_at&order=name.asc'):
+              if p.get('slug'):
+                  urls.append((f"/publisher.html?slug={urllib.parse.quote(str(p['slug']))}",'weekly','0.6',str(p.get('updated_at') or '')[:10]))
+          ns='http://www.sitemaps.org/schemas/sitemap/0.9'
+          ET.register_namespace('',ns)
+          root=ET.Element('{%s}urlset'%ns)
+          seen=set()
+          for item in urls:
+              path,freq,prio,*rest=item
+              loc=base+path
+              if loc in seen: continue
+              seen.add(loc)
+              u=ET.SubElement(root,'{%s}url'%ns)
+              ET.SubElement(u,'{%s}loc'%ns).text=loc
+              if rest and rest[0]:
+                  ET.SubElement(u,'{%s}lastmod'%ns).text=rest[0]
+              ET.SubElement(u,'{%s}changefreq'%ns).text=freq
+              ET.SubElement(u,'{%s}priority'%ns).text=prio
+          ET.ElementTree(root).write('sitemap.xml',encoding='utf-8',xml_declaration=True)
+          print('Generated sitemap URLs:',len(seen))
+          PY
+
       - name: Deploy current protected release
         if: steps.latest.outputs.deploy == 'true'
         env:
@@ -156,6 +213,8 @@ jobs:
           assets/js/admin-enterprise-config.js
           assets/js/admin-marketing-suite.js
           assets/js/admin-stock-forecast.js
+          assets/js/admin-abandoned.js
+          assets/js/admin-reports.js
           assets/js/admin-social-contacts.js
           assets/js/admin-site-design.js
           assets/js/admin-branding.js
