@@ -5,7 +5,8 @@
     logo_url:'assets/brand/zemzem-logo.svg',watermark_url:'assets/brand/zemzem-watermark.svg',
     logo_width:206,logo_height:58,logo_mobile_width:164,logo_mobile_height:50,
     footer_logo_width:206,footer_logo_height:58,watermark_enabled:true,
-    watermark_size:34,watermark_opacity:20,watermark_position:'bottom-right'
+    watermark_size:34,watermark_opacity:20,watermark_position:'bottom-right',
+    menu_font_desktop:13,menu_font_tablet:12,menu_font_mobile:11
   };
   let current={...defaults},logoFile=null,watermarkFile=null,logoObjectUrl='',watermarkObjectUrl='';
   const num=(id,fallback)=>{const n=Number(q(id)?.value);return Number.isFinite(n)?n:fallback};
@@ -42,6 +43,15 @@
           <label class="brand-select-label">Pozicioni<select id="brandWmPosition"><option value="bottom-right">Poshtë djathtas</option><option value="bottom-left">Poshtë majtas</option><option value="top-right">Lart djathtas</option><option value="top-left">Lart majtas</option><option value="center">Në qendër</option></select></label>
           <div class="brand-book-preview"><div class="brand-book-fake"><span>LIBËR</span><img id="brandWmPreview" alt="Watermark preview"></div></div>
         </article>
+        <article class="brand-admin-card" style="grid-column:1/-1">
+          <div class="brand-card-head"><div><h3>Shkronjat e menusë</h3><p>Rregullo madhësinë e tekstit të menusë veçmas për kompjuter, tablet dhe telefon. Vlen në të gjitha faqet publike.</p></div></div>
+          <div class="brand-dim-grid">
+            <label>Kompjuter — madhësia (px)<input id="brandMenuDesktop" type="number" min="10" max="24" step="1"></label>
+            <label>Tablet — madhësia (px)<input id="brandMenuTablet" type="number" min="9" max="22" step="1"></label>
+            <label>Telefon — madhësia (px)<input id="brandMenuMobile" type="number" min="9" max="20" step="1"></label>
+          </div>
+          <div id="brandMenuPreview" style="margin-top:14px;padding:14px 16px;border:1px solid #e7edef;border-radius:10px;background:#fafcfc;color:#2e4052;font-weight:800">Ballina · Libra fizikë · eBook · Oferta · Blog · Rreth nesh</div>
+        </article>
       </div>
       <div class="brand-admin-footer"><button class="secondary-btn" id="brandReset">Kthe vlerat zyrtare</button><div><button class="secondary-btn" id="brandReload">Rikthe nga databaza</button> <button class="primary-btn" id="brandSaveBottom">Ruaj & apliko</button></div></div>
     </section>`);
@@ -74,11 +84,11 @@
   function preview(){
     const logo=q('#brandLogoPreview'),logoImg=logo?.querySelector('img');if(logo&&logoImg){logo.style.width=clamp(num('#brandLogoWidth',206),120,360)+'px';logo.style.height=clamp(num('#brandLogoHeight',58),40,140)+'px';logoImg.src=imgPreviewUrl('logo')}
     const size=clamp(num('#brandWmSize',34),10,70),opacity=clamp(num('#brandWmOpacity',20),0,70),outS=q('#brandWmSizeOut'),outO=q('#brandWmOpacityOut');if(outS)outS.textContent=size+'%';if(outO)outO.textContent=opacity+'%';
-    const wm=q('#brandWmPreview'),fake=q('.brand-book-fake');if(wm&&fake){wm.src=imgPreviewUrl('watermark');wm.style.width=size+'%';wm.style.opacity=(opacity/100).toFixed(2);wm.style.display=q('#brandWatermarkEnabled')?.checked?'block':'none';positionWatermark(wm,q('#brandWmPosition')?.value||'bottom-right')}
+    const wm=q('#brandWmPreview'),fake=q('.brand-book-fake');if(wm&&fake){wm.src=imgPreviewUrl('watermark');wm.style.width=size+'%';wm.style.opacity=(opacity/100).toFixed(2);wm.style.display=q('#brandWatermarkEnabled')?.checked?'block':'none';positionWatermark(wm,q('#brandWmPosition')?.value||'bottom-right')}const mp=q('#brandMenuPreview');if(mp)mp.style.fontSize=clamp(num('#brandMenuDesktop',13),10,24)+'px'
   }
   function fill(c){
     current={...defaults,...(c||{})};
-    setInput('#brandLogoWidth',current.logo_width);setInput('#brandLogoHeight',current.logo_height);setInput('#brandMobileWidth',current.logo_mobile_width);setInput('#brandMobileHeight',current.logo_mobile_height);setInput('#brandFooterWidth',current.footer_logo_width);setInput('#brandFooterHeight',current.footer_logo_height);setInput('#brandWmSize',current.watermark_size);setInput('#brandWmOpacity',current.watermark_opacity);setInput('#brandWmPosition',current.watermark_position);
+    setInput('#brandLogoWidth',current.logo_width);setInput('#brandLogoHeight',current.logo_height);setInput('#brandMobileWidth',current.logo_mobile_width);setInput('#brandMobileHeight',current.logo_mobile_height);setInput('#brandFooterWidth',current.footer_logo_width);setInput('#brandFooterHeight',current.footer_logo_height);setInput('#brandWmSize',current.watermark_size);setInput('#brandWmOpacity',current.watermark_opacity);setInput('#brandWmPosition',current.watermark_position);setInput('#brandMenuDesktop',current.menu_font_desktop);setInput('#brandMenuTablet',current.menu_font_tablet);setInput('#brandMenuMobile',current.menu_font_mobile);
     q('#brandWatermarkEnabled').checked=current.watermark_enabled!==false;
     q('#brandSameWatermark').checked=String(current.watermark_url||'')===String(current.logo_url||'');
     logoFile=watermarkFile=null;if(logoObjectUrl)URL.revokeObjectURL(logoObjectUrl);if(watermarkObjectUrl)URL.revokeObjectURL(watermarkObjectUrl);logoObjectUrl=watermarkObjectUrl='';
@@ -103,7 +113,7 @@
     logo_width:clamp(num('#brandLogoWidth',206),120,360),logo_height:clamp(num('#brandLogoHeight',58),40,140),
     logo_mobile_width:clamp(num('#brandMobileWidth',164),110,280),logo_mobile_height:clamp(num('#brandMobileHeight',50),36,110),
     footer_logo_width:clamp(num('#brandFooterWidth',206),120,360),footer_logo_height:clamp(num('#brandFooterHeight',58),40,140),
-    watermark_enabled:!!q('#brandWatermarkEnabled')?.checked,watermark_size:clamp(num('#brandWmSize',34),10,70),watermark_opacity:clamp(num('#brandWmOpacity',20),0,70),watermark_position:q('#brandWmPosition')?.value||'bottom-right'
+    watermark_enabled:!!q('#brandWatermarkEnabled')?.checked,watermark_size:clamp(num('#brandWmSize',34),10,70),watermark_opacity:clamp(num('#brandWmOpacity',20),0,70),watermark_position:q('#brandWmPosition')?.value||'bottom-right',menu_font_desktop:clamp(num('#brandMenuDesktop',13),10,24),menu_font_tablet:clamp(num('#brandMenuTablet',12),9,22),menu_font_mobile:clamp(num('#brandMenuMobile',11),9,20)
   }}
   async function save(){
     const buttons=[q('#brandSaveTop'),q('#brandSaveBottom')].filter(Boolean);buttons.forEach(b=>b.disabled=true);setStatus('Duke ruajtur dhe aplikuar…','');
@@ -121,7 +131,7 @@
     q('#brandSaveTop').onclick=save;q('#brandSaveBottom').onclick=save;q('#brandReload').onclick=loadConfig;q('#brandReset').onclick=reset;
     q('#brandLogoFile').addEventListener('change',e=>{logoFile=e.target.files?.[0]||null;if(logoObjectUrl)URL.revokeObjectURL(logoObjectUrl);logoObjectUrl=logoFile?URL.createObjectURL(logoFile):'';preview()});
     q('#brandWatermarkFile').addEventListener('change',e=>{watermarkFile=e.target.files?.[0]||null;if(watermarkObjectUrl)URL.revokeObjectURL(watermarkObjectUrl);watermarkObjectUrl=watermarkFile?URL.createObjectURL(watermarkFile):'';q('#brandSameWatermark').checked=false;preview()});
-    ['#brandLogoWidth','#brandLogoHeight','#brandMobileWidth','#brandMobileHeight','#brandFooterWidth','#brandFooterHeight','#brandWmSize','#brandWmOpacity','#brandWmPosition','#brandWatermarkEnabled','#brandSameWatermark'].forEach(id=>q(id)?.addEventListener('input',preview));
+    ['#brandLogoWidth','#brandLogoHeight','#brandMobileWidth','#brandMobileHeight','#brandFooterWidth','#brandFooterHeight','#brandWmSize','#brandWmOpacity','#brandWmPosition','#brandWatermarkEnabled','#brandSameWatermark','#brandMenuDesktop','#brandMenuTablet','#brandMenuMobile'].forEach(id=>q(id)?.addEventListener('input',preview));
     q('#brandSameWatermark')?.addEventListener('change',preview);
   }
   function init(){buildView();addNav();bind();}
