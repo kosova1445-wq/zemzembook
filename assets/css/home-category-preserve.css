@@ -80,3 +80,81 @@
   .zemzem-bookstore-v2 .category-cards{grid-template-columns:repeat(3,1fr)!important}
 }
 @media(max-width:640px){.zemzem-bookstore-v2 .category-cards{grid-template-columns:repeat(2,1fr)!important}}
+
+
+/* Desktop top navigation — colorful premium menu buttons */
+@media(min-width:981px){
+  .zemzem-bookstore-v2 .nav{
+    background:#fff!important;
+    border-bottom:1px solid #e8e1dc!important;
+    padding:8px 0!important
+  }
+  .zemzem-bookstore-v2 .nav-row{
+    min-height:52px!important;
+    gap:8px!important;
+    align-items:center!important
+  }
+  .zemzem-bookstore-v2 .nav-row>a{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-height:38px!important;
+    padding:0 15px!important;
+    border-radius:12px!important;
+    border:1px solid transparent!important;
+    font-size:12px!important;
+    font-weight:850!important;
+    line-height:1!important;
+    text-decoration:none!important;
+    transition:.2s ease!important;
+    box-shadow:0 5px 14px rgba(32,56,71,.04)!important
+  }
+  .zemzem-bookstore-v2 .nav-row>a:hover{
+    transform:translateY(-2px)!important;
+    box-shadow:0 10px 20px rgba(32,56,71,.10)!important
+  }
+
+  .zemzem-bookstore-v2 .nav-row>a[href="index.html"]{
+    background:linear-gradient(135deg,#fff0ea,#fff8f5)!important;
+    border-color:#f1d4ca!important;
+    color:#b6533e!important
+  }
+  .zemzem-bookstore-v2 .nav-row>a[href="shop.html"]{
+    background:linear-gradient(135deg,#eef5ff,#f8fbff)!important;
+    border-color:#d7e4f4!important;
+    color:#365f8e!important
+  }
+  .zemzem-bookstore-v2 .nav-row>a[href="ebooks.html"]{
+    background:linear-gradient(135deg,#f3efff,#fbf9ff)!important;
+    border-color:#ded7f3!important;
+    color:#65529d!important
+  }
+  .zemzem-bookstore-v2 .nav-row>a[href="#oferta"]{
+    background:linear-gradient(135deg,#fff7dc,#fffdf2)!important;
+    border-color:#efe0a7!important;
+    color:#826619!important
+  }
+  .zemzem-bookstore-v2 .nav-row>a[href="about.html"]{
+    background:linear-gradient(135deg,#eef9f0,#f8fcf8)!important;
+    border-color:#d4e8d7!important;
+    color:#47734d!important
+  }
+  .zemzem-bookstore-v2 .nav-row>a[href="blog.html"]{
+    background:linear-gradient(135deg,#eef9f8,#f9fdfd)!important;
+    border-color:#d6e9e8!important;
+    color:#397777!important
+  }
+
+  .zemzem-bookstore-v2 .nav-row>a[href="index.html"]::before{content:"⌂";margin-right:7px;font-size:13px}
+  .zemzem-bookstore-v2 .nav-row>a[href="shop.html"]::before{content:"▣";margin-right:7px;font-size:12px}
+  .zemzem-bookstore-v2 .nav-row>a[href="ebooks.html"]::before{content:"▤";margin-right:7px;font-size:12px}
+  .zemzem-bookstore-v2 .nav-row>a[href="#oferta"]::before{content:"%";margin-right:7px;font-size:12px;font-weight:900}
+  .zemzem-bookstore-v2 .nav-row>a[href="about.html"]::before{content:"●";margin-right:7px;font-size:8px}
+  .zemzem-bookstore-v2 .nav-row>a[href="blog.html"]::before{content:"✎";margin-right:7px;font-size:12px}
+
+  .zemzem-bookstore-v2 .nav .support{
+    background:linear-gradient(135deg,#f8ece8,#fff7f4)!important;
+    border:1px solid #edd8d0!important;
+    color:#bd5146!important
+  }
+}
