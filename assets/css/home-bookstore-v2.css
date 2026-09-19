@@ -28,3 +28,11 @@ body{background:#fff;color:var(--zv2-ink);font-family:Inter,ui-sans-serif,system
     display:none !important;
   }
 }
+
+
+/* Phone only: hide Featured Collection / selected books */
+@media (max-width: 680px){
+  body.zemzem-bookstore-v2 #trending{
+    display:none !important;
+  }
+}
