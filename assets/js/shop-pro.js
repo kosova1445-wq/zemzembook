@@ -73,7 +73,31 @@
     return items;
   }
 
-  function renderCard(b){try{return typeof bookCard==='function'?bookCard(b):`<article class="book-card"><a href="product.html?id=${encodeURIComponent(b.id)}"><h3>${escHtml(b.title)}</h3></a><div>${moneyLocal(b.price)}</div></article>`}catch{return''}}
+  function renderCard(b){
+    try{
+      const unavailable=b.trackStock&&Number(b.stock||0)<=0;
+      const discount=b.old&&Number(b.old)>Number(b.price)?Math.round((1-Number(b.price)/Number(b.old))*100):0;
+      const tag=unavailable?'Pa stok':discount?(`−${discount}%`):b.bestseller?'Bestseller':b.featured?'Zgjedhja ZemZem':'I ri';
+      const stockText=unavailable?'Nuk ka stok':b.trackStock?(`Në stok: ${Number(b.stock||0)}`):'Në stok';
+      const cover=b.coverUrl?`<img class="book-cover-img" src="${escHtml(b.coverUrl)}" alt="${escHtml(b.title)}" loading="lazy">`:`<div class="book-cover ${escHtml(b.cover||'c1')}"><span>${escHtml(b.title)}</span></div>`;
+      return `<article class="book-card shop-book-card">
+        <div class="shop-card-badges"><span class="shop-card-badge ${unavailable?'stockout':discount?'discount':b.bestseller?'best':''}">${escHtml(tag)}</span></div>
+        <button class="shop-wishlist-btn" type="button" aria-label="Shto në wishlist" title="Wishlist" onclick="toggleWishlist('${b.id}')">♡</button>
+        <a class="book-card-cover-link shop-card-cover" href="product.html?id=${encodeURIComponent(b.id)}" aria-label="Shiko ${escHtml(b.title)}">${cover}</a>
+        <div class="book-meta shop-card-meta">
+          <div class="shop-card-category">${escHtml(b.cat||'Libra')}</div>
+          <h3><a href="product.html?id=${encodeURIComponent(b.id)}">${escHtml(b.title)}</a></h3>
+          <div class="author">${escHtml(b.author||'ZemZem')}</div>
+          <div class="shop-card-stock ${unavailable?'out':''}">${unavailable?'×':'✓'} ${escHtml(stockText)}</div>
+          <div class="price-row shop-card-price-row"><div><span class="price">${moneyLocal(b.price)}</span>${b.old?`<span class="old">${moneyLocal(b.old)}</span>`:''}</div></div>
+          <div class="shop-card-actions">
+            <a class="shop-details-btn" href="product.html?id=${encodeURIComponent(b.id)}">Detaje</a>
+            <button class="shop-cart-btn" type="button" ${unavailable?'disabled':''} onclick="addToCart('${b.id}')">${unavailable?'Pa stok':'＋ Shto në shportë'}</button>
+          </div>
+        </div>
+      </article>`;
+    }catch{return''}
+  }
   function render(skipUrl=false){
     const all=filtered(),total=all.length,pages=Math.max(1,Math.ceil(total/state.perPage));if(state.page>pages)state.page=pages;const start=(state.page-1)*state.perPage,visible=all.slice(start,start+state.perPage),grid=$('#shopBooks');
     if(grid)grid.innerHTML=visible.length?visible.map(renderCard).join(''):`<div class="shop-pro-empty"><strong>Nuk u gjet asnjë libër.</strong>Ndrysho filtrat ose pastro kërkimin dhe provo përsëri.</div>`;
