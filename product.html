@@ -92,6 +92,7 @@
       const unavailable=b.trackStock&&b.stock<=0,max=b.trackStock?Math.max(1,b.stock):9999;
       const stockText=unavailable?'Nuk ka stok':b.trackStock?`${b.stock} copë në stok`:'Në stok';
       const desc=b.description||'Përshkrimi i këtij libri do të shtohet së shpejti.';
+      const gallery=[b.coverUrl,...(Array.isArray(b.galleryUrls)?b.galleryUrls:[])].filter((url,i,all)=>url&&all.indexOf(url)===i).slice(0,5);
       document.title=`${b.title} — ZemZem`;
       q('#productBreadcrumbCategory').textContent=b.cat||'Libra';q('#productBreadcrumbTitle').textContent=b.title;
 
@@ -99,10 +100,10 @@
       <div class="premium-product-layout">
         <section class="premium-media-card" aria-label="Kopertina e librit">
           <div class="premium-media-stage" id="premiumMediaStage">
-            ${coverHtml(b,'premium-main-cover')}
-            ${b.coverUrl?'<button class="premium-zoom" id="premiumZoom" type="button" aria-label="Zmadho kopertinën">⌕</button>':''}
+            ${gallery.length?`<img id="premiumMainImage" class="premium-book-image premium-main-cover" src="${esc(gallery[0])}" alt="${esc(b.title)}">`:coverHtml(b,'premium-main-cover')}
+            ${gallery.length?'<button class="premium-zoom" id="premiumZoom" type="button" aria-label="Zmadho fotografinë">⌕</button>':''}
           </div>
-          <div class="premium-thumbs"><button type="button" class="premium-thumb active" aria-label="Kopertina">${coverHtml(b)}</button></div>
+          <div class="premium-thumbs">${gallery.length?gallery.map((url,i)=>`<button type="button" class="premium-thumb ${i===0?'active':''}" data-gallery-url="${esc(url)}" aria-label="${i===0?'Kopertina':'Fotografia '+(i+1)}"><img src="${esc(url)}" alt=""></button>`).join(''):`<button type="button" class="premium-thumb active" aria-label="Kopertina">${coverHtml(b)}</button>`}</div>
         </section>
 
         <section class="premium-product-summary">
@@ -169,7 +170,8 @@
       q('#premiumAddCart')?.addEventListener('click',()=>window.addToCart?.(b.id,qty?.value||1));
       q('#premiumBuyNow')?.addEventListener('click',()=>window.buyNow?.(b.id));
       q('#premiumWishlist')?.addEventListener('click',()=>window.toggleWishlist?.(b.id));
-      q('#premiumZoom')?.addEventListener('click',()=>openLightbox(b));
+      document.querySelectorAll('[data-gallery-url]').forEach(btn=>btn.addEventListener('click',()=>{const main=q('#premiumMainImage');if(main)main.src=btn.dataset.galleryUrl;document.querySelectorAll('[data-gallery-url]').forEach(x=>x.classList.toggle('active',x===btn))}));
+      q('#premiumZoom')?.addEventListener('click',()=>openLightbox(b,q('#premiumMainImage')?.src||b.coverUrl));
     }
     function bindTabs(){
       document.querySelectorAll('[data-product-tab]').forEach(btn=>btn.addEventListener('click',()=>activateTab(btn.dataset.productTab,true)));
@@ -180,9 +182,9 @@
       document.querySelectorAll('[data-product-panel]').forEach(p=>p.classList.toggle('active',p.dataset.productPanel===name));
       if(scroll)q('.premium-tabs-shell')?.scrollIntoView({behavior:'smooth',block:'start'});
     }
-    function openLightbox(b){
-      if(!b.coverUrl)return;let box=q('#productLightbox');if(!box){document.body.insertAdjacentHTML('beforeend','<div id="productLightbox" class="product-lightbox" hidden><button type="button" class="product-lightbox-close" aria-label="Mbyll">×</button><img alt=""></div>');box=q('#productLightbox');box.addEventListener('click',e=>{if(e.target===box||e.target.classList.contains('product-lightbox-close'))box.hidden=true})}
-      box.querySelector('img').src=b.coverUrl;box.querySelector('img').alt=b.title;box.hidden=false;
+    function openLightbox(b,url){
+      if(!url)return;let box=q('#productLightbox');if(!box){document.body.insertAdjacentHTML('beforeend','<div id="productLightbox" class="product-lightbox" hidden><button type="button" class="product-lightbox-close" aria-label="Mbyll">×</button><img alt=""></div>');box=q('#productLightbox');box.addEventListener('click',e=>{if(e.target===box||e.target.classList.contains('product-lightbox-close'))box.hidden=true})}
+      box.querySelector('img').src=url;box.querySelector('img').alt=b.title;box.hidden=false;
     }
     async function loadReviews(b){
       try{
