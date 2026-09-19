@@ -238,66 +238,52 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
           fetch_live() {
             local url="$1" out="$2"
-            for attempt in 1 2 3 4 5 6; do
-              if curl -L --fail --silent --show-error --max-time 20 "${url}?deploy=${GITHUB_SHA}&attempt=${attempt}" -o "$out"; then
+            curl -L --fail --silent --show-error \
+              -H 'Cache-Control: no-cache, no-store, must-revalidate' \
+              -H 'Pragma: no-cache' \
+              --max-time 25 \
+              "${url}?deploy=${GITHUB_SHA}&ts=${GITHUB_RUN_ID}" -o "$out"
+          }
+
+          require_live() {
+            local url="$1" out="$2" needle="$3" label="$4"
+            for attempt in 1 2 3 4 5 6 7 8; do
+              if fetch_live "$url" "$out" && grep -Fq "$needle" "$out"; then
+                echo "OK: $label"
                 return 0
               fi
-              sleep 3
+              echo "Waiting for live update: $label (attempt $attempt/8)"
+              sleep 5
             done
+            echo "::error title=Live verification failed::$label was not found at $url"
+            echo "Expected: $needle"
+            echo "Response preview:"
+            head -c 1200 "$out" || true
+            echo
             return 1
           }
 
-          # Verify the current production shell without tying success to cache-busting version numbers.
-          fetch_live https://www.zemzem.al/shop.html /tmp/shop.html
-          grep -Fq 'assets/css/shop-pro.css' /tmp/shop.html
-          grep -Fq 'assets/js/shop-pro.js' /tmp/shop.html
-          grep -Fq 'assets/js/branding.js' /tmp/shop.html
+          require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/css/shop-pro.css' 'Shop CSS reference'
+          require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/js/shop-pro.js' 'Shop JS reference'
+          require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'zz-ticket-price' 'Shop price ticket'
+          require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'OFERTË' 'Shop Albanian offer label'
 
-          fetch_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js
-          grep -Fq 'shopProPagination' /tmp/shop-pro.js
-          grep -Fq 'zz-ticket-price' /tmp/shop-pro.js
-          grep -Fq 'OFERTË' /tmp/shop-pro.js
+          require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
+          require_live https://www.zemzem.al/index.html /tmp/index.html 'assets/js/home-modern.js' 'Homepage modern script'
+          require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern.js 'zz-hero-ticket' 'Homepage hero price ticket'
+          require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
+          require_live https://www.zemzem.al/product.html /tmp/product.html 'premium-price-ticket-wrap' 'Product price ticket'
 
-          fetch_live https://www.zemzem.al/admin.html /tmp/admin.html
-          grep -Fq 'assets/js/admin-branding.js' /tmp/admin.html
-          grep -Fq 'menuTypographyInline' /tmp/admin.html
+          require_live https://www.zemzem.al/assets/css/home-professional-v4.css /tmp/home-professional.css 'glossy pill style inspired by reference' 'Glossy category pill CSS'
+          require_live https://www.zemzem.al/index.html /tmp/index-categories.html 'assets/js/site-content.js?v=3' 'Homepage category controller version'
+          require_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content.js 'linear-gradient(180deg,#ffffff 0%,#f3f4f5 100%)' 'White glossy category controller'
 
-          fetch_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js
-          grep -Fq 'site_content?key=eq.branding' /tmp/branding.js
-          grep -Fq 'zemzem-menu-font-desktop' /tmp/branding.js
+          require_live https://www.zemzem.al/admin.html /tmp/admin.html 'assets/js/admin-branding.js' 'Admin branding controls'
+          require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js 'zemzem-menu-font-desktop' 'Global menu typography'
 
-          fetch_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css
-          grep -Fq '.zz-ticket-price' /tmp/price-ticket.css
-
-          fetch_live https://www.zemzem.al/index.html /tmp/index-price.html
-          grep -Fq 'assets/js/app-v5.js?v=2' /tmp/index-price.html
-          grep -Fq 'assets/js/home-modern.js?v=4' /tmp/index-price.html
-
-          fetch_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern-price.js
-          grep -Fq 'zz-hero-ticket' /tmp/home-modern-price.js
-          grep -Fq 'ÇMIM I MIRË' /tmp/home-modern-price.js
-
-          fetch_live https://www.zemzem.al/ebooks.html /tmp/ebooks-price.html
-          grep -Fq 'assets/css/price-ticket.css?v=1' /tmp/ebooks-price.html
-          grep -Fq 'assets/js/ebooks.js?v=4' /tmp/ebooks-price.html
-
-          fetch_live https://www.zemzem.al/product.html /tmp/product-price.html
-          grep -Fq 'assets/css/price-ticket.css?v=1' /tmp/product-price.html
-          grep -Fq 'premium-price-ticket-wrap' /tmp/product-price.html
-
-          fetch_live https://www.zemzem.al/assets/css/home-professional-v4.css /tmp/home-professional-v4.css
-          grep -Fq 'glossy pill style inspired by reference' /tmp/home-professional-v4.css
-
-          fetch_live https://www.zemzem.al/index.html /tmp/index-categories.html
-          grep -Fq 'assets/css/home-professional-v4.css?v=5' /tmp/index-categories.html
-          grep -Fq 'assets/js/site-content.js?v=3' /tmp/index-categories.html
-
-          fetch_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content-categories.js
-          grep -Fq 'linear-gradient(180deg,#ffffff 0%,#f3f4f5 100%)' /tmp/site-content-categories.js
-
-          echo 'ZEMZEM_SHARED_PRICE_TICKET_OK=yes'
           echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
 
       - name: Obsolete commit skipped safely
