@@ -1,14 +1,7 @@
 name: Apply Professional Shop
 
 on:
-  workflow_run:
-    workflows: ["Deploy ZemZem to cPanel"]
-    types: [completed]
-    branches: [main]
-
-concurrency:
-  group: zemzem-professional-shop
-  cancel-in-progress: true
+  workflow_dispatch:
 
 jobs:
   shop:
