@@ -159,6 +159,10 @@ jobs:
           assets/js/admin-stock-forecast.js
           assets/js/admin-social-contacts.js
           assets/js/admin-site-design.js
+          assets/js/admin-branding.js
+          assets/css/admin-branding.css
+          assets/js/branding.js
+          assets/css/brand.css
           assets/js/site-content.js
           assets/js/admin-blog.js
           assets/css/admin-blog.css
@@ -214,6 +218,10 @@ jobs:
           upload "assets/js/admin-home-books.js"
           upload "assets/js/admin-social-contacts.js"
           upload "assets/js/admin-site-design.js"
+          upload "assets/js/admin-branding.js"
+          upload "assets/css/admin-branding.css"
+          upload "assets/js/branding.js"
+          upload "assets/css/brand.css"
           upload "assets/js/site-content.js"
           upload "assets/js/admin-enterprise.js"
           upload "assets/js/admin-enterprise-tools.js"
@@ -240,7 +248,7 @@ jobs:
           }
 
           fetch_live https://www.zemzem.al/index.html /tmp/index.html
-          grep -Fq 'assets/js/home-modern.js?v=2' /tmp/index.html
+          grep -Fq 'assets/js/home-modern.js?v=3' /tmp/index.html
           grep -Fq 'assets/js/site-content.js?v=2' /tmp/index.html
           grep -Fq 'collection-rail' /tmp/index.html
 
@@ -251,6 +259,18 @@ jobs:
 
           fetch_live https://www.zemzem.al/admin.html /tmp/admin.html
           grep -Fq 'assets/js/admin-site-design.js?v=2' /tmp/admin.html
+          grep -Fq 'assets/js/admin-branding.js?v=3' /tmp/admin.html
+          grep -Fq 'menuTypographyInline' /tmp/admin.html
+          grep -Fq 'Shkronjat e menusë' /tmp/admin.html
+
+          fetch_live https://www.zemzem.al/assets/js/admin-branding.js /tmp/admin-branding.js
+          grep -Fq 'brandMenuDesktop' /tmp/admin-branding.js
+          grep -Fq 'brandMenuTablet' /tmp/admin-branding.js
+          grep -Fq 'brandMenuMobile' /tmp/admin-branding.js
+
+          fetch_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js
+          grep -Fq 'zemzem-menu-font-desktop' /tmp/branding.js
+          grep -Fq 'zemzemMenuTypography' /tmp/branding.js
 
           fetch_live https://www.zemzem.al/assets/js/admin-site-design.js /tmp/admin-site-design.js
           grep -Fq 'Dizajni i Ballinës' /tmp/admin-site-design.js
