@@ -173,6 +173,10 @@ jobs:
           sitemap.xml
           blog.html
           article.html
+          author.html
+          publisher.html
+          assets/js/entity-page.js
+          assets/css/entity-page.css
           assets/js/blog.js
           assets/css/blog.css
           assets/js/app-v5.js
@@ -287,7 +291,14 @@ jobs:
           upload "assets/js/admin-enterprise.js"
           upload "assets/js/admin-enterprise-tools.js"
           upload "assets/js/admin-enterprise-config.js"
+          upload "assets/js/admin-abandoned.js"
+          upload "assets/js/admin-reports.js"
+          upload "assets/js/admin-gift-cards.js"
           upload "assets/js/admin-advanced.js"
+          upload "author.html"
+          upload "publisher.html"
+          upload "assets/js/entity-page.js"
+          upload "assets/css/entity-page.css"
           upload "assets/js/account.js"
           upload "assets/js/account-enterprise.js"
           upload "assets/js/account-advanced.js"
@@ -342,7 +353,7 @@ jobs:
           require_live https://www.zemzem.al/index.html /tmp/index-categories.html 'assets/js/site-content.js?v=3' 'Homepage category controller version'
           require_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content.js 'linear-gradient(180deg,#ffffff 0%,#f3f4f5 100%)' 'White glossy category controller'
           require_live https://www.zemzem.al/index.html /tmp/index-all-books.html 'id="allBooksStatic"' 'Homepage all books section'
-          require_live https://www.zemzem.al/index.html /tmp/index-all-books.html 'assets/js/home-modern.js?v=6' 'Homepage all books script version'
+          require_live https://www.zemzem.al/index.html /tmp/index-all-books.html 'assets/js/home-modern.js' 'Homepage all books script reference'
           require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern-all-books.js 'renderAllBooksSection' 'Homepage all books renderer'
           require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern-all-books.js "limit:20" 'Homepage all books default limit'
           require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksLimit' 'Admin all-books limit control'
@@ -362,10 +373,16 @@ jobs:
           require_live https://www.zemzem.al/assets/css/product.css /tmp/product-review.css 'Review form v2 — visible on every product' 'Review form v2 styles'
           require_live https://www.zemzem.al/product.html /tmp/product-review.html 'submit_verified_review' 'Verified review submit RPC hook'
           require_live https://www.zemzem.al/assets/css/product.css /tmp/product-review.css 'Verified buyer review form' 'Verified review form styles'
-          require_live https://www.zemzem.al/checkout.html /tmp/checkout-coupon.html 'assets/js/checkout-v2.js?v=3' 'Checkout coupon fix version'
+          require_live https://www.zemzem.al/checkout.html /tmp/checkout-coupon.html 'assets/js/checkout-v2.js' 'Checkout script reference'
           require_live https://www.zemzem.al/assets/js/checkout-v2.js /tmp/checkout-v2.js 'appliedCouponCode' 'Server-validated coupon state'
           require_live https://www.zemzem.al/assets/js/checkout-v2.js /tmp/checkout-v2.js "coupon_code:''" 'Invalid coupon keeps shipping and COD'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js 'zemzem-menu-font-desktop' 'Global menu typography'
+          require_live https://www.zemzem.al/checkout.html /tmp/checkout-gift.html 'giftCardCode' 'Gift Card checkout field'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-gift.html 'admin-gift-cards.js' 'Gift Card Admin module'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-abandoned.html 'admin-abandoned.js' 'Abandoned cart Admin module'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-reports.html 'admin-reports.js' 'Admin reports module'
+          require_live https://www.zemzem.al/author.html /tmp/author.html 'entity-page.js' 'Author profile page'
+          require_live https://www.zemzem.al/publisher.html /tmp/publisher.html 'entity-page.js' 'Publisher profile page'
 
           echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
 
