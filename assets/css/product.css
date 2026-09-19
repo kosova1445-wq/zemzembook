@@ -67,3 +67,13 @@
 .review-form-locked textarea:disabled,.review-form-locked input:disabled{background:#f5f7f8;color:#9aa5ab}
 #premiumReviews{margin-top:14px}
 @media(max-width:700px){.review-two-col{grid-template-columns:1fr}.premium-review-form{padding:18px}.review-star{font-size:25px}}
+
+
+/* Back in stock alert */
+.stock-alert-box{margin-top:16px;padding:18px;border:1px solid #dfe8ea;border-radius:14px;background:#f8fbfb}
+.stock-alert-box strong{display:block;color:#203847;font-size:14px}
+.stock-alert-box p{margin:5px 0 12px;color:#71808a;font-size:11px;line-height:1.5}
+#stockAlertForm{display:flex;gap:8px;flex-wrap:wrap}
+#stockAlertForm input{flex:1;min-width:220px;border:1px solid #d8e1e4;border-radius:10px;padding:11px 12px;outline:0}
+#stockAlertForm input:focus{border-color:#159da8;box-shadow:0 0 0 3px rgba(21,157,168,.10)}
+#stockAlertStatus{margin-top:8px;color:#2c765a;font-size:11px;line-height:1.4}
