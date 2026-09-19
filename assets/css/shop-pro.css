@@ -39,3 +39,26 @@
 @media(max-width:1100px){#shopBooks.shop-pro-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 @media(max-width:760px){#shopBooks.shop-pro-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}.shop-book-card{padding:9px!important;border-radius:14px!important}.shop-card-badges{left:14px;top:14px}.shop-wishlist-btn{right:14px;top:14px;width:31px;height:31px}.shop-card-meta h3{font-size:13px!important;min-height:auto!important}.shop-card-actions{grid-template-columns:1fr}.shop-details-btn{display:none}.shop-cart-btn{min-height:38px;font-size:10px}}
 @media(max-width:430px){#shopBooks.shop-pro-grid{gap:9px!important}.shop-card-badge{font-size:8px;padding:0 7px}.shop-card-price-row .price{font-size:14px!important}}
+
+/* ZemZem promotional price tag */
+.shop-price-wrap{display:flex;align-items:center;margin-top:10px;min-height:64px}
+.shop-price-tag{position:relative;display:inline-flex;align-items:flex-end;gap:6px;min-width:126px;padding:17px 26px 9px 13px;background:#ef3f33;color:#fff;border-radius:12px 5px 5px 12px;clip-path:polygon(0 0,86% 0,100% 50%,86% 100%,0 100%);box-shadow:0 8px 18px rgba(239,63,51,.18)}
+.shop-price-tag:not(.has-discount){background:#fff;border:2px solid #ef3f33;color:#ef3f33}
+.shop-price-label{position:absolute;left:14px;top:-9px;background:#ffd72e;color:#1e1e1e;padding:3px 7px;border-radius:2px;font-size:8px;font-weight:1000;letter-spacing:.04em;line-height:1;text-transform:uppercase;box-shadow:0 2px 5px rgba(0,0,0,.08)}
+.shop-price-current{font-size:24px;font-weight:1000;line-height:1;letter-spacing:-.04em;white-space:nowrap}
+.shop-price-old{position:absolute;left:15px;top:7px;font-size:10px;font-weight:900;color:rgba(255,255,255,.92);text-decoration:line-through;text-decoration-thickness:2px}
+.shop-price-tag:not(.has-discount) .shop-price-old{color:#8b8f92}
+.shop-price-hole{position:absolute;right:12px;top:50%;width:8px;height:8px;border-radius:50%;background:#fff;transform:translateY(-50%);box-shadow:inset 0 0 0 1px rgba(35,58,74,.14)}
+.shop-price-tag:not(.has-discount) .shop-price-hole{background:#fff;border:1px solid #ef3f33}
+#shopBooks.shop-pro-list .shop-price-wrap{margin-top:8px}
+@media(max-width:760px){
+  .shop-price-wrap{min-height:58px;margin-top:8px}
+  .shop-price-tag{min-width:112px;padding:16px 23px 8px 11px}
+  .shop-price-current{font-size:20px}
+  .shop-price-label{left:11px;font-size:7px}
+  .shop-price-old{left:12px;font-size:9px}
+}
+@media(max-width:430px){
+  .shop-price-tag{min-width:102px;padding-right:21px}
+  .shop-price-current{font-size:18px}
+}
