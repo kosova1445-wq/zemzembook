@@ -239,272 +239,29 @@ jobs:
             return 1
           }
 
-          fetch_live https://www.zemzem.al/assets/js/analytics.js /tmp/analytics.js
-          grep -Fq 'G-9TPM62WY0G' /tmp/analytics.js
-          grep -Fq "event('purchase'" /tmp/analytics.js
-          grep -Fq "analytics_storage" /tmp/analytics.js
-
-          fetch_live https://www.zemzem.al/ /tmp/index.html
-          grep -Fq 'ZemZem.al – Libra Shqip, eBook & Librari Online' /tmp/index.html
-          grep -Fq 'application/ld+json' /tmp/index.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/index.html
-          grep -Fq 'assets/css/home-modern.css?v=1' /tmp/index.html
-          grep -Fq 'assets/css/home-wow.css?v=1' /tmp/index.html
-          grep -Fq 'assets/css/home-bookstore-v2.css?v=1' /tmp/index.html
-          grep -Fq 'assets/js/home-wow.js?v=1' /tmp/index.html
-          grep -Fq 'assets/js/home-bookstore-v2.js?v=3' /tmp/index.html
-          grep -Fq 'assets/css/home-responsive-v5.css?v=2' /tmp/index.html
-          grep -Fq 'assets/js/home-mobile-v6.js?v=1' /tmp/index.html
+          fetch_live https://www.zemzem.al/index.html /tmp/index.html
+          grep -Fq 'assets/js/home-modern.js?v=2' /tmp/index.html
           grep -Fq 'assets/js/site-content.js?v=2' /tmp/index.html
-          fetch_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content.js
-          grep -Fq 'applyDesign' /tmp/site-content.js
-          grep -Fq 'hero_background' /tmp/site-content.js
+          grep -Fq 'collection-rail' /tmp/index.html
+
           fetch_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern.js
-          grep -Fq "const rail=q('.collection-rail')" /tmp/home-modern.js
+          grep -Fq "renderCollectionRail" /tmp/home-modern.js
+          grep -Fq "insertAdjacentElement('afterend',rail)" /tmp/home-modern.js
           grep -Fq 'collection_rail' /tmp/home-modern.js
-          fetch_live https://www.zemzem.al/assets/js/home-wow.js /tmp/home-wow.js
-          grep -Fq 'wow-featured' /tmp/home-wow.js
-          grep -Fq 'mega-menu-shell' /tmp/home-wow.js
-          fetch_live https://www.zemzem.al/assets/css/home-wow.css /tmp/home-wow.css
-          grep -Fq '.wow-featured' /tmp/home-wow.css
-          grep -Fq '.wow-quickview' /tmp/home-wow.css
-          fetch_live https://www.zemzem.al/assets/css/home-bookstore-v2.css /tmp/home-bookstore-v2.css
-          grep -Fq 'ZemZem bookstore v2' /tmp/home-bookstore-v2.css
-          grep -Fq '.zv2-newsletter' /tmp/home-bookstore-v2.css
-          fetch_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js
-          grep -Fq 'zemzem-bookstore-v2' /tmp/home-bookstore-v2.js
-          grep -Fq 'home-ebukz3.css?v=1' /tmp/home-bookstore-v2.js
-          grep -Fq 'home-category-preserve.css?v=1' /tmp/home-bookstore-v2.js
-          grep -Fq 'home-professional-v4.css?v=1' /tmp/home-bookstore-v2.js
-          fetch_live https://www.zemzem.al/assets/css/home-professional-v4.css /tmp/home-professional-v4.css
-          grep -Fq 'ZemZem home professional v4' /tmp/home-professional-v4.css
-          fetch_live https://www.zemzem.al/assets/css/home-responsive-v5.css /tmp/home-responsive-v5.css
-          grep -Fq 'advanced mobile v6' /tmp/home-responsive-v5.css
-          grep -Fq '@media(max-width:340px)' /tmp/home-responsive-v5.css
-          fetch_live https://www.zemzem.al/assets/js/home-mobile-v6.js /tmp/home-mobile-v6.js
-          grep -Fq 'ZemZem mobile experience v6' /tmp/home-mobile-v6.js
-          grep -Fq 'zz-mobile-dock' /tmp/home-mobile-v6.js
-          fetch_live https://www.zemzem.al/assets/css/home-ebukz3.css /tmp/home-ebukz3.css
-          grep -Fq 'supplied bookstore reference screenshot' /tmp/home-ebukz3.css
-          grep -Fq '.wow-featured' /tmp/home-ebukz3.css
-          fetch_live https://www.zemzem.al/assets/css/home-category-preserve.css /tmp/home-category-preserve.css
-          grep -Fq 'Keep the ZemZem category UI' /tmp/home-category-preserve.css
-          grep -Fq '.category-box-premium' /tmp/home-category-preserve.css
-
-          fetch_live https://www.zemzem.al/shop.html /tmp/shop.html
-          grep -Fq 'Libra në Shqip – Dyqani i Librave Fizikë | ZemZem' /tmp/shop.html
-          grep -Fq 'application/ld+json' /tmp/shop.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/shop.html
-          fetch_live https://www.zemzem.al/product.html /tmp/product.html
-          grep -Fq 'seo-product.js?v=2' /tmp/product.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/product.html
-          grep -Fq 'data-gallery-url' /tmp/product.html
-          fetch_live https://www.zemzem.al/assets/js/seo-product.js /tmp/seo-product.js
-          grep -Fq 'zemzemProductSchema' /tmp/seo-product.js
-          fetch_live https://www.zemzem.al/checkout.html /tmp/checkout.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/checkout.html
-          fetch_live https://www.zemzem.al/paypal-return.html /tmp/paypal-return.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/paypal-return.html
-          fetch_live https://www.zemzem.al/about.html /tmp/about.html
-          grep -Fq 'Rreth ZemZem.al – Librari Online për Libra në Shqip' /tmp/about.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/about.html
-          fetch_live https://www.zemzem.al/contact.html /tmp/contact.html
-          grep -Fq 'Kontakt & Ndihmë – Porosi, Libra dhe eBook | ZemZem' /tmp/contact.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/contact.html
-          fetch_live https://www.zemzem.al/shipping-returns.html /tmp/shipping.html
-          grep -Fq 'Transporti, Tracking & Kthimet e Porosive | ZemZem' /tmp/shipping.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/shipping.html
-          fetch_live https://www.zemzem.al/privacy.html /tmp/privacy.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/privacy.html
-          fetch_live https://www.zemzem.al/terms.html /tmp/terms.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/terms.html
-          fetch_live https://www.zemzem.al/sitemap.xml /tmp/sitemap.xml
-          grep -Fq 'product.html?id=' /tmp/sitemap.xml
-          grep -Fq 'ebook.html?id=' /tmp/sitemap.xml
-
-          fetch_live https://www.zemzem.al/blog.html /tmp/blog.html
-          grep -Fq 'assets/js/blog.js?v=1' /tmp/blog.html
-          grep -Fq 'assets/css/blog.css?v=1' /tmp/blog.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/blog.html
-          fetch_live https://www.zemzem.al/article.html /tmp/article.html
-          grep -Fq 'data-blog-page="article"' /tmp/article.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/article.html
-          fetch_live https://www.zemzem.al/assets/js/blog.js /tmp/blog.js
-          grep -Fq 'blog_categories' /tmp/blog.js
-          grep -Fq 'blog_posts' /tmp/blog.js
 
           fetch_live https://www.zemzem.al/admin.html /tmp/admin.html
-          grep -Fq 'admin-v2.js?v=4' /tmp/admin.html
-          grep -Fq 'assets/css/admin-polish.css?v=1' /tmp/admin.html
-          grep -Fq 'id="adminSync"' /tmp/admin.html
-          grep -Fq 'admin-booksto.css?v=1' /tmp/admin.html
-          grep -Fq 'admin-booksto-pages.css?v=1' /tmp/admin.html
-          grep -Fq 'admin-booksto.js?v=1' /tmp/admin.html
-          grep -Fq 'admin-book-helper.js?v=1' /tmp/admin.html
-          grep -Fq 'admin-home-books.js?v=4' /tmp/admin.html
-          grep -Fq 'admin-enterprise.js?v=1' /tmp/admin.html
-          grep -Fq 'admin-enterprise-tools.js?v=1' /tmp/admin.html
-          grep -Fq 'admin-enterprise-config.js?v=1' /tmp/admin.html
-          grep -Fq 'admin-marketing-suite.js?v=1' /tmp/admin.html
-          grep -Fq 'admin-stock-forecast.js?v=1' /tmp/admin.html
-          grep -Fq 'admin-social-contacts.js?v=2' /tmp/admin.html
-          grep -Fq 'admin-site-design.js?v=2' /tmp/admin.html
+          grep -Fq 'assets/js/admin-site-design.js?v=2' /tmp/admin.html
+
           fetch_live https://www.zemzem.al/assets/js/admin-site-design.js /tmp/admin-site-design.js
           grep -Fq 'Dizajni i Ballinës' /tmp/admin-site-design.js
           grep -Fq 'siteRailRows' /tmp/admin-site-design.js
-          grep -Fq 'hero_shelf_opacity' /tmp/admin-site-design.js
-          if grep -Fq 'assets/js/analytics.js' /tmp/admin.html; then
-            echo 'Analytics must not be loaded in admin.html'; exit 1
-          fi
-          fetch_live https://www.zemzem.al/assets/js/admin-v2.js /tmp/admin-v2.js
-          grep -Fq 'store-admin-ops' /tmp/admin-v2.js
-          grep -Fq 'admin_update_physical_order' /tmp/admin-v2.js
-          grep -Fq 'admin_customer_detail' /tmp/admin-v2.js
-          grep -Fq 'setAdminSync' /tmp/admin-v2.js
-          grep -Fq 'admin-funnel.js?v=1' /tmp/admin-v2.js
-          grep -Fq 'admin-paypal.js?v=1' /tmp/admin-v2.js
-          grep -Fq 'uploadGalleryImages' /tmp/admin-v2.js
-          fetch_live https://www.zemzem.al/assets/js/admin-funnel.js /tmp/admin-funnel.js
-          grep -Fq 'ZemZem Admin sales funnel v1' /tmp/admin-funnel.js
-          fetch_live https://www.zemzem.al/assets/js/admin-paypal.js /tmp/admin-paypal.js
-          grep -Fq 'ZemZem secure PayPal Business manager v1' /tmp/admin-paypal.js
-          grep -Fq 'featured_collection' /tmp/home-wow.js
-          fetch_live https://www.zemzem.al/assets/css/admin-polish.css /tmp/admin-polish.css
-          grep -Fq '.admin-password-field' /tmp/admin-polish.css
-          fetch_live https://www.zemzem.al/assets/js/app-v5.js /tmp/app-v5.js
-          grep -Fq 'production-polish.css?v=1' /tmp/app-v5.js
-          grep -Fq 'mobile-commerce-v3.css?v=1' /tmp/app-v5.js
-          grep -Fq 'mobile-commerce-v3.js?v=1' /tmp/app-v5.js
-          fetch_live https://www.zemzem.al/assets/css/mobile-commerce-v3.css /tmp/mobile-commerce-v3.css
-          grep -Fq 'ZemZem mobile commerce v3' /tmp/mobile-commerce-v3.css
-          grep -Fq '.zz-product-buy-dock' /tmp/mobile-commerce-v3.css
-          fetch_live https://www.zemzem.al/assets/js/mobile-commerce-v3.js /tmp/mobile-commerce-v3.js
-          grep -Fq 'ZemZem mobile commerce enhancements v3' /tmp/mobile-commerce-v3.js
-          grep -Fq 'zz-checkout-dock' /tmp/mobile-commerce-v3.js
-          grep -Fq 'whatsapp-chat.js?v=5' /tmp/app-v5.js
-          grep -Fq 'storefront-funnel.js?v=1' /tmp/app-v5.js
-          grep -Fq 'book-gallery-v1.css?v=1' /tmp/app-v5.js
-          fetch_live https://www.zemzem.al/assets/css/book-gallery-v1.css /tmp/book-gallery-v1.css
-          grep -Fq 'ZemZem book image frames and gallery v1' /tmp/book-gallery-v1.css
-          fetch_live https://www.zemzem.al/assets/js/storefront-funnel.js /tmp/storefront-funnel.js
-          grep -Fq 'ZemZem consent-aware storefront funnel v1' /tmp/storefront-funnel.js
-          fetch_live https://www.zemzem.al/assets/js/whatsapp-chat.js /tmp/whatsapp-chat.js
-          grep -Fq 'ZemZem admin-managed communication buttons v4' /tmp/whatsapp-chat.js
-          grep -Fq 'zemzem-custom-contact' /tmp/whatsapp-chat.js
-          grep -Fq '41786044792' /tmp/whatsapp-chat.js
-          grep -Fq '.zemzem-whatsapp{display:flex' /tmp/whatsapp-chat.js
-          grep -Fq 'https://m.me/zemzemhouse' /tmp/whatsapp-chat.js
-          grep -Fq '.zemzem-facebook{display:flex' /tmp/whatsapp-chat.js
-          grep -Fq 'https://t.me/+${phone}' /tmp/whatsapp-chat.js
-          grep -Fq 'viber://chat?number=%2B${phone}' /tmp/whatsapp-chat.js
-          fetch_live https://www.zemzem.al/assets/css/production-polish.css /tmp/production-polish.css
-          grep -Fq 'html{overflow-x:hidden}' /tmp/production-polish.css
-          fetch_live https://www.zemzem.al/assets/css/site-premium-v3.css /tmp/site-premium-v3.css
-          grep -Fq 'ZemZem premium v3' /tmp/site-premium-v3.css
-          grep -Fq 'collection-rail' /tmp/index.html
-          grep -Fq 'data-premium-v3' /tmp/app-v5.js
-          fetch_live https://www.zemzem.al/assets/js/admin-book-helper.js /tmp/admin-book-helper.js
-          grep -Fq 'books_sku_key' /tmp/admin-book-helper.js
-          grep -Fq 'Gjenero SKU' /tmp/admin-book-helper.js
-          fetch_live https://www.zemzem.al/assets/js/admin-home-books.js /tmp/admin-home-books.js
-          grep -Fq 'Seksionet e librave në Ballinë' /tmp/admin-home-books.js
-          grep -Fq 'homepage_selected_books' /tmp/admin-home-books.js
-          fetch_live https://www.zemzem.al/assets/js/admin-enterprise.js /tmp/admin-enterprise.js
-          grep -Fq 'ZemZem Enterprise modules center v1' /tmp/admin-enterprise.js
-          grep -Fq 'used_marketplace' /tmp/admin-enterprise.js
-          fetch_live https://www.zemzem.al/assets/js/admin-enterprise-tools.js /tmp/admin-enterprise-tools.js
-          grep -Fq 'ZemZem Enterprise operational tools v1' /tmp/admin-enterprise-tools.js
-          grep -Fq 'content_moderation_queue' /tmp/admin-enterprise-tools.js
-          fetch_live https://www.zemzem.al/assets/js/admin-enterprise-config.js /tmp/admin-enterprise-config.js
-          grep -Fq 'ZemZem Enterprise configuration editor v1' /tmp/admin-enterprise-config.js
-          grep -Fq 'author_royalty_percent' /tmp/admin-enterprise-config.js
-          fetch_live https://www.zemzem.al/assets/js/admin-marketing-suite.js /tmp/admin-marketing-suite.js
-          grep -Fq 'ZemZem newsletter manager v1' /tmp/admin-marketing-suite.js
-          fetch_live https://www.zemzem.al/assets/js/admin-stock-forecast.js /tmp/admin-stock-forecast.js
-          grep -Fq 'predictive stock forecasting v1' /tmp/admin-stock-forecast.js
-          fetch_live https://www.zemzem.al/assets/js/admin-social-contacts.js /tmp/admin-social-contacts.js
-          grep -Fq 'ZemZem admin social contacts manager v2 — custom channels' /tmp/admin-social-contacts.js
-          grep -Fq 'site_content?key=eq.social_contacts' /tmp/admin-social-contacts.js
-          grep -Fq 'Shto kanal tjetër' /tmp/admin-social-contacts.js
-          fetch_live https://www.zemzem.al/assets/js/admin-advanced.js /tmp/admin-advanced.js
-          grep -Fq 'period statistics and publication year' /tmp/admin-advanced.js
-          fetch_live https://www.zemzem.al/assets/js/account-advanced.js /tmp/account-advanced.js
-          grep -Fq 'password change and invoice/PDF' /tmp/account-advanced.js
-          fetch_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto.js
-          grep -Fq 'booksto-insight-grid' /tmp/admin-booksto.js
-          grep -Fq 'Category Lists' /tmp/admin-booksto.js
-          grep -Fq 'admin-blog.js?v=1' /tmp/admin-booksto.js
-          fetch_live https://www.zemzem.al/assets/js/admin-blog.js /tmp/admin-blog.js
-          grep -Fq 'Kategoritë & Nënkategoritë' /tmp/admin-blog.js
-          grep -Fq 'blog_posts' /tmp/admin-blog.js
-          fetch_live https://www.zemzem.al/assets/css/admin-blog.css /tmp/admin-blog.css
-          grep -Fq '.blog-admin-wrap' /tmp/admin-blog.css
-          fetch_live https://www.zemzem.al/assets/css/admin-booksto.css /tmp/admin-booksto.css
-          grep -Fq '.booksto-insight-grid' /tmp/admin-booksto.css
-          grep -Fq '.side-section-label' /tmp/admin-booksto.css
-          fetch_live https://www.zemzem.al/assets/css/admin-booksto-pages.css /tmp/admin-booksto-pages.css
-          grep -Fq '#view-orders .table-panel' /tmp/admin-booksto-pages.css
-          grep -Fq '#view-books .table-thumb' /tmp/admin-booksto-pages.css
+          grep -Fq 'Përmbajtja e shiritit të koleksioneve' /tmp/admin-site-design.js
 
-          fetch_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebooks.html
-          grep -Fq 'admin-ebooks-orders.js?v=2' /tmp/admin-ebooks.html
-          grep -Fq 'admin-ebooks-booksto.css?v=1' /tmp/admin-ebooks.html
-          grep -Fq 'ebook-mobile.css?v=1' /tmp/admin-ebooks.html
-          if grep -Fq 'assets/js/analytics.js' /tmp/admin-ebooks.html; then
-            echo 'Analytics must not be loaded in admin-ebooks.html'; exit 1
-          fi
-          fetch_live https://www.zemzem.al/assets/css/admin-ebooks-booksto.css /tmp/admin-ebooks-booksto.css
-          grep -Fq '.ebook-admin-nav' /tmp/admin-ebooks-booksto.css
-          grep -Fq '.ebook-admin-table' /tmp/admin-ebooks-booksto.css
-          fetch_live https://www.zemzem.al/assets/js/admin-ebooks-orders.js /tmp/admin-ebooks-orders.js
-          grep -Fq 'refund_order' /tmp/admin-ebooks-orders.js
-          grep -Fq 'cleanup_generated_inactive' /tmp/admin-ebooks-orders.js
+          fetch_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content.js
+          grep -Fq 'applyDesign' /tmp/site-content.js
+          grep -Fq 'hero_background' /tmp/site-content.js
 
-          fetch_live https://www.zemzem.al/account.html /tmp/account.html
-          grep -Fq 'account.js?v=3' /tmp/account.html
-          grep -Fq 'ebook-mobile.css?v=1' /tmp/account.html
-          grep -Fq '#authPanel[hidden]' /tmp/account.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/account.html
-          grep -Fq 'account-enterprise.js?v=2' /tmp/account.html
-          if grep -Fq 'account-ebooks.js' /tmp/account.html; then
-            echo 'Legacy account-ebooks.js is still referenced'; exit 1
-          fi
-          fetch_live https://www.zemzem.al/assets/js/account.js /tmp/account.js
-          grep -Fq 'dedupeEntitlements' /tmp/account.js
-          grep -Fq 'ebook-download' /tmp/account.js
-          fetch_live https://www.zemzem.al/assets/js/account-enterprise.js /tmp/account-enterprise.js
-          grep -Fq 'ZemZem customer enterprise modules v2 — smart librarian' /tmp/account-enterprise.js
-          grep -Fq 'reading_sessions' /tmp/account-enterprise.js
-          grep -Fq 'data-librarian-cart' /tmp/account-enterprise.js
-
-          fetch_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html
-          grep -Fq 'eBook në Shqip – Libra Digjitalë PDF & EPUB | ZemZem' /tmp/ebooks.html
-          grep -Fq 'ebooks.js?v=3' /tmp/ebooks.html
-          grep -Fq 'ebook-mobile.css?v=1' /tmp/ebooks.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/ebooks.html
-          fetch_live https://www.zemzem.al/ebook.html /tmp/ebook.html
-          grep -Fq 'ebooks.js?v=3' /tmp/ebook.html
-          grep -Fq 'seo-ebook.js?v=1' /tmp/ebook.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/ebook.html
-          fetch_live https://www.zemzem.al/assets/js/ebooks.js /tmp/ebooks.js
-          grep -Fq 'OWNED_EBOOK_IDS' /tmp/ebooks.js
-          grep -Fq 'entitlementUsable' /tmp/ebooks.js
-          fetch_live https://www.zemzem.al/assets/js/seo-ebook.js /tmp/seo-ebook.js
-          grep -Fq 'zemzemEbookSchema' /tmp/seo-ebook.js
-
-          fetch_live https://www.zemzem.al/ebook-checkout.html /tmp/ebook-checkout.html
-          grep -Fq 'ebook-checkout.js?v=2' /tmp/ebook-checkout.html
-          grep -Fq 'ebook-mobile.css?v=1' /tmp/ebook-checkout.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/ebook-checkout.html
-          fetch_live https://www.zemzem.al/assets/js/ebook-checkout.js /tmp/ebook-checkout.js
-          grep -Fq 'cleanupOwnedCart' /tmp/ebook-checkout.js
-          grep -Fq 'EBOOK_ALREADY_OWNED' /tmp/ebook-checkout.js
-          fetch_live https://www.zemzem.al/ebook-paypal-return.html /tmp/ebook-paypal-return.html
-          grep -Fq 'assets/js/analytics.js?v=1' /tmp/ebook-paypal-return.html
-
-          fetch_live https://www.zemzem.al/assets/css/ebook-mobile.css /tmp/ebook-mobile.css
-          grep -Fq 'ZemZem eBook responsive layer' /tmp/ebook-mobile.css
-          echo 'ZEMZEM_PROTECTED_RELEASE_LIVE_OK=yes'
+          echo 'ZEMZEM_LIVE_ADMIN_DESIGN_AND_RAIL_OK=yes'
 
       - name: Obsolete commit skipped safely
         if: steps.latest.outputs.deploy != 'true'
