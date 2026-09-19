@@ -30,9 +30,11 @@ body{background:#fff;color:var(--zv2-ink);font-family:Inter,ui-sans-serif,system
 }
 
 
-/* Phone only: hide Featured Collection / selected books */
+
+
+/* Phone only: hide the dark Featured Collection banner */
 @media (max-width: 680px){
-  body.zemzem-bookstore-v2 #trending{
+  body.zemzem-bookstore-v2 .wow-featured{
     display:none !important;
   }
 }
