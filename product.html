@@ -173,10 +173,10 @@
           </div>
         </div>
         <div class="premium-tab-panel" data-product-panel="reviews"><div class="premium-panel-head"><div><h2>Recensionet</h2><p>Vetëm blerësit e verifikuar mund të shkruajnë recension për këtë libër.</p></div></div><div id="premiumReviewForm" class="premium-review-form-wrap"></div><div id="premiumReviews"><div class="premium-empty-state">Ende nuk ka recensione të publikuara për këtë libër.</div></div></div>
-        <div class="premium-tab-panel" data-product-panel="related"><div class="premium-panel-head"><div><h2>Produkte të ngjashme</h2><p>Tituj të tjerë që mund të të interesojnë.</p></div><a href="shop.html">Shiko të gjitha →</a></div><div id="premiumRelated" class="premium-related-grid"><div class="premium-empty-state">Duke ngarkuar...</div></div></div>
+        <div class="premium-tab-panel" data-product-panel="related"><div class="premium-panel-head"><div><h2>Blerësit shikojnë edhe</h2><p>Rekomandime nga blerjet reale dhe libra të së njëjtës kategori.</p></div><a href="shop.html">Shiko të gjitha →</a></div><div id="premiumRelated" class="premium-related-grid"><div class="premium-empty-state">Duke ngarkuar...</div></div><div class="premium-recent-block"><div class="premium-panel-head"><div><h2>Ke parë së fundmi</h2><p>Kthehu shpejt te librat që ke hapur më parë.</p></div></div><div id="premiumRecent" class="premium-related-grid"></div></div></div>
       </section>`;
 
-      bindPremiumActions(b,max,unavailable);bindTabs();loadReviewForm(b);loadReviews(b);loadRelated(b);
+      bindPremiumActions(b,max,unavailable);bindTabs();trackRecent(b);loadReviewForm(b);loadReviews(b);loadRelated(b);loadRecent(b);
     }
 
     function bindPremiumActions(b,max,unavailable){
@@ -251,25 +251,19 @@
         const box=q('#premiumReviews');if(box&&count)box.innerHTML=reviews.map(x=>`<article class="premium-review-card"><div class="premium-review-stars">${ratingStars(x.rating)}</div><h3>${esc(x.title||'Recension')}</h3><p>${esc(x.body||'')}</p><small>${x.reviewer_name?`<strong>${esc(x.reviewer_name)}</strong> · `:''}${x.created_at?new Intl.DateTimeFormat('sq-AL',{dateStyle:'medium'}).format(new Date(x.created_at)):''}</small></article>`).join('');
       }catch{}
     }
+    function relatedCard(x){
+      const id=x.id,title=x.title||'',author=x.author_name||x.author||'ZemZem',priceVal=Number(x.price||0),old=x.compare_at_price??x.old,coverUrl=x.cover_url||x.coverUrl,coverTheme=x.cover_theme||x.cover||'c1',cat=x.category_name||x.cat||'Libra',track=x.track_stock!==undefined?x.track_stock:x.trackStock,stock=x.stock_quantity!==undefined?Number(x.stock_quantity||0):Number(x.stock||0),unavailable=track!==false&&stock<=0;
+      const cover=coverUrl?`<img src="${esc(coverUrl)}" alt="${esc(title)}" loading="lazy">`:`<div class="book-cover ${esc(coverTheme)}"><span>${esc(title)}</span></div>`;
+      return `<article class="premium-related-card"><a class="related-cover" href="product.html?id=${encodeURIComponent(id)}">${cover}</a><div class="related-meta"><div class="related-category">${esc(cat)}</div><h3><a href="product.html?id=${encodeURIComponent(id)}">${esc(title)}</a></h3><p>${esc(author)}</p><div class="related-bottom"><div><strong>${money(priceVal)}</strong>${old?`<s>${money(old)}</s>`:''}</div><button type="button" ${unavailable?'disabled':''} onclick="addToCart('${id}')">${unavailable?'×':'＋'}</button></div></div></article>`;
+    }
+    function trackRecent(b){try{const key='zemzem_recent_books',raw=JSON.parse(localStorage.getItem(key)||'[]'),ids=[String(b.id),...raw.map(String).filter(x=>x!==String(b.id))].slice(0,12);localStorage.setItem(key,JSON.stringify(ids))}catch{}}
+    function loadRecent(b){const box=q('#premiumRecent');if(!box)return;try{const s=window.ZemZemStore,ids=JSON.parse(localStorage.getItem('zemzem_recent_books')||'[]').map(String).filter(id=>id!==String(b.id)).slice(0,4),items=ids.map(id=>s?.getBook(id)).filter(Boolean);box.innerHTML=items.length?items.map(relatedCard).join(''):'<div class="premium-empty-state">Ende nuk ke libra të tjerë të parë së fundmi.</div>'}catch{box.innerHTML=''}}
     async function loadRelated(b){
       const box=q('#premiumRelated');if(!box)return;
       try{
         const s=window.ZemZemStore;if(!s)throw new Error('store');
-        const url=`${s.SUPABASE_URL}/rest/v1/storefront_books?select=id,sku,title,author_name,price,compare_at_price,cover_url,cover_theme,category_name,stock_quantity,track_stock&limit=80`;
-        const r=await fetch(url,{headers:{apikey:s.SUPABASE_PUBLISHABLE_KEY},cache:'no-store'});if(!r.ok)throw new Error('fetch');
-        const rows=await r.json()||[];
-        const preferred=rows.filter(x=>String(x.id)!==String(b.id)&&x.category_name===b.cat),others=rows.filter(x=>String(x.id)!==String(b.id)&&x.category_name!==b.cat);const items=[...preferred,...others].slice(0,4);
-        box.innerHTML=items.length?items.map(x=>{
-          const unavailable=x.track_stock!==false&&Number(x.stock_quantity||0)<=0;
-          const cover=x.cover_url?`<img src="${esc(x.cover_url)}" alt="${esc(x.title)}" loading="lazy">`:`<div class="book-cover ${esc(x.cover_theme||'c1')}"><span>${esc(x.title)}</span></div>`;
-          return `<article class="premium-related-card"><a class="related-cover" href="product.html?id=${encodeURIComponent(x.id)}">${cover}</a><div class="related-meta"><div class="related-category">${esc(x.category_name||'Libra')}</div><h3><a href="product.html?id=${encodeURIComponent(x.id)}">${esc(x.title)}</a></h3><p>${esc(x.author_name||'ZemZem')}</p><div class="related-bottom"><div><strong>${money(x.price)}</strong>${x.compare_at_price?`<s>${money(x.compare_at_price)}</s>`:''}</div><button type="button" ${unavailable?'disabled':''} onclick="addToCart('${x.id}')">${unavailable?'×':'＋'}</button></div></div></article>`;
-        }).join(''):'<div class="premium-empty-state">Nuk u gjetën produkte të ngjashme.</div>';
-      }catch{box.innerHTML='<div class="premium-empty-state">Produktet e ngjashme nuk u ngarkuan.</div>'}
+        const r=await fetch(`${s.SUPABASE_URL}/rest/v1/rpc/book_recommendations`,{method:'POST',headers:{apikey:s.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_book_id:b.id,p_limit:8}),cache:'no-store'});if(!r.ok)throw new Error('fetch');
+        const items=await r.json()||[];box.innerHTML=items.length?items.map(relatedCard).join(''):'<div class="premium-empty-state">Nuk ka rekomandime për momentin.</div>';
+      }catch{box.innerHTML='<div class="premium-empty-state">Rekomandimet nuk u ngarkuan.</div>'}
     }
 
-    window.addEventListener('zemzem:catalog-ready',renderPremiumProduct);
-    document.addEventListener('DOMContentLoaded',()=>setTimeout(renderPremiumProduct,700));
-  })();
-  </script>
-<script src="assets/js/branding.js?v=4"></script></body>
-</html>
