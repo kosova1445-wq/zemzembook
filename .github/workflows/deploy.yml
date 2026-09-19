@@ -125,6 +125,7 @@ jobs:
           assets/js/app-v5.js
           assets/js/shop-pro.js
           assets/css/shop-pro.css
+          assets/css/price-ticket.css
           assets/js/storefront-funnel.js
           assets/js/admin-funnel.js
           assets/js/admin-paypal.js
@@ -206,6 +207,7 @@ jobs:
           upload "assets/js/app-v5.js"
           upload "assets/js/shop-pro.js"
           upload "assets/css/shop-pro.css"
+          upload "assets/css/price-ticket.css"
           upload "assets/js/storefront-funnel.js"
           upload "assets/js/admin-funnel.js"
           upload "assets/js/admin-paypal.js"
@@ -270,6 +272,17 @@ jobs:
           grep -Fq 'site_content?key=eq.branding' /tmp/branding.js
           grep -Fq 'zemzem-menu-font-desktop' /tmp/branding.js
 
+          fetch_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css
+          grep -Fq '.zz-ticket-price' /tmp/price-ticket.css
+
+          fetch_live https://www.zemzem.al/index.html /tmp/index-price.html
+          grep -Fq 'assets/js/app-v5.js?v=2' /tmp/index-price.html
+
+          fetch_live https://www.zemzem.al/ebooks.html /tmp/ebooks-price.html
+          grep -Fq 'assets/css/price-ticket.css?v=1' /tmp/ebooks-price.html
+          grep -Fq 'assets/js/ebooks.js?v=4' /tmp/ebooks-price.html
+
+          echo 'ZEMZEM_SHARED_PRICE_TICKET_OK=yes'
           echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
 
       - name: Obsolete commit skipped safely
