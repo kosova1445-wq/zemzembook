@@ -1,14 +1,7 @@
 name: Apply Official ZemZem Branding
 
 on:
-  workflow_run:
-    workflows: ["Deploy ZemZem to cPanel"]
-    types: [completed]
-    branches: [main]
-
-concurrency:
-  group: zemzem-official-branding
-  cancel-in-progress: true
+  workflow_dispatch:
 
 jobs:
   branding:
