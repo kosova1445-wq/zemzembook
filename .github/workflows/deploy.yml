@@ -281,8 +281,12 @@ jobs:
           require_live https://www.zemzem.al/index.html /tmp/index-categories.html 'assets/js/site-content.js?v=3' 'Homepage category controller version'
           require_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content.js 'linear-gradient(180deg,#ffffff 0%,#f3f4f5 100%)' 'White glossy category controller'
           require_live https://www.zemzem.al/index.html /tmp/index-all-books.html 'id="allBooksStatic"' 'Homepage all books section'
-          require_live https://www.zemzem.al/index.html /tmp/index-all-books.html 'assets/js/home-modern.js?v=5' 'Homepage all books script version'
+          require_live https://www.zemzem.al/index.html /tmp/index-all-books.html 'assets/js/home-modern.js?v=6' 'Homepage all books script version'
           require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern-all-books.js 'renderAllBooksSection' 'Homepage all books renderer'
+          require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern-all-books.js "limit:20" 'Homepage all books default limit'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksLimit' 'Admin all-books limit control'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksVisible' 'Admin all-books visibility control'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksSort' 'Admin all-books sorting control'
 
           require_live https://www.zemzem.al/admin.html /tmp/admin.html 'assets/js/admin-branding.js' 'Admin branding controls'
           require_live https://www.zemzem.al/admin.html /tmp/admin-book-meta.html 'bookCountry' 'Admin country metadata field'
