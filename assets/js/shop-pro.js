@@ -90,11 +90,16 @@
           <div class="author">${escHtml(b.author||'ZemZem')}</div>
           <div class="shop-card-stock ${unavailable?'out':''}">${unavailable?'×':'✓'} ${escHtml(stockText)}</div>
           <div class="shop-price-wrap">
-            <div class="shop-price-tag ${discount?'has-discount':''}">
-              <span class="shop-price-label">${discount?'OFERTË':'ÇMIMI'}</span>
-              ${b.old?`<span class="shop-price-old">${moneyLocal(b.old)}</span>`:''}
-              <span class="shop-price-current">${moneyLocal(b.price)}</span>
-              <span class="shop-price-hole" aria-hidden="true"></span>
+            <div class="zz-ticket-price ${discount?'has-discount':'regular'}">
+              <div class="zz-ticket-top">
+                ${b.old?`<span class="zz-ticket-old">${moneyLocal(b.old)}</span>`:`<span class="zz-ticket-old-label">ÇMIMI</span>`}
+                <span class="zz-ticket-bars" aria-hidden="true"></span>
+              </div>
+              <div class="zz-ticket-main">
+                <span class="zz-ticket-current">${moneyLocal(b.price).replace(' €','')}</span>
+                <span class="zz-ticket-currency">€</span>
+              </div>
+              <div class="zz-ticket-ribbon">${discount?'OFERTË':'ÇMIM I MIRË'}</div>
             </div>
           </div>
           <div class="shop-card-actions">
