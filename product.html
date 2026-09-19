@@ -171,11 +171,11 @@
             <div><span>SKU</span><strong>${esc(b.sku||'—')}</strong></div><div><span>ISBN</span><strong>${esc(b.isbn||'—')}</strong></div>
           </div>
         </div>
-        <div class="premium-tab-panel" data-product-panel="reviews"><h2>Recensionet</h2><div id="premiumReviews"><div class="premium-empty-state">Ende nuk ka recensione të publikuara për këtë libër.</div></div></div>
+        <div class="premium-tab-panel" data-product-panel="reviews"><div class="premium-panel-head"><div><h2>Recensionet</h2><p>Vetëm blerësit e verifikuar mund të shkruajnë recension për këtë libër.</p></div></div><div id="premiumReviewForm" class="premium-review-form-wrap"></div><div id="premiumReviews"><div class="premium-empty-state">Ende nuk ka recensione të publikuara për këtë libër.</div></div></div>
         <div class="premium-tab-panel" data-product-panel="related"><div class="premium-panel-head"><div><h2>Produkte të ngjashme</h2><p>Tituj të tjerë që mund të të interesojnë.</p></div><a href="shop.html">Shiko të gjitha →</a></div><div id="premiumRelated" class="premium-related-grid"><div class="premium-empty-state">Duke ngarkuar...</div></div></div>
       </section>`;
 
-      bindPremiumActions(b,max,unavailable);bindTabs();loadReviews(b);loadRelated(b);
+      bindPremiumActions(b,max,unavailable);bindTabs();loadReviewForm(b);loadReviews(b);loadRelated(b);
     }
 
     function bindPremiumActions(b,max,unavailable){
@@ -203,6 +203,25 @@
       if(!url)return;let box=q('#productLightbox');if(!box){document.body.insertAdjacentHTML('beforeend','<div id="productLightbox" class="product-lightbox" hidden><button type="button" class="product-lightbox-close" aria-label="Mbyll">×</button><img alt=""></div>');box=q('#productLightbox');box.addEventListener('click',e=>{if(e.target===box||e.target.classList.contains('product-lightbox-close'))box.hidden=true})}
       box.querySelector('img').src=url;box.querySelector('img').alt=b.title;box.hidden=false;
     }
+    async function reviewRpc(name,body){
+      const s=window.ZemZemStore,session=s?.getCustomerSession?.();if(!s||!session?.access_token)throw new Error('LOGIN_REQUIRED');
+      const r=await fetch(`${s.SUPABASE_URL}/rest/v1/rpc/${name}`,{method:'POST',headers:{apikey:s.SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${session.access_token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+      const raw=await r.text();let data={};try{data=raw?JSON.parse(raw):{}}catch{}if(!r.ok)throw new Error(data?.message||data?.error||raw||'REVIEW_FAILED');return data;
+    }
+    function reviewErrorMessage(err){const m=String(err?.message||err||'');return m.includes('LOGIN_REQUIRED')?'Duhet të kyçesh në llogari për të shkruar recension.':m.includes('NOT_PURCHASED')?'Recension mund të shkruajnë vetëm klientët që e kanë blerë këtë libër.':m.includes('INVALID_RATING')?'Zgjidh vlerësimin nga 1 deri në 5 yje.':m.includes('REVIEW_TOO_SHORT')?'Komenti duhet të ketë të paktën 3 karaktere.':m.includes('REVIEW_TOO_LONG')?'Komenti është shumë i gjatë.':m.includes('TITLE_TOO_LONG')?'Titulli është shumë i gjatë.':'Recensioni nuk u dërgua. Provo përsëri.'}
+    async function loadReviewForm(b){
+      const box=q('#premiumReviewForm');if(!box)return;const s=window.ZemZemStore,session=s?.getCustomerSession?.();
+      if(!session?.access_token){box.innerHTML='<div class="premium-review-gate"><strong>Ke blerë këtë libër?</strong><p>Kyçu në llogarinë tënde për të shkruar recension.</p><a class="btn btn-light" href="account.html">Hyr në llogari</a></div>';return}
+      box.innerHTML='<div class="premium-empty-state">Po kontrollohet blerja...</div>';
+      try{
+        const d=await reviewRpc('review_eligibility',{p_book_id:b.id});
+        if(!d?.eligible){box.innerHTML='<div class="premium-review-gate"><strong>Recension vetëm nga blerës të verifikuar</strong><p>Ky libër nuk figuron si i blerë në këtë llogari.</p></div>';return}
+        const ex=d.existing||{};
+        box.innerHTML=`<form id="verifiedReviewForm" class="premium-review-form"><div class="review-form-head"><div><strong>${ex.id?'Përditëso recensionin':'Shkruaj recension'}</strong><small>Blerje e verifikuar ✓</small></div></div><label>Vlerësimi<select id="reviewRating" required><option value="">Zgjidh yjet</option>${[5,4,3,2,1].map(n=>`<option value="${n}" ${Number(ex.rating)===n?'selected':''}>${'★'.repeat(n)} ${n}/5</option>`).join('')}</select></label><label>Titulli <small>(opsional)</small><input id="reviewTitle" maxlength="120" value="${esc(ex.title||'')}" placeholder="P.sh. Libër shumë i dobishëm"></label><label>Komenti<textarea id="reviewBody" maxlength="2000" rows="5" required placeholder="Shkruaj përvojën tënde me librin...">${esc(ex.body||'')}</textarea></label><div class="review-form-actions"><span id="reviewFormStatus">${ex.status==='pending'?'Recensioni aktual është në pritje të aprovimit.':ex.status==='rejected'?'Recensioni i mëparshëm është refuzuar; mund ta përmirësosh dhe ta dërgosh përsëri.':''}</span><button class="btn btn-primary" type="submit">${ex.id?'Ruaj dhe ridërgo':'Dërgo recensionin'}</button></div></form>`;
+        q('#verifiedReviewForm')?.addEventListener('submit',async e=>{e.preventDefault();const btn=e.currentTarget.querySelector('button[type="submit"]'),status=q('#reviewFormStatus');btn.disabled=true;const old=btn.textContent;btn.textContent='Duke dërguar...';try{await reviewRpc('submit_verified_review',{p_book_id:b.id,p_rating:Number(q('#reviewRating').value),p_title:q('#reviewTitle').value.trim()||null,p_body:q('#reviewBody').value.trim()});status.textContent='Recensioni u dërgua. Do të shfaqet pasi të aprovohet nga ZemZem.';e.currentTarget.reset();btn.textContent='U dërgua ✓'}catch(err){status.textContent=reviewErrorMessage(err);btn.disabled=false;btn.textContent=old}});
+      }catch(err){box.innerHTML=`<div class="premium-review-gate"><p>${esc(reviewErrorMessage(err))}</p></div>`}
+    }
+
     async function loadReviews(b){
       try{
         const s=window.ZemZemStore;if(!s)return;
