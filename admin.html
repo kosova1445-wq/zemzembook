@@ -120,6 +120,53 @@
 <script src="assets/js/admin-stock-forecast.js?v=1" data-admin-stock-forecast="1"></script>
 <script src="assets/js/admin-social-contacts.js?v=2" data-admin-social-contacts="1"></script>
 <script src="assets/js/admin-site-design.js?v=2" data-admin-site-design="1"></script>
-<script src="assets/js/admin-branding.js?v=2" data-admin-branding="1"></script>
+<script src="assets/js/admin-branding.js?v=3" data-admin-branding="1"></script>
+
+<script id="menuTypographyInline">
+(()=>{
+  const q=s=>document.querySelector(s);
+  function inject(){
+    const grid=q('#view-site .site-editor-grid');
+    if(!grid||q('#menuTypographyCard'))return false;
+    const card=document.createElement('article');
+    card.id='menuTypographyCard';
+    card.className='site-editor-card span-2';
+    card.innerHTML='<div class="site-card-head"><div><h3>Shkronjat e menusë</h3><p>Rrit ose zvogëlo tekstin e menusë veçmas për kompjuter, tablet dhe telefon. Vlen në të gjitha faqet.</p></div></div><div class="site-four"><div class="site-field"><label>Kompjuter (px)</label><input id="menuFontDesktop" type="number" min="10" max="24" step="1" value="13"></div><div class="site-field"><label>Tablet (px)</label><input id="menuFontTablet" type="number" min="9" max="22" step="1" value="12"></div><div class="site-field"><label>Telefon (px)</label><input id="menuFontMobile" type="number" min="9" max="20" step="1" value="11"></div><div class="site-field"><label>&nbsp;</label><button type="button" class="primary-btn" id="menuTypographySave">Ruaj madhësitë</button></div></div><div id="menuTypographyState" class="site-editor-status" style="margin:4px 0 0">Duke ngarkuar…</div>';
+    grid.appendChild(card);
+    q('#menuTypographySave').onclick=save;
+    load();
+    return true;
+  }
+  async function load(){
+    const st=q('#menuTypographyState');
+    try{
+      const rows=await api('site_content?key=eq.branding&select=content&limit=1');
+      const x=rows?.[0]?.content||{};
+      q('#menuFontDesktop').value=Number(x.menu_font_desktop||13);
+      q('#menuFontTablet').value=Number(x.menu_font_tablet||12);
+      q('#menuFontMobile').value=Number(x.menu_font_mobile||11);
+      st.textContent='Gati për ndryshime.';st.className='site-editor-status ready';
+    }catch(e){st.textContent='Nuk u ngarkua: '+e.message;st.className='site-editor-status error'}
+  }
+  async function save(){
+    const st=q('#menuTypographyState'),btn=q('#menuTypographySave');btn.disabled=true;
+    try{
+      const rows=await api('site_content?key=eq.branding&select=content&limit=1');
+      const content={...(rows?.[0]?.content||{}),
+        menu_font_desktop:Math.min(24,Math.max(10,Number(q('#menuFontDesktop').value||13))),
+        menu_font_tablet:Math.min(22,Math.max(9,Number(q('#menuFontTablet').value||12))),
+        menu_font_mobile:Math.min(20,Math.max(9,Number(q('#menuFontMobile').value||11)))
+      };
+      await api('site_content?key=eq.branding',{method:'PATCH',body:{content,updated_at:new Date().toISOString()},prefer:'return=minimal'});
+      st.textContent='U ruajt. Madhësitë e menusë vlejnë për kompjuter, tablet dhe telefon.';st.className='site-editor-status ready';
+      if(typeof toast==='function')toast('Madhësia e menusë u ruajt');
+    }catch(e){st.textContent='Ruajtja dështoi: '+e.message;st.className='site-editor-status error';if(typeof toast==='function')toast(e.message,'error')}
+    finally{btn.disabled=false}
+  }
+  function boot(){let n=0;const t=setInterval(()=>{n++;if(inject()||n>100)clearInterval(t)},120)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+
 </body>
 </html>
