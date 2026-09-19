@@ -91,7 +91,7 @@
       const b=store.getBook(currentId());if(!b)return;
       currentBook=b;
       const unavailable=b.trackStock&&b.stock<=0,max=b.trackStock?Math.max(1,b.stock):9999;
-      const stockText=unavailable?'Nuk ka stok':b.trackStock?`${b.stock} copë në stok`:'Në stok';
+      const stockText=unavailable?'Nuk ka stok':'Ka në stok';
       const desc=b.description||'Përshkrimi i këtij libri do të shtohet së shpejti.';
       const gallery=[b.coverUrl,...(Array.isArray(b.galleryUrls)?b.galleryUrls:[])].filter((url,i,all)=>url&&all.indexOf(url)===i).slice(0,5);
       document.title=`${b.title} — ZemZem`;
@@ -163,7 +163,7 @@
         <div class="premium-tab-panel" data-product-panel="details">
           <h2>Detajet e librit</h2>
           <div class="premium-details-grid">
-            <div><span>Disponueshmëria</span><strong>${unavailable?'Nuk ka stok':stockText}</strong></div><div><span>Kategoria</span><strong>${esc(b.cat||'—')}</strong></div>
+            <div><span>Disponueshmëria</span><strong>${stockText}</strong></div><div><span>Kategoria</span><strong>${esc(b.cat||'—')}</strong></div>
             <div><span>Data e botimit</span><strong>${b.releaseDate?new Intl.DateTimeFormat('sq-AL',{dateStyle:'medium'}).format(new Date(b.releaseDate+'T00:00:00')):'—'}</strong></div><div><span>Faqe gjithsej</span><strong>${b.pages?esc(b.pages):'—'}</strong></div>
             <div><span>Formati</span><strong>${b.format==='physical'?'Libër fizik':esc(b.format||'—')}</strong></div><div><span>Shteti / Vendi</span><strong>${esc(b.country||'—')}</strong></div>
             <div><span>Gjuha</span><strong>${esc((b.language||'sq').toUpperCase())}</strong></div><div><span>Dimensionet</span><strong>${esc(b.dimensions||'—')}</strong></div>
