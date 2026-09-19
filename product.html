@@ -110,7 +110,7 @@
         <section class="premium-product-summary">
           <div class="premium-category-pill">${esc(b.cat||'Libra')}</div>
           <h1>${esc(b.title)}</h1>
-          <div class="premium-author-line">${b.author?`Autor / Botues: <strong>${esc(b.author)}</strong>`:'ZemZem'}</div>
+          <div class="premium-author-line">${b.author?`Autor: ${b.authorSlug?`<a href="author.html?slug=${encodeURIComponent(b.authorSlug)}"><strong>${esc(b.author)}</strong></a>`:`<strong>${esc(b.author)}</strong>`}${b.publisher?` · Botues: ${b.publisherSlug?`<a href="publisher.html?slug=${encodeURIComponent(b.publisherSlug)}"><strong>${esc(b.publisher)}</strong></a>`:`<strong>${esc(b.publisher)}</strong>`}`:''}`:'ZemZem'}</div>
           <div class="premium-rating-row"><div class="premium-stars" id="premiumStars">${ratingStars(0)}</div><strong id="premiumRatingText">Pa recensione</strong><button type="button" class="link-button" data-tab-target="reviews">Shiko recensionet</button></div>
           <div class="premium-price-ticket-wrap">
             <div class="zz-ticket-wrap">
