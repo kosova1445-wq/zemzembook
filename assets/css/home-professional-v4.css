@@ -168,3 +168,13 @@ body.zemzem-bookstore-v2{--pro-navy:#203847;--pro-navy-deep:#162b37;--pro-coral:
     font-size:15px!important;
   }
 }
+
+
+/* Homepage full catalog section */
+.zemzem-bookstore-v2 .all-books-section{
+  background:linear-gradient(180deg,#fffdfb 0%,#f8f5f2 100%)!important;
+  border-top:1px solid var(--pro-line)!important;
+}
+.zemzem-bookstore-v2 .all-books-grid{
+  align-items:stretch!important;
+}
