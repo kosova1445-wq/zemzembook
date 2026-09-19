@@ -292,6 +292,10 @@ jobs:
 
           fetch_live https://www.zemzem.al/index.html /tmp/index-categories.html
           grep -Fq 'assets/css/home-professional-v4.css?v=5' /tmp/index-categories.html
+          grep -Fq 'assets/js/site-content.js?v=3' /tmp/index-categories.html
+
+          fetch_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content-categories.js
+          grep -Fq 'linear-gradient(180deg,#ffffff 0%,#f3f4f5 100%)' /tmp/site-content-categories.js
 
           echo 'ZEMZEM_SHARED_PRICE_TICKET_OK=yes'
           echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
