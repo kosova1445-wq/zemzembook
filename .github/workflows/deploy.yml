@@ -123,6 +123,8 @@ jobs:
           assets/js/blog.js
           assets/css/blog.css
           assets/js/app-v5.js
+          assets/js/shop-pro.js
+          assets/css/shop-pro.css
           assets/js/storefront-funnel.js
           assets/js/admin-funnel.js
           assets/js/admin-paypal.js
@@ -202,6 +204,8 @@ jobs:
           # Storefront design files are released as one visual unit.
           upload "index.html"
           upload "assets/js/app-v5.js"
+          upload "assets/js/shop-pro.js"
+          upload "assets/css/shop-pro.css"
           upload "assets/js/storefront-funnel.js"
           upload "assets/js/admin-funnel.js"
           upload "assets/js/admin-paypal.js"
@@ -246,6 +250,14 @@ jobs:
             done
             return 1
           }
+
+          fetch_live https://www.zemzem.al/shop.html /tmp/shop.html
+          grep -Fq 'assets/css/shop-pro.css?v=2' /tmp/shop.html
+          grep -Fq 'assets/js/shop-pro.js?v=2' /tmp/shop.html
+
+          fetch_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js
+          grep -Fq 'shop-card-actions' /tmp/shop-pro.js
+          grep -Fq 'Bestseller' /tmp/shop-pro.js
 
           fetch_live https://www.zemzem.al/index.html /tmp/index.html
           grep -Fq 'assets/js/home-modern.js?v=3' /tmp/index.html
