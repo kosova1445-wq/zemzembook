@@ -9,7 +9,8 @@
     logo_mobile_width:164,logo_mobile_height:50,
     footer_logo_width:206,footer_logo_height:58,
     watermark_enabled:true,watermark_size:34,watermark_opacity:20,
-    watermark_position:'bottom-right'
+    watermark_position:'bottom-right',
+    menu_font_desktop:13,menu_font_tablet:12,menu_font_mobile:11
   };
   const clamp=(v,min,max,fallback)=>{const n=Number(v);return Number.isFinite(n)?Math.min(max,Math.max(min,n)):fallback};
   const safeUrl=v=>{const s=String(v||'').trim();if(!s)return'';if(/^https:\/\//i.test(s)||/^assets\//i.test(s)||/^\.\.?\//.test(s))return s;return''};
@@ -30,6 +31,11 @@
     root.setProperty('--zemzem-watermark-size',clamp(c.watermark_size,10,70,34)+'%');
     root.setProperty('--zemzem-watermark-opacity',(clamp(c.watermark_opacity,0,70,20)/100).toFixed(2));
     root.setProperty('--zemzem-watermark-display',c.watermark_enabled===false?'none':'block');
+    root.setProperty('--zemzem-menu-font-desktop',clamp(c.menu_font_desktop,10,24,13)+'px');
+    root.setProperty('--zemzem-menu-font-tablet',clamp(c.menu_font_tablet,9,22,12)+'px');
+    root.setProperty('--zemzem-menu-font-mobile',clamp(c.menu_font_mobile,9,20,11)+'px');
+    let menuStyle=document.getElementById('zemzemMenuTypography');if(!menuStyle){menuStyle=document.createElement('style');menuStyle.id='zemzemMenuTypography';document.head.appendChild(menuStyle)}
+    menuStyle.textContent=`.nav-row>a,.nav-row .category-trigger,.simple-head nav a{font-size:var(--zemzem-menu-font-desktop)!important}@media (min-width:721px) and (max-width:1024px){.nav-row>a,.nav-row .category-trigger,.simple-head nav a{font-size:var(--zemzem-menu-font-tablet)!important}}@media (max-width:720px){.nav-row>a,.nav-row .category-trigger,.simple-head nav a,.zz-mobile-links a,.zz-mobile-categories a,.zz-mobile-dock small{font-size:var(--zemzem-menu-font-mobile)!important}}`;
     const pos=['bottom-right','bottom-left','top-right','top-left','center'].includes(c.watermark_position)?c.watermark_position:'bottom-right';
     document.documentElement.dataset.zemzemWatermarkPosition=pos;
     window.ZemZemBranding=c;
