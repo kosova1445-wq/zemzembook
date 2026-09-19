@@ -379,7 +379,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/checkout-v2.js /tmp/checkout-v2.js "coupon_code:''" 'Invalid coupon keeps shipping and COD'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js 'zemzem-menu-font-desktop' 'Global menu typography'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-mobile.js 'mobile_logo_url' 'Mobile-only logo branding support'
-          require_live https://www.zemzem.al/assets/css/brand.css /tmp/brand-mobile.css -- '--zemzem-mobile-logo-bg' 'Mobile-only logo CSS'
+          require_live https://www.zemzem.al/assets/css/brand.css /tmp/brand-mobile.css '--zemzem-mobile-logo-bg' 'Mobile-only logo CSS'
           require_live https://www.zemzem.al/assets/js/admin-branding.js /tmp/admin-branding-mobile.js 'brandMobileLogoFile' 'Editable mobile logo Admin control'
           require_live https://www.zemzem.al/checkout.html /tmp/checkout-gift.html 'giftCardCode' 'Gift Card checkout field'
           require_live https://www.zemzem.al/admin.html /tmp/admin-gift.html 'admin-gift-cards.js' 'Gift Card Admin module'
