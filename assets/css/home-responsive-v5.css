@@ -155,3 +155,14 @@ html,body{max-width:100%;overflow-x:hidden}
   }
   .zemzem-bookstore-v2 .header .brand::before{content:none!important;display:none!important}
 }
+
+
+/* Phone only: hide New Arrivals and Editorial sections */
+@media(max-width:680px){
+  body.zemzem-bookstore-v2 .new-arrivals,
+  body.zemzem-bookstore-v2 #new-arrivals,
+  body.zemzem-bookstore-v2 #wowEditorial,
+  body.zemzem-bookstore-v2 .wow-editorial{
+    display:none !important;
+  }
+}
