@@ -148,6 +148,7 @@
             <div><span>${icon('shield')}</span><p><strong>Pagesë e sigurt</strong><small>PayPal ose pagesë në dorëzim</small></p></div>
             <div><span>${icon('book')}</span><p><strong>Libra të përzgjedhur</strong><small>Katalog i kuruar me kujdes</small></p></div>
           </div>
+          ${unavailable?`<div class="stock-alert-box"><div><strong>Njoftohu kur të kthehet në stok</strong><p>Lëre emailin dhe do të të njoftojmë sapo libri të jetë sërish i disponueshëm.</p></div><form id="stockAlertForm"><input id="stockAlertEmail" type="email" required maxlength="254" placeholder="Emaili yt"><button class="btn btn-primary" type="submit">Më njofto</button></form><div id="stockAlertStatus"></div></div>`:''}
           <div class="premium-payment-note"><strong>PayPal:</strong> −10% mbi librat <span>•</span> <strong>Cash on Delivery:</strong> +2 €</div>
         </section>
       </div>
@@ -187,6 +188,7 @@
       q('#premiumAddCart')?.addEventListener('click',()=>window.addToCart?.(b.id,qty?.value||1));
       q('#premiumBuyNow')?.addEventListener('click',()=>window.buyNow?.(b.id));
       q('#premiumWishlist')?.addEventListener('click',()=>window.toggleWishlist?.(b.id));
+      q('#stockAlertForm')?.addEventListener('submit',async e=>{e.preventDefault();const status=q('#stockAlertStatus'),email=q('#stockAlertEmail')?.value.trim(),btn=e.currentTarget.querySelector('button');if(!email)return;btn.disabled=true;const old=btn.textContent;btn.textContent='Duke ruajtur...';try{const s=window.ZemZemStore,r=await fetch(`${s.SUPABASE_URL}/rest/v1/rpc/subscribe_stock_alert`,{method:'POST',headers:{apikey:s.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_book_id:b.id,p_email:email})});const raw=await r.text();if(!r.ok)throw new Error(raw);status.textContent='U regjistrua. Do të të njoftojmë kur libri të kthehet në stok.';btn.textContent='U regjistrua ✓'}catch(err){status.textContent='Nuk u regjistrua emaili. Kontrolloje dhe provo përsëri.';btn.disabled=false;btn.textContent=old}});
       document.querySelectorAll('[data-gallery-url]').forEach(btn=>btn.addEventListener('click',()=>{const main=q('#premiumMainImage');if(main)main.src=btn.dataset.galleryUrl;document.querySelectorAll('[data-gallery-url]').forEach(x=>x.classList.toggle('active',x===btn))}));
       q('#premiumZoom')?.addEventListener('click',()=>openLightbox(b,q('#premiumMainImage')?.src||b.coverUrl));
     }
