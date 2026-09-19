@@ -287,6 +287,12 @@ jobs:
           grep -Fq 'assets/css/price-ticket.css?v=1' /tmp/product-price.html
           grep -Fq 'premium-price-ticket-wrap' /tmp/product-price.html
 
+          fetch_live https://www.zemzem.al/assets/css/home-professional-v4.css /tmp/home-professional-v4.css
+          grep -Fq 'glossy pill style inspired by reference' /tmp/home-professional-v4.css
+
+          fetch_live https://www.zemzem.al/index.html /tmp/index-categories.html
+          grep -Fq 'assets/css/home-professional-v4.css?v=5' /tmp/index-categories.html
+
           echo 'ZEMZEM_SHARED_PRICE_TICKET_OK=yes'
           echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
 
