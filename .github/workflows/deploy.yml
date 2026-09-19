@@ -294,6 +294,7 @@ jobs:
           upload "assets/js/admin-abandoned.js"
           upload "assets/js/admin-reports.js"
           upload "assets/js/admin-gift-cards.js"
+          upload "assets/js/admin-team.js"
           upload "assets/js/admin-advanced.js"
           upload "author.html"
           upload "publisher.html"
@@ -379,6 +380,9 @@ jobs:
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js 'zemzem-menu-font-desktop' 'Global menu typography'
           require_live https://www.zemzem.al/checkout.html /tmp/checkout-gift.html 'giftCardCode' 'Gift Card checkout field'
           require_live https://www.zemzem.al/admin.html /tmp/admin-gift.html 'admin-gift-cards.js' 'Gift Card Admin module'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-team.html 'admin-team.js' 'Admin team management module'
+          require_live https://www.zemzem.al/assets/js/admin-team.js /tmp/admin-team-js.html 'Administratorët' 'Admin roles UI'
+          require_live https://www.zemzem.al/assets/js/admin-v2.js /tmp/admin-access-js.html 'rpc/admin_access' 'Permission-aware Admin session'
           require_live https://www.zemzem.al/admin.html /tmp/admin-abandoned.html 'admin-abandoned.js' 'Abandoned cart Admin module'
           require_live https://www.zemzem.al/admin.html /tmp/admin-reports.html 'admin-reports.js' 'Admin reports module'
           require_live https://www.zemzem.al/author.html /tmp/author.html 'entity-page.js' 'Author profile page'
