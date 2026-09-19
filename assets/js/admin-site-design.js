@@ -50,7 +50,7 @@
   async function loadDesign(){
     try{
       const rows=await window.api('site_content?key=eq.homepage&select=content&limit=1');
-      applyControls(rows?.[0]?.content?.design||defaults);
+      const content=rows?.[0]?.content||{};applyControls({...defaults,...(content.design||{}),collection_rail:content.collection_rail||defaults.collection_rail});
     }catch(e){console.warn('Design config load failed',e)}
   }
   async function saveDesign(){
