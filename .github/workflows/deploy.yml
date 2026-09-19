@@ -382,8 +382,11 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-gift.html 'admin-gift-cards.js' 'Gift Card Admin module'
           require_live https://www.zemzem.al/admin.html /tmp/admin-team.html 'admin-team.js' 'Admin team management module'
           require_live https://www.zemzem.al/assets/js/admin-team.js /tmp/admin-team-js.js 'Administratorët' 'Admin roles UI'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-team-v6.html 'admin-team.js?v=6' 'Fixed Admin team script version'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-team-ref.html 'assets/js/admin-team.js' 'Admin team script reference'
           node --check /tmp/admin-team-js.js
+          require_live https://www.zemzem.al/assets/js/admin-team.js /tmp/admin-team-owner.js "data-owner-edit" 'Owner profile edit action'
+          require_live https://www.zemzem.al/assets/js/admin-team.js /tmp/admin-team-owner.js "update_owner_profile" 'Owner profile update flow'
+          require_live https://www.zemzem.al/assets/js/admin-team.js /tmp/admin-team-owner.js "resetPassword" 'Owner password reset flow'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-team.html "adminsBtn=side.querySelector('[data-view=\"admins\"]')" 'Booksto sidebar keeps Administrators'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-team.html "iconize(adminsBtn,'admins','Administratorët')" 'Booksto Admin team menu label'
           require_live https://www.zemzem.al/admin.html /tmp/admin-team-visible.html 'admin-booksto.js?v=2' 'Fixed Admin sidebar asset version'
