@@ -259,6 +259,9 @@ jobs:
           fetch_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content.js
           grep -Fq 'applyDesign' /tmp/site-content.js
           grep -Fq 'hero_background' /tmp/site-content.js
+          fetch_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern.js
+          grep -Fq "const rail=q('.collection-rail')" /tmp/home-modern.js
+          grep -Fq 'collection_rail' /tmp/home-modern.js
           fetch_live https://www.zemzem.al/assets/js/home-wow.js /tmp/home-wow.js
           grep -Fq 'wow-featured' /tmp/home-wow.js
           grep -Fq 'mega-menu-shell' /tmp/home-wow.js
@@ -345,9 +348,10 @@ jobs:
           grep -Fq 'admin-marketing-suite.js?v=1' /tmp/admin.html
           grep -Fq 'admin-stock-forecast.js?v=1' /tmp/admin.html
           grep -Fq 'admin-social-contacts.js?v=2' /tmp/admin.html
-          grep -Fq 'admin-site-design.js?v=1' /tmp/admin.html
+          grep -Fq 'admin-site-design.js?v=2' /tmp/admin.html
           fetch_live https://www.zemzem.al/assets/js/admin-site-design.js /tmp/admin-site-design.js
           grep -Fq 'Dizajni i Ballinës' /tmp/admin-site-design.js
+          grep -Fq 'siteRailRows' /tmp/admin-site-design.js
           grep -Fq 'hero_shelf_opacity' /tmp/admin-site-design.js
           if grep -Fq 'assets/js/analytics.js' /tmp/admin.html; then
             echo 'Analytics must not be loaded in admin.html'; exit 1
