@@ -108,7 +108,7 @@
         </section>
 
         <section class="premium-product-summary">
-          <div class="premium-category-pill">${esc(b.cat||'Libra')}</div>
+          <div class="premium-category-row"><div class="premium-category-pill">${esc(b.cat||'Libra')}</div>${b.badgeText?`<span class="premium-custom-badge badge-${esc(b.badgeStyle||'default')}">${esc(b.badgeText)}</span>`:''}</div>
           <h1>${esc(b.title)}</h1>
           <div class="premium-author-line">${b.author?`Autor: ${b.authorSlug?`<a href="author.html?slug=${encodeURIComponent(b.authorSlug)}"><strong>${esc(b.author)}</strong></a>`:`<strong>${esc(b.author)}</strong>`}${b.publisher?` · Botues: ${b.publisherSlug?`<a href="publisher.html?slug=${encodeURIComponent(b.publisherSlug)}"><strong>${esc(b.publisher)}</strong></a>`:`<strong>${esc(b.publisher)}</strong>`}`:''}`:'ZemZem'}</div>
           <div class="premium-rating-row"><div class="premium-stars" id="premiumStars">${ratingStars(0)}</div><strong id="premiumRatingText">Pa recensione</strong><button type="button" class="link-button" data-tab-target="reviews">Shiko recensionet</button></div>
@@ -127,6 +127,7 @@
               </div>
             </div>
           </div>
+          ${b.offerEndsAt&&new Date(b.offerEndsAt)>new Date()?`<div class="premium-offer-countdown offer-countdown" data-offer-countdown="${esc(b.offerEndsAt)}"></div>`:''}
           <p class="premium-summary-desc">${esc(shortText(desc))}</p>
           <button type="button" class="premium-read-more link-button" data-tab-target="description">Lexo përshkrimin e plotë →</button>
 
@@ -140,7 +141,7 @@
             <div class="premium-qty-wrap"><span>Sasia</span><div class="premium-qty"><button type="button" id="qtyMinus" aria-label="Zvogëlo sasinë">−</button><input id="productQty" type="number" min="1" max="${max}" value="1" ${unavailable?'disabled':''}><button type="button" id="qtyPlus" aria-label="Rrit sasinë">+</button></div></div>
             <button class="premium-primary-btn" id="premiumAddCart" type="button" ${unavailable?'disabled':''}>🛒 <span>${unavailable?'Nuk ka stok':'Shto në shportë'}</span></button>
             <button class="premium-secondary-btn" id="premiumBuyNow" type="button" ${unavailable?'disabled':''}>⚡ Bli tani</button>
-            <button class="premium-wishlist-btn" id="premiumWishlist" type="button">♡ <span>Shto në wishlist</span></button>
+            <button class="premium-wishlist-btn" id="premiumWishlist" data-wishlist-id="${b.id}" type="button">♡ <span>Shto në wishlist</span></button>
           </div>
 
           <div class="premium-trust-grid">
@@ -187,7 +188,7 @@
       qty?.addEventListener('change',()=>qty.value=clamp(qty.value));
       q('#premiumAddCart')?.addEventListener('click',()=>window.addToCart?.(b.id,qty?.value||1));
       q('#premiumBuyNow')?.addEventListener('click',()=>window.buyNow?.(b.id));
-      q('#premiumWishlist')?.addEventListener('click',()=>window.toggleWishlist?.(b.id));
+      q('#premiumWishlist')?.addEventListener('click',()=>window.toggleWishlist?.(b.id));window.ZemZemStore?.syncWishlistButtons?.();window.ZemZemStore?.updateOfferCountdowns?.();
       q('#stockAlertForm')?.addEventListener('submit',async e=>{e.preventDefault();const status=q('#stockAlertStatus'),email=q('#stockAlertEmail')?.value.trim(),btn=e.currentTarget.querySelector('button');if(!email)return;btn.disabled=true;const old=btn.textContent;btn.textContent='Duke ruajtur...';try{const s=window.ZemZemStore,r=await fetch(`${s.SUPABASE_URL}/rest/v1/rpc/subscribe_stock_alert`,{method:'POST',headers:{apikey:s.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_book_id:b.id,p_email:email})});const raw=await r.text();if(!r.ok)throw new Error(raw);status.textContent='U regjistrua. Do të të njoftojmë kur libri të kthehet në stok.';btn.textContent='U regjistrua ✓'}catch(err){status.textContent='Nuk u regjistrua emaili. Kontrolloje dhe provo përsëri.';btn.disabled=false;btn.textContent=old}});
       document.querySelectorAll('[data-gallery-url]').forEach(btn=>btn.addEventListener('click',()=>{const main=q('#premiumMainImage');if(main)main.src=btn.dataset.galleryUrl;document.querySelectorAll('[data-gallery-url]').forEach(x=>x.classList.toggle('active',x===btn))}));
       q('#premiumZoom')?.addEventListener('click',()=>openLightbox(b,q('#premiumMainImage')?.src||b.coverUrl));
