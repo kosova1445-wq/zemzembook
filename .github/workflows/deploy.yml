@@ -395,7 +395,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-team.js /tmp/admin-team-owner.js "resetPassword" 'Owner password reset flow'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-team.html "adminsBtn=side.querySelector('[data-view=\"admins\"]')" 'Booksto sidebar keeps Administrators'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-team.html "iconize(adminsBtn,'admins','Administratorët')" 'Booksto Admin team menu label'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-team-visible.html 'admin-booksto.js?v=2' 'Fixed Admin sidebar asset version'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-booksto-ref.html 'assets/js/admin-booksto.js' 'Admin sidebar asset reference'
           require_live https://www.zemzem.al/assets/js/admin-v2.js /tmp/admin-access-js.html 'rpc/admin_access' 'Permission-aware Admin session'
           require_live https://www.zemzem.al/admin.html /tmp/admin-abandoned.html 'admin-abandoned.js' 'Abandoned cart Admin module'
           require_live https://www.zemzem.al/admin.html /tmp/admin-reports.html 'admin-reports.js' 'Admin reports module'
