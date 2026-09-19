@@ -3,29 +3,31 @@
   const SB_URL='https://ysvtrhizgcioyycwlkrk.supabase.co';
   const SB_KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
   const defaults={
-    logo_url:'assets/brand/zemzem-logo.svg',
+    logo_url:'assets/brand/zemzem-logo.svg',mobile_logo_url:'',
     watermark_url:'assets/brand/zemzem-watermark.svg',
     logo_width:206,logo_height:58,
-    logo_mobile_width:164,logo_mobile_height:50,
+    logo_mobile_width:240,logo_mobile_height:70,
     footer_logo_width:206,footer_logo_height:58,
     watermark_enabled:true,watermark_size:34,watermark_opacity:20,
     watermark_position:'bottom-right',
     menu_font_desktop:13,menu_font_tablet:12,menu_font_mobile:11
   };
   const clamp=(v,min,max,fallback)=>{const n=Number(v);return Number.isFinite(n)?Math.min(max,Math.max(min,n)):fallback};
-  const safeUrl=v=>{const s=String(v||'').trim();if(!s)return'';if(/^https:\/\//i.test(s)||/^assets\//i.test(s)||/^\.\.?\//.test(s))return s;return''};
+  const safeUrl=v=>{const s=String(v||'').trim();if(!s)return'';if(/^https:\/\//i.test(s)||/^assets\//i.test(s)||/^\.\.?\//.test(s)||/^data:image\/(?:png|jpeg|webp|svg\+xml);base64,/i.test(s))return s;return''};
   const cssUrl=v=>`url("${String(v||'').replace(/["\\\n\r]/g,'')}")`;
   function apply(raw={}){
     const c={...defaults,...raw};
     const root=document.documentElement.style;
     const logo=safeUrl(c.logo_url)||defaults.logo_url;
+    const mobileLogo=safeUrl(c.mobile_logo_url)||logo;
     const wm=safeUrl(c.watermark_url)||logo||defaults.watermark_url;
     root.setProperty('--zemzem-logo-bg',cssUrl(logo));
+    root.setProperty('--zemzem-mobile-logo-bg',cssUrl(mobileLogo));
     root.setProperty('--zemzem-watermark-bg',cssUrl(wm));
     root.setProperty('--zemzem-logo-width',clamp(c.logo_width,120,360,206)+'px');
     root.setProperty('--zemzem-logo-height',clamp(c.logo_height,40,140,58)+'px');
-    root.setProperty('--zemzem-mobile-logo-width',clamp(c.logo_mobile_width,110,280,164)+'px');
-    root.setProperty('--zemzem-mobile-logo-height',clamp(c.logo_mobile_height,36,110,50)+'px');
+    root.setProperty('--zemzem-mobile-logo-width',clamp(c.logo_mobile_width,140,360,240)+'px');
+    root.setProperty('--zemzem-mobile-logo-height',clamp(c.logo_mobile_height,45,160,70)+'px');
     root.setProperty('--zemzem-footer-logo-width',clamp(c.footer_logo_width,120,360,206)+'px');
     root.setProperty('--zemzem-footer-logo-height',clamp(c.footer_logo_height,40,140,58)+'px');
     root.setProperty('--zemzem-watermark-size',clamp(c.watermark_size,10,70,34)+'%');
