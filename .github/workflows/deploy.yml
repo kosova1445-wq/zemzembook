@@ -273,6 +273,11 @@ jobs:
 
           fetch_live https://www.zemzem.al/index.html /tmp/index-price.html
           grep -Fq 'assets/js/app-v5.js?v=2' /tmp/index-price.html
+          grep -Fq 'assets/js/home-modern.js?v=4' /tmp/index-price.html
+
+          fetch_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern-price.js
+          grep -Fq 'zz-hero-ticket' /tmp/home-modern-price.js
+          grep -Fq 'ÇMIM I MIRË' /tmp/home-modern-price.js
 
           fetch_live https://www.zemzem.al/ebooks.html /tmp/ebooks-price.html
           grep -Fq 'assets/css/price-ticket.css?v=1' /tmp/ebooks-price.html
