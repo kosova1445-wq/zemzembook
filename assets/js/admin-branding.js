@@ -65,11 +65,10 @@
   }
 
   function addNav(){
-    const side=q('.side-nav');if(!side||q('[data-view="branding"]'))return;
-    const b=document.createElement('button');b.type='button';b.className='nav-item';b.dataset.view='branding';
-    b.innerHTML='<span class="side-menu-icon"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 15l2.5-3 2 2 3.5-4 4 5"/><circle cx="9" cy="9" r="1.3"/></svg></span><span>Logo & Brand</span>';
-    const site=q('[data-view="site"]');if(site)site.insertAdjacentElement('afterend',b);else side.appendChild(b);
-    b.addEventListener('click',async()=>{if(typeof setView==='function')setView('branding');const t=q('#viewTitle');if(t)t.textContent='Logo & Brand';await loadConfig()});
+    const side=q('.side-nav');if(!side)return;
+    let b=q('[data-view="branding"]');
+    if(!b){b=document.createElement('button');b.type='button';b.className='nav-item';b.dataset.view='branding';b.innerHTML='<span class="side-menu-icon"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 15l2.5-3 2 2 3.5-4 4 5"/><circle cx="9" cy="9" r="1.3"/></svg></span><span>Logo & Brand</span>';const site=q('[data-view="site"]');if(site)site.insertAdjacentElement('afterend',b);else side.appendChild(b)}
+    if(!b.dataset.brandingBound){b.dataset.brandingBound='1';b.addEventListener('click',async()=>{if(typeof setView==='function')setView('branding');const t=q('#viewTitle');if(t)t.textContent='Logo & Brand';await loadConfig()})}
   }
 
   function setStatus(text,type='ready'){const e=q('#brandStatus');if(!e)return;e.textContent=text;e.className='brand-admin-status '+type}
