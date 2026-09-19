@@ -7,7 +7,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>Detajet e Librit – Bli Online | ZemZem</title>
   <link rel="stylesheet" href="assets/css/style.css"><link rel="stylesheet" href="assets/css/brand.css?v=2">
-  <link rel="stylesheet" href="assets/css/product.css?v=6">
+  <link rel="stylesheet" href="assets/css/product.css?v=7">
   <link rel="stylesheet" href="assets/css/commerce.css?v=1">
   <link rel="stylesheet" href="assets/css/price-ticket.css?v=1">
 </head>
@@ -62,7 +62,7 @@
     </div>
   </footer>
 
-  <script src="assets/js/app-v5.js?v=8"></script>
+  <script src="assets/js/app-v5.js?v=9"></script>
   <script src="assets/js/seo-product.js?v=2"></script>
   <script>
   (()=>{
@@ -76,6 +76,19 @@
     function coverHtml(b,cls=''){
       if(b.coverUrl)return `<img class="premium-book-image ${cls}" src="${esc(b.coverUrl)}" alt="${esc(b.title)}">`;
       return `<div class="book-cover ${fallbackCoverClass(b)} premium-book-fallback ${cls}"><span>${esc(b.title)}</span></div>`;
+    }
+    function book3dMarkup(b){
+      if(!(b.coverUrl&&b.coverSpineUrl&&b.coverBackUrl))return coverHtml(b,'premium-main-cover');
+      const thickness=Math.max(14,Math.min(42,Number(b.bookThicknessMm||28)));
+      return `<div class="zz-book3d-scene" data-book3d style="--zz-book-depth:${thickness}px" aria-label="Pamje 3D e librit ${esc(b.title)}">
+        <div class="zz-book3d-shadow" aria-hidden="true"></div>
+        <div class="zz-book3d-back"><img src="${esc(b.coverBackUrl)}" alt="Kopertina prapa – ${esc(b.title)}"></div>
+        <div class="zz-book3d-main">
+          <div class="zz-book3d-spine"><img src="${esc(b.coverSpineUrl)}" alt="Shpina – ${esc(b.title)}"></div>
+          <div class="zz-book3d-front"><img src="${esc(b.coverUrl)}" alt="Kopertina para – ${esc(b.title)}"></div>
+          <div class="zz-book3d-pages" aria-hidden="true"></div>
+        </div>
+      </div>`;
     }
     function icon(name){
       const icons={truck:'<svg viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm10 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>',shield:'<svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.7 2.8 8 7 10 4.2-2 7-5.3 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>',book:'<svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H11v17H7.5A3.5 3.5 0 0 0 4 22zM20 5.5A3.5 3.5 0 0 0 16.5 2H13v17h3.5A3.5 3.5 0 0 1 20 22z"/></svg>',box:'<svg viewBox="0 0 24 24"><path d="m4 7 8-4 8 4v10l-8 4-8-4zM4 7l8 4 8-4M12 11v10"/></svg>',barcode:'<svg viewBox="0 0 24 24"><path d="M4 5v14M7 5v14M10 5v14M14 5v14M17 5v14M20 5v14"/></svg>',pages:'<svg viewBox="0 0 24 24"><path d="M4 4h6a3 3 0 0 1 3 3v13a3 3 0 0 0-3-3H4zM20 4h-6a3 3 0 0 0-3 3v13a3 3 0 0 1 3-3h6z"/></svg>'};
@@ -93,7 +106,8 @@
       const unavailable=b.trackStock&&b.stock<=0,max=b.trackStock?Math.max(1,b.stock):9999;
       const stockText=unavailable?'Nuk ka stok':'Ka në stok';
       const desc=b.description||'Përshkrimi i këtij libri do të shtohet së shpejti.';
-      const gallery=[b.coverUrl,...(Array.isArray(b.galleryUrls)?b.galleryUrls:[])].filter((url,i,all)=>url&&all.indexOf(url)===i).slice(0,5);
+      const threeD=b.coverMode==='3d'&&!!(b.coverUrl&&b.coverSpineUrl&&b.coverBackUrl);
+      const gallery=[b.coverUrl,b.coverSpineUrl,b.coverBackUrl,...(Array.isArray(b.galleryUrls)?b.galleryUrls:[])].filter((url,i,all)=>url&&all.indexOf(url)===i).slice(0,7);
       document.title=`${b.title} — ZemZem`;
       q('#productBreadcrumbCategory').textContent=b.cat||'Libra';q('#productBreadcrumbTitle').textContent=b.title;
 
@@ -101,10 +115,10 @@
       <div class="premium-product-layout">
         <section class="premium-media-card" aria-label="Kopertina e librit">
           <div class="premium-media-stage" id="premiumMediaStage">
-            ${gallery.length?`<img id="premiumMainImage" class="premium-book-image premium-main-cover" src="${esc(gallery[0])}" alt="${esc(b.title)}">`:coverHtml(b,'premium-main-cover')}
+            ${threeD?book3dMarkup(b):(gallery.length?`<img id="premiumMainImage" class="premium-book-image premium-main-cover" src="${esc(gallery[0])}" alt="${esc(b.title)}">`:coverHtml(b,'premium-main-cover'))}
             ${gallery.length?'<button class="premium-zoom" id="premiumZoom" type="button" aria-label="Zmadho fotografinë">⌕</button>':''}
           </div>
-          <div class="premium-thumbs">${gallery.length?gallery.map((url,i)=>`<button type="button" class="premium-thumb ${i===0?'active':''}" data-gallery-url="${esc(url)}" aria-label="${i===0?'Kopertina':'Fotografia '+(i+1)}"><img src="${esc(url)}" alt=""></button>`).join(''):`<button type="button" class="premium-thumb active" aria-label="Kopertina">${coverHtml(b)}</button>`}</div>
+          <div class="premium-thumbs">${threeD?`<button type="button" class="premium-thumb premium-thumb-3d active" data-view-3d aria-label="Pamje 3D"><span>3D</span></button>`:''}${gallery.length?gallery.map((url,i)=>`<button type="button" class="premium-thumb ${!threeD&&i===0?'active':''}" data-gallery-url="${esc(url)}" aria-label="${i===0?'Kopertina para':i===1&&b.coverSpineUrl?'Shpina':i===2&&b.coverBackUrl?'Kopertina prapa':'Fotografia '+(i+1)}"><img src="${esc(url)}" alt=""></button>`).join(''):`<button type="button" class="premium-thumb active" aria-label="Kopertina">${coverHtml(b)}</button>`}</div>
         </section>
 
         <section class="premium-product-summary">
@@ -190,7 +204,8 @@
       q('#premiumBuyNow')?.addEventListener('click',()=>window.buyNow?.(b.id));
       q('#premiumWishlist')?.addEventListener('click',()=>window.toggleWishlist?.(b.id));window.ZemZemStore?.syncWishlistButtons?.();window.ZemZemStore?.updateOfferCountdowns?.();
       q('#stockAlertForm')?.addEventListener('submit',async e=>{e.preventDefault();const status=q('#stockAlertStatus'),email=q('#stockAlertEmail')?.value.trim(),btn=e.currentTarget.querySelector('button');if(!email)return;btn.disabled=true;const old=btn.textContent;btn.textContent='Duke ruajtur...';try{const s=window.ZemZemStore,r=await fetch(`${s.SUPABASE_URL}/rest/v1/rpc/subscribe_stock_alert`,{method:'POST',headers:{apikey:s.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_book_id:b.id,p_email:email})});const raw=await r.text();if(!r.ok)throw new Error(raw);status.textContent='U regjistrua. Do të të njoftojmë kur libri të kthehet në stok.';btn.textContent='U regjistrua ✓'}catch(err){status.textContent='Nuk u regjistrua emaili. Kontrolloje dhe provo përsëri.';btn.disabled=false;btn.textContent=old}});
-      document.querySelectorAll('[data-gallery-url]').forEach(btn=>btn.addEventListener('click',()=>{const main=q('#premiumMainImage');if(main)main.src=btn.dataset.galleryUrl;document.querySelectorAll('[data-gallery-url]').forEach(x=>x.classList.toggle('active',x===btn))}));
+      document.querySelectorAll('[data-gallery-url]').forEach(btn=>btn.addEventListener('click',()=>{const stage=q('#premiumMediaStage');if(!stage)return;let main=q('#premiumMainImage');q('[data-book3d]')?.remove();if(!main){stage.insertAdjacentHTML('afterbegin',`<img id="premiumMainImage" class="premium-book-image premium-main-cover" src="${esc(btn.dataset.galleryUrl)}" alt="${esc(b.title)}">`);main=q('#premiumMainImage')}else main.src=btn.dataset.galleryUrl;document.querySelectorAll('.premium-thumb').forEach(x=>x.classList.toggle('active',x===btn))}));
+      q('[data-view-3d]')?.addEventListener('click',btn=>{const stage=q('#premiumMediaStage');if(!stage)return;q('#premiumMainImage')?.remove();if(!q('[data-book3d]'))stage.insertAdjacentHTML('afterbegin',book3dMarkup(b));document.querySelectorAll('.premium-thumb').forEach(x=>x.classList.toggle('active',x===btn.currentTarget))});
       q('#premiumZoom')?.addEventListener('click',()=>openLightbox(b,q('#premiumMainImage')?.src||b.coverUrl));
     }
     function bindTabs(){
