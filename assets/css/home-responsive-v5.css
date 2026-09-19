@@ -25,7 +25,7 @@ html,body{max-width:100%;overflow-x:hidden}
   .zemzem-bookstore-v2 .topbar [data-home-topbar]{font-size:9px!important;line-height:1.35!important}
   .zemzem-bookstore-v2 .topbar .tiny-links{display:none!important}
   .zemzem-bookstore-v2 .header-row{min-height:0!important;gap:8px!important;padding:9px 0 10px!important}
-  .zemzem-bookstore-v2 .header .brand{width:124px!important;min-width:124px!important;height:44px!important}
+  .zemzem-bookstore-v2 .header .brand{width:var(--zemzem-mobile-logo-width)!important;min-width:var(--zemzem-mobile-logo-width)!important;height:var(--zemzem-mobile-logo-height)!important}
   .zemzem-bookstore-v2 .header-actions{gap:5px!important}
   .zemzem-bookstore-v2 .icon-btn{width:38px!important;height:38px!important;min-width:38px!important}
   .zemzem-bookstore-v2 .header .search{display:grid!important;grid-template-columns:92px minmax(0,1fr) 44px!important;height:46px!important;min-height:46px!important;border-radius:11px!important;overflow:hidden!important}
@@ -87,7 +87,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 @media(max-width:420px){
   .zemzem-bookstore-v2 .container{width:calc(100% - 18px)!important}
-  .zemzem-bookstore-v2 .header .brand{width:112px!important;min-width:112px!important;height:40px!important}
+  .zemzem-bookstore-v2 .header .brand{width:var(--zemzem-mobile-logo-width)!important;min-width:var(--zemzem-mobile-logo-width)!important;height:var(--zemzem-mobile-logo-height)!important}
   .zemzem-bookstore-v2 .header .search{grid-template-columns:minmax(0,1fr) 42px!important}
   .zemzem-bookstore-v2 .search select{display:none!important}
   .zemzem-bookstore-v2 .home-hero,.zemzem-bookstore-v2 .home-slide{min-height:400px!important}
@@ -103,7 +103,7 @@ html,body{max-width:100%;overflow-x:hidden}
 
 @media(max-width:340px){
   .zemzem-bookstore-v2 .container{width:calc(100% - 14px)!important}
-  .zemzem-bookstore-v2 .header .brand{width:100px!important;min-width:100px!important}
+  .zemzem-bookstore-v2 .header .brand{width:var(--zemzem-mobile-logo-width)!important;min-width:var(--zemzem-mobile-logo-width)!important;height:var(--zemzem-mobile-logo-height)!important}
   .zemzem-bookstore-v2 .icon-btn{width:35px!important;height:35px!important;min-width:35px!important}
   .zemzem-bookstore-v2 .home-slide-copy h1{font-size:26px!important}
   .zemzem-bookstore-v2 .book-meta h3{font-size:11px!important}
