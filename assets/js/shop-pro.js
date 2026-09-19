@@ -89,7 +89,14 @@
           <h3><a href="product.html?id=${encodeURIComponent(b.id)}">${escHtml(b.title)}</a></h3>
           <div class="author">${escHtml(b.author||'ZemZem')}</div>
           <div class="shop-card-stock ${unavailable?'out':''}">${unavailable?'×':'✓'} ${escHtml(stockText)}</div>
-          <div class="price-row shop-card-price-row"><div><span class="price">${moneyLocal(b.price)}</span>${b.old?`<span class="old">${moneyLocal(b.old)}</span>`:''}</div></div>
+          <div class="shop-price-wrap">
+            <div class="shop-price-tag ${discount?'has-discount':''}">
+              <span class="shop-price-label">${discount?'OFERTË':'ÇMIMI'}</span>
+              ${b.old?`<span class="shop-price-old">${moneyLocal(b.old)}</span>`:''}
+              <span class="shop-price-current">${moneyLocal(b.price)}</span>
+              <span class="shop-price-hole" aria-hidden="true"></span>
+            </div>
+          </div>
           <div class="shop-card-actions">
             <a class="shop-details-btn" href="product.html?id=${encodeURIComponent(b.id)}">Detaje</a>
             <button class="shop-cart-btn" type="button" ${unavailable?'disabled':''} onclick="addToCart('${b.id}')">${unavailable?'Pa stok':'＋ Shto në shportë'}</button>
