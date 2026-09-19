@@ -78,7 +78,7 @@
       const unavailable=b.trackStock&&Number(b.stock||0)<=0;
       const discount=b.old&&Number(b.old)>Number(b.price)?Math.round((1-Number(b.price)/Number(b.old))*100):0;
       const tag=unavailable?'Pa stok':discount?(`−${discount}%`):b.bestseller?'Bestseller':b.featured?'Zgjedhja ZemZem':'I ri';
-      const stockText=unavailable?'Nuk ka stok':b.trackStock?(`Në stok: ${Number(b.stock||0)}`):'Në stok';
+      const stockText=unavailable?'Nuk ka stok':'Ka në stok';
       const cover=b.coverUrl?`<img class="book-cover-img" src="${escHtml(b.coverUrl)}" alt="${escHtml(b.title)}" loading="lazy">`:`<div class="book-cover ${escHtml(b.cover||'c1')}"><span>${escHtml(b.title)}</span></div>`;
       return `<article class="book-card shop-book-card">
         <div class="shop-card-badges"><span class="shop-card-badge ${unavailable?'stockout':discount?'discount':b.bestseller?'best':''}">${escHtml(tag)}</span></div>
