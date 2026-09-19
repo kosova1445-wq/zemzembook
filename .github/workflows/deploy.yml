@@ -270,6 +270,8 @@ jobs:
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/js/shop-pro.js' 'Shop JS reference'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'zz-ticket-price' 'Shop price ticket'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'OFERTË' 'Shop Albanian offer label'
+          require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-stock.js 'Ka në stok' 'Public stock hides exact quantity'
+          require_live https://www.zemzem.al/product.html /tmp/product-stock.html "const stockText=unavailable?'Nuk ka stok':'Ka në stok';" 'Product stock hides exact quantity'
 
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index.html 'assets/js/home-modern.js' 'Homepage modern script'
