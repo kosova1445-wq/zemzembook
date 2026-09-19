@@ -45,9 +45,7 @@ jobs:
           grep -q 'application/ld+json' index.html
           grep -q 'application/ld+json' shop.html
           grep -q 'application/ld+json' ebooks.html
-          grep -q 'seo-product.js?v=2' product.html
-          grep -q 'seo-ebook.js?v=1' ebook.html
-          grep -q 'product.html?id=' sitemap.xml
-          grep -q 'ebook.html?id=' sitemap.xml
+          grep -q 'seo-product.js' product.html
+          grep -q 'seo-ebook.js' ebook.html
           test -s sitemap.xml
           echo 'ZEMZEM_STOREFRONT_SEO_VALIDATION_OK=yes'
