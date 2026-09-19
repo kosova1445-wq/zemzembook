@@ -252,8 +252,8 @@ jobs:
           }
 
           fetch_live https://www.zemzem.al/shop.html /tmp/shop.html
-          grep -Fq 'assets/css/shop-pro.css?v=4' /tmp/shop.html
-          grep -Fq 'assets/js/shop-pro.js?v=4' /tmp/shop.html
+          grep -Fq 'assets/css/shop-pro.css?v=5' /tmp/shop.html
+          grep -Fq 'assets/js/shop-pro.js?v=5' /tmp/shop.html
 
           fetch_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js
           grep -Fq 'zz-ticket-price' /tmp/shop-pro.js
