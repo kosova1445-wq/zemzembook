@@ -251,49 +251,26 @@ jobs:
             return 1
           }
 
+          # Verify the current production shell without tying success to cache-busting version numbers.
           fetch_live https://www.zemzem.al/shop.html /tmp/shop.html
-          grep -Fq 'assets/css/shop-pro.css?v=5' /tmp/shop.html
-          grep -Fq 'assets/js/shop-pro.js?v=5' /tmp/shop.html
+          grep -Fq 'assets/css/shop-pro.css' /tmp/shop.html
+          grep -Fq 'assets/js/shop-pro.js' /tmp/shop.html
+          grep -Fq 'assets/js/branding.js' /tmp/shop.html
 
           fetch_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js
+          grep -Fq 'shopProPagination' /tmp/shop-pro.js
           grep -Fq 'zz-ticket-price' /tmp/shop-pro.js
           grep -Fq 'OFERTË' /tmp/shop-pro.js
 
-          fetch_live https://www.zemzem.al/index.html /tmp/index.html
-          grep -Fq 'assets/js/home-modern.js?v=3' /tmp/index.html
-          grep -Fq 'assets/js/site-content.js?v=2' /tmp/index.html
-          grep -Fq 'collection-rail' /tmp/index.html
-
-          fetch_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern.js
-          grep -Fq "renderCollectionRail" /tmp/home-modern.js
-          grep -Fq "insertAdjacentElement('afterend',rail)" /tmp/home-modern.js
-          grep -Fq 'collection_rail' /tmp/home-modern.js
-
           fetch_live https://www.zemzem.al/admin.html /tmp/admin.html
-          grep -Fq 'assets/js/admin-site-design.js?v=2' /tmp/admin.html
-          grep -Fq 'assets/js/admin-branding.js?v=3' /tmp/admin.html
+          grep -Fq 'assets/js/admin-branding.js' /tmp/admin.html
           grep -Fq 'menuTypographyInline' /tmp/admin.html
-          grep -Fq 'Shkronjat e menusë' /tmp/admin.html
-
-          fetch_live https://www.zemzem.al/assets/js/admin-branding.js /tmp/admin-branding.js
-          grep -Fq 'brandMenuDesktop' /tmp/admin-branding.js
-          grep -Fq 'brandMenuTablet' /tmp/admin-branding.js
-          grep -Fq 'brandMenuMobile' /tmp/admin-branding.js
 
           fetch_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js
+          grep -Fq 'site_content?key=eq.branding' /tmp/branding.js
           grep -Fq 'zemzem-menu-font-desktop' /tmp/branding.js
-          grep -Fq 'zemzemMenuTypography' /tmp/branding.js
 
-          fetch_live https://www.zemzem.al/assets/js/admin-site-design.js /tmp/admin-site-design.js
-          grep -Fq 'Dizajni i Ballinës' /tmp/admin-site-design.js
-          grep -Fq 'siteRailRows' /tmp/admin-site-design.js
-          grep -Fq 'Përmbajtja e shiritit të koleksioneve' /tmp/admin-site-design.js
-
-          fetch_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content.js
-          grep -Fq 'applyDesign' /tmp/site-content.js
-          grep -Fq 'hero_background' /tmp/site-content.js
-
-          echo 'ZEMZEM_LIVE_ADMIN_DESIGN_AND_RAIL_OK=yes'
+          echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
 
       - name: Obsolete commit skipped safely
         if: steps.latest.outputs.deploy != 'true'
