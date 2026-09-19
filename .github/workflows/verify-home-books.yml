@@ -1,14 +1,6 @@
 name: Verify Homepage Books Manager
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'admin.html'
-      - 'assets/js/admin-home-books.js'
-      - 'assets/js/admin-book-helper.js'
-      - '.github/workflows/deploy.yml'
-      - '.github/workflows/verify-home-books.yml'
   workflow_dispatch:
 
 jobs:
