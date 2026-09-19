@@ -89,7 +89,7 @@ jobs:
           done
 
           # Keep the safe book-create helper in the live admin without changing the classic admin design.
-          ADMIN_BOOK_HELPER_TAG='<script src="assets/js/admin-book-helper.js?v=1"></script>'
+          ADMIN_BOOK_HELPER_TAG='<script src="assets/js/admin-book-helper.js?v=2"></script>'
           if [ -f admin.html ] && ! grep -Fq 'assets/js/admin-book-helper.js' admin.html; then
             sed -i "s#<script src=\"assets/js/admin-booksto.js?v=1\"></script>#<script src=\"assets/js/admin-booksto.js?v=1\"></script>${ADMIN_BOOK_HELPER_TAG}#" admin.html
           fi
@@ -282,6 +282,12 @@ jobs:
           require_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content.js 'linear-gradient(180deg,#ffffff 0%,#f3f4f5 100%)' 'White glossy category controller'
 
           require_live https://www.zemzem.al/admin.html /tmp/admin.html 'assets/js/admin-branding.js' 'Admin branding controls'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-book-meta.html 'bookCountry' 'Admin country metadata field'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-book-meta.html 'bookDimensions' 'Admin dimensions metadata field'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-book-meta.html 'bookWeight' 'Admin weight metadata field'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-book-meta.html 'bookReleaseDate' 'Admin publish date metadata field'
+          require_live https://www.zemzem.al/product.html /tmp/product-meta.html 'Data e botimit' 'Product publish date detail'
+          require_live https://www.zemzem.al/product.html /tmp/product-meta.html 'Dimensionet' 'Product dimensions detail'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js 'zemzem-menu-font-desktop' 'Global menu typography'
 
           echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
