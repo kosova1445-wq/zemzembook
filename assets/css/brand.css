@@ -2,9 +2,10 @@
 :root{
   --zemzem-teal:#159da8;--zemzem-teal-dark:#0d7f88;
   --zemzem-logo-bg:url('../brand/zemzem-logo.svg');
+  --zemzem-mobile-logo-bg:var(--zemzem-logo-bg);
   --zemzem-watermark-bg:url('../brand/zemzem-watermark.svg');
   --zemzem-logo-width:206px;--zemzem-logo-height:58px;
-  --zemzem-mobile-logo-width:164px;--zemzem-mobile-logo-height:50px;
+  --zemzem-mobile-logo-width:240px;--zemzem-mobile-logo-height:70px;
   --zemzem-footer-logo-width:206px;--zemzem-footer-logo-height:58px;
   --zemzem-watermark-size:34%;--zemzem-watermark-opacity:.20;--zemzem-watermark-display:block
 }
@@ -108,5 +109,5 @@ html[data-zemzem-watermark-position="center"] .wow-editorial-book::after{left:50
 .book-card>a:first-of-type img,.ebook-cover-wrap img,.ebook-detail-cover img,.product-cover-wrap img{position:relative;z-index:1}
 
 @media(max-width:720px){
-  .brand{width:var(--zemzem-mobile-logo-width)!important;min-width:var(--zemzem-mobile-logo-width)!important;height:var(--zemzem-mobile-logo-height)!important;border-radius:12px!important}
+  .brand{width:var(--zemzem-mobile-logo-width)!important;min-width:0!important;height:var(--zemzem-mobile-logo-height)!important;border-radius:12px!important;background-image:var(--zemzem-mobile-logo-bg)!important;background-size:contain!important;background-position:center!important}
 }
