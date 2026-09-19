@@ -62,7 +62,7 @@
     </div>
   </footer>
 
-  <script src="assets/js/app-v5.js?v=2"></script>
+  <script src="assets/js/app-v5.js?v=3"></script>
   <script src="assets/js/seo-product.js?v=2"></script>
   <script>
   (()=>{
@@ -163,10 +163,12 @@
         <div class="premium-tab-panel" data-product-panel="details">
           <h2>Detajet e librit</h2>
           <div class="premium-details-grid">
-            <div><span>Titulli</span><strong>${esc(b.title)}</strong></div><div><span>Autor / Botues</span><strong>${esc(b.author||'—')}</strong></div>
-            <div><span>Kategoria</span><strong>${esc(b.cat||'—')}</strong></div><div><span>SKU</span><strong>${esc(b.sku||'—')}</strong></div>
-            <div><span>ISBN</span><strong>${esc(b.isbn||'—')}</strong></div><div><span>Faqe</span><strong>${b.pages?esc(b.pages):'—'}</strong></div>
-            <div><span>Gjuha</span><strong>${esc((b.language||'sq').toUpperCase())}</strong></div><div><span>Formati</span><strong>${b.format==='physical'?'Libër fizik':esc(b.format||'—')}</strong></div>
+            <div><span>Disponueshmëria</span><strong>${unavailable?'Nuk ka stok':stockText}</strong></div><div><span>Kategoria</span><strong>${esc(b.cat||'—')}</strong></div>
+            <div><span>Data e botimit</span><strong>${b.releaseDate?new Intl.DateTimeFormat('sq-AL',{dateStyle:'medium'}).format(new Date(b.releaseDate+'T00:00:00')):'—'}</strong></div><div><span>Faqe gjithsej</span><strong>${b.pages?esc(b.pages):'—'}</strong></div>
+            <div><span>Formati</span><strong>${b.format==='physical'?'Libër fizik':esc(b.format||'—')}</strong></div><div><span>Shteti / Vendi</span><strong>${esc(b.country||'—')}</strong></div>
+            <div><span>Gjuha</span><strong>${esc((b.language||'sq').toUpperCase())}</strong></div><div><span>Dimensionet</span><strong>${esc(b.dimensions||'—')}</strong></div>
+            <div><span>Pesha</span><strong>${b.weightGrams?esc(b.weightGrams)+' g':'—'}</strong></div><div><span>Autor / Botues</span><strong>${esc(b.author||'—')}</strong></div>
+            <div><span>SKU</span><strong>${esc(b.sku||'—')}</strong></div><div><span>ISBN</span><strong>${esc(b.isbn||'—')}</strong></div>
           </div>
         </div>
         <div class="premium-tab-panel" data-product-panel="reviews"><h2>Recensionet</h2><div id="premiumReviews"><div class="premium-empty-state">Ende nuk ka recensione të publikuara për këtë libër.</div></div></div>
