@@ -43,3 +43,27 @@
 #reviewFormStatus{font-size:11px;color:#6c7a82;line-height:1.45;flex:1}
 .premium-review-card{position:relative}
 .premium-review-card:before{content:"✓ Blerje e verifikuar";display:inline-flex;margin-bottom:8px;padding:4px 8px;border-radius:999px;background:#eaf7f1;color:#24694e;font-size:9px;font-weight:900}
+
+
+/* Review form v2 — visible on every product */
+.premium-review-form-wrap{max-width:1000px;margin:0 0 34px}
+.premium-review-form{padding:26px;border:1px solid #e1e7ea;border-radius:18px;background:#fff;box-shadow:0 10px 28px rgba(32,56,71,.055)}
+.review-form-head{padding-bottom:16px;margin-bottom:2px}
+.review-form-head strong{font-size:20px}
+.review-form-head small{font-size:11px;line-height:1.5;color:#6f7f88}
+.review-rating-field{display:grid;gap:7px}
+.review-label{font-size:12px;font-weight:900;color:#3e5564}
+.review-star-picker{display:flex;gap:5px;align-items:center}
+.review-star{appearance:none;border:0;background:transparent;padding:0;font-size:28px;line-height:1;color:#d9dee1;cursor:pointer;transition:transform .14s ease,color .14s ease}
+.review-star:hover,.review-star.selected{color:#f5a623}
+.review-star:hover{transform:translateY(-1px) scale(1.06)}
+.review-star:disabled{cursor:not-allowed;opacity:.55}
+.review-two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.review-terms{display:flex!important;grid-template-columns:auto 1fr!important;align-items:flex-start!important;gap:9px!important;font-size:11px!important;font-weight:600!important;color:#687882!important}
+.review-terms input{width:auto!important;margin-top:2px}
+.review-terms a{color:#1c607b;text-decoration:underline}
+.review-form-locked{background:linear-gradient(180deg,#fff,#fafbfb)}
+.review-form-locked input[readonly]{background:#f7f9fa}
+.review-form-locked textarea:disabled,.review-form-locked input:disabled{background:#f5f7f8;color:#9aa5ab}
+#premiumReviews{margin-top:14px}
+@media(max-width:700px){.review-two-col{grid-template-columns:1fr}.premium-review-form{padding:18px}.review-star{font-size:25px}}
