@@ -90,12 +90,15 @@
     const provisionalId=id||crypto.randomUUID();
     const saveBtn=q('#saveBookBtn');if(saveBtn){saveBtn.disabled=true;saveBtn.textContent='Duke ruajtur…'}
     try{
-      const cover=await window.uploadCover(q('#bookCover')?.files?.[0],provisionalId);
-      const body={id:provisionalId,sku,isbn:isbn||null,title,slug,short_description:q('#bookShort').value.trim()||null,description:q('#bookDescription').value.trim()||null,author_id:q('#bookAuthor').value||null,category_id:q('#bookCategory').value||null,publisher_id:q('#bookPublisher').value||null,price,compare_at_price:q('#bookOldPrice').value?Number(q('#bookOldPrice').value):null,format:q('#bookFormat').value,language:q('#bookLanguage').value.trim()||'sq',pages:q('#bookPages').value?Number(q('#bookPages').value):null,cover_url:cover,status:q('#bookStatus').value,is_featured:q('#bookFeatured').checked,is_bestseller:q('#bookBestseller').checked,is_preorder:q('#bookPreorder').checked,track_stock:q('#bookTrackStock').checked,stock_quantity:Number(q('#bookStock').value||0),low_stock_threshold:Number(q('#bookLowStock').value||5),updated_at:new Date().toISOString()};
+      const [cover,galleryUrls]=await Promise.all([
+        window.uploadCover(q('#bookCover')?.files?.[0],provisionalId),
+        window.uploadGalleryImages(provisionalId)
+      ]);
+      const body={id:provisionalId,sku,isbn:isbn||null,title,slug,short_description:q('#bookShort').value.trim()||null,description:q('#bookDescription').value.trim()||null,author_id:q('#bookAuthor').value||null,category_id:q('#bookCategory').value||null,publisher_id:q('#bookPublisher').value||null,price,compare_at_price:q('#bookOldPrice').value?Number(q('#bookOldPrice').value):null,format:q('#bookFormat').value,language:q('#bookLanguage').value.trim()||'sq',pages:q('#bookPages').value?Number(q('#bookPages').value):null,cover_url:cover,gallery_urls:galleryUrls,status:q('#bookStatus').value,is_featured:q('#bookFeatured').checked,is_bestseller:q('#bookBestseller').checked,is_preorder:q('#bookPreorder').checked,track_stock:q('#bookTrackStock').checked,stock_quantity:Number(q('#bookStock').value||0),low_stock_threshold:Number(q('#bookLowStock').value||5),updated_at:new Date().toISOString()};
       if(id)delete body.id;
       if(id)await window.api(`books?id=eq.${id}`,{method:'PATCH',body,prefer:'return=minimal'});
       else await window.api('books',{method:'POST',body,prefer:'return=minimal'});
-      await window.logAudit(id?'update_book':'create_book','book',id||provisionalId,{title:body.title,sku:body.sku,status:body.status,stock_quantity:body.stock_quantity});
+      await window.logAudit(id?'update_book':'create_book','book',id||provisionalId,{title:body.title,sku:body.sku,status:body.status,stock_quantity:body.stock_quantity,gallery_images:galleryUrls.length});
       q('#bookModal').hidden=true;
       await Promise.all([window.loadBooks(),window.loadAudit()]);
       window.renderBooks();window.renderDashboard();window.renderAudit();window.toast(id?'Libri u përditësua':'Libri i ri u shtua');
