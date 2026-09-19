@@ -7,7 +7,7 @@ if(!document.querySelector('script[data-admin-paypal]')){const s=document.create
 
 let session=null;
 let orders=[],books=[],authors=[],categories=[],publishers=[],customers=[],coupons=[],reviews=[],ebookOrders=[],auditRows=[];
-let integrations=null,activeOrder=null,activeBook=null,activeCustomer=null;
+let integrations=null,activeOrder=null,activeBook=null,activeCustomer=null,currentAdminAccess=null;
 
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
@@ -71,7 +71,7 @@ async function logout(){
   try{await raw('/auth/v1/logout',{method:'POST',token:session?.access_token})}catch{}
   clearSession();$('#authScreen').hidden=false;$('#adminApp').hidden=true;
 }
-async function verifyAdmin(){const r=await api('admin_me?select=is_admin&limit=1');return !!r?.[0]?.is_admin}
+async function verifyAdmin(){try{const r=await api('rpc/admin_access',{method:'POST',body:{}});currentAdminAccess=r||null;window.ZemZemAdminAccess=currentAdminAccess;return !!r?.authorized}catch{return false}}function hasAdminPermission(name){return !!(currentAdminAccess?.full_access||currentAdminAccess?.permissions?.includes?.(name))}
 function statusPill(s){return `<span class="status-pill status-${esc(s)}">${esc(statusLabel(s))}</span>`}
 function paymentPill(s){return `<span class="status-pill status-${esc(s)}">${esc(statusLabel(s))}</span>`}
 
@@ -166,8 +166,26 @@ async function enterAdmin(){
 }
 async function loadAll(){
   setAdminSync('Duke sinkronizuar…');
-  await Promise.all([loadOrders(),loadBooks(),loadRefs(),loadCustomers(),loadCoupons(),loadReviews(),loadEbookOrders(),loadAudit(),loadIntegrations()]);
-  renderDashboard();renderOrders();renderBooks();renderEntities();renderCustomers();renderCoupons();renderReviews();renderAudit();renderIntegrations();
+  const jobs=[];
+  if(hasAdminPermission('orders')||hasAdminPermission('dashboard')||hasAdminPermission('reports'))jobs.push(loadOrders());
+  if(hasAdminPermission('books')||hasAdminPermission('catalog')||hasAdminPermission('dashboard')||hasAdminPermission('coupons'))jobs.push(loadBooks(),loadRefs());
+  if(hasAdminPermission('customers'))jobs.push(loadCustomers());
+  if(hasAdminPermission('coupons'))jobs.push(loadCoupons());
+  if(hasAdminPermission('reviews'))jobs.push(loadReviews());
+  if(hasAdminPermission('ebooks')||hasAdminPermission('dashboard')||hasAdminPermission('reports'))jobs.push(loadEbookOrders());
+  if(hasAdminPermission('audit'))jobs.push(loadAudit());
+  if(hasAdminPermission('integrations'))jobs.push(loadIntegrations());
+  await Promise.all(jobs);
+  if(hasAdminPermission('dashboard'))renderDashboard();
+  if(hasAdminPermission('orders'))renderOrders();
+  if(hasAdminPermission('books'))renderBooks();
+  if(hasAdminPermission('catalog')||hasAdminPermission('books'))renderEntities();
+  if(hasAdminPermission('customers'))renderCustomers();
+  if(hasAdminPermission('coupons'))renderCoupons();
+  if(hasAdminPermission('reviews'))renderReviews();
+  if(hasAdminPermission('audit'))renderAudit();
+  if(hasAdminPermission('integrations'))renderIntegrations();
+  window.dispatchEvent(new CustomEvent('zemzem:admin-access-ready',{detail:currentAdminAccess}));
   setAdminSync(`Përditësuar ${new Intl.DateTimeFormat('sq-AL',{hour:'2-digit',minute:'2-digit'}).format(new Date())}`);
 }
 async function loadOrders(){orders=await api('orders?select=*&order=created_at.desc&limit=700')||[]}
@@ -309,9 +327,9 @@ function renderIntegrations(){
 }
 async function testStoreEmail(){const b=$('#storeEmailTestBtn');if(b)b.disabled=true;try{const d=await edge('store-admin-ops',{action:'test_email'});toast(`Emaili testues u dërgua te ${d.email}`);await loadAudit();renderAudit();renderDashboard()}catch(e){toast(e.message,'error')}finally{if(b)b.disabled=false}}
 
-function setView(name){if(!name)return;$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));$$('.view').forEach(v=>v.classList.toggle('active-view',v.id===`view-${name}`));$('#viewTitle').textContent={dashboard:'Dashboard',orders:'Porositë',books:'Librat fizikë',catalog:'Katalogu',customers:'Klientët',coupons:'Kuponët',reviews:'Review',audit:'Audit Log',integrations:'Integrimet'}[name]||name;if(window.innerWidth<=760)$('.sidebar')?.classList.remove('mobile-open')}
+function setView(name){if(!name)return;if(!hasAdminPermission(name)&&!currentAdminAccess?.full_access){toast('Nuk ke qasje në këtë seksion.','error');return}$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));$$('.view').forEach(v=>v.classList.toggle('active-view',v.id===`view-${name}`));$('#viewTitle').textContent={dashboard:'Dashboard',orders:'Porositë',books:'Librat fizikë',catalog:'Katalogu',customers:'Klientët',coupons:'Kuponët',reviews:'Review',audit:'Audit Log',integrations:'Integrimet'}[name]||name;if(window.innerWidth<=760)$('.sidebar')?.classList.remove('mobile-open')}
 function bind(){
-  $('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=$('#loginBtn');setButtonBusy(b,true,'Duke hyrë…');try{saveSession(await login(ADMIN_EMAIL,$('#adminPassword').value));await enterAdmin()}catch(err){authMessage(String(err.message||'').includes('Invalid login credentials')?'Fjalëkalimi nuk është i saktë.':err.message,'error')}finally{setButtonBusy(b,false)}});$('#logoutBtn').onclick=logout;
+  $('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=$('#loginBtn'),email=$('#adminEmail').value.trim().toLowerCase();setButtonBusy(b,true,'Duke hyrë…');try{saveSession(await login(email,$('#adminPassword').value));await enterAdmin()}catch(err){authMessage(String(err.message||'').includes('Invalid login credentials')?'Emaili ose fjalëkalimi nuk është i saktë.':err.message,'error')}finally{setButtonBusy(b,false)}});$('#logoutBtn').onclick=logout;
   $('#adminPasswordToggle')?.addEventListener('click',()=>{const input=$('#adminPassword'),button=$('#adminPasswordToggle'),show=input.type==='password';input.type=show?'text':'password';button.textContent=show?'Fshih':'Shfaq';button.setAttribute('aria-label',show?'Fshih fjalëkalimin':'Shfaq fjalëkalimin')});
   $$('.nav-item[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));$$('[data-go]').forEach(b=>b.onclick=()=>setView(b.dataset.go));
   $('#refreshBtn').onclick=async()=>{const b=$('#refreshBtn');setButtonBusy(b,true,'…');try{await loadAll();toast('Të dhënat u rifreskuan')}catch(e){setAdminSync('Sinkronizimi dështoi',false);toast(e.message,'error')}finally{setButtonBusy(b,false)}};
