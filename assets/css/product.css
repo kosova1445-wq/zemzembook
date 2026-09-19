@@ -77,3 +77,10 @@
 #stockAlertForm input{flex:1;min-width:220px;border:1px solid #d8e1e4;border-radius:10px;padding:11px 12px;outline:0}
 #stockAlertForm input:focus{border-color:#159da8;box-shadow:0 0 0 3px rgba(21,157,168,.10)}
 #stockAlertStatus{margin-top:8px;color:#2c765a;font-size:11px;line-height:1.4}
+
+
+/* Product custom badge and countdown */
+.premium-category-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.premium-custom-badge{display:inline-flex;align-items:center;min-height:28px;padding:0 11px;border-radius:999px;background:#eef2f4;color:#4d616e;font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.premium-offer-countdown{display:inline-flex;margin:6px 0 14px;font-size:11px;padding:8px 10px}
+.premium-wishlist-btn.active{color:#d94e5d;border-color:#f0cfd5;background:#fff4f5}
