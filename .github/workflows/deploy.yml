@@ -393,6 +393,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-team.js /tmp/admin-team-owner.js "data-owner-edit" 'Owner profile edit action'
           require_live https://www.zemzem.al/assets/js/admin-team.js /tmp/admin-team-owner.js "update_owner_profile" 'Owner profile update flow'
           require_live https://www.zemzem.al/assets/js/admin-team.js /tmp/admin-team-owner.js "resetPassword" 'Owner password reset flow'
+          require_live https://www.zemzem.al/assets/js/admin-team.js /tmp/admin-team-branding.js "'branding'" 'Full access includes Logo and Brand'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-team.html "adminsBtn=side.querySelector('[data-view=\"admins\"]')" 'Booksto sidebar keeps Administrators'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-team.html "iconize(adminsBtn,'admins','Administratorët')" 'Booksto Admin team menu label'
           require_live https://www.zemzem.al/admin.html /tmp/admin-booksto-ref.html 'assets/js/admin-booksto.js' 'Admin sidebar asset reference'
