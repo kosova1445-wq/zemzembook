@@ -1,7 +1,7 @@
 (()=>{
   if(!document.querySelector('script[data-zemzem-affiliate]')){const s=document.createElement('script');s.src='assets/js/affiliate.js?v=1';s.defer=true;s.dataset.zemzemAffiliate='1';document.head.appendChild(s)}
-  if(!document.querySelector('script[data-zemzem-pwa]')){const s=document.createElement('script');s.src='assets/js/pwa.js?v=2';s.defer=true;s.dataset.zemzemPwa='1';document.head.appendChild(s)}
-  if(!document.querySelector('script[data-runtime-storefront]')){const s=document.createElement('script');s.src='assets/js/runtime-storefront.js?v=1';s.defer=true;s.dataset.runtimeStorefront='1';document.head.appendChild(s)}
+  if(!document.querySelector('script[data-zemzem-pwa]')){const s=document.createElement('script');s.src='assets/js/pwa.js?v=3';s.defer=true;s.dataset.zemzemPwa='1';document.head.appendChild(s)}
+  if(!document.querySelector('script[data-runtime-ops]')){const s=document.createElement('script');s.src='assets/js/runtime-ops.js?v=1';s.defer=true;s.dataset.runtimeOps='1';document.head.appendChild(s)}\n  if(!document.querySelector('script[data-runtime-storefront]')){const s=document.createElement('script');s.src='assets/js/runtime-storefront.js?v=1';s.defer=true;s.dataset.runtimeStorefront='1';document.head.appendChild(s)}
   'use strict';
   const SB_URL='https://ysvtrhizgcioyycwlkrk.supabase.co';
   const SB_KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
