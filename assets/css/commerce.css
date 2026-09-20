@@ -13,3 +13,22 @@
 .saved-later-item small{margin-top:3px;font-size:10px;color:#7c8990}
 .saved-later-item button{border:1px solid #dde5e8;background:#fff;border-radius:8px;padding:7px 9px;font-size:10px;font-weight:800;cursor:pointer;margin-left:4px}
 @media(max-width:620px){.saved-later-item{grid-template-columns:46px 1fr}.saved-later-item>div:last-child{grid-column:2}}
+
+
+/* Checkout desktop readability and width */
+.checkout-page .section{padding-top:42px}
+.checkout-page .section>.container{width:min(1240px,calc(100% - 48px))}
+.checkout-page .cart-layout{grid-template-columns:minmax(0,1.55fr) minmax(280px,.65fr);gap:28px}
+.checkout-page .checkout-grid{grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr);gap:28px;align-items:start}
+.checkout-page .checkout-box,.checkout-page .cart-box,.checkout-page .summary-box{padding:26px}
+.checkout-page .summary-box{position:sticky;top:92px}
+.checkout-page .field input,.checkout-page .field select,.checkout-page .notes-field textarea{font-size:15px}
+@media(max-width:980px){
+  .checkout-page .section>.container{width:min(100% - 28px,760px)}
+  .checkout-page .cart-layout,.checkout-page .checkout-grid{grid-template-columns:1fr}
+  .checkout-page .summary-box{position:static}
+}
+@media(max-width:640px){
+  .checkout-page .section>.container{width:calc(100% - 20px)}
+  .checkout-page .checkout-box,.checkout-page .cart-box,.checkout-page .summary-box{padding:16px}
+}
