@@ -1,20 +1,41 @@
-/* ZemZem shared price ticket — physical books + eBook */
-.zz-ticket-wrap{display:flex;align-items:center;margin-top:12px;min-height:112px;overflow:visible}
-.zz-ticket-price{position:relative;width:156px;filter:drop-shadow(0 9px 16px rgba(20,25,30,.16))}
-.zz-ticket-top{position:relative;height:38px;background:#ffd51f;color:#111;display:flex;align-items:center;justify-content:space-between;padding:0 13px 0 14px;border-radius:3px 3px 0 0;overflow:hidden}
-.zz-ticket-top:before,.zz-ticket-top:after{content:"";position:absolute;bottom:-8px;width:16px;height:16px;border-radius:50%;background:#fff}
-.zz-ticket-top:before{left:-8px}.zz-ticket-top:after{right:-8px}
-.zz-ticket-old{font-size:18px;font-weight:1000;line-height:1;position:relative;display:inline-block}
-.zz-ticket-old:after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:4px;background:#e11f2d;transform:rotate(-8deg);border-radius:4px}
-.zz-ticket-old-label{font-size:11px;font-weight:1000;letter-spacing:.09em}
-.zz-ticket-bars{width:34px;height:21px;background:repeating-linear-gradient(90deg,#111 0 2px,transparent 2px 4px);opacity:.9}
-.zz-ticket-main{position:relative;height:72px;background:#17191d;color:#fff;display:flex;align-items:center;justify-content:center;gap:3px;padding:4px 14px 8px;overflow:hidden}
-.zz-ticket-main:before,.zz-ticket-main:after{content:"";position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:#fff;transform:translateY(-50%)}
-.zz-ticket-main:before{left:-9px}.zz-ticket-main:after{right:-9px}
-.zz-ticket-current{font-size:44px;font-weight:1000;letter-spacing:-.055em;line-height:.92;white-space:nowrap}
-.zz-ticket-currency{font-size:16px;font-weight:1000;align-self:flex-start;margin-top:18px}
-.zz-ticket-ribbon{position:relative;display:inline-block;margin-top:-4px;margin-left:-10px;background:#e51f2c;color:#fff;font-size:17px;font-weight:1000;font-style:italic;letter-spacing:.02em;line-height:1;padding:9px 22px 10px 15px;border-radius:11px 0 0 11px;transform:rotate(-3deg);z-index:2;text-transform:uppercase}
-.zz-ticket-ribbon:after{content:"";position:absolute;right:-24px;top:0;border-top:17px solid #e51f2c;border-bottom:17px solid #e51f2c;border-right:24px solid transparent}
-.zz-ticket-price.regular .zz-ticket-ribbon{background:#233a4a}.zz-ticket-price.regular .zz-ticket-ribbon:after{border-top-color:#233a4a;border-bottom-color:#233a4a}
-@media(max-width:760px){.zz-ticket-wrap{min-height:96px}.zz-ticket-price{width:136px}.zz-ticket-top{height:33px}.zz-ticket-old{font-size:15px}.zz-ticket-bars{width:29px;height:18px}.zz-ticket-main{height:62px}.zz-ticket-current{font-size:37px}.zz-ticket-currency{font-size:14px;margin-top:15px}.zz-ticket-ribbon{font-size:14px;padding:8px 19px 9px 13px}.zz-ticket-ribbon:after{right:-21px;border-top-width:15px;border-bottom-width:15px;border-right-width:21px}}
-@media(max-width:430px){.zz-ticket-wrap{min-height:88px}.zz-ticket-price{width:122px}.zz-ticket-top{height:30px}.zz-ticket-old{font-size:14px}.zz-ticket-bars{width:25px;height:16px}.zz-ticket-main{height:56px}.zz-ticket-current{font-size:33px}.zz-ticket-currency{font-size:12px;margin-top:14px}.zz-ticket-ribbon{font-size:12px}}
+/* ZemZem shared price sticker v2 — transparent outside, inspired by retail sale tag */
+.zz-ticket-wrap{display:flex;align-items:center;margin-top:10px;min-height:118px;overflow:visible;background:transparent!important}
+.zz-ticket-price{position:relative;display:inline-block;width:166px;overflow:visible;background:transparent!important;filter:drop-shadow(0 10px 16px rgba(15,20,24,.18))}
+.zz-ticket-top{position:relative;z-index:2;height:36px;margin:0 18px 0 20px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;background:#ffd51f;color:#111;border:0!important;border-radius:0!important;overflow:visible;clip-path:polygon(0 0,88% 0,100% 26%,100% 100%,0 100%)}
+.zz-ticket-top:before,.zz-ticket-top:after{content:none!important}
+.zz-ticket-old{position:relative;display:inline-block;font-size:18px;font-weight:1000;line-height:1;color:#111}
+.zz-ticket-old:after{content:"";position:absolute;left:-3px;right:-3px;top:48%;height:4px;background:#e11f2d;transform:rotate(-8deg);border-radius:999px}
+.zz-ticket-old-label{font-size:10px;font-weight:1000;letter-spacing:.12em;color:#111}
+.zz-ticket-bars{width:34px;height:20px;background:repeating-linear-gradient(90deg,#111 0 2px,transparent 2px 4px);opacity:.95}
+.zz-ticket-main{position:relative;z-index:3;height:78px;margin-top:-2px;padding:5px 15px 8px 17px;display:flex;align-items:center;justify-content:center;gap:3px;background:#111315;color:#fff;border-radius:42px;overflow:visible}
+.zz-ticket-main:before,.zz-ticket-main:after{content:none!important}
+.zz-ticket-current{font-size:50px;font-weight:1000;letter-spacing:-.065em;line-height:.9;white-space:nowrap}
+.zz-ticket-currency{align-self:center;margin:16px 0 0 1px;padding:4px 8px 3px;border-radius:999px;background:#ffd51f;color:#111;font-size:13px;font-weight:1000;line-height:1}
+.zz-ticket-ribbon{position:relative;z-index:1;display:block;width:max-content;min-width:126px;margin:-2px auto 0;padding:8px 14px 9px;background:#ffd51f!important;color:#111!important;font-size:14px;font-weight:1000;font-style:normal;letter-spacing:.03em;line-height:1;text-align:center;text-transform:uppercase;border-radius:0!important;transform:none!important;clip-path:polygon(0 0,100% 0,100% 88%,93% 78%,86% 92%,79% 79%,72% 92%,65% 79%,58% 92%,51% 79%,44% 92%,37% 79%,30% 92%,23% 79%,16% 92%,8% 79%,0 90%);text-shadow:none!important}
+.zz-ticket-ribbon:after{content:none!important}
+.zz-ticket-price.regular .zz-ticket-top{background:#f0c91d}
+.zz-ticket-price.regular .zz-ticket-main{background:#17191d}
+.zz-ticket-price.regular .zz-ticket-ribbon{background:#f0c91d!important;color:#111!important}
+.zz-ticket-price,.zz-ticket-price *{box-sizing:border-box}
+.shop-price-wrap,.home-slide-price,.premium-price-ticket-wrap{background:transparent!important}
+@media(max-width:760px){
+ .zz-ticket-wrap{min-height:102px}
+ .zz-ticket-price{width:144px}
+ .zz-ticket-top{height:31px;margin:0 15px 0 17px;padding:0 10px}
+ .zz-ticket-old{font-size:15px}
+ .zz-ticket-bars{width:28px;height:17px}
+ .zz-ticket-main{height:67px;border-radius:36px;padding:4px 12px 7px 14px}
+ .zz-ticket-current{font-size:41px}
+ .zz-ticket-currency{font-size:11px;margin-top:13px;padding:3px 7px}
+ .zz-ticket-ribbon{min-width:108px;font-size:12px;padding:7px 12px 8px}
+}
+@media(max-width:430px){
+ .zz-ticket-price{width:128px}
+ .zz-ticket-top{height:28px;margin:0 13px 0 15px}
+ .zz-ticket-old{font-size:14px}
+ .zz-ticket-bars{width:24px;height:15px}
+ .zz-ticket-main{height:60px;border-radius:32px}
+ .zz-ticket-current{font-size:36px}
+ .zz-ticket-currency{font-size:10px;margin-top:11px}
+ .zz-ticket-ribbon{min-width:96px;font-size:11px}
+}
