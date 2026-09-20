@@ -229,7 +229,8 @@ async function loadOrders() {
       <div id="od-${o.id}" hidden></div>
     </article>`).join('');
   aqq('[data-order-detail]').forEach((b) => b.onclick = () => toggleOrderItems(b.dataset.orderDetail));
-  aqq('[data-order-invoice]').forEach((b) => b.onclick = () => openProfessionalCustomerInvoice(b.dataset.orderInvoice));\n  aqq('[data-order-buyagain]').forEach((b) => b.onclick = () => buyAgainOrder(b.dataset.orderBuyagain, b));
+  aqq('[data-order-invoice]').forEach((b) => b.onclick = () => openProfessionalCustomerInvoice(b.dataset.orderInvoice));
+  aqq('[data-order-buyagain]').forEach((b) => b.onclick = () => buyAgainOrder(b.dataset.orderBuyagain, b));
 }
 
 async function buyAgainOrder(id, button) {
