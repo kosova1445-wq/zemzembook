@@ -229,7 +229,7 @@ async function loadOrders() {
       <div id="od-${o.id}" hidden></div>
     </article>`).join('');
   aqq('[data-order-detail]').forEach((b) => b.onclick = () => toggleOrderItems(b.dataset.orderDetail));
-  aqq('[data-order-invoice]').forEach((b) => b.onclick = () => printCustomerInvoice(b.dataset.orderInvoice));
+  aqq('[data-order-invoice]').forEach((b) => b.onclick = () => (window.ZemZemInvoice?.printCustomerInvoice ? window.ZemZemInvoice.printCustomerInvoice(b.dataset.orderInvoice) : printCustomerInvoice(b.dataset.orderInvoice)));
 }
 
 async function printCustomerInvoice(id) {
