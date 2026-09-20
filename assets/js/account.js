@@ -225,11 +225,35 @@ async function loadOrders() {
         <span class="status-chip status-${aesc(o.order_status)}">${aesc(statusLabels[o.order_status] || o.order_status || 'Në pritje')}</span>
       </div>
       ${o.tracking_number ? `<div class="order-meta"><strong>Gjurmimi:</strong> ${aesc(o.shipping_carrier || '')} <span class="tracking-number">${aesc(o.tracking_number)}</span></div>` : ''}
-      <div class="order-card-actions"><button class="text-btn" data-order-detail="${o.id}">Shiko artikujt</button><button class="text-btn" data-order-invoice="${o.id}">Fatura / PDF</button></div>
+      <div class="order-card-actions"><button class="text-btn" data-order-detail="${o.id}">Shiko artikujt</button><button class="text-btn" data-order-invoice="${o.id}">Fatura / PDF</button><button class="text-btn" data-order-buyagain="${o.id}">Blej përsëri</button></div>
       <div id="od-${o.id}" hidden></div>
     </article>`).join('');
   aqq('[data-order-detail]').forEach((b) => b.onclick = () => toggleOrderItems(b.dataset.orderDetail));
-  aqq('[data-order-invoice]').forEach((b) => b.onclick = () => openProfessionalCustomerInvoice(b.dataset.orderInvoice));
+  aqq('[data-order-invoice]').forEach((b) => b.onclick = () => openProfessionalCustomerInvoice(b.dataset.orderInvoice));\n  aqq('[data-order-buyagain]').forEach((b) => b.onclick = () => buyAgainOrder(b.dataset.orderBuyagain, b));
+}
+
+async function buyAgainOrder(id, button) {
+  const old = button?.textContent;
+  if (button) { button.disabled = true; button.textContent = 'Duke shtuar…'; }
+  try {
+    const items = await aapi(`order_items?order_id=eq.${encodeURIComponent(id)}&select=book_id,quantity&order=created_at.asc`) || [];
+    if (!items.length) throw new Error('Kjo porosi nuk ka artikuj për t’u shtuar.');
+    const current = (() => { try { const x = JSON.parse(localStorage.getItem('zemzem_cart') || '[]'); return Array.isArray(x) ? x : []; } catch { return []; } })();
+    const map = new Map(current.map(x => [String(x.id), Number(x.qty || 0)]));
+    for (const it of items) {
+      const key = String(it.book_id || '');
+      if (!key) continue;
+      map.set(key, Math.min(20, (map.get(key) || 0) + Number(it.quantity || 1)));
+    }
+    const next = [...map.entries()].map(([id, qty]) => ({id, qty}));
+    localStorage.setItem('zemzem_cart', JSON.stringify(next));
+    try { window.ZemZemStore?.setCart?.(next); } catch {}
+    toast('Artikujt u shtuan përsëri në shportë');
+    setTimeout(() => { location.href = 'checkout.html'; }, 500);
+  } catch (err) {
+    toast(err.message || 'Buy Again dështoi.', true);
+    if (button) { button.disabled = false; button.textContent = old || 'Blej përsëri'; }
+  }
 }
 
 async function ensureProfessionalInvoiceModule() {
