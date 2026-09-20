@@ -64,9 +64,45 @@ async function showEbooks(){
 }
 async function showConvert(){
  await preload(); const jobs=await api('ebook_conversion_jobs?select=*,ebooks(title)&order=created_at.desc&limit=100')||[],host=q('#p20body-convert');
- host.innerHTML=card('<form id="conv20" class="p20form"><label>eBook<select id="ce">'+cache.ebooks.map(x=>'<option value="'+x.id+'">'+esc(x.title)+'</option>').join('')+'</select></label><label>Source file ID<input id="cf" placeholder="UUID i PDF"></label><label>Target<select id="ct"><option>epub</option><option>mobi</option><option>azw3</option></select></label><div><button class="primary-btn">Shto në Queue</button></div></form><p class="p20note">Queue dhe statuset janë aktive. Konvertimi automatik i skedarit kërkon worker/engine konvertimi.</p>')+card(rows(jobs,x=>'<div class="p20row"><div><b>'+esc(x.ebooks?.title||x.ebook_id)+'</b><small>'+esc(x.source_format)+' → '+esc(x.target_format)+' · '+esc(x.status)+'</small></div><select data-cs="'+x.id+'"><option '+(x.status==='queued'?'selected':'')+'>queued</option><option '+(x.status==='processing'?'selected':'')+'>processing</option><option '+(x.status==='completed'?'selected':'')+'>completed</option><option '+(x.status==='failed'?'selected':'')+'>failed</option></select></div>'));
- q('#conv20').onsubmit=async e=>{e.preventDefault();await api('ebook_conversion_jobs',{method:'POST',body:{ebook_id:q('#ce').value,source_file_id:q('#cf').value||null,target_format:q('#ct').value,created_by:window.ZemZemAdminAccess?.user_id||null},prefer:'return=minimal'});showConvert()};
+ host.innerHTML=card('<form id="conv20" class="p20form"><label>eBook<select id="ce">'+cache.ebooks.map(x=>'<option value="'+x.id+'">'+esc(x.title)+'</option>').join('')+'</select></label><label>Source file ID<input id="cf" placeholder="UUID i PDF (opsionale)"></label><label>Target<select id="ct"><option>epub</option><option>mobi</option><option>azw3</option></select></label><div><button class="primary-btn">Shto në Queue</button></div></form><hr style="margin:16px 0;border:0;border-top:1px solid #edf1ef"><div class="p20form"><label>Konverto PDF direkt<input id="convPdfFile" type="file" accept="application/pdf"></label><div><button type="button" class="primary-btn" id="convPdfNow">PDF → EPUB tani</button></div></div><div id="convPdfState" class="p20note" style="margin-top:8px">Punon për PDF me tekst. PDF-të e skanuara vetëm si fotografi kërkojnë OCR.</div>')+card(rows(jobs,x=>'<div class="p20row"><div><b>'+esc(x.ebooks?.title||x.ebook_id)+'</b><small>'+esc(x.source_format)+' → '+esc(x.target_format)+' · '+esc(x.status)+'</small></div><select data-cs="'+x.id+'"><option '+(x.status==='queued'?'selected':'')+'>queued</option><option '+(x.status==='processing'?'selected':'')+'>processing</option><option '+(x.status==='completed'?'selected':'')+'>completed</option><option '+(x.status==='failed'?'selected':'')+'>failed</option></select></div>'));
+ q('#conv20').onsubmit=async e=>{e.preventDefault();await api('ebook_conversion_jobs',{method:'POST',body:{ebook_id:q('#ce').value,source_file_id:q('#cf').value||null,target_format:q('#ct').value,created_by:window.ZemZemAdminAccess?.user_id||null},prefer:'return=minimal'});showConvert()};q('#convPdfNow').onclick=convertPdfToEpubNow;
  qa('[data-cs]',host).forEach(s=>s.onchange=async()=>api('ebook_conversion_jobs?id=eq.'+s.dataset.cs,{method:'PATCH',body:{status:s.value,started_at:s.value==='processing'?new Date().toISOString():null,completed_at:s.value==='completed'?new Date().toISOString():null},prefer:'return=minimal'}));
+}
+async function loadScript20(src,test){if(test())return;await new Promise((ok,bad)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=bad;document.head.appendChild(s)});if(!test())throw new Error('Library nuk u ngarkua')}
+function xesc20(v){return String(v||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+async function convertPdfToEpubNow(){
+ const file=q('#convPdfFile')?.files?.[0],ebookId=q('#ce')?.value,state=q('#convPdfState');
+ if(!file||!ebookId){toast('Zgjidh eBook-un dhe PDF-në','error');return}
+ const btn=q('#convPdfNow');btn.disabled=true;state.textContent='Duke ngarkuar motorin e konvertimit…';
+ try{
+  await loadScript20('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',()=>!!window.pdfjsLib);
+  await loadScript20('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',()=>!!window.JSZip);
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const ebook=cache.ebooks.find(x=>x.id===ebookId)||{},pdf=await window.pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+  const chapters=[];let totalChars=0;
+  for(let i=1;i<=pdf.numPages;i++){
+   state.textContent='Po lexon faqen '+i+' / '+pdf.numPages+'…';
+   const p=await pdf.getPage(i),tc=await p.getTextContent(),txt=(tc.items||[]).map(x=>String(x.str||'')).join(' ').replace(/\s+/g,' ').trim();
+   totalChars+=txt.length;chapters.push({n:i,text:txt});
+  }
+  if(totalChars<100)throw new Error('PDF-ja duket e skanuar si fotografi. Kërkohet OCR.');
+  state.textContent='Po krijon EPUB…';
+  const zip=new window.JSZip();zip.file('mimetype','application/epub+zip',{compression:'STORE'});
+  zip.file('META-INF/container.xml','<?xml version="1.0"?><container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles></container>');
+  const title=xesc20(ebook.title||file.name.replace(/\.pdf$/i,'')),manifest=[],spine=[],nav=[];
+  chapters.forEach(ch=>{const id='c'+ch.n,name='chapter-'+ch.n+'.xhtml';manifest.push('<item id="'+id+'" href="'+name+'" media-type="application/xhtml+xml"/>');spine.push('<itemref idref="'+id+'"/>');nav.push('<li><a href="'+name+'">Faqja '+ch.n+'</a></li>');zip.file('OEBPS/'+name,'<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml"><head><title>'+title+' — '+ch.n+'</title><link rel="stylesheet" href="style.css"/></head><body><h2>'+title+'</h2><p>'+xesc20(ch.text)+'</p></body></html>')});
+  zip.file('OEBPS/style.css','body{font-family:serif;line-height:1.6;margin:5%;}p{text-align:justify;}');
+  zip.file('OEBPS/nav.xhtml','<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"><head><title>'+title+'</title></head><body><nav epub:type="toc"><ol>'+nav.join('')+'</ol></nav></body></html>');
+  zip.file('OEBPS/content.opf','<?xml version="1.0" encoding="utf-8"?><package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bookid"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="bookid">urn:uuid:'+crypto.randomUUID()+'</dc:identifier><dc:title>'+title+'</dc:title><dc:language>sq</dc:language></metadata><manifest><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/><item id="css" href="style.css" media-type="text/css"/>'+manifest.join('')+'</manifest><spine>'+spine.join('')+'</spine></package>');
+  const blob=await zip.generateAsync({type:'blob',mimeType:'application/epub+zip',compression:'DEFLATE'}),id=crypto.randomUUID(),path='converted/'+ebookId+'/'+id+'.epub';
+  state.textContent='Po ngarkon EPUB-in…';
+  const up=await fetch(SB_URL+'/storage/v1/object/ebook-files/'+path,{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+session.access_token,'Content-Type':'application/epub+zip','x-upsert':'false'},body:blob});
+  if(!up.ok)throw new Error('Upload-i i EPUB dështoi');
+  const existing=await api('ebook_files?ebook_id=eq.'+ebookId+'&format=eq.epub&select=version&order=version.desc&limit=1')||[],version=Number(existing?.[0]?.version||0)+1;
+  const created=await api('ebook_files',{method:'POST',body:{ebook_id:ebookId,format:'epub',storage_path:path,original_filename:(ebook.title||'ebook')+'.epub',mime_type:'application/epub+zip',file_size_bytes:blob.size,version,is_active:true},prefer:'return=representation'});
+  await api('ebook_conversion_jobs',{method:'POST',body:{ebook_id:ebookId,source_format:'pdf',target_format:'epub',status:'completed',output_file_id:created?.[0]?.id||null,created_by:window.ZemZemAdminAccess?.user_id||null,started_at:new Date().toISOString(),completed_at:new Date().toISOString()},prefer:'return=minimal'});
+  state.textContent='EPUB u krijua dhe u ruajt me sukses.';toast('PDF → EPUB u krye');showConvert();
+ }catch(e){state.textContent=e.message;toast(e.message,'error')}finally{btn.disabled=false}
 }
 async function showBundles(){
  await preload(); const list=await api('bundles?select=*&order=created_at.desc&limit=200')||[],host=q('#p20body-bundles');
