@@ -134,6 +134,11 @@ jobs:
             CHANGED="$(git diff --name-only HEAD~1 HEAD)"
           fi
 
+          # Build a tiny live release manifest for the Admin Deployment panel.
+          cat > release.json <<EOF
+          {"sha":"${GITHUB_SHA}","run_id":"${GITHUB_RUN_ID}","ref":"main","deployed_at":"$(date -u +%Y-%m-%dT%H:%M:%SZ)"}
+          EOF
+
           # Inject the public analytics bootstrap at build time. Admin pages intentionally stay analytics-free.
           ANALYTICS_TAG='<script src="assets/js/analytics.js?v=1"></script>'
           for page in \
@@ -249,8 +254,10 @@ jobs:
           assets/js/admin-extras-suite.js
           assets/js/admin-invoice-settings.js
           assets/js/admin-invoice-center.js
+          assets/js/admin-pro-20.js
           assets/js/invoice-professional.js
           assets/js/runtime-storefront.js
+          assets/js/storefront-observability.js
           assets/css/admin-branding.css
           assets/js/branding.js
           assets/css/brand.css
@@ -337,8 +344,10 @@ jobs:
           upload "assets/js/admin-extras-suite.js"
           upload "assets/js/admin-invoice-settings.js"
           upload "assets/js/admin-invoice-center.js"
+          upload "assets/js/admin-pro-20.js"
           upload "assets/js/invoice-professional.js"
           upload "assets/js/runtime-storefront.js"
+          upload "assets/js/storefront-observability.js"
           upload "assets/css/admin-branding.css"
           upload "assets/js/branding.js"
           upload "assets/css/brand.css"
@@ -358,6 +367,7 @@ jobs:
           upload "assets/js/account.js"
           upload "assets/js/account-enterprise.js"
           upload "assets/js/account-advanced.js"
+          upload "release.json"
 
       - name: Syntax check Admin advanced modules
         if: steps.latest.outputs.deploy == 'true'
@@ -374,7 +384,9 @@ jobs:
           node --check assets/js/runtime-ops.js
           node --check assets/js/admin-invoice-settings.js
           node --check assets/js/admin-invoice-center.js
+          node --check assets/js/admin-pro-20.js
           node --check assets/js/invoice-professional.js
+          node --check assets/js/storefront-observability.js
           node --check assets/js/pwa.js
 
       - name: Verify live protected release
@@ -504,6 +516,8 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-docs-ref.html 'assets/js/admin-documents.js' 'Invoice and packing slip module'
           require_live https://www.zemzem.al/admin.html /tmp/admin-invoice-center-ref.html 'assets/js/admin-invoice-center.js' 'Dedicated invoice center reference'
           require_live https://www.zemzem.al/assets/js/admin-invoice-center.js /tmp/admin-invoice-center.js 'Menaxhimi i faturave' 'Dedicated invoice center module'
+          require_live https://www.zemzem.al/assets/js/admin-pro-20.js /tmp/admin-pro20.js 'Advanced Center' 'Advanced Center module'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-pro20-ref.html 'admin-pro-20.js' 'Advanced Center reference'
           require_live https://www.zemzem.al/assets/js/admin-invoice-settings.js /tmp/admin-invoice-settings.js 'Konfigurimi i faturës' 'Invoice settings module'
           require_live https://www.zemzem.al/assets/js/invoice-professional.js /tmp/invoice-professional.js 'invoiceBarcode' 'Invoice barcode and QR renderer'
           require_live https://www.zemzem.al/assets/js/admin-documents.js /tmp/admin-docs.js 'Packing Slip' 'Packing slip renderer'
