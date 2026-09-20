@@ -161,6 +161,9 @@ jobs:
           find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=9#g'
           sed -i 's#assets/js/checkout-v2.js?v=7#assets/js/checkout-v2.js?v=8#g' checkout.html
 
+          # Force republish advanced Admin modules and bypass stale CDN/browser versions.
+          touch admin.html assets/js/admin-intelligence-suite.js assets/js/admin-growth-advanced.js assets/js/admin-experience-automation.js
+
           # Always republish the complete protected production set.
           CHANGED="$CHANGED
           index.html
@@ -411,7 +414,7 @@ jobs:
           require_live https://www.zemzem.al/collections.html /tmp/collections.html 'collections.js' 'Public Collections page'
           require_live https://www.zemzem.al/assets/js/affiliate.js /tmp/affiliate.js 'zemzem_affiliate_ref' 'Affiliate tracker'
           require_live https://www.zemzem.al/assets/js/pwa.js /tmp/pwa.js 'serviceWorker.register' 'PWA runtime'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-super.html 'admin-super-suite.js' 'Admin Super Suite reference'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-super.html 'admin-intelligence-suite.js?v=2' 'Admin advanced modules reference'
           require_live https://www.zemzem.al/assets/js/admin-super-suite.js /tmp/admin-super.js 'Command Center' 'Admin Command Center'
           require_live https://www.zemzem.al/assets/js/admin-workflow-studio.js /tmp/admin-workflow.js 'Manual Order' 'Admin Workflow Studio'
           require_live https://www.zemzem.al/assets/js/admin-intelligence-suite.js /tmp/admin-intel.js 'Intelligence Center' 'Admin Intelligence Center'
