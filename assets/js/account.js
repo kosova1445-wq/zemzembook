@@ -326,9 +326,10 @@ async function loadMyEbooks() {
       if (!e.is_active) label = 'Qasja joaktive';
       else if (expired) label = 'Qasja skadoi';
       else if (remaining <= 0) label = 'Limiti u arrit';
-      return `<article class="wish-card ebook-owned-card" style="align-items:center;margin-bottom:12px"><div class="wish-main">${b.cover_url ? `<img class="book-thumb" src="${aesc(b.cover_url)}" alt="${aesc(b.title || 'eBook')}">` : '<div class="book-thumb" style="display:grid;place-items:center;font-size:11px">eBook</div>'}<div><strong>${aesc(b.title || 'eBook')}</strong><div>${aesc(b.author_name || 'ZemZem')}</div><div style="margin-top:6px;font-size:12px;color:#758189">⬇ ${remaining} nga ${max} shkarkime kanë mbetur · ${e.access_expires_at ? `Qasje deri ${aday(e.access_expires_at)}` : 'Pa afat skadimi'}</div></div></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="btn btn-light compact" href="ebook.html?id=${encodeURIComponent(e.ebook_id)}">Detajet</a><button class="btn btn-primary compact" data-ebook-download="${e.id}" ${disabled ? 'disabled' : ''}>${label}</button></div></article>`;
+      return `<article class="wish-card ebook-owned-card" style="align-items:center;margin-bottom:12px"><div class="wish-main">${b.cover_url ? `<img class="book-thumb" src="${aesc(b.cover_url)}" alt="${aesc(b.title || 'eBook')}">` : '<div class="book-thumb" style="display:grid;place-items:center;font-size:11px">eBook</div>'}<div><strong>${aesc(b.title || 'eBook')}</strong><div>${aesc(b.author_name || 'ZemZem')}</div><div style="margin-top:6px;font-size:12px;color:#758189">⬇ ${remaining} nga ${max} shkarkime kanë mbetur · ${e.access_expires_at ? `Qasje deri ${aday(e.access_expires_at)}` : 'Pa afat skadimi'}</div></div></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="btn btn-light compact" href="ebook.html?id=${encodeURIComponent(e.ebook_id)}">Detajet</a><button class="btn btn-light compact" data-ebook-kindle="${e.id}" ${disabled ? 'disabled' : ''}>📖 Dërgo në Kindle</button><button class="btn btn-primary compact" data-ebook-download="${e.id}" ${disabled ? 'disabled' : ''}>${label}</button></div></article>`;
     }).join('');
     aqq('[data-ebook-download]').forEach((btn) => btn.onclick = () => downloadOwnedEbook(btn.dataset.ebookDownload, btn));
+    aqq('[data-ebook-kindle]').forEach((btn) => btn.onclick = () => sendOwnedEbookToKindle(btn.dataset.ebookKindle, btn));
   } catch (err) {
     root.innerHTML = `<div class="empty-state">${aesc(err.message || 'Biblioteka eBook nuk mund të ngarkohet.')}</div>`;
   }
@@ -352,6 +353,40 @@ async function downloadOwnedEbook(entitlementId, button) {
   } catch (err) {
     toast(err.message || 'Shkarkimi dështoi.', true);
     if (button) { button.disabled = false; button.textContent = old || 'Shkarko'; }
+  }
+}
+
+async function sendOwnedEbookToKindle(entitlementId, button) {
+  const old = button?.textContent;
+  const kindleTab = window.open('about:blank', '_blank');
+  if (kindleTab) {
+    try { kindleTab.opener = null; } catch {}
+    kindleTab.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Send to Kindle</title></head><body style="font:15px Arial,sans-serif;padding:28px;color:#203847">Duke përgatitur EPUB-in për Kindle…</body></html>');
+    kindleTab.document.close();
+  }
+  if (button) { button.disabled = true; button.textContent = 'Duke përgatitur EPUB…'; }
+  try {
+    const d = await aedge('ebook-download', {entitlement_id: entitlementId, format: 'epub'});
+    if (!d?.url) throw new Error('EPUB-i për Kindle nuk u krijua.');
+    const a = document.createElement('a');
+    a.href = d.url;
+    a.rel = 'noopener';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    if (kindleTab) kindleTab.location.href = 'https://www.amazon.com/sendtokindle';
+    else window.open('https://www.amazon.com/sendtokindle', '_blank', 'noopener');
+    toast(`EPUB-i u shkarkua · hape Amazon Send to Kindle dhe ngarkoje skedarin · ${Number(d.remaining_downloads || 0)} shkarkime kanë mbetur`);
+    setTimeout(loadMyEbooks, 700);
+  } catch (err) {
+    if (kindleTab) try { kindleTab.close(); } catch {}
+    const raw = String(err?.message || err || '');
+    const message = /FILE|NOT_AVAILABLE|NOT_FOUND/i.test(raw)
+      ? 'Ky eBook nuk ka EPUB aktiv. Ngarko versionin EPUB nga Admini.'
+      : (raw || 'Dërgimi në Kindle dështoi.');
+    toast(message, true);
+    if (button) { button.disabled = false; button.textContent = old || '📖 Dërgo në Kindle'; }
   }
 }
 
