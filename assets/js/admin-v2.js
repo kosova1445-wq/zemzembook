@@ -157,9 +157,26 @@ async function logAudit(action,entityType,entityId=null,details={}){
   try{await api('rpc/admin_log_store_action',{method:'POST',body:{p_action:action,p_entity_type:entityType,p_entity_id:entityId,p_details:details}})}catch(e){console.warn('audit',e)}
 }
 
+async function requireAdmin2FA(){
+  if(!currentAdminAccess?.two_factor_enabled)return true;
+  const key='zemzem_admin_2fa_ok_'+String(currentAdminAccess.user_id||'');
+  if(sessionStorage.getItem(key)==='1')return true;
+  if(!$('#admin2faModal')){
+    document.body.insertAdjacentHTML('beforeend',`<div id="admin2faModal" class="modal-wrap" hidden><div class="modal-backdrop"></div><div class="modal-card" style="max-width:440px"><div class="modal-head"><div><div class="eyebrow">VERIFIKIM I DYTË</div><h2>2FA Admin</h2></div></div><p class="muted">Po dërgojmë një kod 6-shifror në emailin e administratorit.</p><div class="field"><label>Kodi</label><input id="admin2faCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000"></div><div id="admin2faStatus" class="muted-small" style="min-height:20px;margin:8px 0"></div><div class="modal-actions"><button class="secondary-btn" id="admin2faResend" type="button">Ridërgo kodin</button><button class="primary-btn" id="admin2faVerify" type="button">Verifiko</button></div></div></div>`);
+  }
+  const modal=$('#admin2faModal'),status=$('#admin2faStatus'),code=$('#admin2faCode');
+  modal.hidden=false;$('#adminApp').hidden=true;$('#authScreen').hidden=true;
+  const send=async()=>{status.textContent='Duke dërguar kodin…';try{await edge('admin-2fa',{action:'send'});status.textContent='Kodi u dërgua. Skadon pas 10 minutash.'}catch(e){status.textContent=e.message}};
+  await send();
+  return await new Promise(resolve=>{
+    $('#admin2faResend').onclick=send;
+    $('#admin2faVerify').onclick=async()=>{const v=code.value.replace(/\D/g,'').slice(0,6);if(v.length!==6){status.textContent='Shkruaj kodin 6-shifror.';return}const b=$('#admin2faVerify');setButtonBusy(b,true,'Duke verifikuar…');try{const r=await edge('admin-2fa',{action:'verify',code:v});if(!r?.ok)throw new Error('Kodi nuk është i saktë ose ka skaduar.');sessionStorage.setItem(key,'1');modal.hidden=true;status.textContent='';resolve(true)}catch(e){status.textContent=e.message}finally{setButtonBusy(b,false)}};code.onkeydown=e=>{if(e.key==='Enter')$('#admin2faVerify').click()};setTimeout(()=>code.focus(),50)
+  });
+}
 async function enterAdmin(){
   try{
     if(!await verifyAdmin())throw new Error('Kjo llogari nuk ka të drejta administratori.');
+    if(!await requireAdmin2FA())throw new Error('2FA nuk u verifikua.');
     $('#authScreen').hidden=true;$('#adminApp').hidden=false;
     await loadAll();
   }catch(e){clearSession();$('#authScreen').hidden=false;$('#adminApp').hidden=true;authMessage(e.message,'error')}
