@@ -158,7 +158,7 @@ jobs:
           fi
 
           # Refresh shared runtime cache versions on all HTML pages before upload.
-          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i 's#assets/js/branding.js?v=6#assets/js/branding.js?v=7#g'
+          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=8#g'
           sed -i 's#assets/js/checkout-v2.js?v=7#assets/js/checkout-v2.js?v=8#g' checkout.html
 
           # Always republish the complete protected production set.
@@ -218,6 +218,8 @@ jobs:
           assets/js/affiliate.js
           assets/js/pwa.js
           assets/js/admin-growth-catalog.js
+          assets/js/admin-super-suite.js
+          assets/js/runtime-ops.js
           assets/js/admin-v2.js
           assets/js/admin-booksto.js
           assets/js/admin-book-helper.js
@@ -303,6 +305,8 @@ jobs:
           upload "assets/js/affiliate.js"
           upload "assets/js/pwa.js"
           upload "assets/js/admin-growth-catalog.js"
+          upload "assets/js/admin-super-suite.js"
+          upload "assets/js/runtime-ops.js"
           upload "assets/js/admin-v2.js"
           upload "assets/css/admin.css"
           upload "assets/css/admin-v2.css"
@@ -382,6 +386,9 @@ jobs:
           require_live https://www.zemzem.al/collections.html /tmp/collections.html 'collections.js' 'Public Collections page'
           require_live https://www.zemzem.al/assets/js/affiliate.js /tmp/affiliate.js 'zemzem_affiliate_ref' 'Affiliate tracker'
           require_live https://www.zemzem.al/assets/js/pwa.js /tmp/pwa.js 'serviceWorker.register' 'PWA runtime'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-super.html 'admin-super-suite.js' 'Admin Super Suite reference'
+          require_live https://www.zemzem.al/assets/js/admin-super-suite.js /tmp/admin-super.js 'Command Center' 'Admin Command Center'
+          require_live https://www.zemzem.al/assets/js/runtime-ops.js /tmp/runtime-ops.js 'zzMaintenance' 'Maintenance runtime'
           require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v1'" 'PWA service worker'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index.html 'assets/js/home-modern.js' 'Homepage modern script'
