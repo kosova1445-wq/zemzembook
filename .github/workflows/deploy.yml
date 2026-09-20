@@ -220,6 +220,7 @@ jobs:
           assets/js/admin-growth-catalog.js
           assets/js/admin-super-suite.js
           assets/js/admin-workflow-studio.js
+          assets/js/admin-intelligence-suite.js
           assets/js/runtime-ops.js
           assets/js/admin-v2.js
           assets/js/admin-booksto.js
@@ -308,6 +309,7 @@ jobs:
           upload "assets/js/admin-growth-catalog.js"
           upload "assets/js/admin-super-suite.js"
           upload "assets/js/admin-workflow-studio.js"
+          upload "assets/js/admin-intelligence-suite.js"
           upload "assets/js/runtime-ops.js"
           upload "assets/js/admin-v2.js"
           upload "assets/css/admin.css"
@@ -349,6 +351,7 @@ jobs:
           set -euo pipefail
           node --check assets/js/admin-super-suite.js
           node --check assets/js/admin-workflow-studio.js
+          node --check assets/js/admin-intelligence-suite.js
           node --check assets/js/admin-growth-catalog.js
           node --check assets/js/runtime-ops.js
           node --check assets/js/pwa.js
@@ -402,6 +405,7 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-super.html 'admin-super-suite.js' 'Admin Super Suite reference'
           require_live https://www.zemzem.al/assets/js/admin-super-suite.js /tmp/admin-super.js 'Command Center' 'Admin Command Center'
           require_live https://www.zemzem.al/assets/js/admin-workflow-studio.js /tmp/admin-workflow.js 'Manual Order' 'Admin Workflow Studio'
+          require_live https://www.zemzem.al/assets/js/admin-intelligence-suite.js /tmp/admin-intel.js 'Intelligence Center' 'Admin Intelligence Center'
           require_live https://www.zemzem.al/assets/js/runtime-ops.js /tmp/runtime-ops.js 'zzMaintenance' 'Maintenance runtime'
           require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v1'" 'PWA service worker'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
