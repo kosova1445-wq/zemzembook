@@ -38,3 +38,6 @@ body{background:#fff;color:var(--zv2-ink);font-family:Inter,ui-sans-serif,system
     display:none !important;
   }
 }
+
+/* Category Media Manager images */
+.category-icon img,.cat-icon img{width:100%!important;height:100%!important;object-fit:cover!important;border-radius:inherit!important;display:block!important}
