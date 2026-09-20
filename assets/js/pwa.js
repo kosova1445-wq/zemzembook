@@ -14,7 +14,8 @@ async function boot(){
   const r=await fetch(SB_URL+'/rest/v1/site_content?key=eq.pwa&select=content&limit=1',{headers:{apikey:SB_KEY},cache:'no-store'});
   const rows=r.ok?await r.json():[],c=rows?.[0]?.content||{};
   if(c.enabled===false)return;
-  const manifest={name:c.app_name||'ZemZem',short_name:c.short_name||'ZemZem',description:c.description||'Libra fizikë dhe eBook nga ZemZem.',start_url:'/',scope:'/',display:'standalone',background_color:c.background_color||'#ffffff',theme_color:c.theme_color||'#233a4a',icons:[{src:'/assets/brand/zemzem-logo.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}]};
+  const icons=(c.icon_192&&c.icon_512)?[{src:c.icon_192,sizes:'192x192',type:'image/png',purpose:'any maskable'},{src:c.icon_512,sizes:'512x512',type:'image/png',purpose:'any maskable'}]:[{src:'/assets/brand/zemzem-logo.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}];
+  const manifest={name:c.app_name||'ZemZem',short_name:c.short_name||'ZemZem',description:c.description||'Libra fizikë dhe eBook nga ZemZem.',start_url:'/',scope:'/',display:'standalone',background_color:c.background_color||'#ffffff',theme_color:c.theme_color||'#233a4a',icons};
   const blob=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}));let link=document.querySelector('link[rel="manifest"]');if(!link){link=document.createElement('link');link.rel='manifest';document.head.appendChild(link)}link.href=blob;
   let theme=document.querySelector('meta[name="theme-color"]');if(!theme){theme=document.createElement('meta');theme.name='theme-color';document.head.appendChild(theme)}theme.content=manifest.theme_color;
   if('serviceWorker'in navigator)navigator.serviceWorker.register('/service-worker.js').catch(()=>{});
