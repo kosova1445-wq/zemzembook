@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
-const E=v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[m]));
+const E=v=>String(v??'').replace(/[&<>"']/g,m=>m==='&'?'&amp;':m==='<'?'&lt;':m==='>'?'&gt;':m==='"'?'&quot;':'&#39;');
 const M=n=>Number(n||0).toFixed(2)+' €';
 let variants=[],bundles2=[],bundleItems2=[],relations=[],compNotes=[],favorites=[];
 function toast3(m,t='ok'){if(typeof toast==='function')toast(m,t)}
