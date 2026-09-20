@@ -229,7 +229,39 @@ async function loadOrders() {
       <div id="od-${o.id}" hidden></div>
     </article>`).join('');
   aqq('[data-order-detail]').forEach((b) => b.onclick = () => toggleOrderItems(b.dataset.orderDetail));
-  aqq('[data-order-invoice]').forEach((b) => b.onclick = () => (window.ZemZemInvoice?.printCustomerInvoice ? window.ZemZemInvoice.printCustomerInvoice(b.dataset.orderInvoice) : printCustomerInvoice(b.dataset.orderInvoice)));
+  aqq('[data-order-invoice]').forEach((b) => b.onclick = () => openProfessionalCustomerInvoice(b.dataset.orderInvoice));
+}
+
+async function ensureProfessionalInvoiceModule() {
+  if (window.ZemZemInvoice?.printCustomerInvoice) return true;
+  const existing = document.querySelector('script[data-professional-invoice-loader]');
+  if (existing) {
+    await new Promise((resolve) => {
+      if (window.ZemZemInvoice?.printCustomerInvoice) return resolve();
+      existing.addEventListener('load', resolve, {once:true});
+      existing.addEventListener('error', resolve, {once:true});
+      setTimeout(resolve, 4000);
+    });
+    return !!window.ZemZemInvoice?.printCustomerInvoice;
+  }
+  await new Promise((resolve) => {
+    const s = document.createElement('script');
+    s.src = 'assets/js/invoice-professional.js?v=3';
+    s.dataset.professionalInvoiceLoader = '1';
+    s.onload = resolve;
+    s.onerror = resolve;
+    document.head.appendChild(s);
+  });
+  return !!window.ZemZemInvoice?.printCustomerInvoice;
+}
+
+async function openProfessionalCustomerInvoice(id) {
+  const ok = await ensureProfessionalInvoiceModule();
+  if (!ok) {
+    toast('Fatura profesionale nuk u ngarkua. Rifresko faqen dhe provo përsëri.', true);
+    return;
+  }
+  return window.ZemZemInvoice.printCustomerInvoice(id);
 }
 
 async function printCustomerInvoice(id) {
