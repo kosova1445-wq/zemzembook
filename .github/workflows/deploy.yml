@@ -206,12 +206,14 @@ jobs:
           assets/js/home-modern.js
           assets/js/home-wow.js
           assets/js/home-bookstore-v2.js
+          assets/js/home-editorial-v6.js
           assets/js/home-mobile-v6.js
           assets/css/home-professional-v4.css
           assets/css/home-responsive-v5.css
           assets/css/home-modern.css
           assets/css/home-wow.css
           assets/css/home-bookstore-v2.css
+          assets/css/home-editorial-v6.css
           assets/css/home-ebukz3.css
           assets/css/home-category-preserve.css
           assets/js/checkout-v2.js
@@ -316,6 +318,8 @@ jobs:
           upload "assets/js/whatsapp-chat.js"
           upload "assets/js/home-modern.js"
           upload "assets/js/home-wow.js"
+          upload "assets/js/home-editorial-v6.js"
+          upload "assets/css/home-editorial-v6.css"
           upload "assets/js/home-mobile-v6.js"
           upload "assets/css/site-premium-v3.css"
           upload "admin.html"
@@ -452,6 +456,10 @@ jobs:
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index.html 'assets/js/home-modern.js' 'Homepage modern script'
           require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern.js 'zz-hero-ticket' 'Homepage hero price ticket'
+          require_live https://www.zemzem.al/index.html /tmp/index-editorial.html 'assets/css/home-editorial-v6.css?v=2' 'Homepage editorial CSS reference'
+          require_live https://www.zemzem.al/index.html /tmp/index-editorial.html 'assets/js/home-editorial-v6.js?v=2' 'Homepage editorial JS reference'
+          require_live https://www.zemzem.al/assets/css/home-editorial-v6.css /tmp/home-editorial.css '.zemzem-editorial-v6 .home-hero' 'Homepage editorial CSS live'
+          require_live https://www.zemzem.al/assets/js/home-editorial-v6.js /tmp/home-editorial.js 'forceEditorialCss' 'Homepage editorial JS live'
           require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
           require_live https://www.zemzem.al/product.html /tmp/product.html 'premium-price-ticket-wrap' 'Product price ticket'
 
