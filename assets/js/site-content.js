@@ -2,6 +2,8 @@
   const SB_URL='https://ysvtrhizgcioyycwlkrk.supabase.co';
   const SB_KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
   const safeHref=v=>{const s=String(v||'').trim();if(!s)return '#';if(/^(javascript|data):/i.test(s))return '#';return s};
+  const safeImage=v=>{const s=String(v||'').trim();return /^(https:\/\/|assets\/|\.\.?\/)/i.test(s)?s:''};
+  const categorySvg='<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v17H6.5A2.5 2.5 0 0 0 4 22z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v17h4.5A2.5 2.5 0 0 1 20 22z"/></svg>';
   const setText=(sel,val)=>{const e=document.querySelector(sel);if(e&&typeof val==='string'&&val.trim())e.textContent=val.trim()};
   function applyMenu(c){
     document.querySelectorAll('.nav-row').forEach(row=>{
@@ -44,11 +46,14 @@
         const t=card.querySelector('.category-copy strong'),d=card.querySelector('.category-copy small');
         if(t)t.textContent=String(x?.label||'Kategori');
         if(d)d.textContent=String(x?.description||'');
+        const icon=card.querySelector('.category-icon'),img=safeImage(x?.image_url);if(icon)icon.innerHTML=img?`<img src="${img.replace(/"/g,'&quot;')}" alt="">`:categorySvg;
         const isEbook=/ebook/i.test(String(x?.label||''))||/ebooks?\.html/i.test(String(x?.href||''));
         card.classList.toggle('category-item-ebook',isEbook);
       });
       cards.slice(cats.length).forEach(card=>card.hidden=true);
     }
+    const mainCards=[...document.querySelectorAll('[data-home-category-cards] .home-category-card')];
+    cats.filter(x=>x&&x.visible!==false&&!/ebook/i.test(String(x.label||''))).slice(0,mainCards.length).forEach((x,i)=>{const card=mainCards[i];if(!card)return;card.href=safeHref(x.href);const t=card.querySelector('strong');if(t)t.textContent=String(x.label||'Kategori');const icon=card.querySelector('.cat-icon'),img=safeImage(x.image_url);if(icon)icon.innerHTML=img?`<img src="${img.replace(/"/g,'&quot;')}" alt="">`:categorySvg;});
   }
   function validColor(v,fallback){return /^#[0-9a-f]{6}$/i.test(String(v||''))?String(v):fallback}
   function shade(hex,amount){const n=parseInt(validColor(hex,'#ffffff').slice(1),16),r=Math.max(0,Math.min(255,(n>>16)+amount)),g=Math.max(0,Math.min(255,((n>>8)&255)+amount)),b=Math.max(0,Math.min(255,(n&255)+amount));return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('')}
