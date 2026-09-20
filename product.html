@@ -7,7 +7,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>Detajet e Librit – Bli Online | ZemZem</title>
   <link rel="stylesheet" href="assets/css/style.css"><link rel="stylesheet" href="assets/css/brand.css?v=4">
-  <link rel="stylesheet" href="assets/css/product.css?v=8">
+  <link rel="stylesheet" href="assets/css/product.css?v=9">
   <link rel="stylesheet" href="assets/css/commerce.css?v=1">
   <link rel="stylesheet" href="assets/css/price-ticket.css?v=1">
 </head>
@@ -191,9 +191,20 @@
         <div class="premium-tab-panel" data-product-panel="related"><div class="premium-panel-head"><div><h2>Blerësit shikojnë edhe</h2><p>Rekomandime nga blerjet reale dhe libra të së njëjtës kategori.</p></div><a href="shop.html">Shiko të gjitha →</a></div><div id="premiumRelated" class="premium-related-grid"><div class="premium-empty-state">Duke ngarkuar...</div></div><div class="premium-recent-block"><div class="premium-panel-head"><div><h2>Ke parë së fundmi</h2><p>Kthehu shpejt te librat që ke hapur më parë.</p></div></div><div id="premiumRecent" class="premium-related-grid"></div></div></div>
       </section>`;
 
-      bindPremiumActions(b,max,unavailable);bindTabs();trackRecent(b);loadReviewForm(b);loadReviews(b);loadRelated(b);loadRecent(b);
+      bindPremiumActions(b,max,unavailable);bindTabs();trackRecent(b);loadReviewForm(b);loadReviews(b);loadRelated(b);loadRecent(b);loadLinkedEbook(b);
     }
 
+    async function loadLinkedEbook(b){
+      const host=q('.premium-payment-note');if(!host)return;
+      try{
+        const s=window.ZemZemStore,r=await fetch(`${s.SUPABASE_URL}/rest/v1/storefront_book_ebook_links?physical_book_id=eq.${encodeURIComponent(b.id)}&select=*&limit=1`,{headers:{apikey:s.SUPABASE_PUBLISHABLE_KEY},cache:'no-store'});
+        if(!r.ok)return;const x=(await r.json())?.[0];if(!x)return;
+        const discount=Math.max(0,Math.min(50,Number(x.bundle_discount_percent||0))),regular=Number(b.price||0)+Number(x.ebook_price||0),bundle=regular*(1-discount/100);
+        const box=document.createElement('div');box.className='premium-linked-ebook';box.innerHTML=`<div class="premium-linked-ebook-cover">${x.ebook_cover_url?`<img src="${esc(x.ebook_cover_url)}" alt="">`:'📱'}</div><div class="premium-linked-ebook-copy"><small>EKZISTON EDHE SI eBOOK</small><strong>${esc(x.ebook_title)}</strong><span>eBook ${money(x.ebook_price)}${discount?` · Paketa e lidhur: −${discount}%`:''}</span>${discount?`<span class="premium-linked-bundle-price">Fizik + eBook: ${money(bundle)} <s>${money(regular)}</s></span>`:''}<div><a class="premium-secondary-btn" href="ebook.html?id=${encodeURIComponent(x.ebook_id)}">Shiko eBook</a><button class="premium-primary-btn" type="button" id="addCrossFormatPair">Shto të dyja</button></div></div>`;
+        host.insertAdjacentElement('beforebegin',box);
+        q('#addCrossFormatPair')?.addEventListener('click',()=>{window.addToCart?.(b.id,1);try{const key='zemzem_ebook_cart',arr=JSON.parse(localStorage.getItem(key)||'[]'),next=[...new Set([...(Array.isArray(arr)?arr:[]).map(String),String(x.ebook_id)])];localStorage.setItem(key,JSON.stringify(next));localStorage.setItem('zemzem_cross_format_bundle',JSON.stringify({physical_book_id:b.id,ebook_id:x.ebook_id,discount_percent:discount,created_at:new Date().toISOString()}));}catch{};window.ZemZemStore?.toast?.('Libri fizik dhe eBook-u u shtuan në shportat përkatëse.')});
+      }catch{}
+    }
     function bindPremiumActions(b,max,unavailable){
       const qty=q('#productQty');
       const clamp=v=>Math.min(max,Math.max(1,Number(v)||1));
