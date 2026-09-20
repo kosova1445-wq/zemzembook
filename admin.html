@@ -100,7 +100,7 @@
 
 <div id="toast" class="admin-toast" hidden></div>
 <script src="assets/js/admin-v2.js?v=15"></script>
-<script src="assets/js/admin-booksto.js?v=6"></script>
+<script src="assets/js/admin-booksto.js?v=7"></script>
 <script>
 (()=>{
   const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];let loaded=false,current=null;const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const val=id=>q(id)?.value?.trim()||'';const fallback={topbar_text:'Dërgesa: Kosovë 3 € · Shqipëri 6 € · Maqedoni e Veriut 6 €',primary_menu:[{label:'Ballina',href:'index.html',visible:true},{label:'Libra fizikë',href:'shop.html',visible:true},{label:'eBook',href:'ebooks.html',visible:true},{label:'Oferta',href:'index.html#oferta',visible:true},{label:'Rreth nesh',href:'about.html',visible:true}],support_label:'Porosit & Pyet',support_href:'contact.html',hero:{eyebrow:'Librari online në shqip',title:'Libra që mbeten me ty.',description:'Zbulo libra në shqip, tituj islamë, edukativë, historikë dhe eBook të përzgjedhur. Porosit thjesht, paguaj sigurt dhe ndiq blerjet nga një vend i vetëm.',primary_label:'Shfleto librat',primary_href:'shop.html',secondary_label:'Shiko eBook →',secondary_href:'ebooks.html'},categories_heading:'Kategoritë',categories_kicker:'Koleksionet',home_categories:[{label:'Fe & Edukim',description:'Kur’an, hadith dhe edukim',href:'shop.html?category=Fe%20%26%20Edukim',visible:true},{label:'Histori',description:'Ngjarje dhe trashëgimi',href:'shop.html?category=Histori',visible:true},{label:'Fëmijë',description:'Tregime dhe edukim',href:'shop.html?category=F%C3%ABmij%C3%AB',visible:true},{label:'Gjuhë të huaja',description:'Fjalorë dhe materiale mësimore',href:'shop.html?category=Gjuh%C3%AB%20t%C3%AB%20huaja',visible:true},{label:'eBook',description:'Biblioteka digjitale ZemZem',href:'ebooks.html',visible:true}]};const copy=o=>JSON.parse(JSON.stringify(o));const allBooksFallback={visible:true,kicker:'Katalogu i plotë',title:'Të gjithë librat',description:'Shfleto të gjithë librat fizikë të publikuar në ZemZem.',limit:20,sort:'newest'};const whyFallback={kicker:'Pse ZemZem?',title:'Blerje më e thjeshtë, nga libri te dera jote.',description:'Katër arsye pse përvoja ZemZem është ndërtuar për të qenë e qartë dhe praktike.',cards:[{icon:'✓',title:'Porosi e sigurt',description:'Checkout i qartë dhe të dhënat e pagesës trajtohen përmes kanaleve të dedikuara.',visible:true},{icon:'🚚',title:'Dërgesë rajonale',description:'Transport për Kosovë, Shqipëri dhe Maqedoni të Veriut me tarifa të dukshme.',visible:true},{icon:'💳',title:'COD & PayPal',description:'Zgjidh pagesën në pranim ose PayPal sipas kushteve që shfaqen në checkout.',visible:true},{icon:'📱',title:'eBook pa pritje',description:'Titujt digjitalë ruhen në llogarinë tënde dhe hapen nga biblioteka ZemZem.',visible:true}]};
@@ -159,8 +159,8 @@
   setTimeout(ensure,1800);
 })();
 </script>
-<script src="assets/js/admin-invoice-settings.js?v=1" data-admin-invoice-settings="1"></script>
-<script src="assets/js/admin-invoice-center.js?v=1" data-admin-invoice-center="1"></script>
+<script src="assets/js/admin-invoice-settings.js?v=2" data-admin-invoice-settings="1"></script>
+<script src="assets/js/admin-invoice-center.js?v=2" data-admin-invoice-center="1"></script>
 
 <script id="menuTypographyInline">
 (()=>{
