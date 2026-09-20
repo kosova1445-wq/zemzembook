@@ -219,6 +219,7 @@ jobs:
           assets/js/pwa.js
           assets/js/admin-growth-catalog.js
           assets/js/admin-super-suite.js
+          assets/js/admin-workflow-studio.js
           assets/js/runtime-ops.js
           assets/js/admin-v2.js
           assets/js/admin-booksto.js
@@ -306,6 +307,7 @@ jobs:
           upload "assets/js/pwa.js"
           upload "assets/js/admin-growth-catalog.js"
           upload "assets/js/admin-super-suite.js"
+          upload "assets/js/admin-workflow-studio.js"
           upload "assets/js/runtime-ops.js"
           upload "assets/js/admin-v2.js"
           upload "assets/css/admin.css"
@@ -339,6 +341,17 @@ jobs:
           upload "assets/js/account.js"
           upload "assets/js/account-enterprise.js"
           upload "assets/js/account-advanced.js"
+
+      - name: Syntax check Admin advanced modules
+        if: steps.latest.outputs.deploy == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/js/admin-super-suite.js
+          node --check assets/js/admin-workflow-studio.js
+          node --check assets/js/admin-growth-catalog.js
+          node --check assets/js/runtime-ops.js
+          node --check assets/js/pwa.js
 
       - name: Verify live protected release
         if: steps.latest.outputs.deploy == 'true'
@@ -388,6 +401,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/pwa.js /tmp/pwa.js 'serviceWorker.register' 'PWA runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin-super.html 'admin-super-suite.js' 'Admin Super Suite reference'
           require_live https://www.zemzem.al/assets/js/admin-super-suite.js /tmp/admin-super.js 'Command Center' 'Admin Command Center'
+          require_live https://www.zemzem.al/assets/js/admin-workflow-studio.js /tmp/admin-workflow.js 'Manual Order' 'Admin Workflow Studio'
           require_live https://www.zemzem.al/assets/js/runtime-ops.js /tmp/runtime-ops.js 'zzMaintenance' 'Maintenance runtime'
           require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v1'" 'PWA service worker'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
