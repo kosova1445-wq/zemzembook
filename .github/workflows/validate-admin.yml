@@ -26,7 +26,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in assets/js/admin-v2.js assets/js/admin-ebooks-orders.js assets/js/account.js assets/js/ebooks.js assets/js/ebook-checkout.js assets/js/admin-branding.js assets/js/branding.js assets/js/shop-pro.js; do
+          for f in assets/js/admin-v2.js assets/js/admin-ebooks-orders.js assets/js/account.js assets/js/ebooks.js assets/js/ebook-checkout.js assets/js/admin-branding.js assets/js/branding.js assets/js/shop-pro.js assets/js/admin-pro-20.js assets/js/storefront-observability.js assets/js/storefront-controls.js; do
             if [ -f "$f" ]; then node --check "$f"; fi
           done
       - name: Check stable frontend hooks
@@ -38,5 +38,7 @@ jobs:
           grep -q 'brandMenuDesktop' assets/js/admin-branding.js
           grep -q 'shopProPagination' assets/js/shop-pro.js
           grep -q 'admin-branding.js' admin.html
+          grep -q 'admin-pro-20.js' admin.html
+          grep -q 'storefront-controls.js' checkout.html
           grep -q 'branding.js' shop.html
           echo 'ZEMZEM_FRONTEND_VALIDATION_OK=yes'
