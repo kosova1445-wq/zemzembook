@@ -1,0 +1,6 @@
+(()=>{const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+function enhanceHeader(){document.body.classList.add('zemzem-editorial-v6');const row=q('.header-row');if(row&&!q('.ze-header-motto',row)){const m=document.createElement('div');m.className='ze-header-motto';m.textContent='Libra që ndërtojnë nesër më të mirë';row.appendChild(m)}}
+function enhanceCategories(){const box=q('.category-box-premium');if(!box)return;if(!q('.ze-all-categories',box)){const a=document.createElement('a');a.className='ze-all-categories';a.href='shop.html';a.innerHTML='☷ <span>Shiko të gjitha kategoritë</span> →';box.appendChild(a)}}
+function enhanceHero(){qa('.home-slide').forEach(slide=>{const cover=q('.home-slide-cover',slide);if(cover&&!q('.ze-hero-quote',cover)){const quote=document.createElement('div');quote.className='ze-hero-quote';quote.textContent='Dija është dritë në çdo kohë.';cover.appendChild(quote)}})}
+function run(){enhanceHeader();enhanceCategories();enhanceHero();setTimeout(()=>{enhanceCategories();enhanceHero()},650);setTimeout(()=>{enhanceCategories();enhanceHero()},1600)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();window.addEventListener('zemzem:catalog-ready',()=>setTimeout(enhanceHero,250));})();
