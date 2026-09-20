@@ -157,6 +157,10 @@ jobs:
             sed -i "s#<script src=\"assets/js/admin-book-helper.js?v=1\"></script>#<script src=\"assets/js/admin-book-helper.js?v=1\"></script>${ADMIN_HOME_BOOKS_TAG}#" admin.html
           fi
 
+          # Refresh shared runtime cache versions on all HTML pages before upload.
+          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i 's#assets/js/branding.js?v=6#assets/js/branding.js?v=7#g'
+          sed -i 's#assets/js/checkout-v2.js?v=7#assets/js/checkout-v2.js?v=8#g' checkout.html
+
           # Always republish the complete protected production set.
           CHANGED="$CHANGED
           index.html
