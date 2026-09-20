@@ -234,6 +234,7 @@ jobs:
           assets/js/site-content.js
           assets/js/admin-blog.js
           assets/css/admin-blog.css
+          assets/css/admin.css
           assets/css/admin-v2.css
           assets/css/admin-booksto.css
           assets/css/admin-booksto-pages.css
@@ -287,6 +288,8 @@ jobs:
           upload "assets/css/site-premium-v3.css"
           upload "admin.html"
           upload "assets/js/admin-v2.js"
+          upload "assets/css/admin.css"
+          upload "assets/css/admin-v2.css"
           upload "assets/js/admin-home-books.js"
           upload "assets/js/admin-social-contacts.js"
           upload "assets/js/admin-site-design.js"
@@ -357,6 +360,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-stock.js 'Ka në stok' 'Public stock hides exact quantity'
           require_live https://www.zemzem.al/product.html /tmp/product-stock.html "const stockText=unavailable?'Nuk ka stok':'Ka në stok';" 'Product stock hides exact quantity'
 
+          require_live https://www.zemzem.al/assets/css/admin.css /tmp/admin-base.css 'overflow-y:auto' 'Desktop Admin sidebar scroll CSS'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index.html 'assets/js/home-modern.js' 'Homepage modern script'
           require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern.js 'zz-hero-ticket' 'Homepage hero price ticket'
