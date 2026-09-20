@@ -9,7 +9,7 @@
 <section id="ebookTab-files" class="ebook-tab" hidden><div class="ebook-panel"><div class="ebook-panel-head"><div><h2>Storage privat PDF / EPUB</h2><p>Skedarët nuk kanë URL publike dhe lexohen vetëm me qasje të autorizuar.</p></div></div><div class="ebook-security-note">🔐 Bucket: <strong>ebook-files</strong> · privat · deri 100 MB për skedar · vetëm PDF/EPUB.</div><div id="ebookFilesOverview" style="margin-top:16px"></div></div></section>
 </main></div>
 <div id="ebookModal" class="ebook-modal-wrap" hidden><div class="ebook-modal-backdrop" data-ebook-close></div><div class="ebook-modal"><div class="ebook-modal-head"><div><div class="eyebrow">ZEMZEM DIGITAL</div><h2 id="ebookModalTitle">eBook i ri</h2></div><button class="ebook-close" type="button" data-ebook-close>×</button></div><form id="ebookForm"><input id="ebookId" type="hidden"><div class="ebook-form-grid">
-<div class="ebook-field ebook-span-3"><div class="ebook-cover-upload"><div id="ebookCoverPreview" class="ebook-cover-preview">Pa kopertinë</div><div><label>Kopertina publike</label><input id="ebookCoverFile" type="file" accept="image/jpeg,image/png,image/webp"><small>JPG/PNG/WebP, maksimum 5 MB.</small></div></div></div>
+<div class="ebook-field ebook-span-3"><div class="ebook-cover-upload"><div id="ebookCoverPreview" class="ebook-cover-preview">Pa kopertinë</div><div><label>Kopertina publike</label><input id="ebookCoverFile" type="file" accept="image/jpeg,image/png,image/webp"><input id="ebookCoverUrl" type="hidden"><button id="ebookMediaFrontBtn" class="ebook-secondary" type="button">Nga Media Manager</button><small>JPG/PNG/WebP, maksimum 5 MB.</small></div></div></div>
 <div class="ebook-field ebook-span-3 ebook-3d-admin-block">
   <div class="ebook-3d-admin-head">
     <div><strong>Mockup 3D i eBook-ut</strong><p>Ngarko kopertinën para, shpinën dhe kopertinën prapa. Kur të tria janë të pranishme, eBook-u mund të shfaqet si mockup 3D.</p></div>
@@ -17,8 +17,8 @@
   </div>
   <div class="ebook-3d-admin-grid">
     <label><span>1. Kopertina para</span><div id="ebook3dFrontPreview" class="ebook-3d-upload-preview">Përdor kopertinën publike</div><label class="ebook-3d-file-button" for="ebookCoverFile">Zgjidh foto para</label></label>
-    <label><span>2. Shpina</span><div id="ebook3dSpinePreview" class="ebook-3d-upload-preview">Pa foto</div><input id="ebookSpineCoverFile" type="file" accept="image/jpeg,image/png,image/webp"><input id="ebookSpineCoverUrl" type="hidden"></label>
-    <label><span>3. Kopertina prapa</span><div id="ebook3dBackPreview" class="ebook-3d-upload-preview">Pa foto</div><input id="ebookBackCoverFile" type="file" accept="image/jpeg,image/png,image/webp"><input id="ebookBackCoverUrl" type="hidden"></label>
+    <label><span>2. Shpina</span><div id="ebook3dSpinePreview" class="ebook-3d-upload-preview">Pa foto</div><input id="ebookSpineCoverFile" type="file" accept="image/jpeg,image/png,image/webp"><input id="ebookSpineCoverUrl" type="hidden"><button id="ebookMediaSpineBtn" class="ebook-secondary" type="button">Nga Media Manager</button></label>
+    <label><span>3. Kopertina prapa</span><div id="ebook3dBackPreview" class="ebook-3d-upload-preview">Pa foto</div><input id="ebookBackCoverFile" type="file" accept="image/jpeg,image/png,image/webp"><input id="ebookBackCoverUrl" type="hidden"><button id="ebookMediaBackBtn" class="ebook-secondary" type="button">Nga Media Manager</button></label>
   </div>
   <div class="ebook-3d-admin-bottom">
     <label>Trashësia e mockup-it (mm, opsionale)<input id="ebookThickness" type="number" min="1" max="200" step="0.1" placeholder="p.sh. 24"></label>
@@ -38,4 +38,4 @@
 <div class="ebook-field ebook-span-3"><label>Përshkrimi i shkurtër</label><textarea id="ebookShort" rows="2"></textarea></div><div class="ebook-field ebook-span-3"><label>Përshkrimi</label><textarea id="ebookDescription" rows="4"></textarea></div>
 <div class="ebook-field ebook-span-3"><div class="ebook-file-upload"><strong>PDF / EPUB privat</strong><small>Mund t’i zgjedhësh PDF dhe EPUB bashkë. Deri 100 MB për skedar. Versioni i ri e çaktivizon versionin e vjetër të të njëjtit format.</small><div style="margin-top:10px"><input id="ebookDigitalFile" type="file" multiple accept="application/pdf,.pdf,application/epub+zip,.epub"></div><div id="ebookFilesList" class="ebook-files-list"></div></div></div>
 </div><div class="ebook-actions"><button id="archiveEbookBtn" class="ebook-danger" type="button" hidden>Arkivo</button><span style="flex:1"></span><button class="ebook-secondary" type="button" data-ebook-close>Anulo</button><button id="saveEbookBtn" class="ebook-primary" type="submit">Ruaj eBook</button></div></form></div></div>
-<div id="ebookAdminToast" class="ebook-admin-toast" hidden></div><script src="assets/js/admin-ebooks.js?v=4"></script><script src="assets/js/admin-ebooks-orders.js?v=2"></script><script src="assets/js/branding.js?v=6"></script></body></html>
+<div id="ebookAdminToast" class="ebook-admin-toast" hidden></div><script src="assets/js/admin-ebooks.js?v=5"></script><script src="assets/js/admin-ebooks-orders.js?v=2"></script><script src="assets/js/branding.js?v=6"></script></body></html>
