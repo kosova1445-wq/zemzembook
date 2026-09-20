@@ -222,6 +222,8 @@ jobs:
           assets/js/admin-workflow-studio.js
           assets/js/admin-intelligence-suite.js
           assets/js/admin-growth-advanced.js
+          assets/js/home-layout-runtime.js
+          assets/js/admin-experience-automation.js
           assets/js/runtime-ops.js
           assets/js/admin-v2.js
           assets/js/admin-booksto.js
@@ -312,6 +314,8 @@ jobs:
           upload "assets/js/admin-workflow-studio.js"
           upload "assets/js/admin-intelligence-suite.js"
           upload "assets/js/admin-growth-advanced.js"
+          upload "assets/js/admin-experience-automation.js"
+          upload "assets/js/home-layout-runtime.js"
           upload "assets/js/runtime-ops.js"
           upload "assets/js/admin-v2.js"
           upload "assets/css/admin.css"
@@ -355,6 +359,8 @@ jobs:
           node --check assets/js/admin-workflow-studio.js
           node --check assets/js/admin-intelligence-suite.js
           node --check assets/js/admin-growth-advanced.js
+          node --check assets/js/home-layout-runtime.js
+          node --check assets/js/admin-experience-automation.js
           node --check assets/js/admin-growth-catalog.js
           node --check assets/js/runtime-ops.js
           node --check assets/js/pwa.js
@@ -410,6 +416,8 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-workflow-studio.js /tmp/admin-workflow.js 'Manual Order' 'Admin Workflow Studio'
           require_live https://www.zemzem.al/assets/js/admin-intelligence-suite.js /tmp/admin-intel.js 'Intelligence Center' 'Admin Intelligence Center'
           require_live https://www.zemzem.al/assets/js/admin-growth-advanced.js /tmp/admin-growth2.js 'Customer Lifetime Value' 'Admin Advanced Growth'
+          require_live https://www.zemzem.al/assets/js/admin-experience-automation.js /tmp/admin-xp.js 'Smart Admin Assistant' 'Admin Experience Automation'
+          require_live https://www.zemzem.al/assets/js/home-layout-runtime.js /tmp/home-layout.js 'banner_campaigns' 'Homepage layout runtime'
           require_live https://www.zemzem.al/assets/js/runtime-ops.js /tmp/runtime-ops.js 'zzMaintenance' 'Maintenance runtime'
           require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v1'" 'PWA service worker'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
