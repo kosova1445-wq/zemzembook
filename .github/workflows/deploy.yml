@@ -68,7 +68,7 @@ jobs:
                   return []
           urls=[
               ('/', 'daily','1.0'),('/shop.html','daily','0.9'),('/ebooks.html','daily','0.9'),
-              ('/blog.html','daily','0.8'),('/about.html','monthly','0.5'),('/contact.html','monthly','0.5'),
+              ('/blog.html','daily','0.8'),('/gift-card.html','monthly','0.6'),('/about.html','monthly','0.5'),('/contact.html','monthly','0.5'),
               ('/shipping-returns.html','monthly','0.4'),('/privacy.html','yearly','0.3'),('/terms.html','yearly','0.3')
           ]
           for b in get('/rest/v1/storefront_books?select=id,created_at&order=created_at.desc'):
