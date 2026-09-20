@@ -208,6 +208,12 @@ jobs:
           assets/css/product.css
           assets/css/commerce.css
           admin.html
+          collections.html
+          service-worker.js
+          assets/js/collections.js
+          assets/js/affiliate.js
+          assets/js/pwa.js
+          assets/js/admin-growth-catalog.js
           assets/js/admin-v2.js
           assets/js/admin-booksto.js
           assets/js/admin-book-helper.js
@@ -287,6 +293,12 @@ jobs:
           upload "assets/js/home-mobile-v6.js"
           upload "assets/css/site-premium-v3.css"
           upload "admin.html"
+          upload "collections.html"
+          upload "service-worker.js"
+          upload "assets/js/collections.js"
+          upload "assets/js/affiliate.js"
+          upload "assets/js/pwa.js"
+          upload "assets/js/admin-growth-catalog.js"
           upload "assets/js/admin-v2.js"
           upload "assets/css/admin.css"
           upload "assets/css/admin-v2.css"
@@ -361,6 +373,12 @@ jobs:
           require_live https://www.zemzem.al/product.html /tmp/product-stock.html "const stockText=unavailable?'Nuk ka stok':'Ka në stok';" 'Product stock hides exact quantity'
 
           require_live https://www.zemzem.al/assets/css/admin.css /tmp/admin-base.css 'overflow-y:auto' 'Desktop Admin sidebar scroll CSS'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-growth.html 'admin-growth-catalog.js' 'Admin growth module reference'
+          require_live https://www.zemzem.al/assets/js/admin-growth-catalog.js /tmp/admin-growth.js 'Collections / Series' 'Admin Collections module'
+          require_live https://www.zemzem.al/collections.html /tmp/collections.html 'collections.js' 'Public Collections page'
+          require_live https://www.zemzem.al/assets/js/affiliate.js /tmp/affiliate.js 'zemzem_affiliate_ref' 'Affiliate tracker'
+          require_live https://www.zemzem.al/assets/js/pwa.js /tmp/pwa.js 'serviceWorker.register' 'PWA runtime'
+          require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v1'" 'PWA service worker'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index.html 'assets/js/home-modern.js' 'Homepage modern script'
           require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern.js 'zz-hero-ticket' 'Homepage hero price ticket'
