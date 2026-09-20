@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
-const E=v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[m]));
+const E=v=>String(v??'').replace(/[&<>"']/g,m=>m==='&'?'&amp;':m==='<'?'&lt;':m==='>'?'&gt;':m==='"'?'&quot;':'&#39;');
 const M=n=>Number(n||0).toFixed(2)+' €';
 let banners=[],homeConfig={},layout=['trending','new_arrivals','categories','offers','bestsellers','newsletter','all_books'];
 const LABELS={trending:'Trending',new_arrivals:'Të sapoardhurat',categories:'Kategoritë',offers:'Oferta',bestsellers:'Më të shiturit',newsletter:'Newsletter',all_books:'Të gjitha librat'};
