@@ -293,6 +293,14 @@
         const items=await r.json()||[];box.innerHTML=items.length?items.map(relatedCard).join(''):'<div class="premium-empty-state">Nuk ka rekomandime për momentin.</div>';
       }catch{box.innerHTML='<div class="premium-empty-state">Rekomandimet nuk u ngarkuan.</div>'}
     }
-
-
-<script src="assets/js/branding.js?v=6"></script>
+    function bootPremiumProduct(){
+      try{renderPremiumProduct()}catch(e){console.error('Product render',e)}
+    }
+    window.addEventListener('zemzem:catalog-ready',renderPremiumProduct);
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootPremiumProduct);
+    else bootPremiumProduct();
+  })();
+  </script>
+  <script src="assets/js/branding.js?v=6"></script>
+</body>
+</html>
