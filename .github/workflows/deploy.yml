@@ -158,7 +158,7 @@ jobs:
           fi
 
           # Refresh shared runtime cache versions on all HTML pages before upload.
-          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=8#g'
+          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=9#g'
           sed -i 's#assets/js/checkout-v2.js?v=7#assets/js/checkout-v2.js?v=8#g' checkout.html
 
           # Always republish the complete protected production set.
