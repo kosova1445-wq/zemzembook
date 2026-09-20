@@ -222,6 +222,9 @@ jobs:
           assets/js/admin-social-contacts.js
           assets/js/admin-site-design.js
           assets/js/admin-branding.js
+          assets/js/admin-media.js
+          assets/js/admin-documents.js
+          assets/js/admin-dashboard-v2.js
           assets/css/admin-branding.css
           assets/js/branding.js
           assets/css/brand.css
@@ -267,6 +270,7 @@ jobs:
           upload "assets/js/shop-pro.js"
           upload "assets/css/shop-pro.css"
           upload "assets/css/price-ticket.css"
+          upload "assets/css/search-autocomplete.css"
           upload "assets/js/storefront-funnel.js"
           upload "assets/js/admin-funnel.js"
           upload "assets/js/admin-paypal.js"
@@ -284,6 +288,9 @@ jobs:
           upload "assets/js/admin-social-contacts.js"
           upload "assets/js/admin-site-design.js"
           upload "assets/js/admin-branding.js"
+          upload "assets/js/admin-media.js"
+          upload "assets/js/admin-documents.js"
+          upload "assets/js/admin-dashboard-v2.js"
           upload "assets/css/admin-branding.css"
           upload "assets/js/branding.js"
           upload "assets/css/brand.css"
@@ -410,6 +417,17 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-v2.js /tmp/admin-3d-js.js 'uploadBook3dAsset' '3D Admin asset upload logic'
           require_live https://www.zemzem.al/assets/js/admin-v2.js /tmp/admin-3d-js.js 'cover_spine_url' '3D spine database field'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/storefront-3d-map.js 'coverSpineUrl' '3D storefront mapping'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-media-ref.html 'assets/js/admin-media.js' 'Admin Media Manager module'
+          require_live https://www.zemzem.al/assets/js/admin-media.js /tmp/admin-media.js 'media-library' 'Media Manager storage'
+          require_live https://www.zemzem.al/assets/js/admin-media.js /tmp/admin-media.js 'fileToBlob' 'Media crop and resize'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-docs-ref.html 'assets/js/admin-documents.js' 'Invoice and packing slip module'
+          require_live https://www.zemzem.al/assets/js/admin-documents.js /tmp/admin-docs.js 'Packing Slip' 'Packing slip renderer'
+          require_live https://www.zemzem.al/assets/js/admin-documents.js /tmp/admin-docs.js 'Faturë' 'Invoice renderer'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-dash-v2-ref.html 'assets/js/admin-dashboard-v2.js' 'Advanced dashboard module'
+          require_live https://www.zemzem.al/assets/js/admin-dashboard-v2.js /tmp/admin-dash-v2.js 'admin_dashboard_v2' 'Advanced dashboard RPC'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-book-ebook-link.html 'bookLinkedEbook' 'Physical to eBook Admin link'
+          require_live https://www.zemzem.al/product.html /tmp/product-ebook-link.html 'loadLinkedEbook' 'Physical product linked eBook'
+          require_live https://www.zemzem.al/assets/css/product.css /tmp/product-ebook-link.css 'Linked physical + eBook' 'Linked eBook product styles'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'searchSuggestions' 'Autocomplete search logic'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'authors:authors.slice' 'Autocomplete authors and categories'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'bindShopAutocomplete' 'Shop autocomplete binding'
