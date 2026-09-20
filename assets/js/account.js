@@ -195,6 +195,11 @@ async function loadAccount() {
     aq('#customerEmail').textContent = user.email || '';
     await Promise.all([loadProfile(), loadOrders(), loadAddresses(), loadWishlist(), loadMyEbooks()]);
     aq('#welcomeTitle').textContent = accProfile?.first_name ? `Përshëndetje, ${accProfile.first_name}` : 'Llogaria ime';
+    const avatar = aq('#customerAvatar');
+    if (avatar) {
+      const initials = [accProfile?.first_name, accProfile?.last_name].filter(Boolean).map(v => String(v).trim().charAt(0).toUpperCase()).join('').slice(0,2);
+      avatar.textContent = initials || String(user.email || 'ZZ').charAt(0).toUpperCase();
+    }
     openRequestedView();
   } catch (e) {
     clearStored();
