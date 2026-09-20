@@ -235,14 +235,30 @@ async function loadOrders() {
 async function printCustomerInvoice(id) {
   const o = accOrders.find((row) => String(row.id) === String(id));
   if (!o) return;
+
+  // Open the tab immediately from the click event so browsers do not block it.
+  // Do not pass "noopener" to window.open here: some browsers return null while
+  // still opening an about:blank tab, which leaves the invoice completely blank.
+  const popup = window.open('', '_blank');
+  if (!popup) {
+    toast('Lejo dritaret pop-up për ZemZem që të hapet fatura.', true);
+    return;
+  }
+
+  popup.document.write('<!doctype html><html lang="sq"><head><meta charset="utf-8"><title>Duke përgatitur faturën…</title></head><body style="font:14px Arial,sans-serif;padding:32px;color:#203847">Duke përgatitur faturën…</body></html>');
+  popup.document.close();
+
   try {
     const items = await aapi(`order_items?order_id=eq.${encodeURIComponent(id)}&select=title,sku,quantity,unit_price,line_total&order=created_at.asc`) || [];
-    const popup = window.open('', '_blank', 'noopener,noreferrer');
-    if (!popup) throw new Error('Lejo dritaren e faturës në shfletues.');
     const rows = items.map((i) => `<tr><td><strong>${aesc(i.title)}</strong><br><small>${aesc(i.sku||'')}</small></td><td>${Number(i.quantity||0)}</td><td>${amoney(i.unit_price)}</td><td>${amoney(i.line_total)}</td></tr>`).join('');
+    popup.document.open();
     popup.document.write(`<!doctype html><html lang="sq"><head><meta charset="utf-8"><title>${aesc(o.order_number)} — ZemZem</title><style>body{font:14px Arial,sans-serif;color:#203847;margin:0;padding:38px}.head{display:flex;justify-content:space-between;gap:30px;border-bottom:3px solid #203847;padding-bottom:18px}.brand{font-size:30px;font-weight:900;color:#159da8}.muted{color:#697880}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:25px 0}.box{border:1px solid #dfe5e7;border-radius:10px;padding:16px}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #e5eaec}th{font-size:11px;text-transform:uppercase}.totals{margin:22px 0 0 auto;width:min(360px,100%)}.line{display:flex;justify-content:space-between;padding:7px 0}.total{font-size:20px;font-weight:900;border-top:2px solid #203847;margin-top:7px;padding-top:12px}.note{margin-top:30px;padding:12px;background:#f6f8f8;border-radius:8px;font-size:12px}.print{margin-bottom:22px;padding:11px 18px;border:0;border-radius:8px;background:#203847;color:#fff;font-weight:800;cursor:pointer}@media print{.print{display:none}body{padding:0}}</style></head><body><button class="print" onclick="window.print()">Printo / Ruaj PDF</button><div class="head"><div><div class="brand">ZEMZEM</div><div class="muted">Dokument i porosisë</div></div><div><strong>${aesc(o.order_number)}</strong><br><span class="muted">${adate(o.created_at)}</span></div></div><div class="grid"><div class="box"><strong>Klienti</strong><p>${aesc(o.first_name||'')} ${aesc(o.last_name||'')}<br>${aesc(o.guest_email||'')}<br>${aesc(o.phone||'')}</p></div><div class="box"><strong>Dërgesa</strong><p>${aesc(o.address_line1||'')}<br>${aesc(o.postal_code||'')} ${aesc(o.city||'')} · ${aesc(o.country_code||'')}</p></div></div><table><thead><tr><th>Artikulli</th><th>Sasia</th><th>Çmimi</th><th>Gjithsej</th></tr></thead><tbody>${rows}</tbody></table><div class="totals"><div class="line"><span>Librat</span><strong>${amoney(o.subtotal)}</strong></div><div class="line"><span>Zbritjet</span><strong>− ${amoney(Number(o.discount_amount||0)+Number(o.payment_discount_amount||0))}</strong></div><div class="line"><span>Transporti & tarifat</span><strong>${amoney(Number(o.shipping_amount||0)+Number(o.cod_fee||0))}</strong></div><div class="line total"><span>Totali</span><span>${amoney(o.total)}</span></div></div><div class="note">Ky është dokument i porosisë nga ZemZem.al. Fatura fiskale lëshohet sipas konfigurimit fiskal të biznesit.</div></body></html>`);
     popup.document.close();
-  } catch (e) { toast(e.message, true); }
+    try { popup.opener = null; } catch {}
+  } catch (e) {
+    try { popup.close(); } catch {}
+    toast(e.message, true);
+  }
 }
 
 async function toggleOrderItems(id) {
