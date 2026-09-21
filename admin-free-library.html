@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="sq">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Biblioteka Falas — Admin ZemZem</title><link rel="icon" href="favicon.svg"><link rel="stylesheet" href="assets/css/style.css?v=1"><link rel="stylesheet" href="assets/css/free-library.css?v=1">
+<style>
+.fl-admin-shell{max-width:1250px;margin:0 auto;padding:28px 20px}.fl-admin-head{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:22px}.fl-admin-head h1{margin:0}.fl-admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.fl-admin-tabs button{border:1px solid #d9e2de;background:#fff;padding:9px 13px;border-radius:999px;font-weight:800;cursor:pointer}.fl-admin-tabs button.active{background:#28745d;color:#fff;border-color:#28745d}.fl-admin-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #dfe7e3;border-radius:16px;overflow:hidden}.fl-admin-table th,.fl-admin-table td{padding:12px 14px;border-bottom:1px solid #edf1ef;text-align:left;vertical-align:top}.fl-admin-table th{font-size:12px;color:#68767c;background:#f7f9f8}.fl-status{font-size:11px;font-weight:900;border-radius:999px;padding:4px 8px;display:inline-block}.fl-status.pending{background:#fff3cd;color:#7a5b00}.fl-status.approved{background:#dff4e8;color:#17643e}.fl-status.rejected{background:#f8dddd;color:#8b2f2b}.fl-admin-actions{display:flex;gap:6px;flex-wrap:wrap}.fl-admin-actions button{border:0;border-radius:8px;padding:7px 10px;font-weight:800;cursor:pointer}.approve{background:#28745d;color:#fff}.reject{background:#9a3d38;color:#fff}.view{background:#eef3f1}.fl-admin-login{max-width:440px;margin:70px auto;background:#fff;border:1px solid #dfe7e3;border-radius:18px;padding:26px}.fl-admin-login input{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #d7dfdc;border-radius:10px}
+</style></head>
+<body>
+<div id="flAdminAuth" class="fl-admin-login">
+  <span class="zzfl-kicker">ADMIN ZEMZEM</span><h2>Biblioteka Falas</h2>
+  <form id="flAdminLogin"><label>Email<input id="flAdminEmail" type="email" value="tamarillot@gmail.com" required></label><label>Fjalëkalimi<input id="flAdminPassword" type="password" required></label><button class="zzfl-btn primary full">Kyçu</button><div id="flAdminLoginStatus" class="zzfl-status"></div></form>
+</div>
+<div id="flAdminApp" hidden>
+  <div class="fl-admin-shell">
+    <div class="fl-admin-head"><div><span class="zzfl-kicker">BIBLIOTEKA FALAS</span><h1>Moderimi i PDF-ve</h1></div><div><a class="zzfl-btn ghost" href="admin.html">← Admin</a> <a class="zzfl-btn ghost" href="free-library.html" target="_blank">Shiko publikisht</a> <button id="flAdminLogout" class="zzfl-btn ghost">Dil</button></div></div>
+    <div class="fl-admin-tabs"><button class="active" data-fl-filter="pending">Në pritje</button><button data-fl-filter="approved">Të aprovuar</button><button data-fl-filter="rejected">Të refuzuar</button><button data-fl-filter="all">Të gjitha</button></div>
+    <div style="overflow:auto"><table class="fl-admin-table"><thead><tr><th>Libri</th><th>Autori / kategoria</th><th>Data</th><th>Statusi</th><th>Veprimet</th></tr></thead><tbody id="flAdminBody"></tbody></table></div>
+    <div id="flAdminEmpty" class="zzfl-empty" hidden>Nuk ka materiale në këtë filtër.</div>
+  </div>
+</div>
+<script src="assets/js/admin-free-library.js?v=1"></script>
+</body></html>
