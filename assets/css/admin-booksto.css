@@ -80,3 +80,90 @@
 
 .side-nav .nav-badge{margin-left:auto!important}
 .sidebar-foot{margin-top:8px!important}
+
+/* ===== Colored Admin sidebar sectors v2 stronger ===== */
+/* Typography: +2px only, icons intentionally larger */
+.side-section-label.zz-sector-label{
+  font-size:11px!important;
+  padding:8px 11px!important;
+}
+.side-nav .zz-sector-item{
+  min-height:48px!important;
+  padding:8px 10px!important;
+  gap:11px!important;
+}
+.side-nav .zz-sector-item>span:not(.side-menu-icon):not(.nav-badge){
+  font-size:13px!important;
+  font-weight:800!important;
+}
+.side-nav .zz-sector-item .side-menu-icon{
+  flex:0 0 36px!important;
+  width:36px!important;
+  height:36px!important;
+  border-radius:11px!important;
+}
+.side-nav .zz-sector-item .side-menu-icon svg{
+  width:20px!important;
+  height:20px!important;
+  stroke-width:2.1!important;
+}
+
+/* Stronger visual separation by sector */
+.side-section-label.zz-sector-main{
+  background:#cfe3ff!important;color:#184f93!important;border-color:#aacdf8!important
+}
+.side-nav .zz-sector-item.zz-sector-main{
+  background:#e4f0ff!important;color:#184f93!important;border-color:#c6ddf7!important
+}
+.side-nav .zz-sector-item.zz-sector-main .side-menu-icon{background:#c9e0ff!important}
+.side-nav .zz-sector-item.zz-sector-main:hover,.side-nav .zz-sector-item.zz-sector-main.active{background:#cfe3ff!important}
+
+.side-section-label.zz-sector-admin{
+  background:#cfeedd!important;color:#145f3d!important;border-color:#addfc4!important
+}
+.side-nav .zz-sector-item.zz-sector-admin{
+  background:#e1f4e9!important;color:#145f3d!important;border-color:#c2e7d1!important
+}
+.side-nav .zz-sector-item.zz-sector-admin .side-menu-icon{background:#c6e9d4!important}
+.side-nav .zz-sector-item.zz-sector-admin:hover,.side-nav .zz-sector-item.zz-sector-admin.active{background:#caecd8!important}
+
+.side-section-label.zz-sector-communication{
+  background:#dfd1ff!important;color:#583394!important;border-color:#c9b4f6!important
+}
+.side-nav .zz-sector-item.zz-sector-communication{
+  background:#eee6ff!important;color:#583394!important;border-color:#d9caf8!important
+}
+.side-nav .zz-sector-item.zz-sector-communication .side-menu-icon{background:#ddceff!important}
+.side-nav .zz-sector-item.zz-sector-communication:hover,.side-nav .zz-sector-item.zz-sector-communication.active{background:#dfd1ff!important}
+
+.side-section-label.zz-sector-invoice{
+  background:#ffe3a8!important;color:#8a5810!important;border-color:#f1c96c!important
+}
+.side-nav .zz-sector-item.zz-sector-invoice{
+  background:#ffefd0!important;color:#8a5810!important;border-color:#f3d99e!important
+}
+.side-nav .zz-sector-item.zz-sector-invoice .side-menu-icon{background:#ffe0a0!important}
+.side-nav .zz-sector-item.zz-sector-invoice:hover,.side-nav .zz-sector-item.zz-sector-invoice.active{background:#ffe3ae!important}
+
+.side-section-label.zz-sector-pages{
+  background:#ffd6e1!important;color:#943d5a!important;border-color:#f1b8c8!important
+}
+.side-nav .zz-sector-item.zz-sector-pages{
+  background:#ffe8ee!important;color:#943d5a!important;border-color:#f5cfda!important
+}
+.side-nav .zz-sector-item.zz-sector-pages .side-menu-icon{background:#ffd4df!important}
+.side-nav .zz-sector-item.zz-sector-pages:hover,.side-nav .zz-sector-item.zz-sector-pages.active{background:#ffd9e4!important}
+
+.side-section-label.zz-sector-system{
+  background:#d6dee7!important;color:#425363!important;border-color:#bcc8d3!important
+}
+.side-nav .zz-sector-item.zz-sector-system{
+  background:#e8edf2!important;color:#425363!important;border-color:#d3dbe2!important
+}
+.side-nav .zz-sector-item.zz-sector-system .side-menu-icon{background:#d4dde6!important}
+.side-nav .zz-sector-item.zz-sector-system:hover,.side-nav .zz-sector-item.zz-sector-system.active{background:#dbe3ea!important}
+
+/* Active item gets clearer emphasis without changing sector identity */
+.side-nav .zz-sector-item.active{
+  box-shadow:inset 4px 0 0 currentColor,0 6px 18px rgba(28,42,34,.12)!important;
+}
