@@ -93,7 +93,7 @@ function fieldFor(id){
  return el.closest('.field,.checks,.book-3d-admin-block')||el;
 }
 function ensure(){
- const modal=q('#bookModal .modal-card');const form=q('#bookForm');if(!modal||!form||q('#zzBookEditorTabs'))return false;
+ const modal=q('#bookEditorHost .modal-card')||q('#bookModal .modal-card');const form=q('#bookForm');if(!modal||!form||q('#zzBookEditorTabs'))return false;
  modal.classList.add('zz-book-editor-card');
  const tabs=document.createElement('div');tabs.id='zzBookEditorTabs';tabs.className='zz-book-editor-tabs';
  tabs.innerHTML='<button type="button" class="active" data-book-tab="basic">1. Të dhënat bazë</button><button type="button" data-book-tab="media">2. Foto & 3D</button><button type="button" data-book-tab="sales">3. Shitja & Stoku</button><button type="button" data-book-tab="advanced">4. Avancuar</button>';
