@@ -2,9 +2,9 @@
 'use strict';
 const SB='https://ysvtrhizgcioyycwlkrk.supabase.co',KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
 const DEF=[
- {key:'feature_strip',visible:true},{key:'collection_rail',visible:true},{key:'why',visible:true},{key:'trending',visible:true},{key:'new_arrivals',visible:true},{key:'categories',visible:true},{key:'offers',visible:true},{key:'bestsellers',visible:true},{key:'newsletter',visible:true},{key:'all_books',visible:true}
+ {key:'feature_strip',visible:true},{key:'collection_rail',visible:true},{key:'why',visible:true},{key:'trending',visible:true},{key:'authors',visible:true},{key:'editorial',visible:true},{key:'featured_collection',visible:true},{key:'promo_banner',visible:true},{key:'new_arrivals',visible:true},{key:'categories',visible:true},{key:'offers',visible:true},{key:'bestsellers',visible:true},{key:'newsletter',visible:true},{key:'all_books',visible:true}
 ];
-const SELECTORS={feature_strip:'.feature-strip',collection_rail:'.collection-rail',why:'#homeWhy',trending:'#trending',new_arrivals:'#new-arrivals',categories:'[data-home-category-cards]',offers:'#oferta',bestsellers:'#bestsellers',newsletter:'#zv2Newsletter',all_books:'#all-books'};
+const SELECTORS={feature_strip:'.feature-strip',collection_rail:'.collection-rail',why:'#homeWhy',trending:'#trending',authors:'#homeAuthors',editorial:'#wowEditorial',featured_collection:'#wowFeatured',promo_banner:'#homePromoBanner',new_arrivals:'#new-arrivals',categories:'[data-home-category-cards]',offers:'#oferta',bestsellers:'#bestsellers',newsletter:'#zv2Newsletter',all_books:'#all-books'};
 async function api(path){const r=await fetch(SB+'/rest/v1/'+path,{headers:{apikey:KEY},cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
 function nodeFor(k){const el=document.querySelector(SELECTORS[k]);if(!el)return null;return k==='categories'?el.closest('section'):el}
 function normalizeLayout(raw){const known=new Set(DEF.map(x=>x.key)),arr=[];(Array.isArray(raw)?raw:[]).forEach(x=>{if(typeof x==='string')x={key:x,visible:true};if(x&&known.has(x.key)&&!arr.some(y=>y.key===x.key))arr.push({key:x.key,visible:x.visible!==false})});DEF.forEach(x=>{if(!arr.some(y=>y.key===x.key))arr.push({...x})});return arr}
@@ -36,6 +36,6 @@ function renderBanners(rows){
   })
 }
 function applyConfig(content){ensureCss();const layout=normalizeLayout(content?.index_layout||content?.layout_order||DEF);applyVisibility(layout);reorder(layout);renderBanners(content?.index_banners||[])}
-async function boot(){if(!/\/(index\.html)?$/.test(location.pathname)&&location.pathname!=='/')return;try{const home=await api('site_content?key=eq.homepage&select=content&limit=1');const content=home?.[0]?.content||{};const apply=()=>applyConfig(content);apply();setTimeout(apply,350);setTimeout(apply,900);setTimeout(apply,1800);const mo=new MutationObserver(()=>{clearTimeout(window.__zzIndexLayoutTick);window.__zzIndexLayoutTick=setTimeout(apply,120)});mo.observe(document.body,{childList:true,subtree:true});setTimeout(()=>mo.disconnect(),7000)}catch(e){console.warn('Homepage layout manager unavailable',e)}}
+async function boot(){if(!/\/(index\.html)?$/.test(location.pathname)&&location.pathname!=='/')return;try{const home=await api('site_content?key=eq.homepage&select=content&limit=1');const content=home?.[0]?.content||{};const apply=()=>applyConfig(content);apply();setTimeout(apply,350);setTimeout(apply,900);setTimeout(apply,1800);setTimeout(apply,3000);setTimeout(apply,5000);const mo=new MutationObserver(()=>{clearTimeout(window.__zzIndexLayoutTick);window.__zzIndexLayoutTick=setTimeout(apply,120)});mo.observe(document.body,{childList:true,subtree:true});setTimeout(()=>mo.disconnect(),12000)}catch(e){console.warn('Homepage layout manager unavailable',e)}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
