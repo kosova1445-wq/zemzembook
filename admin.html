@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="assets/css/admin-booksto.css?v=1">
   <link rel="stylesheet" href="assets/css/admin-booksto-pages.css?v=1">
   <link rel="stylesheet" href="assets/css/admin-branding.css?v=1">
-  <link rel="stylesheet" href="assets/css/admin-polish.css?v=6">
+  <link rel="stylesheet" href="assets/css/admin-polish.css?v=7">
   <style id="adminSiteEditorInline">
     .site-editor-view{max-width:1500px}.site-editor-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:14px}.site-editor-head h2{margin:5px 0 3px;font-size:22px;color:#2d3f50}.site-editor-head p{margin:0;color:#7f8d99;font-size:12px}.site-editor-actions{display:flex;gap:8px;align-items:center}.site-editor-status{padding:10px 12px;border:1px solid #e8edf0;background:#fff;border-radius:7px;margin-bottom:14px;font-size:11px;color:#7b8894}.site-editor-status.ready{background:#edf9f6;border-color:#d5efe9;color:#16836f}.site-editor-status.error{background:#fff0f0;border-color:#f1d4d4;color:#ad3f3f}.site-editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.site-editor-card{background:#fff;border:1px solid #edf1f4;border-radius:8px;padding:17px;box-shadow:0 5px 18px rgba(38,55,72,.025)}.site-editor-card.span-2{grid-column:span 2}.site-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:13px;margin-bottom:13px;border-bottom:1px solid #edf1f4}.site-card-head h3{margin:0;font-size:14px;color:#2e4052}.site-card-head p{margin:4px 0 0;font-size:10px;color:#8b98a4}.site-field{display:grid;gap:6px;margin-bottom:11px}.site-field label{font-size:10px;font-weight:800;color:#657686;text-transform:uppercase;letter-spacing:.04em}.site-field input,.site-field textarea,.site-menu-row input,.site-category-row input,.site-why-row input{width:100%;border:1px solid #e2e8ec;background:#fff;border-radius:6px;padding:10px 11px;outline:0;color:#344658;font-size:12px}.site-field input:focus,.site-field textarea:focus,.site-menu-row input:focus,.site-category-row input:focus,.site-why-row input:focus{border-color:#a9e8de;box-shadow:0 0 0 3px #effbf8}.site-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.site-four{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}.site-repeat{display:grid;gap:8px}.site-menu-row{display:grid;grid-template-columns:34px 1fr 1.25fr 90px 94px;gap:8px;align-items:center;padding:9px;border:1px solid #edf1f4;border-radius:7px;background:#fbfcfd}.site-category-row{display:grid;grid-template-columns:34px .9fr 1.25fr 1.45fr 90px;gap:8px;align-items:center;padding:9px;border:1px solid #edf1f4;border-radius:7px;background:#fbfcfd}.site-why-row{display:grid;grid-template-columns:34px 72px 1fr 1.6fr 90px;gap:8px;align-items:center;padding:9px;border:1px solid #edf1f4;border-radius:7px;background:#fbfcfd}.site-why-row input[data-f="icon"]{text-align:center;font-size:16px}.site-drag{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#eafbf7;color:#0baa93;font-size:10px;font-weight:900}.site-check{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;color:#687988;white-space:nowrap}.site-check input{accent-color:#12cbb0}.site-row-actions{display:flex;gap:5px;justify-content:flex-end}.site-row-actions button{width:27px;height:27px;border:1px solid #e3e9ed;background:#fff;border-radius:5px;color:#667786;font-weight:900}.site-row-actions button:hover{border-color:#bfeee7;color:#0baa93}.site-row-actions button.danger:hover{border-color:#f0cccc;color:#c84b4b;background:#fff6f6}.site-editor-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;padding:13px 15px;background:#fff;border:1px solid #edf1f4;border-radius:8px}.site-editor-footer>span{font-size:10px;color:#8b98a4}@media(max-width:1150px){.site-four{grid-template-columns:1fr 1fr}.site-menu-row{grid-template-columns:30px 1fr 1fr}.site-category-row{grid-template-columns:30px 1fr 1fr}.site-category-row input[data-f="href"]{grid-column:2/4}.site-category-row .site-check{grid-column:2/4}}@media(max-width:820px){.site-editor-grid{grid-template-columns:1fr}.site-editor-card.span-2{grid-column:auto}.site-editor-head{align-items:flex-start;flex-direction:column}.site-two,.site-four{grid-template-columns:1fr}.site-menu-row,.site-category-row{grid-template-columns:30px 1fr}.site-menu-row input[data-f="href"],.site-category-row input[data-f="description"],.site-category-row input[data-f="href"]{grid-column:2}.site-menu-row .site-check,.site-menu-row .site-row-actions,.site-category-row .site-check{grid-column:2}.site-row-actions{justify-content:flex-start}.site-editor-footer{align-items:flex-start;flex-direction:column}}
   </style>
@@ -36,7 +36,7 @@
     <div class="sidebar-head"><a class="admin-brand light admin-brand-image-link" href="index.html"><img data-admin-brand-image class="admin-brand-image admin-sidebar-logo" src="assets/brand/zemzem-logo.svg" alt="ZemZem"></a><div class="admin-owner-title">Owner Administration</div></div>
     <nav class="side-nav">
       <button class="nav-item active" data-view="dashboard">◫ Dashboard</button>
-      <button class="nav-item zz-messenger-nav" data-view="messages">💬 Messenger Admin</button>
+      <button class="nav-item zz-messenger-nav" data-view="messages">💬 Messenger Admin <span class="nav-badge" id="adminMessengerNavBadge" hidden>0</span></button>
       <button class="nav-item" data-view="orders">▤ Porositë <span class="nav-badge" id="pendingBadge">0</span></button>
       <button class="nav-item" data-view="books">▥ Librat fizikë</button><button class="nav-item" data-view="add-book">＋ Shto libër</button>
       <a class="nav-item" href="admin-ebooks.html">📱 eBook</a>
@@ -54,7 +54,7 @@
   <main class="main">
     <header class="admin-topbar">
       <div><div class="eyebrow">ZEMZEM ADMIN</div><h1 id="viewTitle">Dashboard</h1></div>
-      <div class="top-actions"><button id="adminMessengerTopBtn" class="nav-item icon-action" data-view="messages" type="button" title="Messenger i administratorëve" style="width:auto;min-width:132px;padding:8px 12px;display:inline-flex;gap:7px;align-items:center">💬 <span>Messenger</span></button><div class="admin-sync" id="adminSync" aria-live="polite">Duke sinkronizuar…</div><button class="icon-action" id="refreshBtn" title="Rifresko" aria-label="Rifresko të dhënat">↻</button><div class="admin-user"><div class="avatar">T</div><div><strong>Owner</strong><span>tamarillot@gmail.com</span></div></div></div>
+      <div class="top-actions"><button id="adminMessengerTopBtn" class="nav-item icon-action" data-view="messages" type="button" title="Messenger i administratorëve" style="width:auto;min-width:132px;padding:8px 12px;display:inline-flex;gap:7px;align-items:center">💬 <span>Messenger</span><span class="nav-badge" id="adminMessengerTopBadge" hidden>0</span></button><div class="admin-sync" id="adminSync" aria-live="polite">Duke sinkronizuar…</div><button class="icon-action" id="refreshBtn" title="Rifresko" aria-label="Rifresko të dhënat">↻</button><div class="admin-user"><div class="avatar">T</div><div><strong>Owner</strong><span>tamarillot@gmail.com</span></div></div></div>
     </header>
 
     <section id="view-dashboard" class="view active-view">
@@ -94,13 +94,35 @@
     <section id="view-customers" class="view"><div class="toolbar"><div class="searchbox grow">⌕ <input id="customerSearch" placeholder="Kërko klient..."></div></div><div id="customersList"></div></section>
 
     <section id="view-messages" class="view">
-      <div class="zz-admin-chat-shell">
-        <div class="zz-admin-chat-head"><div><div class="eyebrow">KOMUNIKIM I BRENDSHËM</div><h2>Messenger i administratorëve</h2><p>Vetëm administratorët e ZemZem mund t’i shohin këto mesazhe.</p></div><button type="button" class="secondary-btn" id="adminChatRefresh">↻ Rifresko</button></div>
-        <div id="adminChatMessages" class="zz-admin-chat-messages"><div class="empty-state">Duke ngarkuar mesazhet…</div></div>
-        <form id="adminChatForm" class="zz-admin-chat-compose">
-          <textarea id="adminChatInput" rows="2" maxlength="4000" placeholder="Shkruaj mesazh për administratorët…"></textarea>
-          <button class="primary-btn" type="submit">Dërgo</button>
-        </form>
+      <div class="zz-admin-chat-shell zz-admin-chat-v2">
+        <aside class="zz-chat-contacts">
+          <div class="zz-chat-contacts-head">
+            <div><div class="eyebrow">KOMUNIKIM</div><strong>Bisedat</strong></div>
+            <button type="button" class="zz-chat-mini-btn" id="adminChatRefresh" title="Rifresko">↻</button>
+          </div>
+          <button type="button" class="zz-chat-contact active" data-chat-peer="">
+            <span class="zz-chat-avatar">👥</span>
+            <span class="zz-chat-contact-copy"><strong>Chat i përbashkët</strong><small>Të gjithë administratorët</small></span>
+            <span class="zz-chat-unread" id="adminGroupUnread" hidden>0</span>
+          </button>
+          <div class="zz-chat-contact-label">ADMINISTRATORËT</div>
+          <div id="adminChatUsers" class="zz-chat-users"><div class="empty-state">Duke ngarkuar administratorët…</div></div>
+        </aside>
+        <section class="zz-chat-thread">
+          <div class="zz-admin-chat-head">
+            <div>
+              <div class="eyebrow" id="adminChatModeLabel">CHAT I PËRBASHKËT</div>
+              <h2 id="adminChatTitle">Messenger i administratorëve</h2>
+              <p id="adminChatSubtitle">Vetëm administratorët e ZemZem mund t’i shohin këto mesazhe.</p>
+            </div>
+            <div class="zz-chat-presence-summary"><span class="zz-online-dot"></span><span id="adminOnlineCount">0 online</span></div>
+          </div>
+          <div id="adminChatMessages" class="zz-admin-chat-messages"><div class="empty-state">Duke ngarkuar mesazhet…</div></div>
+          <form id="adminChatForm" class="zz-admin-chat-compose">
+            <textarea id="adminChatInput" rows="2" maxlength="4000" placeholder="Shkruaj mesazh…"></textarea>
+            <button class="primary-btn" type="submit">Dërgo</button>
+          </form>
+        </section>
       </div>
     </section>
 
@@ -118,7 +140,7 @@
 <div id="toast" class="admin-toast" hidden></div>
 <script src="assets/js/admin-v2.js?v=19"></script>
 <script src="assets/js/admin-booksto.js?v=11"></script>
-<script src="assets/js/admin-collab.js?v=2"></script>
+<script src="assets/js/admin-collab.js?v=3"></script>
 <script>
 (()=>{
   const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];let loaded=false,current=null;const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const val=id=>q(id)?.value?.trim()||'';const fallback={topbar_text:'Dërgesa: Kosovë 3 € · Shqipëri 6 € · Maqedoni e Veriut 6 €',primary_menu:[{label:'Ballina',href:'index.html',visible:true},{label:'Libra fizikë',href:'shop.html',visible:true},{label:'eBook',href:'ebooks.html',visible:true},{label:'Oferta',href:'index.html#oferta',visible:true},{label:'Rreth nesh',href:'about.html',visible:true}],support_label:'Porosit & Pyet',support_href:'contact.html',hero:{eyebrow:'Librari online në shqip',title:'Libra që mbeten me ty.',description:'Zbulo libra në shqip, tituj islamë, edukativë, historikë dhe eBook të përzgjedhur. Porosit thjesht, paguaj sigurt dhe ndiq blerjet nga një vend i vetëm.',primary_label:'Shfleto librat',primary_href:'shop.html',secondary_label:'Shiko eBook →',secondary_href:'ebooks.html'},categories_heading:'Kategoritë',categories_kicker:'Koleksionet',home_categories:[{label:'Fe & Edukim',description:'Kur’an, hadith dhe edukim',href:'shop.html?category=Fe%20%26%20Edukim',visible:true},{label:'Histori',description:'Ngjarje dhe trashëgimi',href:'shop.html?category=Histori',visible:true},{label:'Fëmijë',description:'Tregime dhe edukim',href:'shop.html?category=F%C3%ABmij%C3%AB',visible:true},{label:'Gjuhë të huaja',description:'Fjalorë dhe materiale mësimore',href:'shop.html?category=Gjuh%C3%AB%20t%C3%AB%20huaja',visible:true},{label:'eBook',description:'Biblioteka digjitale ZemZem',href:'ebooks.html',visible:true}]};const copy=o=>JSON.parse(JSON.stringify(o));const allBooksFallback={visible:true,kicker:'Katalogu i plotë',title:'Të gjithë librat',description:'Shfleto të gjithë librat fizikë të publikuar në ZemZem.',limit:20,sort:'newest'};const whyFallback={kicker:'Pse ZemZem?',title:'Blerje më e thjeshtë, nga libri te dera jote.',description:'Katër arsye pse përvoja ZemZem është ndërtuar për të qenë e qartë dhe praktike.',cards:[{icon:'✓',title:'Porosi e sigurt',description:'Checkout i qartë dhe të dhënat e pagesës trajtohen përmes kanaleve të dedikuara.',visible:true},{icon:'🚚',title:'Dërgesë rajonale',description:'Transport për Kosovë, Shqipëri dhe Maqedoni të Veriut me tarifa të dukshme.',visible:true},{icon:'💳',title:'COD & PayPal',description:'Zgjidh pagesën në pranim ose PayPal sipas kushteve që shfaqen në checkout.',visible:true},{icon:'📱',title:'eBook pa pritje',description:'Titujt digjitalë ruhen në llogarinë tënde dhe hapen nga biblioteka ZemZem.',visible:true}]};
