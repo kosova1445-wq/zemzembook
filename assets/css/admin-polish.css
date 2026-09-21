@@ -7,3 +7,150 @@ button:disabled{cursor:not-allowed;opacity:.62}
 :focus-visible{outline:3px solid rgba(18,203,176,.28);outline-offset:2px}
 @media(max-width:760px){.admin-sync{display:none}.admin-topbar h1{font-size:20px}.top-actions{margin-left:auto}}
 /* Production admin polish v1 */
+
+
+/* ZemZem Admin global muted section palette v2 */
+:root{
+  --adm-blue:#9fbfc9;--adm-blue-bg:#f2f7f9;
+  --adm-green:#a8c3b0;--adm-green-bg:#f3f8f4;
+  --adm-sand:#d1b79f;--adm-sand-bg:#faf5f0;
+  --adm-lilac:#b6abc8;--adm-lilac-bg:#f6f3f9;
+  --adm-gold:#c8b887;--adm-gold-bg:#faf8ef;
+  --adm-teal:#96bcae;--adm-teal-bg:#f1f7f5;
+  --adm-rose:#c8adb5;--adm-rose-bg:#faf4f6;
+  --adm-line:#e3e9ed;--adm-shadow:0 8px 24px rgba(27,49,63,.045);
+}
+/* all major admin content cards */
+.admin-app .view .panel,
+.admin-app .view .stat-card,
+.admin-app .view .entity-card,
+.admin-app .view .customer-card,
+.admin-app .view .coupon-card,
+.admin-app .view .review-card,
+.admin-app .view .integration-card,
+.admin-app .view .site-editor-card,
+.admin-app .view .zzcc,
+.admin-app .view .zz-news-admin-card,
+.admin-app .view .hb-pro-box,
+.admin-app .view article[class*="-card"],
+.admin-app .view section[class*="-card"],
+.admin-app .view div[class*="-card"]:not(.admin-user):not(.book-card){
+  position:relative;
+  border:1px solid var(--adm-line)!important;
+  border-radius:13px!important;
+  background:#fff!important;
+  box-shadow:var(--adm-shadow)!important;
+}
+.admin-app .view .panel::before,
+.admin-app .view .stat-card::before,
+.admin-app .view .entity-card::before,
+.admin-app .view .customer-card::before,
+.admin-app .view .coupon-card::before,
+.admin-app .view .review-card::before,
+.admin-app .view .integration-card::before,
+.admin-app .view .site-editor-card::before,
+.admin-app .view .zzcc::before,
+.admin-app .view .zz-news-admin-card::before,
+.admin-app .view .hb-pro-box::before{
+  content:"";
+  position:absolute;left:0;right:0;top:0;height:5px;
+  border-radius:13px 13px 0 0;
+  background:var(--adm-blue);
+  pointer-events:none;
+}
+/* cycle subtle colors through cards everywhere */
+.admin-app .view > *:nth-child(7n+1) .panel::before,
+.admin-app .view > *:nth-child(7n+1).panel::before,
+.admin-app .view article:nth-child(7n+1)::before{background:var(--adm-blue)}
+.admin-app .view > *:nth-child(7n+2) .panel::before,
+.admin-app .view > *:nth-child(7n+2).panel::before,
+.admin-app .view article:nth-child(7n+2)::before{background:var(--adm-green)}
+.admin-app .view > *:nth-child(7n+3) .panel::before,
+.admin-app .view > *:nth-child(7n+3).panel::before,
+.admin-app .view article:nth-child(7n+3)::before{background:var(--adm-sand)}
+.admin-app .view > *:nth-child(7n+4) .panel::before,
+.admin-app .view > *:nth-child(7n+4).panel::before,
+.admin-app .view article:nth-child(7n+4)::before{background:var(--adm-lilac)}
+.admin-app .view > *:nth-child(7n+5) .panel::before,
+.admin-app .view > *:nth-child(7n+5).panel::before,
+.admin-app .view article:nth-child(7n+5)::before{background:var(--adm-gold)}
+.admin-app .view > *:nth-child(7n+6) .panel::before,
+.admin-app .view > *:nth-child(7n+6).panel::before,
+.admin-app .view article:nth-child(7n+6)::before{background:var(--adm-teal)}
+.admin-app .view > *:nth-child(7n+7) .panel::before,
+.admin-app .view > *:nth-child(7n+7).panel::before,
+.admin-app .view article:nth-child(7n+7)::before{background:var(--adm-rose)}
+/* soft headers inside every module */
+.admin-app .view .panel-head,
+.admin-app .view .site-card-head,
+.admin-app .view .zzcc-head,
+.admin-app .view .zz-news-admin-head,
+.admin-app .view .modal-head,
+.admin-app .view [class*="-head"]:not(.site-editor-head):not(.admin-topbar){
+  border-bottom-color:#edf1f3!important;
+}
+.admin-app .view .panel-head{padding-top:4px}
+/* distinct dashboard stat colors */
+#view-dashboard .stat-card:nth-child(1)::before{background:var(--adm-blue)}
+#view-dashboard .stat-card:nth-child(2)::before{background:var(--adm-sand)}
+#view-dashboard .stat-card:nth-child(3)::before{background:var(--adm-green)}
+#view-dashboard .stat-card:nth-child(4)::before{background:var(--adm-rose)}
+/* catalog cards */
+#view-catalog .entity-card:nth-child(1)::before{background:var(--adm-blue)}
+#view-catalog .entity-card:nth-child(2)::before{background:var(--adm-green)}
+#view-catalog .entity-card:nth-child(3)::before{background:var(--adm-gold)}
+/* integrations */
+#view-integrations .integration-card:nth-child(1)::before{background:var(--adm-blue)}
+#view-integrations .integration-card:nth-child(2)::before{background:var(--adm-green)}
+#view-integrations .integration-card:nth-child(3)::before{background:var(--adm-teal)}
+#view-integrations .integration-card:nth-child(4)::before{background:var(--adm-lilac)}
+/* toolbars and forms become calmer and visually grouped */
+.admin-app .toolbar,
+.admin-app .coupon-form,
+.admin-app .book-form,
+.admin-app .entity-add,
+.admin-app .searchbox{
+  border-color:#e1e8ec!important;
+}
+.admin-app input:focus,
+.admin-app select:focus,
+.admin-app textarea:focus{
+  border-color:#9ebdc7!important;
+  box-shadow:0 0 0 3px rgba(118,157,170,.10)!important;
+  outline:none!important;
+}
+/* sidebar groups - muted separators, not loud colors */
+.sidebar .side-section-label{
+  color:#90a3ae!important;
+  letter-spacing:.11em!important;
+  font-weight:850!important;
+}
+.sidebar .nav-item{
+  border-left:3px solid transparent!important;
+  transition:.18s ease!important;
+}
+.sidebar .nav-item:hover{
+  background:rgba(255,255,255,.055)!important;
+  border-left-color:#8fb7aa!important;
+}
+.sidebar .nav-item.active{
+  background:rgba(255,255,255,.10)!important;
+  border-left-color:#a9c3b4!important;
+}
+/* muted labels in long forms */
+.admin-app .eyebrow,
+.admin-app .muted-small,
+.admin-app .field-help{
+  color:#7d8d98!important;
+}
+/* tables */
+.admin-app table thead th{
+  background:#f7f9fa!important;
+  color:#60727f!important;
+  border-bottom:1px solid #e5ebee!important;
+}
+.admin-app table tbody tr:hover{background:#fbfcfd!important}
+@media(max-width:760px){
+  .admin-app .view .panel,
+  .admin-app .view article[class*="-card"]{border-radius:11px!important}
+}
