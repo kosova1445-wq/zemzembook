@@ -154,3 +154,52 @@ button:disabled{cursor:not-allowed;opacity:.62}
   .admin-app .view .panel,
   .admin-app .view article[class*="-card"]{border-radius:11px!important}
 }
+
+/* Admin transparent logo + Owner Administration */
+.sidebar-head{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  gap:8px!important;
+  padding:2px 8px 18px!important;
+}
+.admin-brand-image-link{
+  display:inline-flex!important;
+  align-items:center!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin:0!important;
+}
+.admin-brand-image{
+  display:block!important;
+  width:152px;
+  max-width:100%;
+  height:auto!important;
+  object-fit:contain!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+.sidebar .admin-sidebar-logo{
+  max-height:72px!important;
+  object-fit:contain!important;
+  object-position:left center!important;
+}
+.admin-owner-title{
+  margin-top:2px;
+  color:#c8d6dd;
+  font-size:10px;
+  line-height:1;
+  font-weight:850;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+.owner-pill{display:none!important}
+.auth-card .admin-brand-image-link{justify-content:center;width:100%}
+.auth-card .admin-brand-image{width:172px;max-height:82px}
+.brand-admin-logo-shell{background:linear-gradient(135deg,#1f3442,#162732)!important}
+.brand-admin-logo-preview{height:92px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.brand-admin-logo-preview img{max-width:100%!important;max-height:76px!important;object-fit:contain!important;background:transparent!important}
