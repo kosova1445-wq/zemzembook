@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="sq">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Biblioteka Falas — ZemZem</title>
+  <meta name="description" content="Libra PDF falas të aprovuar nga ZemZem dhe mundësi për të dhuruar materiale që lejohen të shpërndahen.">
+  <link rel="icon" href="favicon.svg">
+  <link rel="stylesheet" href="assets/css/style.css?v=1">
+  <link rel="stylesheet" href="assets/css/free-library.css?v=1">
+</head>
+<body>
+<header class="zzfl-header">
+  <div class="container zzfl-nav">
+    <a class="brand" href="index.html"><span class="brand-mark"></span><span>ZemZem</span></a>
+    <nav>
+      <a href="shop.html">Libra fizikë</a>
+      <a href="ebooks.html">eBook</a>
+      <a class="active" href="free-library.html">Biblioteka Falas</a>
+      <a href="account.html">Llogaria</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="zzfl-hero">
+    <div class="container zzfl-hero-grid">
+      <div>
+        <span class="zzfl-kicker">BIBLIOTEKA FALAS</span>
+        <h1>Libra PDF për t’u lexuar dhe shkarkuar pa pagesë.</h1>
+        <p>Këtu publikohen vetëm materialet e aprovuara. Nëse ke një libër që lejohet të shpërndahet falas, mund ta dërgosh për verifikim.</p>
+        <div class="zzfl-actions">
+          <a class="zzfl-btn primary" href="#biblioteka">Shiko librat</a>
+          <button class="zzfl-btn ghost" id="openSubmit" type="button">Ngarko një PDF</button>
+        </div>
+      </div>
+      <div class="zzfl-hero-card">
+        <strong>Si funksionon?</strong>
+        <ol>
+          <li>Ngarko PDF-në dhe të dhënat e librit.</li>
+          <li>Konfirmo të drejtën për shpërndarje.</li>
+          <li>Admini e kontrollon dhe e aprovon.</li>
+          <li>Vetëm pas aprovimit bëhet publik.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="biblioteka" class="zzfl-section">
+    <div class="container">
+      <div class="zzfl-toolbar">
+        <div>
+          <span class="zzfl-kicker">KOLEKSIONI</span>
+          <h2>Libra falas</h2>
+          <p id="freeLibraryCount">Po ngarkohen librat…</p>
+        </div>
+        <div class="zzfl-filters">
+          <input id="freeLibrarySearch" type="search" placeholder="Kërko titull ose autor…">
+          <select id="freeLibraryCategory"><option value="">Të gjitha kategoritë</option></select>
+        </div>
+      </div>
+      <div id="freeLibraryGrid" class="zzfl-grid"><div class="zzfl-empty">Po ngarkohen librat…</div></div>
+    </div>
+  </section>
+</main>
+
+<div id="freeLibraryModal" class="zzfl-modal" hidden>
+  <div class="zzfl-backdrop" data-close-free-library></div>
+  <div class="zzfl-dialog">
+    <button class="zzfl-close" type="button" data-close-free-library aria-label="Mbyll">×</button>
+    <span class="zzfl-kicker">DHURO NJË LIBËR</span>
+    <h2>Ngarko PDF për verifikim</h2>
+    <p class="zzfl-note">Duhet të jesh i kyçur në llogarinë ZemZem. Materiali nuk publikohet derisa të aprovohet nga administratori.</p>
+    <form id="freeLibraryForm">
+      <div class="zzfl-form-grid">
+        <label><span>Titulli *</span><input id="flTitle" maxlength="250" required></label>
+        <label><span>Autori</span><input id="flAuthor" maxlength="180"></label>
+        <label><span>Kategoria</span><input id="flCategory" maxlength="100" placeholder="p.sh. Fe, Histori, Edukim"></label>
+        <label><span>Gjuha</span>
+          <select id="flLanguage"><option value="sq">Shqip</option><option value="ar">Arabisht</option><option value="en">Anglisht</option><option value="bs">Boshnjakisht</option><option value="other">Tjetër</option></select>
+        </label>
+        <label class="wide"><span>Përshkrimi</span><textarea id="flDescription" rows="4" maxlength="2000"></textarea></label>
+        <label><span>PDF * (max 100 MB)</span><input id="flPdf" type="file" accept="application/pdf,.pdf" required></label>
+        <label><span>Kopertina (opsionale)</span><input id="flCover" type="file" accept="image/jpeg,image/png,image/webp"></label>
+      </div>
+      <label class="zzfl-check">
+        <input id="flCopyright" type="checkbox" required>
+        <span>Konfirmoj se kam të drejtën ta shpërndaj këtë material ose se materiali lejohet ligjërisht të shpërndahet falas.</span>
+      </label>
+      <div id="flSubmitStatus" class="zzfl-status"></div>
+      <button id="flSubmitBtn" class="zzfl-btn primary full" type="submit">Dërgo për aprovim</button>
+    </form>
+  </div>
+</div>
+
+<footer class="zzfl-footer">
+  <div class="container">© 2026 ZemZem.al · Biblioteka Falas</div>
+</footer>
+<script src="assets/js/free-library.js?v=1"></script>
+</body>
+</html>
