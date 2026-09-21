@@ -26,3 +26,57 @@
 @media(max-width:900px){.booksto-insight-grid,.dashboard-activity{grid-template-columns:1fr}.booksto-insight:last-child{grid-column:auto}.booksto-search{max-width:330px;margin:0 12px}}
 @media(max-width:760px){.side-section-label{display:none}.side-page-link,.side-extra-item{white-space:nowrap;width:auto;padding:12px 13px}.side-extra-item{padding-left:13px}.booksto-search{display:none}.booksto-insight-grid{gap:12px}.mini-metric-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.mini-metric-grid{grid-template-columns:1fr}.topbar-icon.hide-mobile{display:none!important}}
+
+/* ===== Colored Admin sidebar sectors v1 ===== */
+.side-nav{padding:10px 9px 18px!important}
+.side-section-label.zz-sector-label{
+  margin:12px 3px 7px!important;padding:7px 10px!important;border-radius:10px!important;
+  font-size:9px!important;font-weight:900!important;letter-spacing:.13em!important;border:1px solid transparent!important
+}
+.side-nav .zz-sector-item{
+  min-height:42px!important;margin:3px 0!important;padding:7px 9px!important;border-radius:11px!important;
+  border:1px solid transparent!important;display:flex!important;align-items:center!important;gap:10px!important;
+  transition:transform .16s ease,box-shadow .16s ease,background .16s ease!important;position:relative!important
+}
+.side-nav .zz-sector-item:hover{transform:translateX(3px)!important;box-shadow:0 5px 15px rgba(28,42,34,.08)!important}
+.side-nav .zz-sector-item .side-menu-icon{
+  flex:0 0 30px!important;width:30px!important;height:30px!important;border-radius:9px!important;
+  display:grid!important;place-items:center!important;background:rgba(255,255,255,.78)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.56)!important
+}
+.side-nav .zz-sector-item .side-menu-icon svg{width:16px!important;height:16px!important;stroke:currentColor!important}
+.side-nav .zz-sector-item>span:not(.side-menu-icon):not(.nav-badge){font-weight:760!important;font-size:11px!important}
+.side-nav .zz-sector-item.active{box-shadow:inset 3px 0 0 currentColor,0 5px 16px rgba(28,42,34,.08)!important;font-weight:900!important}
+
+/* MAIN — blue */
+.side-section-label.zz-sector-main{background:#eaf3ff!important;color:#285e9a!important;border-color:#d7e8fb!important}
+.side-nav .zz-sector-item.zz-sector-main{background:#f2f7ff!important;color:#2c6197!important;border-color:#e1edfb!important}
+.side-nav .zz-sector-item.zz-sector-main:hover,.side-nav .zz-sector-item.zz-sector-main.active{background:#e5f0ff!important}
+
+/* ADMIN — warm green */
+.side-section-label.zz-sector-admin{background:#e9f6ef!important;color:#1f6a49!important;border-color:#d8ecdf!important}
+.side-nav .zz-sector-item.zz-sector-admin{background:#f0f8f3!important;color:#275f47!important;border-color:#e1eee5!important}
+.side-nav .zz-sector-item.zz-sector-admin:hover,.side-nav .zz-sector-item.zz-sector-admin.active{background:#e3f3e9!important}
+
+/* KOMUNIKIM — violet */
+.side-section-label.zz-sector-communication{background:#f2edff!important;color:#6546a3!important;border-color:#e5dcfb!important}
+.side-nav .zz-sector-item.zz-sector-communication{background:#f7f3ff!important;color:#654b96!important;border-color:#ebe3fa!important}
+.side-nav .zz-sector-item.zz-sector-communication:hover,.side-nav .zz-sector-item.zz-sector-communication.active{background:#ede4ff!important}
+
+/* FATURAT — amber */
+.side-section-label.zz-sector-invoice{background:#fff4df!important;color:#9a651c!important;border-color:#f5e4c1!important}
+.side-nav .zz-sector-item.zz-sector-invoice{background:#fff8ea!important;color:#8a641f!important;border-color:#f5e9d2!important}
+.side-nav .zz-sector-item.zz-sector-invoice:hover,.side-nav .zz-sector-item.zz-sector-invoice.active{background:#ffefce!important}
+
+/* PAGES — rose */
+.side-section-label.zz-sector-pages{background:#ffedf2!important;color:#a14b66!important;border-color:#f6dce5!important}
+.side-nav .zz-sector-item.zz-sector-pages{background:#fff4f7!important;color:#93536a!important;border-color:#f6e2e8!important}
+.side-nav .zz-sector-item.zz-sector-pages:hover,.side-nav .zz-sector-item.zz-sector-pages.active{background:#ffe8ef!important}
+
+/* SYSTEM — slate */
+.side-section-label.zz-sector-system{background:#edf1f5!important;color:#536474!important;border-color:#dde4ea!important}
+.side-nav .zz-sector-item.zz-sector-system{background:#f5f7f9!important;color:#52616e!important;border-color:#e7ebef!important}
+.side-nav .zz-sector-item.zz-sector-system:hover,.side-nav .zz-sector-item.zz-sector-system.active{background:#e9eef2!important}
+
+.side-nav .nav-badge{margin-left:auto!important}
+.sidebar-foot{margin-top:8px!important}
