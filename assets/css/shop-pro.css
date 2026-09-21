@@ -132,3 +132,124 @@
  .zz-ticket-ribbon{font-size:15px!important;padding:8px 21px 9px 13px!important}
  .zz-ticket-ribbon:after{right:-22px!important;border-top-width:16px!important;border-bottom-width:16px!important;border-right-width:22px!important}
 }
+
+
+/* ZemZem Shop Modern v8 — visually aligned with homepage */
+body.shop-page-modern{
+  --shop-ink:#233a4a;
+  --shop-muted:#70808a;
+  --shop-line:#eadfd9;
+  --shop-coral:#e6675a;
+  --shop-coral-dark:#c74d45;
+  --shop-soft:#fffaf7;
+  --shop-cream:#fff4ef;
+  --shop-blue:#edf5fb;
+  --shop-green:#eef7f1;
+  background:#fffdfb;
+  color:var(--shop-ink);
+}
+body.shop-page-modern .container{width:min(1180px,calc(100% - 32px));margin:auto}
+body.shop-page-modern .topbar{background:#173847!important;color:#fff!important}
+body.shop-page-modern .topbar .container{min-height:30px;font-size:10px}
+body.shop-page-modern .topbar a{color:#fff;opacity:.9}
+body.shop-page-modern .header{background:#fff!important;border-bottom:1px solid #edf1f2;box-shadow:0 8px 28px rgba(32,52,65,.035)}
+body.shop-page-modern .header-row{grid-template-columns:230px minmax(420px,1fr) auto!important;gap:26px!important;min-height:82px!important}
+body.shop-page-modern .search{height:48px!important;border:1px solid #dfe6e9!important;border-radius:11px!important;box-shadow:none!important;background:#fff!important}
+body.shop-page-modern .search select{height:46px!important;background:#fffaf7!important;border-right:1px solid #eee5df!important}
+body.shop-page-modern .search input{height:46px!important}
+body.shop-page-modern .search button{width:46px!important;height:46px!important;border-radius:0 10px 10px 0!important;background:var(--shop-coral)!important;color:#fff!important}
+body.shop-page-modern .icon-btn{width:38px!important;height:38px!important;border:1px solid #e7ecef!important;background:#fff!important;box-shadow:none!important}
+body.shop-page-modern .nav{margin-top:7px!important;padding:7px 9px!important;border-radius:15px!important;background:#fff!important;border:1px solid #e9e1dc!important;box-shadow:0 9px 25px rgba(35,58,74,.055)!important}
+body.shop-page-modern .nav-row{gap:6px!important;align-items:center!important}
+body.shop-page-modern .nav-row>a{display:inline-flex;align-items:center;justify-content:center;min-height:37px;padding:0 14px;border-radius:10px;font-weight:850;color:#233a4a;transition:.18s ease}
+body.shop-page-modern .nav-row>a:hover{background:#fff2ee;transform:translateY(-1px)}
+body.shop-page-modern .nav-row .category-trigger{background:linear-gradient(135deg,#233a4a,#35566d)!important;color:#fff!important;min-width:160px}
+body.shop-page-modern .nav-row .active-shop{background:#eaf3fb!important;color:#274f69!important}
+body.shop-page-modern .nav-row .support{background:#f8ebe7!important;border:1px solid #ead6ce!important;color:#8a4d43!important}
+
+.shop-modern-hero{padding:24px 0 16px;background:linear-gradient(180deg,#fff,#fffaf7)}
+.shop-modern-hero .container{min-height:235px;border:1px solid #eedfd8;border-radius:24px;background:radial-gradient(circle at 82% 18%,rgba(255,255,255,.9),transparent 28%),linear-gradient(120deg,#fce8e2,#f4d4cc);display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:38px;align-items:center;padding:38px 44px;box-shadow:0 18px 44px rgba(53,41,37,.055)}
+.shop-modern-hero-copy .section-kicker{font-size:9px;letter-spacing:.17em;font-weight:900;color:#c75a4d}
+.shop-modern-hero-copy h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(38px,4vw,58px);line-height:.98;letter-spacing:-2px;margin:10px 0 14px;color:#233a4a;max-width:680px}
+.shop-modern-hero-copy p{max-width:680px;color:#66757e;line-height:1.65;font-size:13px;margin:0}
+.shop-modern-hero-actions{display:flex;gap:9px;margin-top:20px;flex-wrap:wrap}
+.shop-modern-hero-note{border-left:1px solid rgba(35,58,74,.12);padding-left:30px;display:grid;gap:4px}
+.shop-modern-hero-note strong{font-size:12px;color:#233a4a;margin-top:9px}
+.shop-modern-hero-note span{font-size:10px;color:#718089}
+
+.shop-catalog-section{padding:28px 0 70px!important;background:#fff!important}
+body.shop-page-modern .shop-layout{display:grid!important;grid-template-columns:235px minmax(0,1fr)!important;gap:20px!important;align-items:start}
+body.shop-page-modern .filter.shop-pro-filter{top:115px;border:1px solid #e8e1dc!important;border-radius:18px!important;padding:18px!important;background:#fff!important;box-shadow:0 10px 30px rgba(35,58,74,.045)!important}
+body.shop-page-modern .shop-pro-filter-head{padding-bottom:9px;border-bottom:1px solid #edf1f2}
+body.shop-page-modern .shop-pro-filter-head h3{font-family:Georgia,"Times New Roman",serif;font-size:22px;color:#233a4a}
+body.shop-page-modern .shop-pro-filter .filter-group{padding:14px 0!important;border-top:1px solid #edf1f2!important}
+body.shop-page-modern .shop-pro-filter .filter-group>strong{font-size:12px!important;color:#294453!important}
+body.shop-page-modern .shop-pro-filter label{font-size:11px!important;color:#60717b!important}
+body.shop-page-modern .shop-pro-filter label span.count{background:#fff0eb!important;color:#a85f52!important}
+body.shop-page-modern .shop-pro-select,
+body.shop-page-modern .shop-pro-price{height:39px!important;border-radius:9px!important;border-color:#dde5e8!important;font-size:11px!important}
+body.shop-page-modern .shop-pro-toolbar{min-height:60px;margin-bottom:16px!important;padding:12px 14px!important;border:1px solid #e5eaed!important;border-radius:14px!important;background:#fff!important;box-shadow:0 8px 24px rgba(35,58,74,.04)!important}
+body.shop-page-modern .shop-pro-summary{font-size:12px!important}
+body.shop-page-modern .shop-pro-summary small{font-size:9px!important}
+body.shop-page-modern .shop-pro-view{border-radius:9px!important}
+body.shop-page-modern .shop-pro-view button.active{background:#233a4a!important}
+
+body.shop-page-modern #shopBooks.shop-pro-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important}
+body.shop-page-modern .shop-book-card{padding:10px!important;border:1px solid #ece7e4!important;border-radius:15px!important;box-shadow:none!important;background:#fff!important}
+body.shop-page-modern .shop-book-card:hover{transform:translateY(-5px)!important;border-color:#e2d2ca!important;box-shadow:0 17px 36px rgba(31,49,61,.09)!important}
+body.shop-page-modern .shop-card-cover{border-radius:11px!important;background:#f5f2ef!important}
+body.shop-page-modern .shop-card-cover img,
+body.shop-page-modern .shop-card-cover .book-cover{border-radius:11px!important}
+body.shop-page-modern .shop-card-badges{left:16px!important;top:16px!important}
+body.shop-page-modern .shop-card-badge{min-height:23px!important;padding:0 8px!important;font-size:8px!important;background:#e56759!important}
+body.shop-page-modern .shop-wishlist-btn{right:16px!important;top:16px!important;width:32px!important;height:32px!important;background:rgba(255,255,255,.95)!important}
+body.shop-page-modern .shop-card-category{font-size:8px!important;color:#b45c4f!important}
+body.shop-page-modern .shop-card-meta h3{font-size:12px!important;line-height:1.32!important;min-height:2.65em!important;margin-bottom:4px!important}
+body.shop-page-modern .shop-card-meta .author{font-size:9px!important;color:#75838b!important}
+body.shop-page-modern .shop-card-stock{font-size:9px!important;margin-top:6px!important}
+body.shop-page-modern .shop-price-wrap{min-height:83px!important;margin-top:8px!important}
+body.shop-page-modern .zz-ticket-price{width:128px!important;filter:drop-shadow(0 6px 11px rgba(0,0,0,.10))!important}
+body.shop-page-modern .zz-ticket-top{height:30px!important;padding:0 10px!important}
+body.shop-page-modern .zz-ticket-old{font-size:14px!important}
+body.shop-page-modern .zz-ticket-bars{width:28px!important;height:18px!important}
+body.shop-page-modern .zz-ticket-main{height:54px!important}
+body.shop-page-modern .zz-ticket-current{font-size:31px!important}
+body.shop-page-modern .zz-ticket-currency{font-size:11px!important;margin-top:13px!important}
+body.shop-page-modern .zz-ticket-ribbon{font-size:10px!important;padding:6px 14px 7px 10px!important;border-radius:7px 0 0 7px!important}
+body.shop-page-modern .zz-ticket-ribbon:after{right:-16px!important;border-top-width:12px!important;border-bottom-width:12px!important;border-right-width:16px!important}
+body.shop-page-modern .shop-card-actions{grid-template-columns:1fr 1fr!important;gap:6px!important;margin-top:9px!important}
+body.shop-page-modern .shop-details-btn,
+body.shop-page-modern .shop-cart-btn{min-height:34px!important;border-radius:8px!important;font-size:9px!important}
+body.shop-page-modern .shop-cart-btn{background:#233a4a!important}
+body.shop-page-modern .shop-cart-btn:hover:not(:disabled){background:#e6675a!important}
+
+body.shop-page-modern .shop-pro-pagination button{border-radius:9px!important}
+body.shop-page-modern .shop-pro-pagination button:hover:not(:disabled),
+body.shop-page-modern .shop-pro-pagination button.active{background:#e6675a!important;border-color:#e6675a!important}
+
+@media(max-width:1080px){
+ body.shop-page-modern #shopBooks.shop-pro-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ .shop-modern-hero .container{grid-template-columns:1fr 260px}
+}
+@media(max-width:900px){
+ body.shop-page-modern .header-row{grid-template-columns:1fr auto!important}
+ body.shop-page-modern .search{grid-column:1/-1;order:3}
+ .shop-modern-hero .container{grid-template-columns:1fr;padding:28px}
+ .shop-modern-hero-note{border-left:0;border-top:1px solid rgba(35,58,74,.12);padding:18px 0 0}
+ body.shop-page-modern .shop-layout{grid-template-columns:1fr!important}
+ body.shop-page-modern #shopBooks.shop-pro-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:720px){
+ body.shop-page-modern .container{width:min(100% - 20px,1180px)}
+ body.shop-page-modern #shopBooks.shop-pro-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ .shop-modern-hero{padding-top:14px}
+ .shop-modern-hero .container{border-radius:18px;padding:24px 20px}
+ .shop-modern-hero-copy h1{font-size:38px}
+ body.shop-page-modern .nav{border-radius:0!important;margin-left:-10px!important;margin-right:-10px!important;overflow-x:auto}
+ body.shop-page-modern .nav-row{min-width:max-content}
+ body.shop-page-modern .zz-ticket-price{width:118px!important}
+ body.shop-page-modern .zz-ticket-main{height:50px!important}
+ body.shop-page-modern .zz-ticket-current{font-size:28px!important}
+ body.shop-page-modern .shop-card-actions{grid-template-columns:1fr!important}
+ body.shop-page-modern .shop-details-btn{display:none!important}
+}
