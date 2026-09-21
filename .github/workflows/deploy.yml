@@ -293,7 +293,12 @@ jobs:
           assets/js/ebook-paypal-return.js
           assets/js/seo-ebook.js
           assets/css/ebooks.css
-          assets/css/ebook-checkout.css"
+          assets/css/ebook-checkout.css
+          free-library.html
+          admin-free-library.html
+          assets/js/free-library.js
+          assets/js/admin-free-library.js
+          assets/css/free-library.css"
 
           printf '%s\n' "$CHANGED" | sed '/^[[:space:]]*$/d' | sort -u | while IFS= read -r file; do
             case "$file" in
@@ -375,6 +380,11 @@ jobs:
           upload "assets/js/account.js"
           upload "assets/js/account-enterprise.js"
           upload "assets/js/account-advanced.js"
+          upload "free-library.html"
+          upload "admin-free-library.html"
+          upload "assets/js/free-library.js"
+          upload "assets/js/admin-free-library.js"
+          upload "assets/css/free-library.css"
           upload "release.json"
 
       - name: Syntax check Admin advanced modules
