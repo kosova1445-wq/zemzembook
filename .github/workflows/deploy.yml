@@ -119,7 +119,7 @@ jobs:
             local src="$1"
             curl --fail --show-error --silent \
               --connect-timeout 20 --max-time 60 --retry 2 --retry-delay 2 \
-              --ftp-ssl-control --disable-epsv --ftp-skip-pasv-ip --ftp-create-dirs \
+              --ssl-reqd --disable-epsv --ftp-skip-pasv-ip --ftp-create-dirs \
               --user "$FTP_USERNAME:$FTP_PASSWORD" \
               --upload-file "$src" \
               "ftp://${FTP_SERVER}:${FTP_PORT}${FTP_SERVER_DIR}${src}"
@@ -388,6 +388,7 @@ jobs:
           upload "assets/js/admin-free-library-integrated.js"
           upload "assets/css/free-library.css"
           upload "release.json"
+          upload ".htaccess"
 
       - name: Syntax check Admin advanced modules
         if: steps.latest.outputs.deploy == 'true'
