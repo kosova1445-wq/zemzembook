@@ -16,7 +16,35 @@ function product(){if(page!=='product.html')return;let n=0;const t=setInterval((
 function pay(){if(page!=='checkout.html'||q('#zzPayProg'))return;let n=0;const t=setInterval(()=>{n++;const e=q('#cartSubtotal');if(!e&&n<30)return;clearInterval(t);if(!e)return;const d=document.createElement('div');d.id='zzPayProg';d.className='zz-payprog';d.innerHTML='<div id="zzPayText"></div><div class="zz-paytrack"><div class="zz-payfill" id="zzPayFill"></div></div>';e.closest('.summary-box')?.appendChild(d);const run=()=>{const v=Number((e.textContent||'0').replace(',','.').replace(/[^0-9.]/g,''))||0,left=Math.max(0,50-v);q('#zzPayFill').style.width=Math.min(100,v/50*100)+'%';q('#zzPayText').textContent=left>0?'Edhe '+M(left)+' deri te −10% me PayPal.':'E ke arritur pragun për −10% me PayPal ✓'};run();new MutationObserver(run).observe(e,{childList:true,subtree:true,characterData:true})},150)}
 function theme(){if(q('#zzTheme'))return;const v=localStorage.getItem(TK)||'light';document.documentElement.dataset.zzTheme=v;const b=document.createElement('button');b.id='zzTheme';b.className='zz-theme';b.textContent=v==='dark'?'☀':'☾';b.setAttribute('aria-label','Ndrysho pamjen');b.onclick=()=>{const x=document.documentElement.dataset.zzTheme==='dark'?'light':'dark';document.documentElement.dataset.zzTheme=x;localStorage.setItem(TK,x);b.textContent=x==='dark'?'☀':'☾'};document.body.appendChild(b)}
 function a11y(){if(!q('.zz-skip')){const a=document.createElement('a');a.className='zz-skip';a.href='#main-content';a.textContent='Kalo te përmbajtja';document.body.prepend(a)}const m=q('main')||q('.section');if(m&&!m.id)m.id='main-content';q('[data-cart-count]')?.setAttribute('aria-live','polite')}
-async function personalized(){q('#zzPersonalized')?.remove();return}
+async function personalized(){
+ if(page!=='index.html'&&page!=='')return;
+ let cfg={visible:false,kicker:'Bazuar në interesin tënd',title:'Mund të të pëlqejnë',description:'Rekomandime nga kategoritë që ke parë së fundi.',limit:8,position:'before_footer'};
+ const z=S();if(!z?.SUPABASE_URL||!z?.SUPABASE_PUBLISHABLE_KEY)return;
+ try{
+   const cr=await fetch(z.SUPABASE_URL+'/rest/v1/site_content?key=eq.homepage&select=content&limit=1',{headers:{apikey:z.SUPABASE_PUBLISHABLE_KEY},cache:'no-store'});
+   if(cr.ok){const rows=await cr.json();cfg={...cfg,...(rows?.[0]?.content?.personalized_recommendations||{})}}
+ }catch{}
+ if(cfg.visible!==true){q('#zzPersonalized')?.remove();return}
+ let ids=[];try{ids=JSON.parse(localStorage.getItem('zemzem_recent_books')||'[]').map(String)}catch{}
+ const seen=ids.map(B).filter(Boolean);if(!seen.length)return;
+ const cats=[...new Set(seen.map(x=>x.cat).filter(Boolean))];if(!cats.length)return;
+ try{
+   const r=await fetch(z.SUPABASE_URL+'/rest/v1/storefront_books?select=*&order=created_at.desc&limit=80',{headers:{apikey:z.SUPABASE_PUBLISHABLE_KEY},cache:'no-store'});
+   if(!r.ok)return;const rows=await r.json();
+   const lim=Math.max(1,Math.min(12,Number(cfg.limit||8)));
+   const picks=(rows||[]).filter(x=>cats.includes(x.category_name)&&!ids.includes(String(x.id))).slice(0,lim).map(x=>B(x.id)).filter(Boolean);
+   if(!picks.length)return;
+   let anchor=q('footer'),after=false;
+   if(cfg.position==='after_hero'){anchor=q('.hero-wrap');after=true}
+   else if(cfg.position==='before_offers')anchor=q('#oferta')||q('footer');
+   else anchor=q('footer');
+   if(!anchor||q('#zzPersonalized'))return;
+   const s=document.createElement('section');s.id='zzPersonalized';s.className='section';
+   s.innerHTML='<div class="container"><div class="section-head"><div><div class="section-kicker">'+E(cfg.kicker||'Bazuar në interesin tënd')+'</div><h2>'+E(cfg.title||'Mund të të pëlqejnë')+'</h2><p>'+E(cfg.description||'')+'</p></div></div><div class="book-grid" id="zzPersonalizedGrid"></div></div>';
+   if(after)anchor.insertAdjacentElement('afterend',s);else anchor.insertAdjacentElement('beforebegin',s);
+   z.renderBooks?.('#zzPersonalizedGrid',picks);
+ }catch{}
+}
 function boot(){style();bar();history();product();pay();theme();a11y();personalized();let n=0;const t=setInterval(()=>{n++;if(S()?.getBook||n>30){clearInterval(t);cards();new MutationObserver(cards).observe(document.body,{childList:true,subtree:true})}},180)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
