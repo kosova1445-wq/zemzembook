@@ -273,5 +273,80 @@
 })();
 </script>
 
+<script id="zz-team-force-runtime">
+(()=>{
+  if(window.__zzTeamForceRuntime)return;window.__zzTeamForceRuntime=1;
+  function openTeam(){
+    try{
+      if(typeof setView==='function'){setView('team-center');return}
+    }catch{}
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active-view',v.id==='view-team-center'));
+    const t=document.querySelector('#viewTitle');if(t)t.textContent='Team Center';
+  }
+  function ensure(){
+    const app=document.getElementById('adminApp');
+    if(!app)return;
+    let launcher=document.getElementById('zzTeamForceLauncher');
+    if(!launcher){
+      launcher=document.createElement('button');
+      launcher.id='zzTeamForceLauncher';
+      launcher.type='button';
+      launcher.className='zz-team-force-launcher';
+      launcher.innerHTML='✦ <span>Team Center</span>';
+      document.body.appendChild(launcher);
+    }else if(launcher.parentElement!==document.body){
+      document.body.appendChild(launcher);
+    }
+    launcher.onclick=openTeam;
+    launcher.style.setProperty('position','fixed','important');
+    launcher.style.setProperty('right','22px','important');
+    launcher.style.setProperty('bottom','22px','important');
+    launcher.style.setProperty('z-index','2147483647','important');
+    launcher.style.setProperty('display',app.hidden?'none':'flex','important');
+    launcher.style.setProperty('align-items','center','important');
+    launcher.style.setProperty('gap','9px','important');
+    launcher.style.setProperty('width','auto','important');
+    launcher.style.setProperty('min-width','158px','important');
+    launcher.style.setProperty('padding','13px 17px','important');
+    launcher.style.setProperty('border','0','important');
+    launcher.style.setProperty('border-radius','999px','important');
+    launcher.style.setProperty('background','#173d2b','important');
+    launcher.style.setProperty('color','#fff','important');
+    launcher.style.setProperty('font-weight','900','important');
+    launcher.style.setProperty('font-size','12px','important');
+    launcher.style.setProperty('box-shadow','0 16px 40px rgba(23,61,43,.34)','important');
+    launcher.style.setProperty('cursor','pointer','important');
+
+    const side=document.querySelector('.side-nav');
+    if(side){
+      let nav=side.querySelector('[data-view="team-center"]');
+      if(!nav){
+        nav=document.createElement('button');
+        nav.type='button';nav.className='nav-item zz-team-center-nav';nav.dataset.view='team-center';
+        nav.innerHTML='✦ <span>Team Center</span>';
+        const dash=side.querySelector('[data-view="dashboard"]');
+        if(dash&&dash.nextSibling)side.insertBefore(nav,dash.nextSibling);else side.prepend(nav);
+      }
+      nav.onclick=openTeam;
+      nav.style.setProperty('display','flex','important');
+      nav.style.setProperty('visibility','visible','important');
+      nav.style.setProperty('opacity','1','important');
+    }
+
+    if(!document.getElementById('view-team-center')){
+      const v=document.createElement('section');
+      v.id='view-team-center';v.className='view';
+      v.innerHTML='<div id="zzTeamShell"><div class="empty-state">Duke ngarkuar Team Center…</div></div>';
+      document.querySelector('main.main')?.appendChild(v);
+    }
+  }
+  function boot(){
+    ensure();
+    setInterval(ensure,700);
+    new MutationObserver(ensure).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','class','style']});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
 <script src="assets/js/branding.js?v=9"></script><script src="assets/js/admin-pro-20.js?v=3" data-admin-pro20="1"></script></body>
 </html>
