@@ -60,6 +60,27 @@ async function api(path,{method='GET',body,prefer}={}){
   return raw('/rest/v1/'+path,{method,body,token:session.access_token,headers});
 }
 window.api=api;
+window.zzAdminStorageUpload=async function(file,path){
+  if(!await ensureSession())throw new Error('Sesioni ka skaduar');
+  const clean=String(path||'').replace(/^\/+/, '');
+  const r=await fetch(SB_URL+'/storage/v1/object/admin-internal/'+encodeURI(clean),{
+    method:'POST',
+    headers:{apikey:SB_KEY,Authorization:'Bearer '+session.access_token,'x-upsert':'false','Content-Type':file.type||'application/octet-stream'},
+    body:file
+  });
+  const t=await r.text();let d={};try{d=t?JSON.parse(t):{}}catch{}
+  if(!r.ok)throw new Error(d?.message||d?.error||('HTTP '+r.status));
+  return clean;
+};
+window.zzAdminStorageBlob=async function(path){
+  if(!await ensureSession())throw new Error('Sesioni ka skaduar');
+  const clean=String(path||'').replace(/^\/+/, '');
+  const r=await fetch(SB_URL+'/storage/v1/object/admin-internal/'+encodeURI(clean),{
+    headers:{apikey:SB_KEY,Authorization:'Bearer '+session.access_token}
+  });
+  if(!r.ok)throw new Error('Nuk u hap skedari.');
+  return await r.blob();
+};
 async function edge(name,body){
   if(!await ensureSession())throw new Error('Sesioni ka skaduar');
   const r=await fetch(`${SB_URL}/functions/v1/${name}`,{method:'POST',headers:{apikey:SB_KEY,Authorization:`Bearer ${session.access_token}`,'Content-Type':'application/json'},body:JSON.stringify(body||{}),cache:'no-store'});
@@ -368,7 +389,7 @@ function renderIntegrations(){
 }
 async function testStoreEmail(){const b=$('#storeEmailTestBtn');if(b)b.disabled=true;try{const d=await edge('store-admin-ops',{action:'test_email'});toast(`Emaili testues u dërgua te ${d.email}`);await loadAudit();renderAudit();renderDashboard()}catch(e){toast(e.message,'error')}finally{if(b)b.disabled=false}}
 
-function setView(name){if(!name)return;const permissionName=name==='add-book'?'books':(name==='messages'?'dashboard':name);if(name==='admins'&&!currentAdminAccess?.is_owner){toast('Vetëm Owner-i mund t’i menaxhojë administratorët.','error');return}if(!hasAdminPermission(permissionName)&&!currentAdminAccess?.full_access){toast('Nuk ke qasje në këtë seksion.','error');return}$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));$$('.view').forEach(v=>v.classList.toggle('active-view',v.id===`view-${name}`));$('#viewTitle').textContent={dashboard:'Dashboard',orders:'Porositë',books:'Librat fizikë',catalog:'Katalogu',customers:'Klientët',coupons:'Kuponët',reviews:'Review',audit:'Audit Log',integrations:'Integrimet','add-book':'Shto libër',messages:'Mesazhet'}[name]||name;if(window.innerWidth<=760)$('.sidebar')?.classList.remove('mobile-open')}
+function setView(name){if(!name)return;const permissionName=name==='add-book'?'books':((name==='messages'||name==='team-center')?'dashboard':name);if(name==='admins'&&!currentAdminAccess?.is_owner){toast('Vetëm Owner-i mund t’i menaxhojë administratorët.','error');return}if(!hasAdminPermission(permissionName)&&!currentAdminAccess?.full_access){toast('Nuk ke qasje në këtë seksion.','error');return}$$('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));$$('.view').forEach(v=>v.classList.toggle('active-view',v.id===`view-${name}`));$('#viewTitle').textContent={dashboard:'Dashboard',orders:'Porositë',books:'Librat fizikë',catalog:'Katalogu',customers:'Klientët',coupons:'Kuponët',reviews:'Review',audit:'Audit Log',integrations:'Integrimet','add-book':'Shto libër',messages:'Mesazhet','team-center':'Team Center'}[name]||name;if(window.innerWidth<=760)$('.sidebar')?.classList.remove('mobile-open')}
 function mountBookEditorPage(){
   const host=$('#bookEditorHost'),card=$('#bookModal .modal-card')||$('#bookEditorHost .modal-card');
   if(!host||!card)return;
