@@ -268,3 +268,17 @@ button:disabled{cursor:not-allowed;opacity:.62}
  .zz-book-panel-grid .cover-preview{width:100%!important;height:260px!important}
  .zz-book-editor-actions{margin:18px -14px -88px!important;padding:12px 14px!important}
 }
+
+
+/* ===== Dedicated Add Book page ===== */
+.zz-add-book-page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:16px;padding:18px 20px;border:1px solid #e4eaed;border-radius:16px;background:#fff}
+.zz-add-book-page-head h2{margin:4px 0 4px;font-size:24px;color:#233a4a}.zz-add-book-page-head p{margin:0;color:#7d8b93;font-size:11px}
+.zz-book-editor-host{width:100%;min-width:0}
+#bookEditorHost .modal-card{position:relative!important;width:100%!important;max-width:none!important;max-height:none!important;margin:0!important;overflow:visible!important;border:1px solid #e4eaed!important;border-radius:18px!important;box-shadow:none!important;background:#fff}
+#bookEditorHost .modal-head{position:static!important;border-bottom:1px solid #e8edef!important;padding:18px 22px!important}
+#bookEditorHost .modal-head .drawer-close{display:none!important}
+#bookEditorHost .zz-book-editor-tabs{position:sticky!important;top:78px!important}
+#bookEditorHost #bookForm.book-form.three{padding:20px 22px 110px!important}
+#bookEditorHost .zz-book-editor-actions{position:sticky!important;bottom:0!important;margin:20px -22px -110px!important}
+#view-add-book.active-view{display:block!important;overflow:visible!important}
+@media(max-width:900px){.zz-add-book-page-head{align-items:flex-start;flex-direction:column}.zz-add-book-page-head .secondary-btn{width:100%;text-align:center}#bookEditorHost .zz-book-editor-tabs{top:72px!important}}
