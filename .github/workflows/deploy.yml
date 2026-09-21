@@ -380,6 +380,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          node --check assets/js/admin-collab.js
           node --check assets/js/admin-super-suite.js
           node --check assets/js/admin-workflow-studio.js
           node --check assets/js/admin-intelligence-suite.js
@@ -469,8 +470,8 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksSort' 'Admin all-books sorting control'
 
           require_live https://www.zemzem.al/admin.html /tmp/admin-messenger.html 'id="adminMessengerTopBtn"' 'Admin messenger marker'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-messenger-script.html 'assets/js/admin-collab.js?v=2' 'Admin messenger script reference'
-          require_live https://www.zemzem.al/assets/js/admin-collab.js /tmp/admin-collab-live.js '__zzAdminCollab' 'Admin messenger runtime'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-messenger-script.html 'assets/js/admin-collab.js?v=3' 'Admin messenger script reference'
+          require_live https://www.zemzem.al/assets/js/admin-collab.js /tmp/admin-collab-live.js '__zzAdminCollabV2' 'Admin messenger runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin.html 'assets/js/admin-branding.js' 'Admin branding controls'
           require_live https://www.zemzem.al/admin.html /tmp/admin-brand-nav.html 'id="adminBrandingNav"' 'Stable Logo and Brand Admin menu'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-branding.js "brandingBtn=side.querySelector('[data-view=\"branding\"]')" 'Booksto sidebar keeps Logo and Brand'
