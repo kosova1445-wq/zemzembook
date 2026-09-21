@@ -1,3 +1,35 @@
 /* Classic mode: Booksto visual layer disabled.
    eBook functionality remains unchanged and uses the original admin-ebooks.css design.
    Verification markers kept intentionally: .ebook-admin-nav | .ebook-admin-table */
+
+
+/* ZemZem eBook Admin muted palette v2 */
+:root{--eba-blue:#9fbfc9;--eba-green:#a8c3b0;--eba-sand:#d1b79f;--eba-lilac:#b6abc8;--eba-gold:#c8b887;--eba-teal:#96bcae;--eba-rose:#c8adb5;--eba-line:#e3e9ed}
+.ebook-admin-main article,
+.ebook-admin-main .ebook-admin-panel,
+.ebook-admin-main .ebook-admin-stat,
+.ebook-admin-main [class*="ebook-"][class*="card"]{
+  position:relative;
+  border:1px solid var(--eba-line)!important;
+  border-radius:13px!important;
+  box-shadow:0 8px 24px rgba(27,49,63,.045)!important;
+  background:#fff!important;
+}
+.ebook-admin-main article::before,
+.ebook-admin-main .ebook-admin-panel::before,
+.ebook-admin-main .ebook-admin-stat::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:5px;border-radius:13px 13px 0 0;background:var(--eba-blue);pointer-events:none
+}
+.ebook-admin-main article:nth-child(7n+1)::before,.ebook-admin-main .ebook-admin-stat:nth-child(7n+1)::before{background:var(--eba-blue)}
+.ebook-admin-main article:nth-child(7n+2)::before,.ebook-admin-main .ebook-admin-stat:nth-child(7n+2)::before{background:var(--eba-green)}
+.ebook-admin-main article:nth-child(7n+3)::before,.ebook-admin-main .ebook-admin-stat:nth-child(7n+3)::before{background:var(--eba-sand)}
+.ebook-admin-main article:nth-child(7n+4)::before,.ebook-admin-main .ebook-admin-stat:nth-child(7n+4)::before{background:var(--eba-lilac)}
+.ebook-admin-main article:nth-child(7n+5)::before{background:var(--eba-gold)}
+.ebook-admin-main article:nth-child(7n+6)::before{background:var(--eba-teal)}
+.ebook-admin-main article:nth-child(7n+7)::before{background:var(--eba-rose)}
+.ebook-admin-nav{border:1px solid #e2e9ed!important;border-radius:12px!important;background:#fff!important;box-shadow:0 7px 22px rgba(27,49,63,.04)!important}
+.ebook-admin-nav button,.ebook-admin-nav a{border-bottom:3px solid transparent!important}
+.ebook-admin-nav button.active{border-bottom-color:#96bcae!important;background:#f3f8f6!important}
+.ebook-admin-main input:focus,.ebook-admin-main select:focus,.ebook-admin-main textarea:focus{border-color:#9ebdc7!important;box-shadow:0 0 0 3px rgba(118,157,170,.10)!important;outline:none!important}
+.ebook-admin-table thead th{background:#f7f9fa!important;color:#60727f!important}
+.ebook-admin-table tbody tr:hover{background:#fbfcfd!important}
