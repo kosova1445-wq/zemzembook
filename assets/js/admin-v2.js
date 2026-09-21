@@ -59,6 +59,7 @@ async function api(path,{method='GET',body,prefer}={}){
   const headers={};if(prefer)headers.Prefer=prefer;
   return raw('/rest/v1/'+path,{method,body,token:session.access_token,headers});
 }
+window.api=api;
 async function edge(name,body){
   if(!await ensureSession())throw new Error('Sesioni ka skaduar');
   const r=await fetch(`${SB_URL}/functions/v1/${name}`,{method:'POST',headers:{apikey:SB_KEY,Authorization:`Bearer ${session.access_token}`,'Content-Type':'application/json'},body:JSON.stringify(body||{}),cache:'no-store'});
