@@ -235,6 +235,8 @@ jobs:
           assets/js/admin-experience-automation.js
           assets/js/runtime-ops.js
           assets/js/admin-v2.js
+          assets/js/admin-collab.js
+          assets/css/admin-polish.css
           assets/js/admin-booksto.js
           assets/js/admin-book-helper.js
           assets/js/admin-home-books.js
@@ -466,6 +468,9 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksVisible' 'Admin all-books visibility control'
           require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksSort' 'Admin all-books sorting control'
 
+          require_live https://www.zemzem.al/admin.html /tmp/admin-messenger.html 'id="adminMessengerTopBtn"' 'Admin messenger marker'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-messenger-script.html 'assets/js/admin-collab.js?v=2' 'Admin messenger script reference'
+          require_live https://www.zemzem.al/assets/js/admin-collab.js /tmp/admin-collab-live.js '__zzAdminCollab' 'Admin messenger runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin.html 'assets/js/admin-branding.js' 'Admin branding controls'
           require_live https://www.zemzem.al/admin.html /tmp/admin-brand-nav.html 'id="adminBrandingNav"' 'Stable Logo and Brand Admin menu'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-branding.js "brandingBtn=side.querySelector('[data-view=\"branding\"]')" 'Booksto sidebar keeps Logo and Brand'
