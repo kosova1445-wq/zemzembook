@@ -21,19 +21,46 @@
     mail:svg('<path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/>')
   };
   function iconize(el,icon,label){if(!el)return;const badge=el.querySelector('.nav-badge');el.innerHTML=`<span class="side-menu-icon">${icons[icon]||''}</span><span>${label}</span>`;if(badge)el.appendChild(badge)}
-  function section(text){const d=document.createElement('div');d.className='side-section-label';d.textContent=text;return d}
+  function section(text,theme='neutral'){const d=document.createElement('div');d.className='side-section-label side-sector-'+theme;d.dataset.sector=theme;d.textContent=text;return d}
   function pageLink(label,href,icon){const a=document.createElement('a');a.className='side-page-link';a.href=href;a.target='_blank';a.rel='noopener';a.innerHTML=`<span class="side-menu-icon">${icons[icon]||icons.home}</span><span>${label}</span>`;return a}
-  function extraCatalog(label,index){const b=document.createElement('button');b.type='button';b.className='side-extra-item';b.textContent=label;b.addEventListener('click',()=>{if(typeof setView==='function')setView('catalog');setTimeout(()=>{const cards=qa('#view-catalog .entity-card');cards[index]?.scrollIntoView({behavior:'smooth',block:'start'});cards[index]?.animate([{boxShadow:'0 0 0 0 rgba(18,203,176,0)'},{boxShadow:'0 0 0 4px rgba(18,203,176,.18)'},{boxShadow:'0 0 0 0 rgba(18,203,176,0)'}],{duration:900})},80)});return b}
+  function extraCatalog(label,index,icon='catalog'){const b=document.createElement('button');b.type='button';b.className='side-extra-item';b.innerHTML=`<span class="side-menu-icon">${icons[icon]||icons.catalog}</span><span>${label}</span>`;b.addEventListener('click',()=>{if(typeof setView==='function')setView('catalog');setTimeout(()=>{const cards=qa('#view-catalog .entity-card');cards[index]?.scrollIntoView({behavior:'smooth',block:'start'});cards[index]?.animate([{boxShadow:'0 0 0 0 rgba(18,203,176,0)'},{boxShadow:'0 0 0 4px rgba(18,203,176,.18)'},{boxShadow:'0 0 0 0 rgba(18,203,176,0)'}],{duration:900})},80)});return b}
+  function decorateSidebarSectors(side){
+    if(!side)return;
+    const sectorMap={main:'main',admin:'admin',communication:'communication',invoice:'invoice',pages:'pages',system:'system'};
+    let current='main';
+    [...side.children].forEach(el=>{
+      if(el.classList.contains('side-section-label')){
+        current=el.dataset.sector||current;
+        el.classList.add('zz-sector-label','zz-sector-'+current);
+        return;
+      }
+      if(el.matches('.nav-item,.side-page-link,.side-extra-item,[data-invoice-center]')){
+        [...el.classList].filter(x=>x.startsWith('zz-sector-')).forEach(x=>el.classList.remove(x));
+        el.classList.add('zz-sector-item','zz-sector-'+(sectorMap[current]||current));
+        if(!el.querySelector('.side-menu-icon')){
+          const badge=el.querySelector('.nav-badge');
+          const text=[...el.childNodes].filter(n=>n.nodeType===Node.TEXT_NODE).map(n=>n.textContent).join(' ').trim()||el.textContent.trim();
+          el.innerHTML=`<span class="side-menu-icon">${icons.settings}</span><span>${text}</span>`;
+          if(badge)el.appendChild(badge);
+        }
+      }
+    });
+  }
   function rebuildSidebar(){
     const side=q('.side-nav');if(!side||side.dataset.bookstoReady)return;side.dataset.bookstoReady='1';
     const dash=side.querySelector('[data-view="dashboard"]'),teamCenterBtn=side.querySelector('[data-view="team-center"]'),freeLibraryBtn=side.querySelector('[data-view="free-library"]'),ordersBtn=side.querySelector('[data-view="orders"]'),booksBtn=side.querySelector('[data-view="books"]'),addBookBtn=side.querySelector('[data-view="add-book"]'),messagesBtn=side.querySelector('[data-view="messages"]'),catalogBtn=side.querySelector('[data-view="catalog"]'),customersBtn=side.querySelector('[data-view="customers"]'),couponsBtn=side.querySelector('[data-view="coupons"]'),reviewsBtn=side.querySelector('[data-view="reviews"]'),adminsBtn=side.querySelector('[data-view="admins"]'),brandingBtn=side.querySelector('[data-view="branding"]'),mediaBtn=side.querySelector('[data-view="media"]'),operationsBtn=side.querySelector('[data-view="operations"]'),auditBtn=side.querySelector('[data-view="audit"]'),integrationsBtn=side.querySelector('[data-view="integrations"]'),invoiceCenterBtn=side.querySelector('[data-invoice-center]'),invoiceSettingsBtn=side.querySelector('[data-view="invoice-settings"]'),ebook=[...side.querySelectorAll('a.nav-item')].find(a=>a.getAttribute('href')==='admin-ebooks.html');
     iconize(dash,'dashboard','Dashboard');iconize(teamCenterBtn,'dashboard','Team Center');iconize(freeLibraryBtn,'ebook','Biblioteka Falas');iconize(ordersBtn,'orders','Porositë');iconize(booksBtn,'book','Books');iconize(addBookBtn,'book','Shto libër');iconize(messagesBtn,'mail','Mesazhet');iconize(catalogBtn,'catalog','Katalogu');iconize(customersBtn,'user','User / Klientët');iconize(couponsBtn,'coupon','Kuponët');iconize(reviewsBtn,'review','Review');iconize(adminsBtn,'admins','Administratorët');iconize(brandingBtn,'branding','Logo & Brand');iconize(mediaBtn,'catalog','Media Manager');iconize(operationsBtn,'settings','Operations');iconize(auditBtn,'audit','Audit Log');iconize(integrationsBtn,'settings','Integrimet');if(ebook)iconize(ebook,'ebook','eBook');
     const frag=document.createDocumentFragment();
-    frag.append(section('MAIN PAGES'));frag.append(pageLink('Home Page','index.html','home'));if(dash)frag.append(dash);if(teamCenterBtn)frag.append(teamCenterBtn);
-    frag.append(section('ADMIN'));if(ordersBtn)frag.append(ordersBtn);frag.append(extraCatalog('Category Lists',1));frag.append(extraCatalog('Author',0));if(booksBtn)frag.append(booksBtn);if(addBookBtn)frag.append(addBookBtn);if(ebook)frag.append(ebook);if(freeLibraryBtn)frag.append(freeLibraryBtn);if(catalogBtn)frag.append(catalogBtn);if(customersBtn)frag.append(customersBtn);if(couponsBtn)frag.append(couponsBtn);if(reviewsBtn)frag.append(reviewsBtn);if(adminsBtn)frag.append(adminsBtn);if(brandingBtn)frag.append(brandingBtn);if(mediaBtn)frag.append(mediaBtn);if(operationsBtn)frag.append(operationsBtn);if(messagesBtn){frag.append(section('KOMUNIKIM'));frag.append(messagesBtn)}if(invoiceCenterBtn||invoiceSettingsBtn){frag.append(section('FATURAT'));if(invoiceCenterBtn)frag.append(invoiceCenterBtn);if(invoiceSettingsBtn)frag.append(invoiceSettingsBtn);}
-    frag.append(section('PAGES'));frag.append(pageLink('Shop','shop.html','book'));frag.append(pageLink('Account','account.html','user'));frag.append(pageLink('Contact','contact.html','contact'));frag.append(pageLink('Shipping & Returns','shipping-returns.html','orders'));
-    frag.append(section('SYSTEM'));if(auditBtn)frag.append(auditBtn);if(integrationsBtn)frag.append(integrationsBtn);
+    frag.append(section('MAIN PAGES','main'));frag.append(pageLink('Home Page','index.html','home'));if(dash)frag.append(dash);if(teamCenterBtn)frag.append(teamCenterBtn);
+    frag.append(section('ADMIN','admin'));if(ordersBtn)frag.append(ordersBtn);frag.append(extraCatalog('Category Lists',1,'catalog'));frag.append(extraCatalog('Author',0,'user'));if(booksBtn)frag.append(booksBtn);if(addBookBtn)frag.append(addBookBtn);if(ebook)frag.append(ebook);if(freeLibraryBtn)frag.append(freeLibraryBtn);if(catalogBtn)frag.append(catalogBtn);if(customersBtn)frag.append(customersBtn);if(couponsBtn)frag.append(couponsBtn);if(reviewsBtn)frag.append(reviewsBtn);if(adminsBtn)frag.append(adminsBtn);if(brandingBtn)frag.append(brandingBtn);if(mediaBtn)frag.append(mediaBtn);if(operationsBtn)frag.append(operationsBtn);if(messagesBtn){frag.append(section('KOMUNIKIM','communication'));frag.append(messagesBtn)}if(invoiceCenterBtn||invoiceSettingsBtn){frag.append(section('FATURAT','invoice'));if(invoiceCenterBtn)frag.append(invoiceCenterBtn);if(invoiceSettingsBtn)frag.append(invoiceSettingsBtn);}
+    frag.append(section('PAGES','pages'));frag.append(pageLink('Shop','shop.html','book'));frag.append(pageLink('Account','account.html','user'));frag.append(pageLink('Contact','contact.html','contact'));frag.append(pageLink('Shipping & Returns','shipping-returns.html','orders'));
+    frag.append(section('SYSTEM','system'));if(auditBtn)frag.append(auditBtn);if(integrationsBtn)frag.append(integrationsBtn);
     side.replaceChildren(frag);
+    decorateSidebarSectors(side);
+    if(!window.zzSidebarSectorObserver){
+      window.zzSidebarSectorObserver=new MutationObserver(()=>decorateSidebarSectors(side));
+      window.zzSidebarSectorObserver.observe(side,{childList:true,subtree:false});
+    }
   }
   function buildTopbar(){
     const bar=q('.admin-topbar');if(!bar||bar.dataset.bookstoReady)return;bar.dataset.bookstoReady='1';
