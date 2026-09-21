@@ -2,13 +2,13 @@
   'use strict';
   const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
   const defaults={
-    logo_url:'assets/brand/zemzem-logo.svg',mobile_logo_url:'',watermark_url:'assets/brand/zemzem-watermark.svg',
-    logo_width:206,logo_height:58,logo_mobile_width:240,logo_mobile_height:70,
+    logo_url:'assets/brand/zemzem-logo.svg',mobile_logo_url:'',admin_logo_url:'',watermark_url:'assets/brand/zemzem-watermark.svg',
+    logo_width:206,logo_height:58,logo_mobile_width:240,logo_mobile_height:70,admin_logo_width:152,
     footer_logo_width:206,footer_logo_height:58,watermark_enabled:true,
     watermark_size:34,watermark_opacity:20,watermark_position:'bottom-right',
     menu_font_desktop:13,menu_font_tablet:12,menu_font_mobile:11
   };
-  let current={...defaults},logoFile=null,mobileLogoFile=null,watermarkFile=null,logoObjectUrl='',mobileLogoObjectUrl='',watermarkObjectUrl='';
+  let current={...defaults},logoFile=null,mobileLogoFile=null,adminLogoFile=null,watermarkFile=null,logoObjectUrl='',mobileLogoObjectUrl='',adminLogoObjectUrl='',watermarkObjectUrl='';
   const num=(id,fallback)=>{const n=Number(q(id)?.value);return Number.isFinite(n)?n:fallback};
   const clamp=(n,min,max)=>Math.min(max,Math.max(min,Number(n)||min));
   const publicAssetUrl=path=>`${SB_URL}/storage/v1/object/public/site-branding/${path.split('/').map(encodeURIComponent).join('/')}`;
@@ -39,6 +39,15 @@
               <label>Mobile — lartësi (px)<input id="brandMobileHeight" type="number" min="45" max="160" step="1"></label>
             </div>
           </div>
+        </article>
+        <article class="brand-admin-card">
+          <div class="brand-card-head"><div><h3>Logoja e Adminit</h3><p>Logo e veçantë për panelin e administrimit. Rekomandohet PNG/WebP/SVG me sfond transparent.</p></div></div>
+          <div class="brand-logo-preview-shell brand-admin-logo-shell"><div id="brandAdminLogoPreview" class="brand-logo-preview brand-admin-logo-preview"><img alt="Admin logo preview"></div></div>
+          <label class="brand-upload"><span>Zgjidh logo të re për Admin</span><input id="brandAdminLogoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label>
+          <div class="brand-dim-grid">
+            <label>Gjerësia në sidebar (px)<input id="brandAdminLogoWidth" type="number" min="90" max="210" step="1"></label>
+          </div>
+          <p class="muted-small" style="margin:10px 0 0">Nëse nuk ngarkon logo të veçantë, përdoret logoja kryesore.</p>
         </article>
         <article class="brand-admin-card">
           <div class="brand-card-head"><div><h3>Logo e hijezuar në libra</h3><p>Aplikohet automatikisht edhe te librat dhe eBook-at që shtohen më vonë.</p></div></div>
@@ -76,9 +85,11 @@
   function imgPreviewUrl(kind){
     if(kind==='logo'&&logoObjectUrl)return logoObjectUrl;
     if(kind==='mobile'&&mobileLogoObjectUrl)return mobileLogoObjectUrl;
+    if(kind==='admin'&&adminLogoObjectUrl)return adminLogoObjectUrl;
     if(kind==='watermark'&&q('#brandSameWatermark')?.checked)return logoObjectUrl||current.logo_url;
     if(kind==='watermark'&&watermarkObjectUrl)return watermarkObjectUrl;
     if(kind==='mobile')return current.mobile_logo_url||current.logo_url;
+    if(kind==='admin')return current.admin_logo_url||current.logo_url;
     return kind==='logo'?current.logo_url:current.watermark_url;
   }
   function positionWatermark(box,pos){
@@ -90,17 +101,25 @@
     else{box.style.right='10px';box.style.bottom='10px'}
   }
   function preview(){
-    const logo=q('#brandLogoPreview'),logoImg=logo?.querySelector('img');if(logo&&logoImg){logo.style.width=clamp(num('#brandLogoWidth',206),120,360)+'px';logo.style.height=clamp(num('#brandLogoHeight',58),40,140)+'px';logoImg.src=imgPreviewUrl('logo')}const mobile=q('#brandMobileLogoPreview'),mobileImg=mobile?.querySelector('img');if(mobile&&mobileImg){mobile.style.width=clamp(num('#brandMobileWidth',240),140,360)+'px';mobile.style.height=clamp(num('#brandMobileHeight',70),45,160)+'px';mobileImg.src=imgPreviewUrl('mobile')}
+    const logo=q('#brandLogoPreview'),logoImg=logo?.querySelector('img');if(logo&&logoImg){logo.style.width=clamp(num('#brandLogoWidth',206),120,360)+'px';logo.style.height=clamp(num('#brandLogoHeight',58),40,140)+'px';logoImg.src=imgPreviewUrl('logo')}const mobile=q('#brandMobileLogoPreview'),mobileImg=mobile?.querySelector('img');if(mobile&&mobileImg){mobile.style.width=clamp(num('#brandMobileWidth',240),140,360)+'px';mobile.style.height=clamp(num('#brandMobileHeight',70),45,160)+'px';mobileImg.src=imgPreviewUrl('mobile')}const adminLogo=q('#brandAdminLogoPreview'),adminLogoImg=adminLogo?.querySelector('img');if(adminLogo&&adminLogoImg){adminLogo.style.width=clamp(num('#brandAdminLogoWidth',152),90,210)+'px';adminLogoImg.src=imgPreviewUrl('admin')}applyAdminSidebarBrand();
     const size=clamp(num('#brandWmSize',34),10,70),opacity=clamp(num('#brandWmOpacity',20),0,70),outS=q('#brandWmSizeOut'),outO=q('#brandWmOpacityOut');if(outS)outS.textContent=size+'%';if(outO)outO.textContent=opacity+'%';
     const wm=q('#brandWmPreview'),fake=q('.brand-book-fake');if(wm&&fake){wm.src=imgPreviewUrl('watermark');wm.style.width=size+'%';wm.style.opacity=(opacity/100).toFixed(2);wm.style.display=q('#brandWatermarkEnabled')?.checked?'block':'none';positionWatermark(wm,q('#brandWmPosition')?.value||'bottom-right')}const mp=q('#brandMenuPreview');if(mp)mp.style.fontSize=clamp(num('#brandMenuDesktop',13),10,24)+'px'
   }
+  function applyAdminSidebarBrand(){
+    const url=adminLogoObjectUrl||current.admin_logo_url||current.logo_url||defaults.logo_url;
+    const width=clamp(num('#brandAdminLogoWidth',current.admin_logo_width||152),90,210);
+    qa('[data-admin-brand-image]').forEach(img=>{img.src=url;img.style.width=width+'px';img.style.height='auto'});
+  }
+  async function loadAdminSidebarBrand(){
+    try{const rows=await api('site_content?key=eq.branding&select=content&limit=1');current={...defaults,...(rows?.[0]?.content||{})};applyAdminSidebarBrand()}catch{applyAdminSidebarBrand()}
+  }
   function fill(c){
     current={...defaults,...(c||{})};
-    setInput('#brandLogoWidth',current.logo_width);setInput('#brandLogoHeight',current.logo_height);setInput('#brandMobileWidth',current.logo_mobile_width);setInput('#brandMobileHeight',current.logo_mobile_height);setInput('#brandFooterWidth',current.footer_logo_width);setInput('#brandFooterHeight',current.footer_logo_height);setInput('#brandWmSize',current.watermark_size);setInput('#brandWmOpacity',current.watermark_opacity);setInput('#brandWmPosition',current.watermark_position);setInput('#brandMenuDesktop',current.menu_font_desktop);setInput('#brandMenuTablet',current.menu_font_tablet);setInput('#brandMenuMobile',current.menu_font_mobile);
+    setInput('#brandLogoWidth',current.logo_width);setInput('#brandLogoHeight',current.logo_height);setInput('#brandAdminLogoWidth',current.admin_logo_width||152);setInput('#brandMobileWidth',current.logo_mobile_width);setInput('#brandMobileHeight',current.logo_mobile_height);setInput('#brandFooterWidth',current.footer_logo_width);setInput('#brandFooterHeight',current.footer_logo_height);setInput('#brandWmSize',current.watermark_size);setInput('#brandWmOpacity',current.watermark_opacity);setInput('#brandWmPosition',current.watermark_position);setInput('#brandMenuDesktop',current.menu_font_desktop);setInput('#brandMenuTablet',current.menu_font_tablet);setInput('#brandMenuMobile',current.menu_font_mobile);
     q('#brandWatermarkEnabled').checked=current.watermark_enabled!==false;
     q('#brandSameWatermark').checked=String(current.watermark_url||'')===String(current.logo_url||'');
-    logoFile=mobileLogoFile=watermarkFile=null;if(logoObjectUrl)URL.revokeObjectURL(logoObjectUrl);if(mobileLogoObjectUrl)URL.revokeObjectURL(mobileLogoObjectUrl);if(watermarkObjectUrl)URL.revokeObjectURL(watermarkObjectUrl);logoObjectUrl=mobileLogoObjectUrl=watermarkObjectUrl='';
-    q('#brandLogoFile').value='';q('#brandMobileLogoFile').value='';q('#brandWatermarkFile').value='';preview();setStatus('Gati për ndryshime. Ndryshimet aplikohen menjëherë pasi t’i ruash.');
+    logoFile=mobileLogoFile=adminLogoFile=watermarkFile=null;if(logoObjectUrl)URL.revokeObjectURL(logoObjectUrl);if(mobileLogoObjectUrl)URL.revokeObjectURL(mobileLogoObjectUrl);if(adminLogoObjectUrl)URL.revokeObjectURL(adminLogoObjectUrl);if(watermarkObjectUrl)URL.revokeObjectURL(watermarkObjectUrl);logoObjectUrl=mobileLogoObjectUrl=adminLogoObjectUrl=watermarkObjectUrl='';
+    q('#brandLogoFile').value='';q('#brandMobileLogoFile').value='';q('#brandAdminLogoFile').value='';q('#brandWatermarkFile').value='';preview();setStatus('Gati për ndryshime. Ndryshimet aplikohen menjëherë pasi t’i ruash.');
   }
   async function loadConfig(){
     setStatus('Duke ngarkuar…','');
@@ -117,9 +136,9 @@
     const text=await r.text();if(!r.ok){let d={};try{d=JSON.parse(text)}catch{}throw new Error(d.message||d.error||`Upload dështoi (${r.status})`)}return publicAssetUrl(path);
   }
   function gather(){return{
-    logo_url:current.logo_url||defaults.logo_url,mobile_logo_url:current.mobile_logo_url||'',watermark_url:current.watermark_url||defaults.watermark_url,
+    logo_url:current.logo_url||defaults.logo_url,mobile_logo_url:current.mobile_logo_url||'',admin_logo_url:current.admin_logo_url||'',watermark_url:current.watermark_url||defaults.watermark_url,
     logo_width:clamp(num('#brandLogoWidth',206),120,360),logo_height:clamp(num('#brandLogoHeight',58),40,140),
-    logo_mobile_width:clamp(num('#brandMobileWidth',240),140,360),logo_mobile_height:clamp(num('#brandMobileHeight',70),45,160),
+    logo_mobile_width:clamp(num('#brandMobileWidth',240),140,360),logo_mobile_height:clamp(num('#brandMobileHeight',70),45,160),admin_logo_width:clamp(num('#brandAdminLogoWidth',152),90,210),
     footer_logo_width:clamp(num('#brandFooterWidth',206),120,360),footer_logo_height:clamp(num('#brandFooterHeight',58),40,140),
     watermark_enabled:!!q('#brandWatermarkEnabled')?.checked,watermark_size:clamp(num('#brandWmSize',34),10,70),watermark_opacity:clamp(num('#brandWmOpacity',20),0,70),watermark_position:q('#brandWmPosition')?.value||'bottom-right',menu_font_desktop:clamp(num('#brandMenuDesktop',13),10,24),menu_font_tablet:clamp(num('#brandMenuTablet',12),9,22),menu_font_mobile:clamp(num('#brandMenuMobile',11),9,20)
   }}
@@ -129,6 +148,7 @@
       const cfg=gather();
       if(logoFile)cfg.logo_url=await upload(logoFile,'logo');
       if(mobileLogoFile)cfg.mobile_logo_url=await upload(mobileLogoFile,'mobile-logo');
+      if(adminLogoFile)cfg.admin_logo_url=await upload(adminLogoFile,'admin-logo');
       if(q('#brandSameWatermark')?.checked)cfg.watermark_url=cfg.logo_url;
       else if(watermarkFile)cfg.watermark_url=await upload(watermarkFile,'watermark');
       await api('site_content?key=eq.branding',{method:'PATCH',body:{content:cfg,updated_at:new Date().toISOString()},prefer:'return=minimal'});
@@ -140,10 +160,11 @@
     q('#brandSaveTop').onclick=save;q('#brandSaveBottom').onclick=save;q('#brandReload').onclick=loadConfig;q('#brandReset').onclick=reset;
     q('#brandLogoFile').addEventListener('change',e=>{logoFile=e.target.files?.[0]||null;if(logoObjectUrl)URL.revokeObjectURL(logoObjectUrl);logoObjectUrl=logoFile?URL.createObjectURL(logoFile):'';preview()});
     q('#brandMobileLogoFile').addEventListener('change',e=>{mobileLogoFile=e.target.files?.[0]||null;if(mobileLogoObjectUrl)URL.revokeObjectURL(mobileLogoObjectUrl);mobileLogoObjectUrl=mobileLogoFile?URL.createObjectURL(mobileLogoFile):'';preview()});
+    q('#brandAdminLogoFile').addEventListener('change',e=>{adminLogoFile=e.target.files?.[0]||null;if(adminLogoObjectUrl)URL.revokeObjectURL(adminLogoObjectUrl);adminLogoObjectUrl=adminLogoFile?URL.createObjectURL(adminLogoFile):'';preview()});
     q('#brandWatermarkFile').addEventListener('change',e=>{watermarkFile=e.target.files?.[0]||null;if(watermarkObjectUrl)URL.revokeObjectURL(watermarkObjectUrl);watermarkObjectUrl=watermarkFile?URL.createObjectURL(watermarkFile):'';q('#brandSameWatermark').checked=false;preview()});
-    ['#brandLogoWidth','#brandLogoHeight','#brandMobileWidth','#brandMobileHeight','#brandFooterWidth','#brandFooterHeight','#brandWmSize','#brandWmOpacity','#brandWmPosition','#brandWatermarkEnabled','#brandSameWatermark','#brandMenuDesktop','#brandMenuTablet','#brandMenuMobile'].forEach(id=>q(id)?.addEventListener('input',preview));
+    ['#brandLogoWidth','#brandLogoHeight','#brandAdminLogoWidth','#brandMobileWidth','#brandMobileHeight','#brandFooterWidth','#brandFooterHeight','#brandWmSize','#brandWmOpacity','#brandWmPosition','#brandWatermarkEnabled','#brandSameWatermark','#brandMenuDesktop','#brandMenuTablet','#brandMenuMobile'].forEach(id=>q(id)?.addEventListener('input',preview));
     q('#brandSameWatermark')?.addEventListener('change',preview);
   }
-  function init(){buildView();addNav();bind();}
+  function init(){buildView();addNav();bind();loadAdminSidebarBrand();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,180));else setTimeout(init,180);
 })();
