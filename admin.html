@@ -162,7 +162,7 @@
 
 <div id="toast" class="admin-toast" hidden></div>
 <script src="assets/js/admin-v2.js?v=21"></script>
-<script src="assets/js/admin-free-library-integrated.js?v=1"></script>
+<script src="assets/js/admin-free-library-integrated.js?v=2"></script>
 <script src="assets/js/admin-booksto.js?v=12"></script>
 <script src="assets/js/admin-collab.js?v=4"></script>
 <script src="assets/js/admin-collaboration-suite.js?v=1"></script>
@@ -273,6 +273,40 @@
 })();
 </script>
 
+
+<script id="zz-free-library-force-runtime">
+(()=>{
+  if(window.__zzFreeLibraryForceRuntime)return;window.__zzFreeLibraryForceRuntime=1;
+  function openFreeLibrary(){
+    try{if(typeof setView==='function'){setView('free-library');document.querySelector('[data-view="free-library"]')?.classList.add('active');return}}catch{}
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active-view',v.id==='view-free-library'));
+    const t=document.querySelector('#viewTitle');if(t)t.textContent='Biblioteka Falas';
+  }
+  function ensure(){
+    const side=document.querySelector('.side-nav');
+    if(side){
+      let b=side.querySelector('[data-view="free-library"]');
+      if(!b){
+        b=document.createElement('button');b.type='button';b.className='nav-item zz-free-library-force-nav';b.dataset.view='free-library';
+        b.innerHTML='<span class="side-menu-icon">📚</span><span>Biblioteka Falas</span><span class="nav-badge" id="freeLibraryPendingBadge" hidden>0</span>';
+        const ebook=[...side.querySelectorAll('a.nav-item')].find(a=>a.getAttribute('href')==='admin-ebooks.html');
+        if(ebook&&ebook.nextSibling)side.insertBefore(b,ebook.nextSibling);else side.appendChild(b);
+      }
+      b.onclick=openFreeLibrary;
+      b.style.setProperty('display','flex','important');
+      b.style.setProperty('visibility','visible','important');
+      b.style.setProperty('opacity','1','important');
+    }
+    if(!document.getElementById('view-free-library')){
+      const v=document.createElement('section');v.id='view-free-library';v.className='view';
+      v.innerHTML='<div class="toolbar wrap"><div><div class="eyebrow">BIBLIOTEKA FALAS</div><h2 style="margin:4px 0 0">Moderimi i PDF-ve</h2></div><span style="flex:1"></span><a class="secondary-btn" href="free-library.html" target="_blank">↗ Shiko publikisht</a><button class="secondary-btn" id="freeLibraryRefresh">↻ Rifresko</button></div><div class="toolbar wrap" style="margin-top:12px"><button class="secondary-btn fl-filter active" data-fl-filter="pending">Në pritje</button><button class="secondary-btn fl-filter" data-fl-filter="approved">Të aprovuar</button><button class="secondary-btn fl-filter" data-fl-filter="rejected">Të refuzuar</button><button class="secondary-btn fl-filter" data-fl-filter="all">Të gjitha</button></div><div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Libri</th><th>Autori / Kategoria</th><th>Ngarkuar</th><th>Statusi</th><th>Veprimet</th></tr></thead><tbody id="freeLibraryAdminBody"></tbody></table></div><div id="freeLibraryAdminEmpty" class="empty-state" hidden>Nuk ka materiale në këtë filtër.</div></div>';
+      document.querySelector('main.main')?.appendChild(v);
+    }
+  }
+  function boot(){ensure();setInterval(ensure,700);new MutationObserver(ensure).observe(document.documentElement,{childList:true,subtree:true});}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
 <script id="zz-team-force-runtime">
 (()=>{
   if(window.__zzTeamForceRuntime)return;window.__zzTeamForceRuntime=1;
