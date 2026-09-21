@@ -36,11 +36,12 @@
     <div class="sidebar-head"><a class="admin-brand light admin-brand-image-link" href="index.html"><img data-admin-brand-image class="admin-brand-image admin-sidebar-logo" src="assets/brand/zemzem-logo.svg" alt="ZemZem"></a><div class="admin-owner-title">Owner Administration</div></div>
     <nav class="side-nav">
       <button class="nav-item active" data-view="dashboard">◫ Dashboard</button>
+      <button class="nav-item zz-messenger-nav" data-view="messages">💬 Messenger Admin</button>
       <button class="nav-item" data-view="orders">▤ Porositë <span class="nav-badge" id="pendingBadge">0</span></button>
       <button class="nav-item" data-view="books">▥ Librat fizikë</button><button class="nav-item" data-view="add-book">＋ Shto libër</button>
       <a class="nav-item" href="admin-ebooks.html">📱 eBook</a>
       <button class="nav-item" data-view="catalog">◈ Katalogu</button>
-      <button class="nav-item" data-view="customers">◎ Klientët</button><button class="nav-item" data-view="messages">💬 Mesazhet</button>
+      <button class="nav-item" data-view="customers">◎ Klientët</button>
       <button class="nav-item" data-view="coupons">％ Kuponët</button>
       <button class="nav-item" data-view="reviews">★ Review</button>
       <button class="nav-item" data-view="admins" id="adminTeamNav">♙ Administratorët</button>
@@ -53,7 +54,7 @@
   <main class="main">
     <header class="admin-topbar">
       <div><div class="eyebrow">ZEMZEM ADMIN</div><h1 id="viewTitle">Dashboard</h1></div>
-      <div class="top-actions"><div class="admin-sync" id="adminSync" aria-live="polite">Duke sinkronizuar…</div><button class="icon-action" id="refreshBtn" title="Rifresko" aria-label="Rifresko të dhënat">↻</button><div class="admin-user"><div class="avatar">T</div><div><strong>Owner</strong><span>tamarillot@gmail.com</span></div></div></div>
+      <div class="top-actions"><button id="adminMessengerTopBtn" class="nav-item icon-action" data-view="messages" type="button" title="Messenger i administratorëve" style="width:auto;min-width:132px;padding:8px 12px;display:inline-flex;gap:7px;align-items:center">💬 <span>Messenger</span></button><div class="admin-sync" id="adminSync" aria-live="polite">Duke sinkronizuar…</div><button class="icon-action" id="refreshBtn" title="Rifresko" aria-label="Rifresko të dhënat">↻</button><div class="admin-user"><div class="avatar">T</div><div><strong>Owner</strong><span>tamarillot@gmail.com</span></div></div></div>
     </header>
 
     <section id="view-dashboard" class="view active-view">
@@ -117,7 +118,7 @@
 <div id="toast" class="admin-toast" hidden></div>
 <script src="assets/js/admin-v2.js?v=19"></script>
 <script src="assets/js/admin-booksto.js?v=11"></script>
-<script src="assets/js/admin-collab.js?v=1"></script>
+<script src="assets/js/admin-collab.js?v=2"></script>
 <script>
 (()=>{
   const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];let loaded=false,current=null;const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const val=id=>q(id)?.value?.trim()||'';const fallback={topbar_text:'Dërgesa: Kosovë 3 € · Shqipëri 6 € · Maqedoni e Veriut 6 €',primary_menu:[{label:'Ballina',href:'index.html',visible:true},{label:'Libra fizikë',href:'shop.html',visible:true},{label:'eBook',href:'ebooks.html',visible:true},{label:'Oferta',href:'index.html#oferta',visible:true},{label:'Rreth nesh',href:'about.html',visible:true}],support_label:'Porosit & Pyet',support_href:'contact.html',hero:{eyebrow:'Librari online në shqip',title:'Libra që mbeten me ty.',description:'Zbulo libra në shqip, tituj islamë, edukativë, historikë dhe eBook të përzgjedhur. Porosit thjesht, paguaj sigurt dhe ndiq blerjet nga një vend i vetëm.',primary_label:'Shfleto librat',primary_href:'shop.html',secondary_label:'Shiko eBook →',secondary_href:'ebooks.html'},categories_heading:'Kategoritë',categories_kicker:'Koleksionet',home_categories:[{label:'Fe & Edukim',description:'Kur’an, hadith dhe edukim',href:'shop.html?category=Fe%20%26%20Edukim',visible:true},{label:'Histori',description:'Ngjarje dhe trashëgimi',href:'shop.html?category=Histori',visible:true},{label:'Fëmijë',description:'Tregime dhe edukim',href:'shop.html?category=F%C3%ABmij%C3%AB',visible:true},{label:'Gjuhë të huaja',description:'Fjalorë dhe materiale mësimore',href:'shop.html?category=Gjuh%C3%AB%20t%C3%AB%20huaja',visible:true},{label:'eBook',description:'Biblioteka digjitale ZemZem',href:'ebooks.html',visible:true}]};const copy=o=>JSON.parse(JSON.stringify(o));const allBooksFallback={visible:true,kicker:'Katalogu i plotë',title:'Të gjithë librat',description:'Shfleto të gjithë librat fizikë të publikuar në ZemZem.',limit:20,sort:'newest'};const whyFallback={kicker:'Pse ZemZem?',title:'Blerje më e thjeshtë, nga libri te dera jote.',description:'Katër arsye pse përvoja ZemZem është ndërtuar për të qenë e qartë dhe praktike.',cards:[{icon:'✓',title:'Porosi e sigurt',description:'Checkout i qartë dhe të dhënat e pagesës trajtohen përmes kanaleve të dedikuara.',visible:true},{icon:'🚚',title:'Dërgesë rajonale',description:'Transport për Kosovë, Shqipëri dhe Maqedoni të Veriut me tarifa të dukshme.',visible:true},{icon:'💳',title:'COD & PayPal',description:'Zgjidh pagesën në pranim ose PayPal sipas kushteve që shfaqen në checkout.',visible:true},{icon:'📱',title:'eBook pa pritje',description:'Titujt digjitalë ruhen në llogarinë tënde dhe hapen nga biblioteka ZemZem.',visible:true}]};
