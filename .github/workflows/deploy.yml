@@ -484,6 +484,9 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksVisible' 'Admin all-books visibility control'
           require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksSort' 'Admin all-books sorting control'
 
+          require_live https://www.zemzem.al/admin.html /tmp/admin-team-force.html 'id="zzTeamForceLauncher"' 'Forced Team Center launcher'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-team-view.html 'id="view-team-center"' 'Static Team Center view'
+          require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-team-center.js "teamCenterBtn=side.querySelector('[data-view=\"team-center\"]')" 'Booksto preserves Team Center'
           require_live https://www.zemzem.al/admin.html /tmp/admin-messenger.html 'id="adminMessengerTopBtn"' 'Admin messenger marker'
           require_live https://www.zemzem.al/admin.html /tmp/admin-messenger-script.html 'assets/js/admin-collab.js?v=4' 'Admin messenger script reference'
           require_live https://www.zemzem.al/assets/js/admin-collab.js /tmp/admin-collab-live.js '__zzAdminCollabV3' 'Admin messenger runtime'
