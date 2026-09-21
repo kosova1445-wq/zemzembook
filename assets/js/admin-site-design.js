@@ -197,7 +197,7 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
 })();
 ;(()=>{
-  if(window.__zzNewsletterManager)return;window.__zzNewsletterManager=1;
+  if(window.__zzNewsletterManager)return;window.__zzNewsletterManager=1;return;
   const q=(s,r=document)=>r.querySelector(s);
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   let current={visible:true,device:'all',kicker:'ZemZem Newsletter',title:'Libra të rinj, oferta dhe rekomandime.',description:'Merr njoftime me email vetëm për përmbajtje të rëndësishme nga ZemZem.',button_label:'Regjistrohu',placeholder:'Email yt',background:'#294f61',text_color:'#ffffff',accent:'#ef6b57',position:'before_featured'};
@@ -380,3 +380,5 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',inject);else inject();
 })();
+/* Newsletter removed by owner */
+;(()=>{const s=document.createElement('style');s.textContent='#zzNewsletterManagerCard,#homeBuilderProCard .hb-pro-box:nth-child(4){display:none!important}';document.head.appendChild(s)})();
