@@ -298,6 +298,7 @@ jobs:
           admin-free-library.html
           assets/js/free-library.js
           assets/js/admin-free-library.js
+          assets/js/admin-free-library-integrated.js
           assets/css/free-library.css"
 
           printf '%s\n' "$CHANGED" | sed '/^[[:space:]]*$/d' | sort -u | while IFS= read -r file; do
@@ -384,6 +385,7 @@ jobs:
           upload "admin-free-library.html"
           upload "assets/js/free-library.js"
           upload "assets/js/admin-free-library.js"
+          upload "assets/js/admin-free-library-integrated.js"
           upload "assets/css/free-library.css"
           upload "release.json"
 
