@@ -77,3 +77,49 @@
 
   document.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>{rebuildSidebar();buildTopbar();wrapRender();buildInsights();renderInsights()},0);setTimeout(loadBlogModule,120);setTimeout(enhanceSiteCategoryEditor,280);setTimeout(()=>{const siteBtn=q('[data-view="site"]');if(siteBtn&&!siteBtn.dataset.catSync){enhanceSiteCategoryEditor()}},700)});
 })();
+
+;(()=>{
+'use strict';
+if(window.__zzBookEditorV2)return;window.__zzBookEditorV2=1;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const groups={
+  basic:['bookTitle','bookSku','bookSlug','bookIsbn','bookPrice','bookOldPrice','bookStock','bookStatus','bookAuthor','bookCategory','bookPublisher','bookShort','bookDescription'],
+  media:['coverPreview','bookGalleryField','bookCoverMode','book3dFrontPreview','book3dSpinePreview','book3dBackPreview','bookThickness'],
+  sales:['bookCostPrice','bookLinkedEbook','bookBundleDiscount','bookBadgeText','bookBadgeStyle','bookOfferEnds','bookLowStock','bookPublishAt','bookUnpublishAt'],
+  advanced:['bookLanguage','bookPages','bookReleaseDate','bookCountry','bookDimensions','bookWeight','bookFeatured','bookBestseller','bookPreorder','bookBackorder','bookTrackStock','bookGiftWrap','bookGiftWrapPrice']
+};
+function fieldFor(id){
+ const el=document.getElementById(id);if(!el)return null;
+ return el.closest('.field,.checks,.book-3d-admin-block')||el;
+}
+function ensure(){
+ const modal=q('#bookModal .modal-card');const form=q('#bookForm');if(!modal||!form||q('#zzBookEditorTabs'))return false;
+ modal.classList.add('zz-book-editor-card');
+ const tabs=document.createElement('div');tabs.id='zzBookEditorTabs';tabs.className='zz-book-editor-tabs';
+ tabs.innerHTML='<button type="button" class="active" data-book-tab="basic">1. Të dhënat bazë</button><button type="button" data-book-tab="media">2. Foto & 3D</button><button type="button" data-book-tab="sales">3. Shitja & Stoku</button><button type="button" data-book-tab="advanced">4. Avancuar</button>';
+ form.insertAdjacentElement('beforebegin',tabs);
+ const hidden=[...form.children].filter(x=>x.matches('input[type="hidden"]'));
+ const actions=q('#bookForm .modal-actions');
+ const panels={};
+ ['basic','media','sales','advanced'].forEach((k,i)=>{const p=document.createElement('section');p.className='zz-book-editor-panel'+(i?'':' active');p.dataset.panel=k;p.innerHTML='<div class="zz-book-panel-title"><strong>'+({basic:'Të dhënat bazë',media:'Foto & pamja e librit',sales:'Shitja & stoku',advanced:'Opsione të avancuara'}[k])+'</strong><span>'+({basic:'Titulli, çmimi dhe klasifikimi',media:'Kopertina, galeria dhe 3D',sales:'Stoku, badge dhe publikimi',advanced:'Të dhëna shtesë dhe veçori'}[k])+'</span></div><div class="zz-book-panel-grid"></div>';form.insertBefore(p,actions);panels[k]=q('.zz-book-panel-grid',p)});
+ const seen=new Set();
+ for(const [k,ids] of Object.entries(groups)){for(const id of ids){const f=fieldFor(id);if(f&&!seen.has(f)){panels[k].appendChild(f);seen.add(f)}}}
+ // Any remaining visible form fields go to Advanced, but keep hidden inputs/actions untouched.
+ [...form.children].forEach(ch=>{if(ch===actions||ch.matches('input[type="hidden"]')||ch.classList.contains('zz-book-editor-panel'))return;if(!seen.has(ch))panels.advanced.appendChild(ch)});
+ if(actions){actions.classList.add('zz-book-editor-actions');form.appendChild(actions)}
+ tabs.onclick=e=>{const b=e.target.closest('[data-book-tab]');if(!b)return;const key=b.dataset.bookTab;qa('[data-book-tab]',tabs).forEach(x=>x.classList.toggle('active',x===b));qa('.zz-book-editor-panel',form).forEach(p=>p.classList.toggle('active',p.dataset.panel===key));modal.scrollTop=0};
+ const openFirst=()=>{const b=q('[data-book-tab="basic"]',tabs);b?.click()};
+ q('#newBookBtn')?.addEventListener('click',()=>setTimeout(openFirst,30));
+ document.addEventListener('click',e=>{if(e.target.closest('[data-book-id]'))setTimeout(openFirst,30)});
+ return true
+}
+function moveGallery(){
+ const gallery=q('#bookGalleryField');const panel=q('.zz-book-editor-panel[data-panel="media"] .zz-book-panel-grid');
+ if(gallery&&panel&&gallery.parentElement!==panel)panel.appendChild(gallery)
+}
+function boot(){
+ let n=0;const t=setInterval(()=>{n++;if(ensure()||n>50)clearInterval(t)},120);
+ new MutationObserver(moveGallery).observe(document.body,{childList:true,subtree:true});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
