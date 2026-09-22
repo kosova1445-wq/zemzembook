@@ -624,6 +624,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-dashboard-v2.js /tmp/admin-dash-v2.js 'admin_dashboard_v2' 'Advanced dashboard RPC'
           require_live https://www.zemzem.al/product.html /tmp/product-complete.html 'zemzem:catalog-ready' 'Complete product renderer bootstrap'
           require_live https://www.zemzem.al/product.html /tmp/product-complete.html 'assets/js/branding.js' 'Product global branding outside renderer'
+          require_live https://www.zemzem.al/product.html /tmp/product-no-bundle.html 'zzForceRemoveProductBundle' 'Force-remove product bundle marker'
           require_live https://www.zemzem.al/assets/js/admin-blog.js /tmp/admin-blog-media.js 'data-media-target="blogPostCover"' 'Blog uses Media Manager'
           require_live https://www.zemzem.al/admin.html /tmp/admin-category-media.html 'data-f="image_url"' 'Homepage categories use Media Manager'
           require_live https://www.zemzem.al/assets/js/site-content.js /tmp/category-media-render.js 'safeImage' 'Homepage category media renderer'
