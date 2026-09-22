@@ -68,7 +68,7 @@ jobs:
                   return []
           urls=[
               ('/', 'daily','1.0'),('/shop.html','daily','0.9'),('/ebooks.html','daily','0.9'),
-              ('/blog.html','daily','0.8'),('/gift-card.html','monthly','0.6'),('/about.html','monthly','0.5'),('/contact.html','monthly','0.5'),
+              ('/blog.html','daily','0.8'),('/free-library.html','weekly','0.8'),('/gift-card.html','monthly','0.6'),('/about.html','monthly','0.5'),('/contact.html','monthly','0.5'),
               ('/fe-edukim.html','weekly','0.7'),('/histori.html','weekly','0.7'),('/femije.html','weekly','0.7'),('/gjuhe-te-huaja.html','weekly','0.7'),
               ('/shipping-returns.html','monthly','0.4'),('/privacy.html','yearly','0.3'),('/terms.html','yearly','0.3')
           ]
@@ -176,7 +176,7 @@ jobs:
             index.html shop.html product.html checkout.html paypal-return.html \
             about.html contact.html shipping-returns.html privacy.html terms.html account.html \
             ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html blog.html article.html \
-            fe-edukim.html histori.html femije.html gjuhe-te-huaja.html; do
+            fe-edukim.html histori.html femije.html gjuhe-te-huaja.html free-library.html; do
             if [ -f "$page" ] && ! grep -Fq 'assets/js/analytics.js' "$page"; then
               sed -i "s#</head>#${ANALYTICS_TAG}</head>#" "$page"
             fi
@@ -465,6 +465,11 @@ jobs:
           node --check assets/js/storefront-observability.js
           node --check assets/js/storefront-controls.js
           node --check assets/js/pwa.js
+          node --check assets/js/checkout-v2.js
+          node --check assets/js/app-v5.js
+          node --check assets/js/free-library.js
+          node --check assets/js/admin-free-library-integrated.js
+          node --check service-worker.js
 
       - name: Verify live protected release
         if: steps.latest.outputs.deploy == 'true'
@@ -571,7 +576,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js 'zemzem-menu-font-desktop' 'Global menu typography'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-mobile.js 'mobile_logo_url' 'Mobile-only logo branding support'
           # Global mobile branding on all public pages
-          for page in index.html shop.html product.html account.html checkout.html contact.html about.html blog.html article.html author.html publisher.html privacy.html terms.html shipping-returns.html ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html paypal-return.html; do
+          for page in index.html shop.html product.html account.html checkout.html contact.html about.html blog.html article.html author.html publisher.html privacy.html terms.html shipping-returns.html ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html paypal-return.html free-library.html; do
             safe_name="$(echo "$page" | tr './-' '___')"
             require_live "https://www.zemzem.al/$page" "/tmp/${safe_name}-brand.html" 'assets/css/brand.css' "Global brand CSS on $page"
             require_live "https://www.zemzem.al/$page" "/tmp/${safe_name}-branding.html" 'assets/js/branding.js' "Global branding JS on $page"
@@ -665,6 +670,13 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-reports.html 'admin-reports.js' 'Admin reports module'
           require_live https://www.zemzem.al/author.html /tmp/author.html 'entity-page.js' 'Author profile page'
           require_live https://www.zemzem.al/publisher.html /tmp/publisher.html 'entity-page.js' 'Publisher profile page'
+          require_live https://www.zemzem.al/free-library.html /tmp/free-library.html 'id="freeLibraryGrid"' 'Free Library public page'
+          require_live https://www.zemzem.al/free-library.html /tmp/free-library-seo.html 'rel="canonical" href="https://www.zemzem.al/free-library.html"' 'Free Library canonical SEO'
+          require_live https://www.zemzem.al/assets/js/free-library.js /tmp/free-library-js.html 'free_library_books' 'Free Library runtime'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-final.html 'data-view="free-library"' 'Free Library main Admin navigation'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-view-final.html 'id="view-free-library"' 'Free Library main Admin view'
+          require_live https://www.zemzem.al/service-worker.js /tmp/sw-v3.js "CACHE='zemzem-shell-v3'" 'PWA shell cache v3'
+          require_live https://www.zemzem.al/sitemap.xml /tmp/sitemap-free-library.xml 'https://www.zemzem.al/free-library.html' 'Free Library sitemap entry'
 
           echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
 
