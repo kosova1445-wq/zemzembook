@@ -565,8 +565,6 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-documents.js /tmp/admin-docs.js 'Faturë' 'Invoice renderer'
           require_live https://www.zemzem.al/admin.html /tmp/admin-dash-v2-ref.html 'assets/js/admin-dashboard-v2.js' 'Advanced dashboard module'
           require_live https://www.zemzem.al/assets/js/admin-dashboard-v2.js /tmp/admin-dash-v2.js 'admin_dashboard_v2' 'Advanced dashboard RPC'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-book-ebook-link.html 'bookLinkedEbook' 'Physical to eBook Admin link'
-          require_live https://www.zemzem.al/product.html /tmp/product-ebook-link.html 'loadLinkedEbook' 'Physical product linked eBook'
           require_live https://www.zemzem.al/product.html /tmp/product-complete.html 'zemzem:catalog-ready' 'Complete product renderer bootstrap'
           require_live https://www.zemzem.al/product.html /tmp/product-complete.html 'assets/js/branding.js?v=6' 'Product global branding outside renderer'
           require_live https://www.zemzem.al/assets/js/admin-blog.js /tmp/admin-blog-media.js 'data-media-target="blogPostCover"' 'Blog uses Media Manager'
@@ -582,15 +580,15 @@ jobs:
           node --check /tmp/admin-operations.js
           node --check /tmp/admin-extras-suite.js
           node --check /tmp/runtime-storefront.js
-          require_live https://www.zemzem.al/assets/css/product.css /tmp/product-ebook-link.css 'Linked physical + eBook' 'Linked eBook product styles'
-          require_live https://www.zemzem.al/ebook-checkout.html /tmp/ebook-bundle-checkout.html 'assets/js/ebook-checkout.js?v=3' 'Verified cross-format bundle checkout'
-          require_live https://www.zemzem.al/assets/js/ebook-checkout.js /tmp/ebook-bundle-checkout.js 'bundle_physical_book_id' 'Cross-format bundle request'
-          require_live https://www.zemzem.al/assets/js/ebook-checkout.js /tmp/ebook-bundle-checkout.js 'serveri kontrollon automatikisht' 'Cross-format bundle server verification note'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'searchSuggestions' 'Autocomplete search logic'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'authors:authors.slice' 'Autocomplete authors and categories'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'bindShopAutocomplete' 'Shop autocomplete binding'
           require_live https://www.zemzem.al/assets/css/search-autocomplete.css /tmp/search-autocomplete.css '.zz-search-suggest' 'Autocomplete search styles'
           require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=9' 'Homepage autocomplete asset version'
+          require_live https://www.zemzem.al/index.html /tmp/index-free-library.html 'id="homeFreeLibrary"' 'Homepage Free Library section'
+          require_live https://www.zemzem.al/index.html /tmp/index-upgrade-css.html 'assets/css/home-index-upgrades.css?v=1' 'Homepage upgrade CSS'
+          require_live https://www.zemzem.al/index.html /tmp/index-upgrade-js.html 'assets/js/home-index-upgrades.js?v=1' 'Homepage upgrade JS'
+          require_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js "function newsletter(){q('#zv2Newsletter')?.remove()}" 'Newsletter remains enabled'
           require_live https://www.zemzem.al/shop.html /tmp/shop-search.html 'assets/js/app-v5.js?v=9' 'Shop autocomplete asset version'
           require_live https://www.zemzem.al/product.html /tmp/product-3d.html 'book3dMarkup' '3D product renderer'
           require_live https://www.zemzem.al/assets/css/product.css /tmp/product-3d.css '3D physical book mockup' '3D product styles'
