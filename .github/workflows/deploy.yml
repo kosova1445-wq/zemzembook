@@ -198,7 +198,7 @@ jobs:
           fi
 
           # Refresh shared runtime cache versions on all HTML pages before upload.
-          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=9#g'
+          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=10#g'
           sed -i 's#assets/js/checkout-v2.js?v=7#assets/js/checkout-v2.js?v=8#g' checkout.html
 
           # Force republish advanced Admin modules and bypass stale CDN/browser versions.
@@ -576,6 +576,8 @@ jobs:
           require_live https://www.zemzem.al/assets/js/checkout-v2.js /tmp/checkout-v2.js "coupon_code:''" 'Invalid coupon keeps shipping and COD'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js 'zemzem-menu-font-desktop' 'Global menu typography'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-mobile.js 'mobile_logo_url' 'Mobile-only logo branding support'
+          require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-home-type.js 'home_hero_title_desktop' 'Homepage heading typography runtime'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-home-type.html 'homepageTypographyCard' 'Homepage heading size Admin controls'
           # Global mobile branding on all public pages
           for page in index.html shop.html product.html account.html checkout.html contact.html about.html blog.html article.html author.html publisher.html privacy.html terms.html shipping-returns.html ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html paypal-return.html free-library.html; do
             safe_name="$(echo "$page" | tr './-' '___')"
