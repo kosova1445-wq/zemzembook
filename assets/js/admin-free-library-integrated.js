@@ -1,14 +1,19 @@
 (()=>{
 'use strict';
-let rows=[],filter='pending',loaded=false;
+let rows=[],reports=[],filter='pending',loaded=false;
 const q=s=>document.querySelector(s), qa=s=>[...document.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
 const labels={pending:'Në pritje',approved:'Aprovuar',rejected:'Refuzuar'};
 async function load(){
   if(!window.api)return;
-  rows=await window.api('free_library_books?select=*&order=created_at.desc&limit=1000')||[];
-  loaded=true; render(); updateBadge();
+  const [bookRows,reportRows]=await Promise.all([window.api('free_library_books?select=*&order=created_at.desc&limit=1000'),window.api('rpc/admin_free_library_reports',{method:'POST',body:{}})]);
+  rows=bookRows||[];reports=reportRows||[];
+  loaded=true; ensureReportsPanel(); render(); renderReports(); updateBadge();
 }
+function ensureReportsPanel(){const view=q('#view-free-library');if(!view||q('#freeLibraryReportsPanel'))return;view.insertAdjacentHTML('beforeend','<section class="panel" id="freeLibraryReportsPanel" style="margin-top:18px"><div class="panel-head"><div><h2>Raportet & Copyright</h2><p>Probleme të raportuara nga vizitorët për PDF-të publike.</p></div><span class="status-pill status-pending" id="freeLibraryReportsCount">0 në pritje</span></div><div class="table-wrap"><table><thead><tr><th>Libri</th><th>Arsyeja</th><th>Detaje</th><th>Data</th><th>Veprimet</th></tr></thead><tbody id="freeLibraryReportsBody"></tbody></table></div><div id="freeLibraryReportsEmpty" class="empty-state" hidden>Nuk ka raporte.</div></section>')}
+const reportLabels={copyright:'Copyright',broken_file:'PDF nuk hapet',wrong_metadata:'Të dhëna të pasakta',inappropriate:'Përmbajtje e papërshtatshme',other:'Tjetër'};
+function renderReports(){ensureReportsPanel();const body=q('#freeLibraryReportsBody');if(!body)return;const pending=reports.filter(r=>r.status==='pending').length;const count=q('#freeLibraryReportsCount');if(count)count.textContent=pending+' në pritje';body.innerHTML=reports.map(r=>'<tr><td><strong>'+esc(r.book_title||'—')+'</strong><div class="muted-small">'+esc(r.reporter_email||'Anonim')+'</div></td><td>'+esc(reportLabels[r.reason]||r.reason)+'</td><td>'+esc((r.details||'—').slice(0,180))+'</td><td>'+new Date(r.created_at).toLocaleString('sq-AL')+'</td><td><div class="table-actions">'+(r.status==='pending'?'<button class="table-action" data-fl-report-action="'+r.id+'" data-status="actioned">Trajtuar</button><button class="table-action" data-fl-report-action="'+r.id+'" data-status="dismissed">Mbyll</button>':'<span class="status-pill status-'+esc(r.status)+'">'+esc(r.status)+'</span>')+'</div></td></tr>').join('');q('#freeLibraryReportsEmpty').hidden=!!reports.length;qa('[data-fl-report-action]').forEach(b=>b.onclick=()=>reviewReport(b.dataset.flReportAction,b.dataset.status))}
+async function reviewReport(id,status){const note=prompt('Shënim administrativ (opsionale):','')||null;try{await window.api('rpc/admin_review_free_library_report',{method:'POST',body:{p_report_id:id,p_status:status,p_admin_note:note}});await load();window.toast?.('Raporti u përditësua')}catch(e){window.toast?.(e.message,'error')}}
 function updateBadge(){
   const n=rows.filter(x=>x.status==='pending').length,b=q('#freeLibraryPendingBadge');
   if(!b)return;b.textContent=n;b.hidden=!n;
