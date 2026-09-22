@@ -4,7 +4,7 @@
   if(!document.querySelector('script[data-home-layout-runtime]')){const s=document.createElement('script');s.src='assets/js/home-layout-runtime.js?v=1';s.defer=true;s.dataset.homeLayoutRuntime='1';document.head.appendChild(s)}
   if(!document.querySelector('script[data-runtime-ops]')){const s=document.createElement('script');s.src='assets/js/runtime-ops.js?v=1';s.defer=true;s.dataset.runtimeOps='1';document.head.appendChild(s)}
   if(!document.querySelector('script[data-runtime-storefront]')){const s=document.createElement('script');s.src='assets/js/runtime-storefront.js?v=1';s.defer=true;s.dataset.runtimeStorefront='1';document.head.appendChild(s)}
-  if(!document.querySelector('script[data-site-manager-runtime]')){const s=document.createElement('script');s.src='assets/js/site-manager-runtime.js?v=1';s.defer=true;s.dataset.siteManagerRuntime='1';document.head.appendChild(s)}
+  if(!document.querySelector('script[data-site-manager-runtime]')){const s=document.createElement('script');s.src='assets/js/site-manager-runtime.js?v=2';s.defer=true;s.dataset.siteManagerRuntime='1';document.head.appendChild(s)}
   'use strict';
   const SB_URL='https://ysvtrhizgcioyycwlkrk.supabase.co';
   const SB_KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
