@@ -307,6 +307,8 @@ jobs:
           assets/js/site-content.js
           assets/js/site-manager-runtime.js
           assets/js/admin-site-manager.js
+          assets/js/site-manager-advanced-runtime.js
+          assets/js/admin-site-manager-pro.js
           assets/js/admin-blog.js
           assets/css/admin-blog.css
           assets/css/admin.css
@@ -414,6 +416,8 @@ jobs:
           upload "assets/js/site-content.js"
           upload "assets/js/site-manager-runtime.js"
           upload "assets/js/admin-site-manager.js"
+          upload "assets/js/admin-site-manager-pro.js"
+          upload "assets/js/site-manager-advanced-runtime.js"
           upload "assets/js/admin-enterprise.js"
           upload "assets/js/admin-enterprise-tools.js"
           upload "assets/js/admin-enterprise-config.js"
@@ -477,6 +481,8 @@ jobs:
           node --check service-worker.js
           node --check assets/js/site-manager-runtime.js
           node --check assets/js/admin-site-manager.js
+          node --check assets/js/admin-site-manager-pro.js
+          node --check assets/js/site-manager-advanced-runtime.js
 
       - name: Verify live protected release
         if: steps.latest.outputs.deploy == 'true'
@@ -585,6 +591,9 @@ jobs:
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-home-type.js 'home_hero_title_desktop' 'Homepage heading typography runtime'
           require_live https://www.zemzem.al/assets/js/site-manager-runtime.js /tmp/site-manager-runtime.js 'site_manager_v1' 'Site Manager public runtime'
           require_live https://www.zemzem.al/assets/js/admin-site-manager.js /tmp/admin-site-manager.js 'Menaxhimi i plotë i faqes' 'Unified Site Manager Admin module'
+          require_live https://www.zemzem.al/assets/js/admin-site-manager-pro.js /tmp/admin-site-manager-pro.js 'Strukturë & Ikona' 'Advanced Site Manager structure controls'
+          require_live https://www.zemzem.al/assets/js/site-manager-advanced-runtime.js /tmp/site-manager-advanced-runtime.js 'applyFooter' 'Advanced Site Manager public runtime'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-site-manager-pro-loader.html 'admin-site-manager-pro.js?v=1' 'Advanced Site Manager Admin loader'
           require_live https://www.zemzem.al/admin.html /tmp/admin-site-manager-loader.html 'admin-site-manager.js?v=2' 'Site Manager Admin loader'
           require_live https://www.zemzem.al/admin.html /tmp/admin-home-type.html 'homepageTypographyCard' 'Homepage heading size Admin controls'
           # Global mobile branding on all public pages
