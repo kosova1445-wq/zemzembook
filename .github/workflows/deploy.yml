@@ -207,6 +207,7 @@ jobs:
           # Always republish the complete protected production set.
           CHANGED="$CHANGED
           index.html
+          404.html
           shop.html
           product.html
           checkout.html
@@ -671,6 +672,7 @@ jobs:
           require_live https://www.zemzem.al/author.html /tmp/author.html 'entity-page.js' 'Author profile page'
           require_live https://www.zemzem.al/publisher.html /tmp/publisher.html 'entity-page.js' 'Publisher profile page'
           require_live https://www.zemzem.al/free-library.html /tmp/free-library.html 'id="freeLibraryGrid"' 'Free Library public page'
+          require_live https://www.zemzem.al/404.html /tmp/zemzem-404.html 'Faqja nuk u gjet' 'Branded ZemZem 404 page'
           require_live https://www.zemzem.al/free-library.html /tmp/free-library-seo.html 'rel="canonical" href="https://www.zemzem.al/free-library.html"' 'Free Library canonical SEO'
           require_live https://www.zemzem.al/assets/js/free-library.js /tmp/free-library-js.html 'free_library_books' 'Free Library runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-final.html 'data-view="free-library"' 'Free Library main Admin navigation'
