@@ -604,6 +604,8 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-invoice-center-ref.html 'assets/js/admin-invoice-center.js' 'Dedicated invoice center reference'
           require_live https://www.zemzem.al/assets/js/admin-invoice-center.js /tmp/admin-invoice-center.js 'Menaxhimi i faturave' 'Dedicated invoice center module'
           require_live https://www.zemzem.al/assets/js/admin-pro-20.js /tmp/admin-pro20.js 'Advanced Center' 'Advanced Center module'
+          require_live https://www.zemzem.al/assets/js/admin-pro-20.js /tmp/admin-pro20-proforma.js 'printProfessionalProforma' 'Professional Proforma renderer'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-pro20-v4.html 'assets/js/admin-pro-20.js?v=4' 'Admin Proforma renderer v4'
           require_live https://www.zemzem.al/gift-card.html /tmp/gift-card.html 'Gift Card ZemZem' 'Public Gift Card page'
           require_live https://www.zemzem.al/assets/js/storefront-controls.js /tmp/storefront-controls.js 'storefront_runtime_config_v1' 'Storefront runtime controls'
           require_live https://www.zemzem.al/admin.html /tmp/admin-pro20-ref.html 'admin-pro-20.js' 'Advanced Center reference'
