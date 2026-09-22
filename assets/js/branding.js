@@ -15,7 +15,10 @@
     footer_logo_width:206,footer_logo_height:58,
     watermark_enabled:true,watermark_size:34,watermark_opacity:20,
     watermark_position:'bottom-right',
-    menu_font_desktop:13,menu_font_tablet:12,menu_font_mobile:11
+    menu_font_desktop:13,menu_font_tablet:12,menu_font_mobile:11,
+    home_hero_title_desktop:52,home_hero_title_mobile:34,
+    home_section_title_desktop:32,home_section_title_mobile:25,
+    home_editorial_title_desktop:36,home_editorial_title_mobile:28
   };
   const clamp=(v,min,max,fallback)=>{const n=Number(v);return Number.isFinite(n)?Math.min(max,Math.max(min,n)):fallback};
   const safeUrl=v=>{const s=String(v||'').trim();if(!s)return'';if(/^https:\/\//i.test(s)||/^assets\//i.test(s)||/^\.\.?\//.test(s)||/^data:image\/(?:png|jpeg|webp|svg\+xml);base64,/i.test(s))return s;return''};
@@ -41,8 +44,16 @@
     root.setProperty('--zemzem-menu-font-desktop',clamp(c.menu_font_desktop,10,24,13)+'px');
     root.setProperty('--zemzem-menu-font-tablet',clamp(c.menu_font_tablet,9,22,12)+'px');
     root.setProperty('--zemzem-menu-font-mobile',clamp(c.menu_font_mobile,9,20,11)+'px');
+    root.setProperty('--zemzem-home-hero-title-desktop',clamp(c.home_hero_title_desktop,28,80,52)+'px');
+    root.setProperty('--zemzem-home-hero-title-mobile',clamp(c.home_hero_title_mobile,24,54,34)+'px');
+    root.setProperty('--zemzem-home-section-title-desktop',clamp(c.home_section_title_desktop,20,52,32)+'px');
+    root.setProperty('--zemzem-home-section-title-mobile',clamp(c.home_section_title_mobile,18,40,25)+'px');
+    root.setProperty('--zemzem-home-editorial-title-desktop',clamp(c.home_editorial_title_desktop,22,64,36)+'px');
+    root.setProperty('--zemzem-home-editorial-title-mobile',clamp(c.home_editorial_title_mobile,20,46,28)+'px');
     let menuStyle=document.getElementById('zemzemMenuTypography');if(!menuStyle){menuStyle=document.createElement('style');menuStyle.id='zemzemMenuTypography';document.head.appendChild(menuStyle)}
     menuStyle.textContent=`.nav-row>a,.nav-row .category-trigger,.simple-head nav a{font-size:var(--zemzem-menu-font-desktop)!important}@media (min-width:721px) and (max-width:1024px){.nav-row>a,.nav-row .category-trigger,.simple-head nav a{font-size:var(--zemzem-menu-font-tablet)!important}}@media (max-width:720px){.nav-row>a,.nav-row .category-trigger,.simple-head nav a,.zz-mobile-links a,.zz-mobile-categories a,.zz-mobile-dock small{font-size:var(--zemzem-menu-font-mobile)!important}}`;
+    let homeTypeStyle=document.getElementById('zemzemHomepageTypography');if(!homeTypeStyle){homeTypeStyle=document.createElement('style');homeTypeStyle.id='zemzemHomepageTypography';document.head.appendChild(homeTypeStyle)}
+    homeTypeStyle.textContent=`body.zemzem-bookstore-v2 .home-slide-copy h1{font-size:var(--zemzem-home-hero-title-desktop)!important}body.zemzem-bookstore-v2 .section-head h2{font-size:var(--zemzem-home-section-title-desktop)!important}body.zemzem-bookstore-v2 .wow-featured-copy h2,body.zemzem-bookstore-v2 .wow-editorial-copy h2,body.zemzem-bookstore-v2 .zz-bookweek-copy h2,body.zemzem-bookstore-v2 .zz-dark-copy h2{font-size:var(--zemzem-home-editorial-title-desktop)!important}@media(max-width:680px){body.zemzem-bookstore-v2 .home-slide-copy h1{font-size:var(--zemzem-home-hero-title-mobile)!important}body.zemzem-bookstore-v2 .section-head h2{font-size:var(--zemzem-home-section-title-mobile)!important}body.zemzem-bookstore-v2 .wow-featured-copy h2,body.zemzem-bookstore-v2 .wow-editorial-copy h2,body.zemzem-bookstore-v2 .zz-bookweek-copy h2,body.zemzem-bookstore-v2 .zz-dark-copy h2{font-size:var(--zemzem-home-editorial-title-mobile)!important}}`;
     let mobileBrandStyle=document.getElementById('zemzemMobileBranding');if(!mobileBrandStyle){mobileBrandStyle=document.createElement('style');mobileBrandStyle.id='zemzemMobileBranding';document.head.appendChild(mobileBrandStyle)}
     mobileBrandStyle.textContent=`@media(max-width:720px){.brand{width:var(--zemzem-mobile-logo-width)!important;min-width:0!important;height:var(--zemzem-mobile-logo-height)!important;padding:0!important;background-color:#fff!important;background-image:var(--zemzem-mobile-logo-bg)!important;background-repeat:no-repeat!important;background-position:center!important;background-size:contain!important;overflow:hidden!important}.brand .brand-mark,.brand>span:last-child{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}}`;
     const pos=['bottom-right','bottom-left','top-right','top-left','center'].includes(c.watermark_position)?c.watermark_position:'bottom-right';
