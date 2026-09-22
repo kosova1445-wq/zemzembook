@@ -212,6 +212,7 @@ jobs:
           assets/css/home-modern.css
           assets/css/home-wow.css
           assets/css/home-bookstore-v2.css
+          assets/css/home-index-upgrades.css
           assets/css/home-ebukz3.css
           assets/css/home-category-preserve.css
           assets/js/checkout-v2.js
@@ -232,6 +233,7 @@ jobs:
           assets/js/admin-intelligence-suite.js
           assets/js/admin-growth-advanced.js
           assets/js/home-layout-runtime.js
+          assets/js/home-index-upgrades.js
           assets/js/admin-experience-automation.js
           assets/js/runtime-ops.js
           assets/js/admin-v2.js
@@ -328,6 +330,7 @@ jobs:
           upload "assets/js/home-wow.js"
           upload "assets/js/home-mobile-v6.js"
           upload "assets/css/site-premium-v3.css"
+          upload "assets/css/home-index-upgrades.css"
           upload "admin.html"
           upload "collections.html"
           upload "service-worker.js"
@@ -341,6 +344,7 @@ jobs:
           upload "assets/js/admin-growth-advanced.js"
           upload "assets/js/admin-experience-automation.js"
           upload "assets/js/home-layout-runtime.js"
+          upload "assets/js/home-index-upgrades.js"
           upload "assets/js/runtime-ops.js"
           upload "assets/js/admin-v2.js"
           upload "assets/css/admin.css"
