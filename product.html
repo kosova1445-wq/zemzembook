@@ -290,5 +290,26 @@
   })();
   </script>
   <script src="assets/js/branding.js?v=6"></script>
-<script src="assets/js/mobile-commerce-v3.js?v=4"></script><script src="assets/js/storefront-experience.js?v=1"></script><script src="assets/js/storefront-advanced.js?v=1"></script><script src="assets/js/storefront-observability.js?v=1"></script><script src="assets/js/storefront-controls.js?v=1"></script></body>
+<script src="assets/js/mobile-commerce-v3.js?v=4"></script><script src="assets/js/storefront-experience.js?v=2"></script><script src="assets/js/storefront-advanced.js?v=1"></script><script src="assets/js/storefront-observability.js?v=1"></script><script src="assets/js/storefront-controls.js?v=1"></script>
+<script id="zzForceRemoveProductBundle">
+(()=>{
+  const kill=()=>{
+    document.querySelectorAll('#zzBundle,.zz-bundle').forEach(x=>x.remove());
+    [...document.querySelectorAll('section,div')].forEach(x=>{
+      const t=(x.textContent||'').trim();
+      if(t.includes('Mund t’i shtosh bashkë')||t.includes('Plotëso koleksionin')){
+        if(x.closest('#productDetail'))return;
+        const target=x.closest('#zzBundle,.zz-bundle,section');
+        if(target)target.remove();
+      }
+    });
+  };
+  kill();
+  document.addEventListener('DOMContentLoaded',kill);
+  window.addEventListener('zemzem:catalog-ready',()=>setTimeout(kill,0));
+  new MutationObserver(kill).observe(document.documentElement,{childList:true,subtree:true});
+  setInterval(kill,500);
+})();
+</script>
+</body>
 </html>
