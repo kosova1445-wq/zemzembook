@@ -280,3 +280,42 @@ body{background:#fffdfb}
  [data-home-category-cards]>*{min-width:145px;scroll-snap-align:start}
  .collection-rail .container>a{min-width:150px;scroll-snap-align:start;flex:0 0 auto}
 }
+
+
+/* Final homepage heading scale */
+body.zemzem-bookstore-v2 .home-slide-copy h1{
+  font-size:clamp(38px,3.5vw,52px)!important;
+  line-height:1.02!important;
+  letter-spacing:-1.5px!important;
+}
+body.zemzem-bookstore-v2 .section-head h2{
+  font-size:clamp(24px,2.2vw,32px)!important;
+  line-height:1.14!important;
+  letter-spacing:-.6px!important;
+}
+body.zemzem-bookstore-v2 .wow-featured-copy h2,
+body.zemzem-bookstore-v2 .wow-editorial-copy h2,
+body.zemzem-bookstore-v2 .zz-bookweek-copy h2,
+body.zemzem-bookstore-v2 .zz-dark-copy h2{
+  font-size:clamp(26px,2.6vw,36px)!important;
+  line-height:1.12!important;
+  letter-spacing:-.8px!important;
+}
+@media(max-width:680px){
+  body.zemzem-bookstore-v2 .home-slide-copy h1{
+    font-size:34px!important;
+    line-height:1.05!important;
+    letter-spacing:-1px!important;
+  }
+  body.zemzem-bookstore-v2 .section-head h2{
+    font-size:25px!important;
+    line-height:1.16!important;
+  }
+  body.zemzem-bookstore-v2 .wow-featured-copy h2,
+  body.zemzem-bookstore-v2 .wow-editorial-copy h2,
+  body.zemzem-bookstore-v2 .zz-bookweek-copy h2,
+  body.zemzem-bookstore-v2 .zz-dark-copy h2{
+    font-size:28px!important;
+    line-height:1.14!important;
+  }
+}
