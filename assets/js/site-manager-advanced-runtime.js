@@ -28,7 +28,10 @@ function applySections(){
  if(CFG?.advanced?.section_order_enabled===true){
    const footer=q('.footer');if(!footer?.parentNode)return;
    const parent=footer.parentNode;
-   arr.forEach(x=>{const el=sectionNode(x);if(el&&el.parentNode===parent&&x.visible!==false&&!x.deleted)parent.insertBefore(el,footer)});
+   const desired=arr.map(sectionNode).filter(el=>el&&el.parentNode===parent&&el.style.display!=='none');
+   const current=[...parent.children].filter(el=>desired.includes(el));
+   const same=current.length===desired.length&&current.every((el,i)=>el===desired[i]);
+   if(!same)desired.forEach(el=>parent.insertBefore(el,footer));
  }
 }
 function normHref(v){try{return new URL(v,location.href).pathname.replace(/^//,'')+new URL(v,location.href).hash}catch{return String(v||'')}}
