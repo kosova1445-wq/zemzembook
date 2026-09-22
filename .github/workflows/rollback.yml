@@ -1,0 +1,92 @@
+name: Rollback ZemZem production
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: "Commit SHA to restore"
+        required: true
+        type: string
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout repository history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate rollback target
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET="${{ inputs.target_sha }}"
+          git rev-parse --verify "${TARGET}^{commit}" >/dev/null
+          git fetch origin main --depth=200
+          if ! git merge-base --is-ancestor "$TARGET" origin/main; then
+            echo "::error::Target SHA is not an ancestor of main."
+            exit 1
+          fi
+          echo "sha=$(git rev-parse "$TARGET")" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout target release
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout --detach "${{ steps.target.outputs.sha }}"
+
+      - name: Validate deployment secrets
+        env:
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+        run: |
+          test -n "$FTP_USERNAME"
+          test -n "$FTP_PASSWORD"
+          test -n "$FTP_PORT"
+          test -n "$FTP_SERVER_DIR"
+
+      - name: Restore selected release
+        env:
+          FTP_SERVER: quebec.us.hostns.io
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+          TARGET_SHA: ${{ steps.target.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          upload() {
+            local src="$1"
+            curl --fail --show-error --silent               --connect-timeout 20 --max-time 90 --retry 2 --retry-delay 2               --ssl-reqd --disable-epsv --ftp-skip-pasv-ip --ftp-create-dirs               --user "$FTP_USERNAME:$FTP_PASSWORD"               --upload-file "$src"               "ftp://${FTP_SERVER}:${FTP_PORT}${FTP_SERVER_DIR}${src}"
+            echo "Restored: $src"
+          }
+
+          find . -type f             \( -name '*.html' -o -name '*.css' -o -name '*.js' -o -name '*.svg' -o -name '*.png' -o -name '*.jpg' -o -name '*.jpeg' -o -name '*.webp' -o -name '*.ico' -o -name 'robots.txt' -o -name 'sitemap.xml' -o -name 'service-worker.js' \)             ! -path './.git/*' ! -path './.github/*' ! -path './supabase/*'             -print0 | while IFS= read -r -d '' file; do
+              upload "${file#./}"
+            done
+
+          if [ -f ".htaccess" ]; then upload ".htaccess"; fi
+
+          cat > release.json <<EOF
+          {"sha":"${TARGET_SHA}","run_id":"${GITHUB_RUN_ID}","ref":"rollback","deployed_at":"$(date -u +%Y-%m-%dT%H:%M:%SZ)"}
+          EOF
+          upload "release.json"
+
+      - name: Verify rollback live
+        env:
+          TARGET_SHA: ${{ steps.target.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          sleep 8
+          curl -fsSL --retry 4 --retry-delay 3 "https://www.zemzem.al/release.json?ts=${GITHUB_RUN_ID}" -o /tmp/release.json
+          grep -Fq "$TARGET_SHA" /tmp/release.json
+          curl -fsSL --retry 4 --retry-delay 3 "https://www.zemzem.al/index.html?ts=${GITHUB_RUN_ID}" -o /tmp/index.html
+          grep -Fq '<title>' /tmp/index.html
+          echo "ROLLBACK_LIVE_OK=yes"
