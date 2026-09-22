@@ -593,7 +593,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-site-manager.js /tmp/admin-site-manager.js 'Menaxhimi i plotë i faqes' 'Unified Site Manager Admin module'
           require_live https://www.zemzem.al/assets/js/admin-site-manager-pro.js /tmp/admin-site-manager-pro.js 'Strukturë & Ikona' 'Advanced Site Manager structure controls'
           require_live https://www.zemzem.al/assets/js/site-manager-advanced-runtime.js /tmp/site-manager-advanced-runtime.js 'applyFooter' 'Advanced Site Manager public runtime'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-site-manager-pro-loader.html 'admin-site-manager-pro.js?v=1' 'Advanced Site Manager Admin loader'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-site-manager-pro-loader.html 'admin-site-manager-pro.js?v=2' 'Advanced Site Manager Admin loader'
           require_live https://www.zemzem.al/admin.html /tmp/admin-site-manager-loader.html 'admin-site-manager.js?v=2' 'Site Manager Admin loader'
           require_live https://www.zemzem.al/admin.html /tmp/admin-home-type.html 'homepageTypographyCard' 'Homepage heading size Admin controls'
           # Global mobile branding on all public pages
