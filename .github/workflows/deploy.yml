@@ -142,17 +142,30 @@ jobs:
 
           # Keep a compact history of recent live releases for Admin rollback visibility.
           curl -fsSL --connect-timeout 8 --max-time 15 "https://www.zemzem.al/release-history.json?ts=${GITHUB_RUN_ID}" -o /tmp/release-history-prev.json || echo '[]' > /tmp/release-history-prev.json
+          curl -fsSL --connect-timeout 8 --max-time 15 "https://www.zemzem.al/release.json?ts=${GITHUB_RUN_ID}" -o /tmp/release-live-prev.json || echo '{}' > /tmp/release-live-prev.json
           python3 - <<'PY'
           import json, os
-          cur={"sha":os.environ["GITHUB_SHA"],"run_id":os.environ["GITHUB_RUN_ID"],"ref":"main"}
           from datetime import datetime, timezone
-          cur["deployed_at"]=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+          cur={"sha":os.environ["GITHUB_SHA"],"run_id":os.environ["GITHUB_RUN_ID"],"ref":"main","deployed_at":datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
           try:
               old=json.load(open("/tmp/release-history-prev.json"))
               if not isinstance(old,list): old=[]
           except Exception:
               old=[]
-          rows=[cur]+[x for x in old if isinstance(x,dict) and x.get("sha")!=cur["sha"]]
+          try:
+              prev=json.load(open("/tmp/release-live-prev.json"))
+              if not isinstance(prev,dict): prev={}
+          except Exception:
+              prev={}
+          candidates=[cur]
+          if prev.get("sha") and prev.get("sha")!=cur["sha"]: candidates.append(prev)
+          candidates += [x for x in old if isinstance(x,dict)]
+          rows=[]
+          seen=set()
+          for x in candidates:
+              sha=x.get("sha")
+              if sha and sha not in seen:
+                  rows.append(x); seen.add(sha)
           json.dump(rows[:10],open("release-history.json","w"))
           PY
 
@@ -622,7 +635,7 @@ jobs:
           require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=9' 'Homepage autocomplete asset version'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release.html 'admin-security-release.js' 'Security and Releases Admin module'
           require_live https://www.zemzem.al/assets/js/admin-security-release.js /tmp/admin-security-release.js 'admin_security_snapshot_v1' 'Security snapshot runtime'
-          require_live https://www.zemzem.al/fe-edukim.html /tmp/fe-edukim.html 'data-category="Fe &amp; Edukim"' 'Fe and Edukim landing page'
+          require_live https://www.zemzem.al/fe-edukim.html /tmp/fe-edukim.html 'data-category="Fe & Edukim"' 'Fe and Edukim landing page'
           require_live https://www.zemzem.al/histori.html /tmp/histori.html 'data-category="Histori"' 'Histori landing page'
           require_live https://www.zemzem.al/femije.html /tmp/femije.html 'data-category="Fëmijë"' 'Femije landing page'
           require_live https://www.zemzem.al/assets/js/performance-vitals.js /tmp/performance-vitals.js 'largest-contentful-paint' 'Core Web Vitals runtime'
