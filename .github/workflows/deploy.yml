@@ -250,6 +250,7 @@ jobs:
           assets/css/home-ebukz3.css
           assets/css/home-category-preserve.css
           assets/js/checkout-v2.js
+          assets/js/checkout-cities.js
           assets/js/seo-product.js
           assets/js/analytics.js
           assets/css/style.css
