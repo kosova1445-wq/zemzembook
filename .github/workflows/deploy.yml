@@ -69,6 +69,7 @@ jobs:
           urls=[
               ('/', 'daily','1.0'),('/shop.html','daily','0.9'),('/ebooks.html','daily','0.9'),
               ('/blog.html','daily','0.8'),('/gift-card.html','monthly','0.6'),('/about.html','monthly','0.5'),('/contact.html','monthly','0.5'),
+              ('/fe-edukim.html','weekly','0.7'),('/histori.html','weekly','0.7'),('/femije.html','weekly','0.7'),('/gjuhe-te-huaja.html','weekly','0.7'),
               ('/shipping-returns.html','monthly','0.4'),('/privacy.html','yearly','0.3'),('/terms.html','yearly','0.3')
           ]
           for b in get('/rest/v1/storefront_books?select=id,created_at&order=created_at.desc'):
@@ -139,14 +140,35 @@ jobs:
           {"sha":"${GITHUB_SHA}","run_id":"${GITHUB_RUN_ID}","ref":"main","deployed_at":"$(date -u +%Y-%m-%dT%H:%M:%SZ)"}
           EOF
 
+          # Keep a compact history of recent live releases for Admin rollback visibility.
+          curl -fsSL --connect-timeout 8 --max-time 15 "https://www.zemzem.al/release-history.json?ts=${GITHUB_RUN_ID}" -o /tmp/release-history-prev.json || echo '[]' > /tmp/release-history-prev.json
+          python3 - <<'PY'
+          import json, os
+          cur={"sha":os.environ["GITHUB_SHA"],"run_id":os.environ["GITHUB_RUN_ID"],"ref":"main"}
+          from datetime import datetime, timezone
+          cur["deployed_at"]=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+          try:
+              old=json.load(open("/tmp/release-history-prev.json"))
+              if not isinstance(old,list): old=[]
+          except Exception:
+              old=[]
+          rows=[cur]+[x for x in old if isinstance(x,dict) and x.get("sha")!=cur["sha"]]
+          json.dump(rows[:10],open("release-history.json","w"))
+          PY
+
           # Inject the public analytics bootstrap at build time. Admin pages intentionally stay analytics-free.
           ANALYTICS_TAG='<script src="assets/js/analytics.js?v=1"></script>'
+          PERF_TAG='<script src="assets/js/performance-vitals.js?v=1" defer></script>'
           for page in \
             index.html shop.html product.html checkout.html paypal-return.html \
             about.html contact.html shipping-returns.html privacy.html terms.html account.html \
-            ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html blog.html article.html; do
+            ebooks.html ebook.html ebook-checkout.html ebook-paypal-return.html blog.html article.html \
+            fe-edukim.html histori.html femije.html gjuhe-te-huaja.html; do
             if [ -f "$page" ] && ! grep -Fq 'assets/js/analytics.js' "$page"; then
               sed -i "s#</head>#${ANALYTICS_TAG}</head>#" "$page"
+            fi
+            if [ -f "$page" ] && ! grep -Fq 'assets/js/performance-vitals.js' "$page"; then
+              sed -i "s#</body>#${PERF_TAG}</body>#" "$page"
             fi
           done
 
@@ -295,6 +317,14 @@ jobs:
           assets/css/ebooks.css
           assets/css/ebook-checkout.css
           free-library.html
+          assets/js/admin-security-release.js
+          assets/js/performance-vitals.js
+          assets/js/category-landing.js
+          assets/css/category-landing.css
+          gjuhe-te-huaja.html
+          femije.html
+          histori.html
+          fe-edukim.html
           admin-free-library.html
           assets/js/free-library.js
           assets/js/admin-free-library.js
@@ -387,6 +417,15 @@ jobs:
           upload "assets/js/admin-free-library.js"
           upload "assets/js/admin-free-library-integrated.js"
           upload "assets/css/free-library.css"
+          upload "fe-edukim.html"
+          upload "histori.html"
+          upload "femije.html"
+          upload "gjuhe-te-huaja.html"
+          upload "assets/css/category-landing.css"
+          upload "assets/js/category-landing.js"
+          upload "assets/js/performance-vitals.js"
+          upload "assets/js/admin-security-release.js"
+          upload "release-history.json"
           upload "release.json"
           upload ".htaccess"
 
@@ -581,6 +620,12 @@ jobs:
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'bindShopAutocomplete' 'Shop autocomplete binding'
           require_live https://www.zemzem.al/assets/css/search-autocomplete.css /tmp/search-autocomplete.css '.zz-search-suggest' 'Autocomplete search styles'
           require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=9' 'Homepage autocomplete asset version'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-security-release.html 'admin-security-release.js' 'Security and Releases Admin module'
+          require_live https://www.zemzem.al/assets/js/admin-security-release.js /tmp/admin-security-release.js 'admin_security_snapshot_v1' 'Security snapshot runtime'
+          require_live https://www.zemzem.al/fe-edukim.html /tmp/fe-edukim.html 'data-category="Fe &amp; Edukim"' 'Fe and Edukim landing page'
+          require_live https://www.zemzem.al/histori.html /tmp/histori.html 'data-category="Histori"' 'Histori landing page'
+          require_live https://www.zemzem.al/femije.html /tmp/femije.html 'data-category="Fëmijë"' 'Femije landing page'
+          require_live https://www.zemzem.al/assets/js/performance-vitals.js /tmp/performance-vitals.js 'largest-contentful-paint' 'Core Web Vitals runtime'
           curl -fsSL --retry 3 --retry-delay 2 "https://www.zemzem.al/index.html?verify=${GITHUB_SHA}" -o /tmp/index-no-free-library.html
           if grep -Fq 'id="homeFreeLibrary"' /tmp/index-no-free-library.html; then
             echo "::error::Homepage Free Library section is still visible"
