@@ -1,5 +1,5 @@
-const CACHE='zemzem-shell-v2';
-const SHELL=['/','/index.html','/shop.html','/offline.html','/assets/css/style.css','/assets/css/brand.css','/assets/js/app-v5.js'];
+const CACHE='zemzem-shell-v3';
+const SHELL=['/','/index.html','/shop.html','/free-library.html','/offline.html','/assets/css/style.css','/assets/css/brand.css','/assets/js/app-v5.js'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET'||new URL(r.url).origin!==location.origin)return;
