@@ -286,6 +286,77 @@
 </script>
 
 
+
+<script id="homepageTypographyInline">
+(()=>{
+  const q=s=>document.querySelector(s);
+  const clamp=(v,min,max,f)=>{const n=Number(v);return Number.isFinite(n)?Math.min(max,Math.max(min,n)):f};
+  function inject(){
+    const grid=q('#view-site .site-editor-grid');
+    if(!grid||q('#homepageTypographyCard'))return false;
+    const card=document.createElement('article');
+    card.id='homepageTypographyCard';
+    card.className='site-editor-card span-2';
+    card.innerHTML='<div class="site-card-head"><div><h3>Madhësia e titujve në Ballinë</h3><p>Rregullo madhësinë e titujve pa hyrë në kod. Mund t’i ndryshosh veçmas për kompjuter dhe telefon.</p></div></div>'+
+      '<div class="site-editor-actions" style="justify-content:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:14px">'+
+      '<button type="button" class="secondary-btn" data-home-type-preset="small">Të vegjël</button>'+
+      '<button type="button" class="secondary-btn" data-home-type-preset="normal">Normal</button>'+
+      '<button type="button" class="secondary-btn" data-home-type-preset="large">Të mëdhenj</button></div>'+
+      '<div class="site-two"><div class="site-field"><label>Hero – kompjuter (px)</label><input id="homeHeroTitleDesktop" type="number" min="28" max="80" step="1" value="52"></div><div class="site-field"><label>Hero – telefon (px)</label><input id="homeHeroTitleMobile" type="number" min="24" max="54" step="1" value="34"></div></div>'+
+      '<div class="site-two"><div class="site-field"><label>Tituj seksionesh – kompjuter (px)</label><input id="homeSectionTitleDesktop" type="number" min="20" max="52" step="1" value="32"></div><div class="site-field"><label>Tituj seksionesh – telefon (px)</label><input id="homeSectionTitleMobile" type="number" min="18" max="40" step="1" value="25"></div></div>'+
+      '<div class="site-two"><div class="site-field"><label>Editorial / Featured – kompjuter (px)</label><input id="homeEditorialTitleDesktop" type="number" min="22" max="64" step="1" value="36"></div><div class="site-field"><label>Editorial / Featured – telefon (px)</label><input id="homeEditorialTitleMobile" type="number" min="20" max="46" step="1" value="28"></div></div>'+
+      '<div class="site-editor-actions" style="justify-content:flex-start;margin-top:14px"><button type="button" class="primary-btn" id="homeTypographySave">Ruaj madhësitë</button><a class="secondary-btn" href="index.html" target="_blank" rel="noopener">↗ Shiko Ballinën</a></div>'+
+      '<div id="homeTypographyState" class="site-editor-status" style="margin:10px 0 0">Duke ngarkuar…</div>';
+    grid.appendChild(card);
+    q('#homeTypographySave').onclick=save;
+    document.querySelectorAll('[data-home-type-preset]').forEach(b=>b.onclick=()=>preset(b.dataset.homeTypePreset));
+    load();
+    return true;
+  }
+  function preset(name){
+    const p=name==='small'?{hd:44,hm:30,sd:27,sm:22,ed:31,em:25}:name==='large'?{hd:60,hm:40,sd:38,sm:30,ed:44,em:34}:{hd:52,hm:34,sd:32,sm:25,ed:36,em:28};
+    q('#homeHeroTitleDesktop').value=p.hd;q('#homeHeroTitleMobile').value=p.hm;
+    q('#homeSectionTitleDesktop').value=p.sd;q('#homeSectionTitleMobile').value=p.sm;
+    q('#homeEditorialTitleDesktop').value=p.ed;q('#homeEditorialTitleMobile').value=p.em;
+    const st=q('#homeTypographyState');st.textContent='Preseti u vendos. Kliko “Ruaj madhësitë”.';st.className='site-editor-status ready';
+  }
+  async function load(){
+    const st=q('#homeTypographyState');
+    try{
+      const rows=await api('site_content?key=eq.branding&select=content&limit=1');
+      const x=rows?.[0]?.content||{};
+      q('#homeHeroTitleDesktop').value=Number(x.home_hero_title_desktop||52);
+      q('#homeHeroTitleMobile').value=Number(x.home_hero_title_mobile||34);
+      q('#homeSectionTitleDesktop').value=Number(x.home_section_title_desktop||32);
+      q('#homeSectionTitleMobile').value=Number(x.home_section_title_mobile||25);
+      q('#homeEditorialTitleDesktop').value=Number(x.home_editorial_title_desktop||36);
+      q('#homeEditorialTitleMobile').value=Number(x.home_editorial_title_mobile||28);
+      st.textContent='Gati për ndryshime.';st.className='site-editor-status ready';
+    }catch(e){st.textContent='Nuk u ngarkua: '+e.message;st.className='site-editor-status error'}
+  }
+  async function save(){
+    const st=q('#homeTypographyState'),btn=q('#homeTypographySave');btn.disabled=true;
+    try{
+      const rows=await api('site_content?key=eq.branding&select=content&limit=1');
+      const content={...(rows?.[0]?.content||{}),
+        home_hero_title_desktop:clamp(q('#homeHeroTitleDesktop').value,28,80,52),
+        home_hero_title_mobile:clamp(q('#homeHeroTitleMobile').value,24,54,34),
+        home_section_title_desktop:clamp(q('#homeSectionTitleDesktop').value,20,52,32),
+        home_section_title_mobile:clamp(q('#homeSectionTitleMobile').value,18,40,25),
+        home_editorial_title_desktop:clamp(q('#homeEditorialTitleDesktop').value,22,64,36),
+        home_editorial_title_mobile:clamp(q('#homeEditorialTitleMobile').value,20,46,28)
+      };
+      await api('site_content?key=eq.branding',{method:'PATCH',body:{content,updated_at:new Date().toISOString()},prefer:'return=minimal'});
+      st.textContent='U ruajt. Rifresko Ballinën dhe madhësitë e reja aplikohen automatikisht.';st.className='site-editor-status ready';
+      if(typeof toast==='function')toast('Madhësia e titujve të Ballinës u ruajt');
+    }catch(e){st.textContent='Ruajtja dështoi: '+e.message;st.className='site-editor-status error';if(typeof toast==='function')toast(e.message,'error')}
+    finally{btn.disabled=false}
+  }
+  function boot(){let n=0;const t=setInterval(()=>{n++;if(inject()||n>100)clearInterval(t)},120)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+
 <script id="zz-free-library-force-runtime">
 (()=>{
   if(window.__zzFreeLibraryForceRuntime)return;window.__zzFreeLibraryForceRuntime=1;
