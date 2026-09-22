@@ -11,26 +11,34 @@ function style(){
  </style>`);
 }
 function build(){
- if(q('#view-security-release'))return;
  style();
  const side=q('.side-nav');
- if(side&&!q('[data-view="security-release"]')){
-   const b=document.createElement('button');b.className='nav-item';b.dataset.view='security-release';b.innerHTML='🛡 Siguria & Releases';
-   side.appendChild(b); b.addEventListener('click',()=>openView());
+ let b=q('#adminSecurityReleaseNav')||q('[data-view="security-release"]');
+ if(side&&!b){
+   b=document.createElement('button');b.className='nav-item';b.id='adminSecurityReleaseNav';b.dataset.view='security-release';b.innerHTML='🛡 Siguria & Releases';
+   const integrations=side.querySelector('[data-view="integrations"]'); integrations?side.insertBefore(b,integrations):side.appendChild(b);
+ }
+ if(b){
+   b.style.setProperty('display','flex','important');
+   b.style.setProperty('visibility','visible','important');
+   b.style.setProperty('opacity','1','important');
+   b.onclick=openView;
  }
  const main=q('.main'); if(!main)return;
- main.insertAdjacentHTML('beforeend',`<section id="view-security-release" class="view">
-   <div class="dashboard-pro-head"><div><h2>Siguria & Releases</h2><p>Monitorim i sigurisë, Core Web Vitals, backup dhe kthim te release-i i mëparshëm.</p></div><button class="secondary-btn" id="zzSecRefresh">Rifresko</button></div>
-   <div id="zzSecCards" class="zz-sec-grid"><div class="zz-sec-card">Duke kontrolluar…</div></div>
-   <div class="zz-release">
-    <section class="zz-release-box"><h3>Core Web Vitals · 7 ditët e fundit</h3><div id="zzVitals">—</div></section>
-    <section class="zz-release-box"><h3>Release live</h3><div id="zzReleaseLive">—</div><div class="zz-sec-actions"><a class="secondary-btn" href="${GITHUB}/actions/workflows/rollback.yml" target="_blank" rel="noopener">↩ Hap Rollback</a><a class="secondary-btn" href="${GITHUB}/actions" target="_blank" rel="noopener">GitHub Actions</a></div></section>
-    <section class="zz-release-box"><h3>Backup konfigurimi</h3><div class="zz-sec-actions"><button class="primary-btn" id="zzCreateBackup">Krijo backup tani</button></div><div id="zzBackups" style="margin-top:12px">—</div></section>
-    <section class="zz-release-box"><h3>Release-i i mëparshëm</h3><div id="zzReleasePrevious">—</div><p style="font-size:11px;color:#78857f">Rollback-u bëhet nga workflow i dedikuar dhe kërkon SHA-n e release-it të mëparshëm.</p></section>
-   </div>
- </section>`);
- q('#zzSecRefresh')?.addEventListener('click',load);
- q('#zzCreateBackup')?.addEventListener('click',createBackup);
+ if(!q('#view-security-release')){
+   main.insertAdjacentHTML('beforeend',`<section id="view-security-release" class="view">
+     <div class="dashboard-pro-head"><div><h2>Siguria & Releases</h2><p>Monitorim sigurie, Core Web Vitals, backup dhe rollback.</p></div><button class="secondary-btn" id="zzSecRefresh">Rifresko</button></div>
+     <div id="zzSecCards" class="zz-sec-grid"><div class="zz-sec-card">Duke kontrolluar…</div></div>
+     <div class="zz-release">
+      <section class="zz-release-box"><h3>Core Web Vitals · 7 ditët e fundit</h3><div id="zzVitals">—</div></section>
+      <section class="zz-release-box"><h3>Release live</h3><div id="zzReleaseLive">—</div><div class="zz-sec-actions"><a class="secondary-btn" href="${GITHUB}/actions/workflows/rollback.yml" target="_blank" rel="noopener">↩ Hap Rollback</a><a class="secondary-btn" href="${GITHUB}/actions" target="_blank" rel="noopener">GitHub Actions</a></div></section>
+      <section class="zz-release-box"><h3>Backup konfigurimi</h3><div class="zz-sec-actions"><button class="primary-btn" id="zzCreateBackup">Krijo backup tani</button></div><div id="zzBackups" style="margin-top:12px">—</div></section>
+      <section class="zz-release-box"><h3>Release-i i mëparshëm</h3><div id="zzReleasePrevious">—</div></section>
+     </div>
+   </section>`);
+ }
+ const refresh=q('#zzSecRefresh'); if(refresh&&!refresh.dataset.zzBound){refresh.dataset.zzBound='1';refresh.addEventListener('click',load)}
+ const backup=q('#zzCreateBackup'); if(backup&&!backup.dataset.zzBound){backup.dataset.zzBound='1';backup.addEventListener('click',createBackup)}
 }
 function openView(){
  if(typeof window.setView==='function')window.setView('security-release');
@@ -68,6 +76,6 @@ async function createBackup(){
  try{await window.api('rpc/admin_create_config_backup_v1',{method:'POST',body:{}});if(typeof toast==='function')toast('Backup u krijua.');await load()}catch(e){if(typeof toast==='function')toast(e.message,'error')}
  finally{b.disabled=false;b.textContent=old}
 }
-function init(){build();window.addEventListener('zemzem:admin-access-ready',()=>{build();if(window.ZemZemAdminAccess?.authorized)load()});setTimeout(build,600)}
+function init(){build();setInterval(build,900);window.addEventListener('zemzem:admin-access-ready',()=>{build();if(window.ZemZemAdminAccess?.authorized)load()});setTimeout(build,300);setTimeout(build,1200)}
 document.addEventListener('DOMContentLoaded',init);
 })();
