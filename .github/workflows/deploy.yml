@@ -525,7 +525,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-experience-automation.js /tmp/admin-xp.js 'Smart Admin Assistant' 'Admin Experience Automation'
           require_live https://www.zemzem.al/assets/js/home-layout-runtime.js /tmp/home-layout.js '__zzHomepageCommandRuntime' 'Homepage layout runtime'
           require_live https://www.zemzem.al/assets/js/runtime-ops.js /tmp/runtime-ops.js 'zzMaintenance' 'Maintenance runtime'
-          require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v2'" 'PWA service worker'
+          require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v3'" 'PWA service worker'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index.html 'assets/js/home-modern.js' 'Homepage modern script'
           require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern.js 'zz-hero-ticket' 'Homepage hero price ticket'
