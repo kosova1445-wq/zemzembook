@@ -23,7 +23,7 @@ const FOOTER_DEFAULTS=[
  {label:'Kontakt',href:'contact.html',icon:'☎',visible:true},
  {label:'Gjurmo porosinë',href:'tracking.html',icon:'⌖',visible:true}
 ];
-let cfg=null,loaded=false;
+let cfg=null,loaded=false,activeIconInput=null;
 const clone=o=>JSON.parse(JSON.stringify(o));
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function mergeDefaults(x){
@@ -80,6 +80,10 @@ function activate(){
 function palettes(){
  const html=ICONS.map(i=>'<button type="button" data-icon="'+esc(i)+'">'+esc(i)+'</button>').join('');
  q('#zzsmSectionPalette').innerHTML=html;q('#zzsmFooterPalette').innerHTML=html;
+ qa('.zzsm-icon-palette [data-icon]').forEach(b=>b.onclick=()=>{
+   if(!activeIconInput){status('Kliko fillimisht fushën e ikonës që dëshiron të ndryshosh.');return}
+   activeIconInput.value=b.dataset.icon;activeIconInput.dispatchEvent(new Event('input',{bubbles:true}));
+ });
 }
 function status(t,e=false){const s=q('#zzsmProStatus');if(s){s.textContent=t;s.className='zzsm-pro-status'+(e?' error':'')}}
 function sectionRow(x,i){
@@ -93,7 +97,7 @@ function sectionRow(x,i){
 function renderSections(){
  q('#zzsmSectionRows').innerHTML=(cfg.home_sections||[]).map(sectionRow).join('');
  qa('[data-section-i]').forEach(r=>{const i=Number(r.dataset.sectionI),x=cfg.home_sections[i];
-  r.querySelector('[data-pro-icon]').oninput=e=>x.icon=e.target.value;
+  const iconInput=r.querySelector('[data-pro-icon]');iconInput.onfocus=()=>activeIconInput=iconInput;iconInput.onclick=()=>activeIconInput=iconInput;iconInput.oninput=e=>x.icon=e.target.value;
   r.querySelector('[data-pro-label]').oninput=e=>x.label=e.target.value;
   r.querySelector('[data-pro-visible]').onchange=e=>{x.visible=e.target.checked;if(e.target.checked)x.deleted=false};
   r.querySelector('[data-up]').onclick=()=>move(cfg.home_sections,i,-1,renderSections);
@@ -113,7 +117,7 @@ function footerRow(x,i){
 function renderFooter(){
  q('#zzsmFooterRows').innerHTML=(cfg.footer_links||[]).map(footerRow).join('');
  qa('[data-footer-i]').forEach(r=>{const i=Number(r.dataset.footerI),x=cfg.footer_links[i];
-  r.querySelector('[data-pro-icon]').oninput=e=>x.icon=e.target.value;
+  const iconInput=r.querySelector('[data-pro-icon]');iconInput.onfocus=()=>activeIconInput=iconInput;iconInput.onclick=()=>activeIconInput=iconInput;iconInput.oninput=e=>x.icon=e.target.value;
   r.querySelector('[data-pro-label]').oninput=e=>x.label=e.target.value;
   r.querySelector('[data-pro-href]').oninput=e=>x.href=e.target.value;
   r.querySelector('[data-pro-visible]').onchange=e=>{x.visible=e.target.checked;if(e.target.checked)x.deleted=false};
