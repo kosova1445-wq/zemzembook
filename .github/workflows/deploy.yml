@@ -467,6 +467,7 @@ jobs:
           node --check assets/js/admin-collab.js
           node --check assets/js/admin-partners.js
           node --check assets/js/partner-portal.js
+          grep -q "partner-shell-pro" assets/js/partner-portal.js
           node --check assets/js/admin-collaboration-suite.js
           node --check assets/js/admin-super-suite.js
           node --check assets/js/admin-workflow-studio.js
