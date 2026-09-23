@@ -47,3 +47,9 @@
 @media(max-width:900px){.partner-shell-pro{grid-template-columns:1fr}.partner-side-pro{position:static;display:block;overflow:visible}.partner-profile-card{border-radius:0}.partner-side-mini{display:grid}.partner-menu-group{display:flex;gap:6px;overflow:auto;padding-bottom:8px}.partner-menu-label{display:none}.partner-side-pro .partner-menu-group button{width:auto;min-width:max-content;white-space:nowrap}.partner-menu-text{flex:none}.partner-menu-badge{margin-left:2px}.partner-dashboard-grid{grid-template-columns:1fr}}
 @media(max-width:660px){.partner-kpis-four{grid-template-columns:1fr 1fr}.partner-help-grid{grid-template-columns:1fr}.partner-profile-upload{align-items:flex-start}.partner-overview-stats{grid-template-columns:1fr}.partner-side-mini{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:460px){.partner-kpis-four{grid-template-columns:1fr}.partner-profile-card{padding:14px}.partner-shell-pro{gap:12px}}
+
+/* Partner book edit controls */
+.partner-edit-book{padding:7px 10px!important;white-space:nowrap}
+.partner-edit-notice{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff7df;border:1px solid #f0ddaa;border-radius:12px;padding:12px 13px;margin-bottom:4px}
+.partner-edit-notice[hidden]{display:none!important}.partner-edit-notice strong,.partner-edit-notice small{display:block}.partner-edit-notice strong{font-size:11px;color:#6f5213}.partner-edit-notice small{font-size:9px;color:#8b7542;margin-top:2px}
+@media(max-width:660px){.partner-edit-notice{align-items:flex-start;flex-direction:column}.partner-edit-notice .btn{width:100%}}
