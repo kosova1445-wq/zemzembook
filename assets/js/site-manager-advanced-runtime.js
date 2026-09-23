@@ -34,7 +34,7 @@ function applySections(){
    if(!same)desired.forEach(el=>parent.insertBefore(el,footer));
  }
 }
-function normHref(v){try{return new URL(v,location.href).pathname.replace(/^\\//,'')+new URL(v,location.href).hash}catch{return String(v||'')}}
+function normHref(v){try{return new URL(v,location.href).pathname.replace(/^\//,'')+new URL(v,location.href).hash}catch{return String(v||'')}}
 function applyFooter(){
  const arr=Array.isArray(CFG?.footer_links)?CFG.footer_links:[];
  if(!arr.length)return;
