@@ -489,6 +489,8 @@ jobs:
           grep -q "PayPal nuk aplikon zbritje automatike" checkout.html
           node --check assets/js/app-v5.js
           node --check assets/js/storefront-advanced.js
+          ! grep -q "new MutationObserver(cards)" assets/js/storefront-advanced.js
+          grep -q "function boot(){stickyHeader();enhanceMega();searchSuggest();mobilePriority()}" assets/js/storefront-experience.js
           node --check assets/js/storefront-experience.js
           node --check assets/js/home-wow.js
           grep -q "__zzBookIdentityGuardV2" index.html
@@ -559,6 +561,7 @@ jobs:
           require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v3'" 'PWA service worker'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index.html 'assets/js/home-modern.js' 'Homepage modern script'
+          require_live https://www.zemzem.al/index.html /tmp/index-stability.html 'assets/js/storefront-advanced.js?v=6' 'Homepage stability mode'
           require_live https://www.zemzem.al/index.html /tmp/index-book-id-guard.html '__zzBookIdentityGuardV2' 'Book identity guard'
           require_live https://www.zemzem.al/index.html /tmp/index-recovery.html '__zzIndexRecoveryV1' 'Homepage recovery runtime'
           require_live https://www.zemzem.al/index.html /tmp/index-allbooks.html 'id="allBooksStatic"' 'Homepage all-books section'
