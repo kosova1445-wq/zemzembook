@@ -20,6 +20,21 @@
 #zzTeamForceLauncher span{display:inline!important;color:#fff!important}
 @media(max-width:760px){#zzTeamForceLauncher{right:12px!important;bottom:74px!important;min-width:auto!important;padding:12px 14px!important}#zzTeamForceLauncher span{display:none!important}}
 </style>
+<style id="zz-admin-mobile-navigation">
+/* The mobile drawer must not inherit the legacy horizontal navigation strip. */
+@media(max-width:760px){
+  #adminApp>.sidebar{width:min(300px,85vw);height:100vh;height:100dvh;left:0;transform:translateX(-100%);padding:64px 12px 16px;transition:transform .2s ease}
+  #adminApp>.sidebar.mobile-open{transform:translateX(0)}
+  #adminApp>.sidebar .side-nav{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:4px;min-height:0;min-width:0;width:100%;margin:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
+  #adminApp>.sidebar .side-nav>a,#adminApp>.sidebar .side-nav>button{flex:0 0 auto;width:100%;height:auto;min-height:48px;white-space:normal;overflow-wrap:anywhere}
+  #adminApp>.sidebar .side-nav .side-section-label{display:block;flex:0 0 auto}
+  #adminApp>.sidebar .sidebar-foot{display:grid;flex:0 0 auto}
+  #adminApp>.main{min-width:0;max-width:100%}
+  #adminApp .admin-topbar{flex-wrap:wrap;gap:10px;padding-left:62px}
+  #adminApp .top-actions{flex-wrap:wrap;min-width:0;max-width:100%}
+  #adminApp .admin-topbar h1{overflow-wrap:anywhere}
+}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-screen">
@@ -416,14 +431,15 @@
     }
     launcher.onclick=openTeam;
     launcher.style.setProperty('position','fixed','important');
-    launcher.style.setProperty('right','22px','important');
-    launcher.style.setProperty('bottom','22px','important');
+    const mobile=window.matchMedia('(max-width:760px)').matches;
+    launcher.style.setProperty('right',mobile?'12px':'22px','important');
+    launcher.style.setProperty('bottom',mobile?'74px':'22px','important');
     launcher.style.setProperty('z-index','2147483647','important');
     launcher.style.setProperty('display',app.hidden?'none':'flex','important');
     launcher.style.setProperty('align-items','center','important');
     launcher.style.setProperty('gap','9px','important');
     launcher.style.setProperty('width','auto','important');
-    launcher.style.setProperty('min-width','158px','important');
+    launcher.style.setProperty('min-width',mobile?'44px':'158px','important');
     launcher.style.setProperty('padding','13px 17px','important');
     launcher.style.setProperty('border','0','important');
     launcher.style.setProperty('border-radius','999px','important');
