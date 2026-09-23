@@ -7,8 +7,8 @@ async function loadPartnerBranding(){
  try{
    const r=await fetch(URL+'/rest/v1/site_content?key=eq.branding&select=content&limit=1',{headers:{apikey:KEY,Accept:'application/json'},cache:'no-store'});
    if(!r.ok)return;
-   const rows=await r.json(),c=rows?.[0]?.content||{},logo=c.partner_logo_url||c.logo_url||'assets/brand/zemzem-logo.svg',width=Math.min(260,Math.max(90,Number(c.partner_logo_width||142)));
-   document.querySelectorAll('[data-partner-brand-image]').forEach(img=>{img.src=logo;img.style.width=width+'px';img.style.height='auto'});
+   const rows=await r.json(),c=rows?.[0]?.content||{},logo=c.partner_logo_url||c.logo_url||'assets/brand/zemzem-logo.svg',width=Math.min(320,Math.max(70,Number(c.partner_logo_width||142))),height=Math.min(140,Math.max(24,Number(c.partner_logo_height||52)));
+   document.querySelectorAll('[data-partner-brand-image]').forEach(img=>{img.src=logo;img.style.width=width+'px';img.style.height=height+'px';img.style.objectFit='contain'});
  }catch{}
 }
 function loadSession(){try{session=JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch{session=null}}
