@@ -109,8 +109,25 @@ function renderDashboard(){
  function openSection(key){document.querySelectorAll('[data-partner-panel]').forEach(x=>x.hidden=x.dataset.partnerPanel!==key);document.querySelectorAll('[data-partner-section]').forEach(x=>x.classList.toggle('active',x.dataset.partnerSection===key))}
  document.querySelectorAll('[data-partner-section]').forEach(b=>b.onclick=()=>openSection(b.dataset.partnerSection));document.querySelectorAll('[data-open-section]').forEach(b=>b.onclick=()=>openSection(b.dataset.openSection));
 
- const preview=(inputSel,boxSel)=>{const input=q(inputSel),box=q(boxSel);input?.addEventListener('change',()=>{const file=input.files?.[0];if(!file)return;if(file.size>5*1024*1024){input.value='';box.innerHTML='<span>!</span><small>Maksimumi 5 MB</small>';return}const u=URL.createObjectURL(file);box.innerHTML='<img src="'+u+'" alt="Preview"><small>'+esc(file.name)+'</small>'})};
- preview('#partnerPhoto1','#partnerPhotoPreview1');preview('#partnerPhoto2','#partnerPhotoPreview2');
+ const bindPhotoPicker=(inputSel,boxSel,required=false)=>{
+   const input=q(inputSel),box=q(boxSel);if(!input||!box)return;
+   const openPicker=e=>{if(e){e.preventDefault();e.stopPropagation()}input.click()};
+   box.addEventListener('click',openPicker);
+   box.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){openPicker(e)}});
+   box.setAttribute('role','button');box.setAttribute('tabindex','0');
+   input.addEventListener('change',()=>{
+     const file=input.files?.[0];
+     if(!file){box.innerHTML='<span>＋</span><small>'+(required?'Ngarko kopertinën kryesore':'Foto shtesë, opsionale')+'</small>';return}
+     if(file.size>5*1024*1024){input.value='';box.innerHTML='<span>!</span><small>Maksimumi 5 MB</small>';return}
+     if(!['image/jpeg','image/png','image/webp'].includes(file.type)){input.value='';box.innerHTML='<span>!</span><small>Lejohen JPG, PNG ose WEBP</small>';return}
+     const reader=new FileReader();
+     reader.onload=()=>{box.innerHTML='<img src="'+reader.result+'" alt="Preview i fotografisë"><small>'+esc(file.name)+'</small>'};
+     reader.onerror=()=>{box.innerHTML='<span>!</span><small>Preview nuk u hap. Provo një foto tjetër.</small>'};
+     reader.readAsDataURL(file);
+   });
+ };
+ bindPhotoPicker('#partnerPhoto1','#partnerPhotoPreview1',true);
+ bindPhotoPicker('#partnerPhoto2','#partnerPhotoPreview2',false);
 
  const calcPrice=()=>{const base=Number(q('#partnerBookForm [name="cost_price"]')?.value||0);const pub=s.margin_type==='percent'?base*(1+Number(s.margin_value||0)/100):base+Number(s.margin_value||0);if(q('#partnerBasePrice'))q('#partnerBasePrice').textContent=money(base);if(q('#partnerPublicPrice'))q('#partnerPublicPrice').textContent=money(pub)};
  q('#partnerBookForm [name="cost_price"]')?.addEventListener('input',calcPrice);calcPrice();
