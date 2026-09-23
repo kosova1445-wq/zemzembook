@@ -488,7 +488,7 @@ jobs:
           node --check assets/js/checkout-v2.js
           node --check assets/js/admin-checkout-settings.js
           ! grep -q "deri te −10% me PayPal" assets/js/storefront-advanced.js
-          grep -q "PayPal nuk aplikon zbritje automatike" checkout.html
+          grep -q "id=\"checkoutNotice\"" checkout.html
           node --check assets/js/app-v5.js
           node --check assets/js/storefront-advanced.js
           ! grep -q "new MutationObserver(cards)" assets/js/storefront-advanced.js
@@ -622,6 +622,8 @@ jobs:
           require_live https://www.zemzem.al/product.html /tmp/product-review.html 'submit_verified_review' 'Verified review submit RPC hook'
           require_live https://www.zemzem.al/assets/css/product.css /tmp/product-review.css 'Verified buyer review form' 'Verified review form styles'
           require_live https://www.zemzem.al/checkout.html /tmp/checkout-coupon.html 'assets/js/checkout-v2.js' 'Checkout script reference'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-checkout-settings.html 'data-view="checkout-settings"' 'Admin checkout settings live'
+          require_live https://www.zemzem.al/checkout.html /tmp/checkout-admin-managed.html 'id="checkoutNotice"' 'Admin-managed checkout live'
           require_live https://www.zemzem.al/checkout.html /tmp/checkout-paypal-no-discount.html 'PayPal nuk aplikon zbritje automatike' 'PayPal automatic discount removed live'
           require_live https://www.zemzem.al/assets/js/checkout-v2.js /tmp/checkout-v2.js 'appliedCouponCode' 'Server-validated coupon state'
           require_live https://www.zemzem.al/assets/js/checkout-v2.js /tmp/checkout-v2.js "coupon_code:''" 'Invalid coupon keeps shipping and COD'
