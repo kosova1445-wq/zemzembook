@@ -25,7 +25,7 @@
 
   function reveals(){const items=qa('.section:not(.wow-reveal),.wow-featured:not(.wow-reveal),.wow-editorial:not(.wow-reveal),.feature:not(.wow-reveal)');items.forEach((el,i)=>{el.classList.add('wow-reveal');if(i%4)el.classList.add(`wow-reveal-delay-${Math.min(i%4,3)}`)});if(!('IntersectionObserver'in window)){items.forEach(x=>x.classList.add('wow-visible'));return}const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('wow-visible');io.unobserve(e.target)}}),{threshold:.08,rootMargin:'0px 0px -40px'});items.forEach(x=>io.observe(x))}
 
-  function refresh(){cinematicHero();premiumCards();reveals()}
-  function init(){const all=getBooks();if(!all.length){setTimeout(init,350);return}smartHeader();cinematicHero();megaMenu();featuredCollection();editorialSplit();premiumCards();reveals();setTimeout(refresh,900);setTimeout(refresh,1800)}
+  function refresh(){cinematicHero();reveals()}
+  function init(){const all=getBooks();if(!all.length){setTimeout(init,350);return}smartHeader();cinematicHero();megaMenu();featuredCollection();editorialSplit();reveals();setTimeout(refresh,900);setTimeout(refresh,1800)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,900));else setTimeout(init,900);
 })();
