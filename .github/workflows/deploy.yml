@@ -1,4 +1,4 @@
-          require_live https://www.zemzem.al/index.html /tmp/index-fast-catalog.html 'assets/js/app-v5.js?v=13' 'Homepage fast catalog runtime'\nname: Deploy ZemZem to cPanel
+name: Deploy ZemZem to cPanel
 
 on:
   push:
