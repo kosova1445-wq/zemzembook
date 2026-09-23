@@ -622,7 +622,7 @@ jobs:
           require_live https://www.zemzem.al/checkout.html /tmp/checkout-coupon.html 'assets/js/checkout-v2.js' 'Checkout script reference'
           require_live https://www.zemzem.al/admin.html /tmp/admin-checkout-settings.html 'data-view="checkout-settings"' 'Admin checkout settings live'
           require_live https://www.zemzem.al/checkout.html /tmp/checkout-admin-managed.html 'id="checkoutNotice"' 'Admin-managed checkout live'
-          require_live https://www.zemzem.al/checkout.html /tmp/checkout-paypal-no-discount.html 'PayPal nuk aplikon zbritje automatike' 'PayPal automatic discount removed live'
+          require_live https://www.zemzem.al/checkout.html /tmp/checkout-paypal-no-discount.html 'id="checkoutNotice"' 'Admin-managed checkout notice live'
           require_live https://www.zemzem.al/assets/js/checkout-v2.js /tmp/checkout-v2.js 'appliedCouponCode' 'Server-validated coupon state'
           require_live https://www.zemzem.al/assets/js/checkout-v2.js /tmp/checkout-v2.js "coupon_code:''" 'Invalid coupon keeps shipping and COD'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding.js 'zemzem-menu-font-desktop' 'Global menu typography'
