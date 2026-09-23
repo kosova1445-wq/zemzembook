@@ -573,6 +573,8 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-partners-nav.html 'id="adminPartnersNav"' 'Partner marketplace Admin navigation'
           require_live https://www.zemzem.al/assets/js/admin-partners.js /tmp/admin-partners-js.html '__zzAdminPartners' 'Partner marketplace Admin runtime'
           require_live https://www.zemzem.al/partner.html /tmp/partner-portal.html 'Shit më shumë libra, pa e komplikuar biznesin.' 'Partner bookstore portal'
+          require_live https://www.zemzem.al/assets/js/admin-branding.js /tmp/admin-branding-partner-logo.js 'brandPartnerLogoPreview' 'Partner logo branding control'
+          require_live https://www.zemzem.al/assets/js/partner-portal.js /tmp/partner-branding-runtime.js 'loadPartnerBranding' 'Partner logo branding runtime'
           require_live https://www.zemzem.al/partner.html /tmp/partner-portal-css.html 'assets/css/partner-portal.css?v=4' 'Professional partner portal styles'
           require_live https://www.zemzem.al/assets/js/partner-portal.js /tmp/partner-photo-upload.js 'bindPhotoPicker' 'Partner photo upload UI'
           require_live https://www.zemzem.al/assets/js/partner-portal.js /tmp/partner-portal-js.html 'partner_book_upsert_v2' 'Partner bookstore portal runtime'
