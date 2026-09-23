@@ -484,6 +484,7 @@ jobs:
           node --check assets/js/storefront-controls.js
           node --check assets/js/pwa.js
           node --check assets/js/checkout-v2.js
+          grep -q "PayPal nuk aplikon zbritje automatike" checkout.html
           node --check assets/js/app-v5.js
           node --check assets/js/free-library.js
           node --check assets/js/admin-free-library-integrated.js
