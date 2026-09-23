@@ -1,18 +1,21 @@
 const SUPABASE_URL='https://ysvtrhizgcioyycwlkrk.supabase.co';
+const PAGE_NAME=location.pathname.split('/').pop()||'index.html';
+const IS_HOME=PAGE_NAME==='index.html'||PAGE_NAME==='';
+
 // Mobile commerce release 2026-09-18.
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
-if(['shop.html','product.html','checkout.html'].includes(location.pathname.split('/').pop()||'index.html')){
+if(['shop.html','product.html','checkout.html'].includes(PAGE_NAME)){
   if(!document.querySelector('link[data-mobile-commerce-v3]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/mobile-commerce-v3.css?v=1';l.dataset.mobileCommerceV3='1';document.head.appendChild(l)}
   if(!document.querySelector('script[data-mobile-commerce-v3]')){const s=document.createElement('script');s.src='assets/js/mobile-commerce-v3.js?v=1';s.dataset.mobileCommerceV3='1';s.defer=true;document.head.appendChild(s)}
 }
-if(!document.querySelector('link[data-production-polish]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/production-polish.css?v=1';l.dataset.productionPolish='1';document.head.appendChild(l)}
-if(!document.querySelector('link[data-premium-v3]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/site-premium-v3.css?v=1';l.dataset.premiumV3='1';document.head.appendChild(l)}
-if(!document.querySelector('script[data-whatsapp-chat]')){const s=document.createElement('script');s.src='assets/js/whatsapp-chat.js?v=5';s.dataset.whatsappChat='1';s.defer=true;document.head.appendChild(s)}
-if(!document.querySelector('script[data-storefront-funnel]')){const s=document.createElement('script');s.src='assets/js/storefront-funnel.js?v=1';s.dataset.storefrontFunnel='1';s.defer=true;document.head.appendChild(s)}
+if(!IS_HOME&&!document.querySelector('link[data-production-polish]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/production-polish.css?v=1';l.dataset.productionPolish='1';document.head.appendChild(l)}
+if(!IS_HOME&&!document.querySelector('link[data-premium-v3]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/site-premium-v3.css?v=1';l.dataset.premiumV3='1';document.head.appendChild(l)}
+if(!IS_HOME&&!document.querySelector('script[data-whatsapp-chat]')){const s=document.createElement('script');s.src='assets/js/whatsapp-chat.js?v=5';s.dataset.whatsappChat='1';s.defer=true;document.head.appendChild(s)}
+if(!IS_HOME&&!document.querySelector('script[data-storefront-funnel]')){const s=document.createElement('script');s.src='assets/js/storefront-funnel.js?v=1';s.dataset.storefrontFunnel='1';s.defer=true;document.head.appendChild(s)}
 if((location.pathname.split('/').pop()||'index.html')==='product.html'&&!document.querySelector('link[data-book-gallery-v1]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/book-gallery-v1.css?v=1';l.dataset.bookGalleryV1='1';document.head.appendChild(l)}
-if(!document.querySelector('link[data-price-ticket]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/price-ticket.css?v=3';l.dataset.priceTicket='1';document.head.appendChild(l)}
-if(!document.querySelector('script[data-price-ticket-runtime]')){const s=document.createElement('script');s.src='assets/js/price-ticket-runtime.js?v=1';s.dataset.priceTicketRuntime='1';s.defer=true;document.head.appendChild(s)}
-if(!document.querySelector('link[data-search-autocomplete]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/search-autocomplete.css?v=1';l.dataset.searchAutocomplete='1';document.head.appendChild(l)}
+if(!IS_HOME&&!document.querySelector('link[data-price-ticket]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/price-ticket.css?v=3';l.dataset.priceTicket='1';document.head.appendChild(l)}
+if(!IS_HOME&&!document.querySelector('script[data-price-ticket-runtime]')){const s=document.createElement('script');s.src='assets/js/price-ticket-runtime.js?v=1';s.dataset.priceTicketRuntime='1';s.defer=true;document.head.appendChild(s)}
+if(!IS_HOME&&!document.querySelector('link[data-search-autocomplete]')){const l=document.createElement('link');l.rel='stylesheet';l.href='assets/css/search-autocomplete.css?v=1';l.dataset.searchAutocomplete='1';document.head.appendChild(l)}
 const FALLBACK_BOOKS=[{id:1,legacyId:1,sku:'ZZ-0001',title:'Kurani Fisnik – Përkthim Shqip',author:'ZemZem',price:12.90,old:15.90,cover:'c1',coverUrl:'',cat:'Fe & Edukim',stock:50,trackStock:true,featured:true,bestseller:true},{id:2,legacyId:2,sku:'ZZ-0002',title:'Rijadus Salihin',author:'Imam en-Nevevi',price:18.50,cover:'c2',coverUrl:'',cat:'Fe & Edukim',stock:40,trackStock:true,featured:true,bestseller:true},{id:3,legacyId:3,sku:'ZZ-0003',title:'Dyzet Hadithe',author:'Imam en-Nevevi',price:7.90,old:9.90,cover:'c3',coverUrl:'',cat:'Fe & Edukim',stock:60,trackStock:true,featured:true},{id:4,legacyId:4,sku:'ZZ-0004',title:'Jeta e Profetit Muhamed ﷺ',author:'ZemZem',price:14.90,cover:'c4',coverUrl:'',cat:'Histori',stock:35,trackStock:true,featured:true,bestseller:true},{id:5,legacyId:5,sku:'ZZ-0005',title:'Tefsiri i Shkurtër',author:'ZemZem',price:16.90,old:19.90,cover:'c5',coverUrl:'',cat:'Fe & Edukim',stock:45,trackStock:true,featured:true,bestseller:true},{id:6,legacyId:6,sku:'ZZ-0006',title:'Edukimi i Fëmijëve',author:'ZemZem',price:9.90,cover:'c6',coverUrl:'',cat:'Fëmijë',stock:30,trackStock:true,bestseller:true},{id:7,legacyId:7,sku:'ZZ-0007',title:'Udhëzuesi i Namazit',author:'ZemZem',price:6.90,old:8.50,cover:'c7',coverUrl:'',cat:'Fe & Edukim',stock:70,trackStock:true,bestseller:true},{id:8,legacyId:8,sku:'ZZ-0008',title:'Etika Islame',author:'ZemZem',price:11.90,cover:'c8',coverUrl:'',cat:'Fe & Edukim',stock:25,trackStock:true},{id:9,legacyId:9,sku:'ZZ-0009',title:'Histori nga Profetët',author:'ZemZem',price:13.50,old:15,cover:'c9',coverUrl:'',cat:'Fëmijë',stock:32,trackStock:true},{id:10,legacyId:10,sku:'ZZ-0010',title:'Fjalori Arabisht–Shqip',author:'ZemZem',price:21.90,cover:'c10',coverUrl:'',cat:'Gjuhë të huaja',stock:20,trackStock:true}];
 let BOOKS=[...FALLBACK_BOOKS],CATALOG_SOURCE='fallback',HOME_COLLECTIONS=null,WISHLIST_IDS=new Set();
 const CATALOG_CACHE_KEY='zz_catalog_cache_v1',CATALOG_CACHE_TTL=5*60*1000;
@@ -58,15 +61,26 @@ function getCustomerSession(){try{return JSON.parse(localStorage.getItem(CUSTOME
 function renderProduct(){const root=document.getElementById('productDetail');if(!root)return;const b=getBook(new URLSearchParams(location.search).get('id'));if(!b){root.innerHTML='<div class="empty"><h2>Libri nuk u gjet.</h2><a class="btn btn-primary" href="shop.html">Kthehu te librat</a></div>';return}document.title=`${b.title} — ZemZem`;const unavailable=b.trackStock&&b.stock<=0&&!b.allowBackorder&&!b.preorder,max=b.trackStock?Math.max(1,b.stock):9999;root.innerHTML=`<div class="product-layout"><div class="product-cover-wrap">${coverMarkup(b,'product-cover')}</div><div class="product-info"><div class="eyebrow">${esc(b.cat)}</div><h1>${esc(b.title)}</h1><p class="product-author">${esc(b.author)}</p><div class="product-price"><span class="price">${money(b.price)}</span>${b.old?`<span class="old">${money(b.old)}</span>`:''}</div><p class="product-desc">${esc(b.description||'')}</p><div class="product-facts"><span>${unavailable?'✕ Nuk ka stok':b.preorder?'◷ Preorder':b.allowBackorder&&b.stock<=0?'↻ Backorder':'✓ Ka në stok'}</span><span>SKU: ${esc(b.sku)}</span>${b.isbn?`<span>ISBN: ${esc(b.isbn)}</span>`:''}${b.pages?`<span>${b.pages} faqe</span>`:''}</div><div class="product-buy"><input id="productQty" type="number" min="1" max="${max}" value="1" ${unavailable?'disabled':''}><button class="btn btn-primary" ${unavailable?'disabled':''} onclick="addToCart('${b.id}',document.getElementById('productQty').value)">Shto në shportë</button><button class="btn btn-light" ${unavailable?'disabled':''} onclick="buyNow('${b.id}')">Bli tani</button><button class="btn btn-light" onclick="toggleWishlist('${b.id}')">♡ Wishlist</button></div><div class="notice">PayPal online · Cash on Delivery: +2 € · Transporti sipas shtetit.</div></div></div>`}
 async function init(){
  updateCartBadge();bindHomeSearch();bindShop();bindShopAutocomplete();
- loadCatalogCache();loadHomeCollectionsCache();
- normalizeCart();renderManagedHomeCollections();applyShopFilters();renderCart();renderProduct();updateOfferCountdowns();
- document.documentElement.dataset.catalogSource=CATALOG_SOURCE;
- window.dispatchEvent(new CustomEvent('zemzem:catalog-ready'));
- const catalogTask=fetchCatalog().then(()=>{normalizeCart();renderManagedHomeCollections();applyShopFilters();renderCart();renderProduct();updateOfferCountdowns();document.documentElement.dataset.catalogSource=CATALOG_SOURCE;window.dispatchEvent(new CustomEvent('zemzem:catalog-refreshed'))});
- const collectionTask=fetchHomeCollections().then(()=>{renderManagedHomeCollections();window.dispatchEvent(new CustomEvent('zemzem:home-collections-refreshed'))});
- Promise.allSettled([catalogTask,collectionTask]);
- if('requestIdleCallback'in window)requestIdleCallback(()=>loadWishlistState(),{timeout:1800});else setTimeout(()=>loadWishlistState(),700);
- setInterval(updateOfferCountdowns,60000);
+ const hadCache=loadCatalogCache();loadHomeCollectionsCache();
+ if(IS_HOME){
+   if(hadCache){
+     normalizeCart();renderManagedHomeCollections();updateOfferCountdowns();
+     document.documentElement.dataset.catalogSource=CATALOG_SOURCE;
+     window.dispatchEvent(new CustomEvent('zemzem:catalog-ready'));
+     fetchCatalog();fetchHomeCollections();
+   }else{
+     await Promise.race([Promise.allSettled([fetchCatalog(),fetchHomeCollections()]),new Promise(r=>setTimeout(r,1400))]);
+     normalizeCart();renderManagedHomeCollections();updateOfferCountdowns();
+     document.documentElement.dataset.catalogSource=CATALOG_SOURCE;
+     window.dispatchEvent(new CustomEvent('zemzem:catalog-ready'));
+   }
+   if('requestIdleCallback'in window)requestIdleCallback(()=>loadWishlistState(),{timeout:2200});else setTimeout(()=>loadWishlistState(),1000);
+   setInterval(updateOfferCountdowns,60000);
+   return;
+ }
+ await fetchCatalog();await fetchHomeCollections();await loadWishlistState();
+ normalizeCart();renderManagedHomeCollections();applyShopFilters();renderCart();renderProduct();updateOfferCountdowns();setInterval(updateOfferCountdowns,60000);
+ document.documentElement.dataset.catalogSource=CATALOG_SOURCE;window.dispatchEvent(new CustomEvent('zemzem:catalog-ready'));
 }
 document.addEventListener('DOMContentLoaded',init);
 window.addToCart=addToCart;window.changeQty=changeQty;window.removeItem=removeItem;window.saveForLater=saveForLater;window.moveSavedToCart=moveSavedToCart;window.removeSavedLater=removeSavedLater;window.buyNow=buyNow;window.toggleWishlist=toggleWishlist;window.renderManagedHomeCollections=renderManagedHomeCollections;window.getManagedHomeCollection=managedCollection;window.ZemZemStore={SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,getBook,getBooks:()=>[...BOOKS],getCart,setCart,cartDetails,cartSubtotal,getCheckoutToken,clearCheckoutToken,getCustomerSession,money,esc,fetchCatalog,bookCard,renderBooks,syncWishlistButtons,updateOfferCountdowns};
