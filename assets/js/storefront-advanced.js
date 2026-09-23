@@ -45,6 +45,6 @@ async function personalized(){
    z.renderBooks?.('#zzPersonalizedGrid',picks);
  }catch{}
 }
-function boot(){style();bar();history();product();pay();theme();a11y();personalized();let n=0;const t=setInterval(()=>{n++;if(S()?.getBook||n>30){clearInterval(t);cards();new MutationObserver(cards).observe(document.body,{childList:true,subtree:true})}},180)}
+function boot(){style();bar();history();product();pay();theme();a11y();personalized();let n=0;const t=setInterval(()=>{n++;if(S()?.getBook||n>30){clearInterval(t);cards();let raf=0;new MutationObserver(()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;cards()})}).observe(document.body,{childList:true,subtree:true})}},180)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
