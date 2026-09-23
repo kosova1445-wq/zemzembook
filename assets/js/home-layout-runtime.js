@@ -65,7 +65,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const q=(s,r=document)=>r.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const DEF={visible:true,device:'all',mode:'marquee',direction:'left',speed:'normal',pause_on_hover:true,background:'#ffffff',cards:[
     {icon:'🚚',title:'Dërgesë rajonale',description:'Kosovë 3 € · Shqipëri 6 € · Maqedoni 6 €',background:'#dfefff',href:'',visible:true},
-    {icon:'💳',title:'−10% me PayPal mbi 50 €',description:'Zbritje automatike kur vlera e librave kalon 50 €',background:'#ddf4e7',href:'',visible:true},
+    {icon:'💳',title:'PayPal online',description:'Pagesë online pa zbritje automatike',background:'#ddf4e7',href:'',visible:true},
     {icon:'📦',title:'Cash on Delivery',description:'Aktiv · pagesë në pranim · tarifë +2 €',background:'#ffe7d4',href:'',visible:true}
   ]};
   function ensureCss(){if(q('#zzFeatureRuntimeCss'))return;document.head.insertAdjacentHTML('beforeend',`<style id="zzFeatureRuntimeCss">
