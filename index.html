@@ -94,7 +94,7 @@
 <script src="assets/js/home-mobile-v6.js?v=1"></script>
 <script src="assets/js/branding.js?v=6"></script>
 <script src="assets/js/site-content.js?v=3"></script>
-<script src="assets/js/mobile-commerce-v3.js?v=4"></script><script src="assets/js/storefront-experience.js?v=11"></script><script src="assets/js/storefront-advanced.js?v=6"></script><script src="assets/js/storefront-observability.js?v=1"></script><script src="assets/js/storefront-controls.js?v=1"></script><script id="zzForceFreeLibraryNav">(()=>{const ensure=()=>{const nav=document.querySelector('[data-home-nav]');if(nav&&!nav.querySelector('a[href="free-library.html"]')){const ebook=nav.querySelector('a[href="ebooks.html"]');const a=document.createElement('a');a.href='free-library.html';a.innerHTML='<strong>Biblioteka Falas</strong>';ebook?.insertAdjacentElement('afterend',a)}const cats=document.querySelector('[data-home-categories]');if(cats&&!cats.querySelector('a[href="free-library.html"]')){const a=document.createElement('a');a.className='category-item category-item-ebook';a.href='free-library.html';a.innerHTML='<span class="category-icon">📚</span><span class="category-copy"><strong>Biblioteka Falas</strong><small>PDF falas të aprovuar</small></span><span class="category-arrow">›</span>';cats.appendChild(a)}};ensure();document.addEventListener('DOMContentLoaded',ensure);[300,900,1800].forEach(ms=>setTimeout(ensure,ms))})();</script>
+<script src="assets/js/mobile-commerce-v3.js?v=4"></script><script src="assets/js/storefront-experience.js?v=11"></script><script src="assets/js/storefront-advanced.js?v=7"></script><script src="assets/js/storefront-observability.js?v=1"></script><script src="assets/js/storefront-controls.js?v=1"></script><script id="zzForceFreeLibraryNav">(()=>{const ensure=()=>{const nav=document.querySelector('[data-home-nav]');if(nav&&!nav.querySelector('a[href="free-library.html"]')){const ebook=nav.querySelector('a[href="ebooks.html"]');const a=document.createElement('a');a.href='free-library.html';a.innerHTML='<strong>Biblioteka Falas</strong>';ebook?.insertAdjacentElement('afterend',a)}const cats=document.querySelector('[data-home-categories]');if(cats&&!cats.querySelector('a[href="free-library.html"]')){const a=document.createElement('a');a.className='category-item category-item-ebook';a.href='free-library.html';a.innerHTML='<span class="category-icon">📚</span><span class="category-copy"><strong>Biblioteka Falas</strong><small>PDF falas të aprovuar</small></span><span class="category-arrow">›</span>';cats.appendChild(a)}};ensure();document.addEventListener('DOMContentLoaded',ensure);[300,900,1800].forEach(ms=>setTimeout(ensure,ms))})();</script>
 <script id="zzForceRemoveEditorial">(()=>{const clean=()=>{document.querySelectorAll('#zzBookWeek,#zzPremiumDark').forEach(n=>n.remove())};clean();document.addEventListener('DOMContentLoaded',clean);[500,1200,2500].forEach(ms=>setTimeout(clean,ms))})();</script>
 <script src="assets/js/performance-vitals.js?v=1" defer></script>
 <script>
@@ -119,17 +119,22 @@ window.addEventListener('zemzem:catalog-ready',()=>{repair();setTimeout(repair,2
 [400,1200,2500,5000].forEach(ms=>setTimeout(repair,ms));
 })();
 </script><script>
-(()=>{if(window.__zzBookIdentityGuardV2)return;window.__zzBookIdentityGuardV2=1;
-function canonical(card){return String(card?.dataset?.bookId||'')}
+(()=>{if(window.__zzBookIdentityGuardV3)return;window.__zzBookIdentityGuardV3=1;
 document.addEventListener('click',e=>{
   const card=e.target.closest?.('.book-card[data-book-id]');if(!card)return;
-  const id=canonical(card);if(!id)return;
-  const link=e.target.closest?.('a[href*="product.html?id="]');
-  if(link){link.href='product.html?id='+encodeURIComponent(id);return}
-  const qv=e.target.closest?.('[data-qv],[data-qv-id],[data-wow-view]');
-  if(qv){if(qv.hasAttribute('data-qv'))qv.dataset.qv=id;if(qv.hasAttribute('data-qv-id'))qv.dataset.qvId=id;if(qv.hasAttribute('data-wow-view'))qv.dataset.wowView=id}
-  const cmp=e.target.closest?.('[data-cmp]');if(cmp)cmp.dataset.cmp=id;
+  const id=String(card.dataset.bookId||'');if(!id)return;
+  const interactive=e.target.closest?.('button,input,select,textarea,[data-wishlist-id],[data-cmp],.add-btn');
+  if(interactive){
+    if(interactive.matches?.('[data-qv],[data-qv-id],[data-wow-view]')){e.preventDefault();e.stopImmediatePropagation();location.href='product.html?id='+encodeURIComponent(id)}
+    return;
+  }
+  const link=e.target.closest?.('a');
+  if(link||e.target.closest?.('.book-card-cover-link,.book-meta,h3')){
+    e.preventDefault();e.stopImmediatePropagation();location.href='product.html?id='+encodeURIComponent(id);
+  }
 },true);
+document.addEventListener('DOMContentLoaded',()=>document.querySelectorAll('.book-card [data-qv],.book-card [data-qv-id],.book-card [data-wow-view]').forEach(b=>b.remove()));
+window.addEventListener('zemzem:catalog-ready',()=>{document.querySelectorAll('.book-card [data-qv],.book-card [data-qv-id],.book-card [data-wow-view]').forEach(b=>b.remove())});
 })();
 </script></body>
 </html>
