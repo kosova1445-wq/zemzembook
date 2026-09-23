@@ -19,3 +19,24 @@ async function submitCheckout(e){e.preventDefault();const form=e.currentTarget;i
 function bindCheckoutV2(){const scheduleAbandoned=()=>{clearTimeout(abandonedTimer);abandonedTimer=setTimeout(saveAbandonedCart,900)};cq('#country')?.addEventListener('change',()=>{const ship=cq('#coShipping');if(ship)ship.textContent='Duke llogaritur…';updateQuote(true);scheduleAbandoned()});document.querySelectorAll('input[name="payment_method"]').forEach(r=>r.addEventListener('change',()=>{updateQuote();scheduleAbandoned()}));cq('#applyCouponBtn')?.addEventListener('click',()=>updateQuote(true));cq('#applyGiftCardBtn')?.addEventListener('click',()=>updateQuote(true));cq('#giftWrapAll')?.addEventListener('change',()=>updateQuote());cq('#couponCode')?.addEventListener('input',()=>{if(rawCouponCode().toUpperCase()!==String(appliedCouponCode||'').toUpperCase())appliedCouponCode=''});cq('#couponCode')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();updateQuote(true)}});cq('#giftCardCode')?.addEventListener('input',()=>{if(rawGiftCardCode().toUpperCase()!==String(appliedGiftCardCode||'').toUpperCase())appliedGiftCardCode=''});cq('#giftCardCode')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();updateQuote(true)}});cq('#cartItems')?.addEventListener('click',()=>{quoteTimer=setTimeout(()=>updateQuote(),80);scheduleAbandoned()});cq('#savedLaterItems')?.addEventListener('click',()=>scheduleAbandoned());cq('#checkoutForm')?.addEventListener('input',e=>{if(e.target?.name==='email')scheduleAbandoned()});cq('#checkoutForm')?.addEventListener('submit',submitCheckout);const notes=cq('[name="notes"]'),count=cq('#notesCount');notes?.addEventListener('input',()=>{if(count)count.textContent=String(notes.value.length)})}
 async function initCheckoutV2(){if(!CZ())return;await prefillAccount();bindCheckoutV2();await recoverAbandonedCart();const promo=new URLSearchParams(location.search).get('coupon');if(promo&&cq('#couponCode')){cq('#couponCode').value=String(promo).toUpperCase();await updateQuote(true);history.replaceState(null,'',location.pathname)}else await updateQuote();saveAbandonedCart()}
 window.addEventListener('zemzem:catalog-ready',initCheckoutV2);if(document.readyState==='complete'&&CZ())initCheckoutV2();
+async function loadAdminCheckoutSettings(){
+ try{
+  const z=window.ZemZemStore;if(!z?.SUPABASE_URL||!z?.SUPABASE_PUBLISHABLE_KEY)return;
+  const r=await fetch(z.SUPABASE_URL+'/rest/v1/rpc/checkout_settings_public',{method:'POST',headers:{apikey:z.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:'{}',cache:'no-store'});
+  if(!r.ok)return;const d=await r.json(),cfg=d?.content||{},zones=Array.isArray(d?.zones)?d.zones:[];
+  const set=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.textContent=v};
+  set('checkoutPageTitle',cfg.checkout_title);set('checkoutPageSubtitle',cfg.checkout_subtitle);set('checkoutNotice',cfg.notice_text);
+  set('paypalLabel',cfg.paypal_label);set('paypalNote',cfg.paypal_note);set('codLabel',cfg.cod_label);set('codNote',cfg.cod_note);
+  const bn=document.getElementById('checkoutBuildNotice');if(bn){bn.textContent=cfg.build_notice||'';bn.hidden=cfg.show_build_notice===false}
+  const paypal=document.querySelector('input[name="payment_method"][value="paypal"]')?.closest('.pay-option');
+  const cod=document.querySelector('input[name="payment_method"][value="cod"]')?.closest('.pay-option');
+  if(paypal)paypal.hidden=cfg.show_paypal===false;if(cod)cod.hidden=cfg.show_cod===false;
+  if(cfg.show_payment_progress!==true)document.getElementById('zzPayProg')?.remove();
+  const country=document.getElementById('country');if(country&&zones.length){
+    const active=zones.filter(z=>z.is_active);
+    country.innerHTML=active.map(z=>'<option value="'+String(z.country_code).replace(/"/g,'&quot;')+'">'+String(z.country_name||z.country_code)+' — '+Number(z.shipping_amount||0).toFixed(2)+' €</option>').join('');
+    country.dispatchEvent(new Event('change',{bubbles:true}));
+  }
+ }catch(e){console.warn('Checkout settings',e)}
+}
+
