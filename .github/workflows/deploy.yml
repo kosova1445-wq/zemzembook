@@ -309,6 +309,7 @@ jobs:
           assets/js/admin-site-manager.js
           assets/js/site-manager-advanced-runtime.js
           assets/js/admin-site-manager-pro.js
+          assets/js/admin-order-launch-reset.js
           assets/js/admin-blog.js
           assets/css/admin-blog.css
           assets/css/admin.css
@@ -417,6 +418,7 @@ jobs:
           upload "assets/js/site-manager-runtime.js"
           upload "assets/js/admin-site-manager.js"
           upload "assets/js/admin-site-manager-pro.js"
+          upload "assets/js/admin-order-launch-reset.js"
           upload "assets/js/site-manager-advanced-runtime.js"
           upload "assets/js/admin-enterprise.js"
           upload "assets/js/admin-enterprise-tools.js"
@@ -482,6 +484,7 @@ jobs:
           node --check assets/js/site-manager-runtime.js
           node --check assets/js/admin-site-manager.js
           node --check assets/js/admin-site-manager-pro.js
+          node --check assets/js/admin-order-launch-reset.js
           node --check assets/js/site-manager-advanced-runtime.js
 
       - name: Verify live protected release
@@ -592,6 +595,8 @@ jobs:
           require_live https://www.zemzem.al/assets/js/site-manager-runtime.js /tmp/site-manager-runtime.js 'site_manager_v1' 'Site Manager public runtime'
           require_live https://www.zemzem.al/assets/js/admin-site-manager.js /tmp/admin-site-manager.js 'Menaxhimi i plotë i faqes' 'Unified Site Manager Admin module'
           require_live https://www.zemzem.al/assets/js/admin-site-manager-pro.js /tmp/admin-site-manager-pro.js 'Strukturë & Ikona' 'Advanced Site Manager structure controls'
+          require_live https://www.zemzem.al/assets/js/admin-order-launch-reset.js /tmp/admin-order-launch-reset.js 'Fillo porositë nga zero' 'Order launch reset Admin module'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-order-reset-loader.html 'admin-order-launch-reset.js?v=1' 'Order launch reset Admin loader'
           require_live https://www.zemzem.al/assets/js/site-manager-advanced-runtime.js /tmp/site-manager-advanced-runtime.js 'applyFooter' 'Advanced Site Manager public runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin-site-manager-pro-loader.html 'admin-site-manager-pro.js?v=2' 'Advanced Site Manager Admin loader'
           require_live https://www.zemzem.al/admin.html /tmp/admin-site-manager-loader.html 'admin-site-manager.js?v=2' 'Site Manager Admin loader'
