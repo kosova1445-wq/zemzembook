@@ -120,7 +120,7 @@ function renderDashboard(){
 
    <section data-partner-panel="books" hidden>
     <div class="partner-page-head"><div><span class="partner-kicker" style="color:#547363">KATALOGU</span><h2>Menaxho katalogun e librarisë</h2><p>Shiko librat, çmimet, stokun dhe statusin e publikimit.</p></div><button class="btn primary" data-open-section="add">＋ Shto libër</button></div>
-    <div class="partner-card" style="margin-top:0"><div class="partner-book-list"><table class="partner-table"><thead><tr><th>Libri</th><th>Autori</th><th>ISBN</th><th>Çmimi yt</th><th>Publik</th><th>Stoku</th><th>Statusi</th></tr></thead><tbody>${books.map(b=>'<tr><td><div class="book-title-cell">'+(b.cover_url?'<img class="book-cover-mini" src="'+esc(b.cover_url)+'" alt="">':'<div class="book-cover-placeholder">▥</div>')+'<div><b>'+esc(b.title)+'</b><br><small>'+esc(b.partner_publisher_name||'')+'</small></div></div></td><td>'+esc(b.partner_author_name||'—')+'</td><td>'+esc(b.isbn||'—')+'</td><td><span class="price-pill">'+money(b.cost_price)+'</span></td><td><b>'+money(b.price)+'</b></td><td>'+Number(b.stock_quantity||0)+'</td><td><span class="status-pill '+esc(b.partner_review_status==='pending'?'pending':(b.partner_review_status==='rejected'?'cancelled':b.status))+'">'+esc(b.partner_review_status==='pending'?'Në pritje për aprovim':(b.partner_review_status==='rejected'?'Refuzuar':statusSq(b.status)))+'</span>'+(b.partner_review_status==='rejected'&&b.partner_review_note?'<br><small class="partner-reject-note">'+esc(b.partner_review_note)+'</small>':'')+'</td></tr>').join('')||'<tr><td colspan="7">Ende nuk ke libra.</td></tr>'}</tbody></table></div></div>
+    <div class="partner-card" style="margin-top:0"><div class="partner-book-list"><table class="partner-table"><thead><tr><th>Libri</th><th>Autori</th><th>ISBN</th><th>Çmimi yt</th><th>Publik</th><th>Stoku</th><th>Statusi</th><th>Veprime</th></tr></thead><tbody>${books.map(b=>'<tr><td><div class="book-title-cell">'+(b.cover_url?'<img class="book-cover-mini" src="'+esc(b.cover_url)+'" alt="">':'<div class="book-cover-placeholder">▥</div>')+'<div><b>'+esc(b.title)+'</b><br><small>'+esc(b.partner_publisher_name||'')+'</small></div></div></td><td>'+esc(b.partner_author_name||'—')+'</td><td>'+esc(b.isbn||'—')+'</td><td><span class="price-pill">'+money(b.cost_price)+'</span></td><td><b>'+money(b.price)+'</b></td><td>'+Number(b.stock_quantity||0)+'</td><td><span class="status-pill '+esc(b.partner_review_status==='pending'?'pending':(b.partner_review_status==='rejected'?'cancelled':b.status))+'">'+esc(b.partner_review_status==='pending'?'Në pritje për aprovim':(b.partner_review_status==='rejected'?'Refuzuar':statusSq(b.status)))+'</span>'+(b.partner_review_status==='rejected'&&b.partner_review_note?'<br><small class="partner-reject-note">'+esc(b.partner_review_note)+'</small>':'')+'</td><td><button type="button" class="btn secondary partner-edit-book" data-edit-book="'+esc(b.id)+'">✎ Edito</button></td></tr>').join('')||'<tr><td colspan="8">Ende nuk ke libra.</td></tr>'}</tbody></table></div></div>
    </section>
 
    <section data-partner-panel="add" hidden>
@@ -128,9 +128,11 @@ function renderDashboard(){
     <div class="partner-add-layout">
       <div class="partner-card partner-form-card" style="margin-top:0">
        <form id="partnerBookForm" class="partner-form">
-        <div class="partner-form-section full"><h3>1. Fotografitë</h3><p>Fotografia e parë është e detyrueshme dhe përdoret si kopertinë kryesore.</p></div>
+        <input type="hidden" name="book_id" id="partnerBookId" value="">
+        <div id="partnerEditNotice" class="partner-edit-notice full" hidden><div><strong>Po editon një libër ekzistues</strong><small>Ndryshimet do të dërgohen përsëri për aprovim.</small></div><button type="button" class="btn secondary" id="partnerCancelEdit">Anulo editimin</button></div>
+        <div class="partner-form-section full"><h3>1. Fotografitë</h3><p>Fotografia e parë është e detyrueshme për libër të ri. Gjatë editimit, fotoja ekzistuese ruhet nëse nuk zgjedh një të re.</p></div>
         <div class="partner-photo-grid full">
-          <label class="partner-photo-upload required"><span class="partner-photo-title">Foto 1 *</span><input id="partnerPhoto1" name="photo1" type="file" accept="image/jpeg,image/png,image/webp" required><div class="partner-photo-preview" id="partnerPhotoPreview1"><span>＋</span><small>Ngarko kopertinën kryesore</small></div></label>
+          <label class="partner-photo-upload required"><span class="partner-photo-title">Foto 1 *</span><input id="partnerPhoto1" name="photo1" type="file" accept="image/jpeg,image/png,image/webp"><div class="partner-photo-preview" id="partnerPhotoPreview1"><span>＋</span><small>Ngarko kopertinën kryesore</small></div></label>
           <label class="partner-photo-upload"><span class="partner-photo-title">Foto 2</span><input id="partnerPhoto2" name="photo2" type="file" accept="image/jpeg,image/png,image/webp"><div class="partner-photo-preview" id="partnerPhotoPreview2"><span>＋</span><small>Foto shtesë, opsionale</small></div></label>
         </div>
         <div class="partner-form-section full"><h3>2. Të dhënat bazë</h3></div>
@@ -209,6 +211,49 @@ function renderDashboard(){
  document.querySelectorAll('[data-partner-section]').forEach(b=>b.onclick=()=>openSection(b.dataset.partnerSection));
  document.querySelectorAll('[data-open-section]').forEach(b=>b.onclick=()=>openSection(b.dataset.openSection));
 
+ function startEditBook(id){
+   const b=books.find(x=>String(x.id)===String(id));if(!b)return;
+   openSection('add');
+   const f=q('#partnerBookForm');if(!f)return;
+   q('#partnerBookId').value=b.id;
+   q('#partnerEditNotice').hidden=false;
+   q('#partnerBookSubmit').textContent='Ruaj ndryshimet';
+   f.title.value=b.title||'';
+   f.author_name.value=b.partner_author_name||'';
+   f.publisher_name.value=b.partner_publisher_name||'';
+   f.isbn.value=b.isbn||'';
+   f.language.value=b.language||'sq';
+   f.pages.value=b.pages||'';
+   f.publication_year.value=b.partner_publication_year||'';
+   f.edition.value=b.partner_edition||'';
+   f.country.value=b.country||'';
+   f.cost_price.value=b.cost_price??'';
+   f.stock.value=b.stock_quantity??0;
+   f.weight_grams.value=b.weight_grams||'';
+   f.dimensions.value=b.dimensions||'';
+   f.condition.value=b.partner_condition||'new';
+   f.short_description.value=b.short_description||'';
+   f.description.value=b.description||'';
+   f.notes.value=b.partner_notes||'';
+   const p1=q('#partnerPhotoPreview1'),p2=q('#partnerPhotoPreview2');
+   if(p1)p1.innerHTML=b.cover_url?'<img src="'+esc(b.cover_url)+'" alt="Kopertina aktuale"><small>Foto aktuale — zgjidh të re vetëm nëse do ta ndryshosh</small>':'<span>＋</span><small>Ngarko kopertinën kryesore</small>';
+   const g=Array.isArray(b.gallery_urls)?b.gallery_urls[0]:'';
+   if(p2)p2.innerHTML=g?'<img src="'+esc(g)+'" alt="Foto shtesë aktuale"><small>Foto 2 aktuale</small>':'<span>＋</span><small>Foto shtesë, opsionale</small>';
+   f.dataset.existingCover=b.cover_url||'';
+   f.dataset.existingGallery=g||'';
+   calcPrice();
+   setTimeout(()=>q('#partnerBookForm')?.scrollIntoView({behavior:'smooth',block:'start'}),100);
+ }
+ function clearEditBook(){
+   const f=q('#partnerBookForm');if(!f)return;
+   f.reset();q('#partnerBookId').value='';q('#partnerEditNotice').hidden=true;q('#partnerBookSubmit').textContent='Ruaj librin';delete f.dataset.existingCover;delete f.dataset.existingGallery;
+   if(q('#partnerPhotoPreview1'))q('#partnerPhotoPreview1').innerHTML='<span>＋</span><small>Ngarko kopertinën kryesore</small>';
+   if(q('#partnerPhotoPreview2'))q('#partnerPhotoPreview2').innerHTML='<span>＋</span><small>Foto shtesë, opsionale</small>';
+   calcPrice();
+ }
+ document.querySelectorAll('[data-edit-book]').forEach(btn=>btn.addEventListener('click',()=>startEditBook(btn.dataset.editBook)));
+ q('#partnerCancelEdit')?.addEventListener('click',()=>{clearEditBook();openSection('books')});
+
  const bindPhotoPicker=(inputSel,boxSel,required=false)=>{
    const input=q(inputSel),box=q(boxSel);if(!input||!box)return;
    const openPicker=e=>{if(e){e.preventDefault();e.stopPropagation()}input.click()};
@@ -220,7 +265,7 @@ function renderDashboard(){
  const calcPrice=()=>{const base=Number(q('#partnerBookForm [name="cost_price"]')?.value||0);const pub=s.margin_type==='percent'?base*(1+Number(s.margin_value||0)/100):base+Number(s.margin_value||0);if(q('#partnerBasePrice'))q('#partnerBasePrice').textContent=money(base);if(q('#partnerPublicPrice'))q('#partnerPublicPrice').textContent=money(pub)};
  q('#partnerBookForm [name="cost_price"]')?.addEventListener('input',calcPrice);calcPrice();
 
- q('#partnerBookForm')?.addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,btn=q('#partnerBookSubmit'),x=Object.fromEntries(new FormData(f));const photo1=q('#partnerPhoto1')?.files?.[0],photo2=q('#partnerPhoto2')?.files?.[0];if(!photo1){q('#bookMsg').innerHTML='<div class="partner-msg error">Foto 1 është e detyrueshme.</div>';return}btn.disabled=true;btn.textContent='Duke ruajtur…';q('#bookMsg').innerHTML='<div class="partner-msg">Duke ngarkuar fotografitë dhe ruajtur librin…</div>';try{const cover=await storageUpload(photo1,'main'),gallery=photo2?await storageUpload(photo2,'extra'):null;await rpc('partner_book_upsert_v2',{p_id:null,p_title:x.title,p_isbn:x.isbn,p_author_name:x.author_name||null,p_publisher_name:x.publisher_name||null,p_cost_price:Number(x.cost_price),p_stock:Number(x.stock||0),p_cover_url:cover,p_gallery_url:gallery,p_short_description:x.short_description||null,p_description:x.description||null,p_language:x.language||'sq',p_pages:x.pages?Number(x.pages):null,p_country:x.country||null,p_dimensions:x.dimensions||null,p_weight_grams:x.weight_grams?Number(x.weight_grams):null,p_edition:x.edition||null,p_publication_year:x.publication_year?Number(x.publication_year):null,p_condition:x.condition||'new',p_notes:x.notes||null});dashboard=await rpc('partner_dashboard',{});renderDashboard();setTimeout(()=>q('[data-partner-section="books"]')?.click(),30)}catch(err){q('#bookMsg').innerHTML='<div class="partner-msg error">'+esc(err.message)+'</div>';btn.disabled=false;btn.textContent='Ruaj librin'}});
+ q('#partnerBookForm')?.addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,btn=q('#partnerBookSubmit'),x=Object.fromEntries(new FormData(f));const photo1=q('#partnerPhoto1')?.files?.[0],photo2=q('#partnerPhoto2')?.files?.[0],bookId=x.book_id||null,existingCover=f.dataset.existingCover||'',existingGallery=f.dataset.existingGallery||'';if(!photo1&&!existingCover){q('#bookMsg').innerHTML='<div class="partner-msg error">Foto 1 është e detyrueshme.</div>';return}btn.disabled=true;btn.textContent='Duke ruajtur…';q('#bookMsg').innerHTML='<div class="partner-msg">Duke ngarkuar fotografitë dhe ruajtur librin…</div>';try{const cover=photo1?await storageUpload(photo1,'main'):existingCover,gallery=photo2?await storageUpload(photo2,'extra'):(existingGallery||null);await rpc('partner_book_upsert_v2',{p_id:bookId,p_title:x.title,p_isbn:x.isbn,p_author_name:x.author_name||null,p_publisher_name:x.publisher_name||null,p_cost_price:Number(x.cost_price),p_stock:Number(x.stock||0),p_cover_url:cover,p_gallery_url:gallery,p_short_description:x.short_description||null,p_description:x.description||null,p_language:x.language||'sq',p_pages:x.pages?Number(x.pages):null,p_country:x.country||null,p_dimensions:x.dimensions||null,p_weight_grams:x.weight_grams?Number(x.weight_grams):null,p_edition:x.edition||null,p_publication_year:x.publication_year?Number(x.publication_year):null,p_condition:x.condition||'new',p_notes:x.notes||null});dashboard=await rpc('partner_dashboard',{});renderDashboard();setTimeout(()=>q('[data-partner-section="books"]')?.click(),30)}catch(err){q('#bookMsg').innerHTML='<div class="partner-msg error">'+esc(err.message)+'</div>';btn.disabled=false;btn.textContent='Ruaj librin'}});
 
  let businessLogoFile=null;
  q('#partnerBusinessLogo')?.addEventListener('change',e=>{businessLogoFile=e.target.files?.[0]||null;if(!businessLogoFile)return;const reader=new FileReader();reader.onload=()=>{q('#partnerProfileLogoPreview').innerHTML='<img src="'+reader.result+'" alt="Logo preview">'};reader.readAsDataURL(businessLogoFile)});
