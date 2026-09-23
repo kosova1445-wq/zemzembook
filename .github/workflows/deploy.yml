@@ -239,7 +239,6 @@ jobs:
           assets/js/mobile-commerce-v3.js
           assets/css/mobile-commerce-v3.css
           assets/js/whatsapp-chat.js
-          assets/js/home-modern.js
           assets/js/home-bookstore-v2.js
           assets/js/home-mobile-v6.js
           assets/css/home-professional-v4.css
@@ -267,7 +266,6 @@ jobs:
           assets/js/admin-workflow-studio.js
           assets/js/admin-intelligence-suite.js
           assets/js/admin-growth-advanced.js
-          assets/js/home-layout-runtime.js
           assets/js/admin-experience-automation.js
           assets/js/runtime-ops.js
           assets/js/admin-v2.js
@@ -378,7 +376,6 @@ jobs:
           upload "assets/js/mobile-commerce-v3.js"
           upload "assets/css/mobile-commerce-v3.css"
           upload "assets/js/whatsapp-chat.js"
-          upload "assets/js/home-modern.js"
           upload "assets/js/home-mobile-v6.js"
           upload "assets/css/site-premium-v3.css"
           upload "admin.html"
@@ -393,7 +390,6 @@ jobs:
           upload "assets/js/admin-intelligence-suite.js"
           upload "assets/js/admin-growth-advanced.js"
           upload "assets/js/admin-experience-automation.js"
-          upload "assets/js/home-layout-runtime.js"
           upload "assets/js/runtime-ops.js"
           upload "assets/js/admin-v2.js"
           upload "assets/css/admin.css"
@@ -472,7 +468,6 @@ jobs:
           node --check assets/js/admin-workflow-studio.js
           node --check assets/js/admin-intelligence-suite.js
           node --check assets/js/admin-growth-advanced.js
-          node --check assets/js/home-layout-runtime.js
           node --check assets/js/admin-experience-automation.js
           node --check assets/js/admin-growth-catalog.js
           node --check assets/js/runtime-ops.js
@@ -487,15 +482,13 @@ jobs:
           node --check assets/js/admin-checkout-settings.js
           ! grep -q "deri te −10% me PayPal" assets/js/storefront-advanced.js
           grep -q "id=\"checkoutNotice\"" checkout.html
-          node --check assets/js/app-v5.js
+          node --check assets/js/app-v5.js\n          node --check assets/js/home-stable.js\n          grep -q "IS_HOME" assets/js/app-v5.js
           grep -q "CATALOG_CACHE_KEY" assets/js/app-v5.js
           grep -q "requestIdleCallback" assets/js/app-v5.js
           node --check assets/js/price-ticket-runtime.js
           grep -q "Unified catalog ticket v3" assets/css/price-ticket.css
           node --check assets/js/storefront-advanced.js
           ! grep -q "new MutationObserver(cards)" assets/js/storefront-advanced.js
-          grep -q "__zzBookIdentityGuardV3" index.html
-          grep -q "__zzIndexRecoveryV1" index.html
           node --check assets/js/free-library.js
           node --check assets/js/admin-free-library-integrated.js
           node --check service-worker.js
@@ -557,28 +550,15 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-intelligence-suite.js /tmp/admin-intel.js 'Intelligence Center' 'Admin Intelligence Center'
           require_live https://www.zemzem.al/assets/js/admin-growth-advanced.js /tmp/admin-growth2.js 'Customer Lifetime Value' 'Admin Advanced Growth'
           require_live https://www.zemzem.al/assets/js/admin-experience-automation.js /tmp/admin-xp.js 'Smart Admin Assistant' 'Admin Experience Automation'
-          require_live https://www.zemzem.al/assets/js/home-layout-runtime.js /tmp/home-layout.js '__zzHomepageCommandRuntime' 'Homepage layout runtime'
           require_live https://www.zemzem.al/assets/js/runtime-ops.js /tmp/runtime-ops.js 'zzMaintenance' 'Maintenance runtime'
           require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v3'" 'PWA service worker'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
-          require_live https://www.zemzem.al/index.html /tmp/index.html 'assets/js/home-modern.js' 'Homepage modern script'
-          require_live https://www.zemzem.al/index.html /tmp/index-stable-home.html '__zzHomeStableV1' 'Stable homepage runtime'
-          require_live https://www.zemzem.al/index.html /tmp/index-stable-css.html 'zz-home-stability-force' 'Homepage forced visibility safety'
-          require_live https://www.zemzem.al/index.html /tmp/index-direct-book.html '__zzBookIdentityGuardV3' 'Direct book navigation guard'
-          require_live https://www.zemzem.al/index.html /tmp/index-book-id-guard.html '__zzBookIdentityGuardV3' 'Book identity guard'
-          require_live https://www.zemzem.al/index.html /tmp/index-recovery.html '__zzIndexRecoveryV1' 'Homepage recovery runtime'
           require_live https://www.zemzem.al/index.html /tmp/index-allbooks.html 'id="allBooksStatic"' 'Homepage all-books section'
-          require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern.js 'zz-hero-ticket' 'Homepage hero price ticket'
-          require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
+          require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=1' 'Stable homepage single runtime'\n          require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
           require_live https://www.zemzem.al/product.html /tmp/product.html 'premium-price-ticket-wrap' 'Product price ticket'
 
           require_live https://www.zemzem.al/assets/css/home-professional-v4.css /tmp/home-professional.css 'glossy pill style inspired by reference' 'Glossy category pill CSS'
-          require_live https://www.zemzem.al/index.html /tmp/index-categories.html 'assets/js/site-content.js?v=3' 'Homepage category controller version'
-          require_live https://www.zemzem.al/assets/js/site-content.js /tmp/site-content.js 'linear-gradient(180deg,#ffffff 0%,#f3f4f5 100%)' 'White glossy category controller'
           require_live https://www.zemzem.al/index.html /tmp/index-all-books.html 'id="allBooksStatic"' 'Homepage all books section'
-          require_live https://www.zemzem.al/index.html /tmp/index-all-books.html 'assets/js/home-modern.js' 'Homepage all books script reference'
-          require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern-all-books.js 'renderAllBooksSection' 'Homepage all books renderer'
-          require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern-all-books.js "limit:20" 'Homepage all books default limit'
           require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksLimit' 'Admin all-books limit control'
           require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksVisible' 'Admin all-books visibility control'
           require_live https://www.zemzem.al/admin.html /tmp/admin-all-books.html 'siteAllBooksSort' 'Admin all-books sorting control'
@@ -705,7 +685,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'authors:authors.slice' 'Autocomplete authors and categories'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'bindShopAutocomplete' 'Shop autocomplete binding'
           require_live https://www.zemzem.al/assets/css/search-autocomplete.css /tmp/search-autocomplete.css '.zz-search-suggest' 'Autocomplete search styles'
-          require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=13' 'Homepage autocomplete asset version'
+          require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=14' 'Homepage autocomplete asset version'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release.html 'adminSecurityReleaseNav' 'Forced Security and Releases Admin menu'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release-view.html 'id="view-security-release"' 'Forced Security and Releases Admin view'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release-v2.html 'assets/js/admin-security-release.js?v=2' 'Security and Releases v2 runtime'
@@ -721,7 +701,7 @@ jobs:
           fi
           echo "OK: Homepage Free Library removed"
           require_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js "function newsletter(){q('#zv2Newsletter')?.remove()}" 'Newsletter remains enabled'
-          require_live https://www.zemzem.al/shop.html /tmp/shop-search.html 'assets/js/app-v5.js?v=13' 'Shop autocomplete asset version'
+          require_live https://www.zemzem.al/shop.html /tmp/shop-search.html 'assets/js/app-v5.js?v=14' 'Shop autocomplete asset version'
           require_live https://www.zemzem.al/product.html /tmp/product-3d.html 'book3dMarkup' '3D product renderer'
           require_live https://www.zemzem.al/assets/css/product.css /tmp/product-3d.css '3D physical book mockup' '3D product styles'
           require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-3d.html 'ebookSpineCoverFile' '3D eBook Admin spine upload'
