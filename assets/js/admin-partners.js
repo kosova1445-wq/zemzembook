@@ -26,19 +26,39 @@ function statusLabel(s){return ({pending:'Në pritje',approved:'Aktiv',suspended
 function statusClass(s){return 'zz-partner-status '+s}
 function render(){
  const host=q('#zzPartnerAdmin');if(!host||!data)return;
- const ps=data.partners||[], ss=data.settlements||[];
- const active=ps.filter(x=>x.partner_status==='approved').length,pending=ps.filter(x=>x.partner_status==='pending').length;
+ const ps=data.partners||[], ss=data.settlements||[], pb=data.pending_books||[];
+ const active=ps.filter(x=>x.partner_status==='approved').length,pending=ps.filter(x=>x.partner_status==='pending').length,pendingBooks=pb.length;
  const due=ps.reduce((a,x)=>a+Number(x.unsettled_due||0),0);
  const profit=ss.reduce((a,x)=>a+Number(x.zemzem_profit||0),0);
  host.innerHTML=`
  <div class="zz-partner-head"><div><div class="eyebrow">MARKETPLACE I LIBRARIVE</div><h2>Partnerët / Libraritë</h2><p>Libraria vendos çmimin bazë. ZemZem i shton automatikisht marzhin dhe llogarit barazimin mujor.</p></div><div class="zz-partner-head-actions"><a class="secondary-btn" href="partner.html" target="_blank">↗ Portali i partnerit</a><button class="primary-btn" id="zzPartnerRefresh">↻ Rifresko</button></div></div>
  <div class="zz-partner-kpis">
   <div><span>Partnerë aktivë</span><strong>${active}</strong></div>
-  <div><span>Aplikime në pritje</span><strong>${pending}</strong></div>
+  <div><span>Aplikime partnerësh</span><strong>${pending}</strong></div>
+  <div><span>Libra për aprovim</span><strong>${pendingBooks}</strong></div>
   <div><span>Për t'u barazuar</span><strong>${money(due)}</strong></div>
-  <div><span>Fitim ZemZem (settlements)</span><strong>${money(profit)}</strong></div>
  </div>
- <div class="zz-partner-grid">
+ <article class="panel zz-partner-panel zz-partner-approval-panel">
+   <div class="panel-head"><div><h3>Libra për aprovim</h3><p>Kontrollo librat e shtuar nga partnerët para se të dalin live në ZemZem.</p></div><span class="zz-partner-status ${pendingBooks?'pending':'approved'}">${pendingBooks} në pritje</span></div>
+   <div class="zz-partner-list">
+    ${pb.map(b=>`<div class="zz-partner-card zz-pending-book-card">
+      <div class="zz-partner-card-top">
+        <div class="zz-partner-identity">
+          <div class="zz-book-approval-cover">${b.cover_url?'<img src="'+esc(b.cover_url)+'" alt="">':'▥'}</div>
+          <div><strong>${esc(b.title)}</strong><small>${esc(b.partner_author_name||'Pa autor')} · ISBN: ${esc(b.isbn||'—')}</small><small>Partner: ${esc(b.supplier_name||'—')}</small></div>
+        </div>
+        <span class="zz-partner-status pending">Në pritje</span>
+      </div>
+      <div class="zz-partner-metrics"><span><b>${money(b.cost_price)}</b> çmimi partnerit</span><span><b>${money(b.price)}</b> çmimi publik</span><span><b>${Number(b.stock_quantity||0)}</b> stok</span></div>
+      ${b.partner_notes?'<p class="zz-partner-review-note"><b>Shënim:</b> '+esc(b.partner_notes)+'</p>':''}
+      <div class="zz-partner-controls">
+        <button class="primary-btn" data-review-book="${b.id}|approved">✓ Aprovo & publiko</button>
+        <button class="secondary-btn" data-review-book="${b.id}|rejected">✕ Refuzo</button>
+      </div>
+    </div>`).join('')||'<div class="empty-state">Nuk ka libra në pritje për aprovim.</div>'}
+   </div>
+  </article>
+   <div class="zz-partner-grid">
   <article class="panel zz-partner-panel"><div class="panel-head"><div><h3>Libraritë partnere</h3><p>Menaxho aplikimet, statusin dhe marzhin e secilit partner.</p></div></div><div class="zz-partner-toolbar"><div class="zz-partner-search"><input id="zzPartnerSearch" placeholder="Kërko librari, kontakt ose email…"></div><select id="zzPartnerStatusFilter"><option value="">Të gjitha statuset</option><option value="pending">Në pritje</option><option value="approved">Aktive</option><option value="suspended">Pezulluara</option><option value="rejected">Refuzuara</option></select></div><div class="zz-partner-list" id="zzPartnerList">
    ${ps.map(p=>`<div class="zz-partner-card">
     <div class="zz-partner-card-top"><div class="zz-partner-identity"><div class="zz-partner-avatar">${esc((p.name||'L').trim().charAt(0).toUpperCase())}</div><div><strong>${esc(p.name)}</strong><small>${esc(p.contact_name||'')} · ${esc(p.email||'')}</small></div></div><span class="${statusClass(p.partner_status)}">${statusLabel(p.partner_status)}</span></div>
@@ -69,6 +89,7 @@ function bind(){
  q('#zzPartnerRefresh')?.addEventListener('click',load);
  const filterPartners=()=>{const term=(q('#zzPartnerSearch')?.value||'').toLowerCase(),status=q('#zzPartnerStatusFilter')?.value||'';qa('#zzPartnerList .zz-partner-card').forEach((card,i)=>{const p=(data.partners||[])[i],hay=[p?.name,p?.contact_name,p?.email,p?.country].join(' ').toLowerCase();card.hidden=!!((term&&!hay.includes(term))||(status&&p?.partner_status!==status))})};
  q('#zzPartnerSearch')?.addEventListener('input',filterPartners);q('#zzPartnerStatusFilter')?.addEventListener('change',filterPartners);
+ qa('[data-review-book]').forEach(b=>b.onclick=async()=>{const [id,decision]=b.dataset.reviewBook.split('|');const note=decision==='rejected'?(prompt('Arsyeja e refuzimit (do t’i shfaqet partnerit):')||''):'';if(decision==='rejected'&&!note)return;await rpc('admin_partner_book_review',{p_book_id:id,p_decision:decision,p_note:note});await load()});
  qa('[data-save-partner]').forEach(b=>b.onclick=async()=>{const id=b.dataset.savePartner,p=(data.partners||[]).find(x=>x.id===id);await rpc('admin_partner_set_status',{p_supplier_id:id,p_status:p.partner_status,p_margin_type:q('[data-margin-type="'+id+'"]').value,p_margin_value:Number(q('[data-margin-value="'+id+'"]').value||0)});await load()});
  qa('[data-partner-status]').forEach(b=>b.onclick=async()=>{const [id,status]=b.dataset.partnerStatus.split('|'),mt=q('[data-margin-type="'+id+'"]')?.value||'fixed',mv=Number(q('[data-margin-value="'+id+'"]')?.value||2);await rpc('admin_partner_set_status',{p_supplier_id:id,p_status:status,p_margin_type:mt,p_margin_value:mv});await load()});
  qa('[data-settle-partner]').forEach(b=>b.onclick=()=>{const d=q('#zzSettlementDialog'),f=q('#zzSettlementForm'),[a,z]=previousMonth();f.supplier_id.value=b.dataset.settlePartner;f.period_start.value=a;f.period_end.value=z;q('#zzSettlementPartnerName').textContent=b.dataset.partnerName;d.showModal()});
