@@ -39,3 +39,24 @@
  .zz-ticket-currency{font-size:10px;margin-top:11px}
  .zz-ticket-ribbon{min-width:96px;font-size:11px}
 }
+
+/* ===== Unified catalog ticket v3 ===== */
+.book-card .zz-ticket-wrap,.shop-book-card .zz-ticket-wrap{display:flex!important;align-items:center!important;justify-content:flex-start!important;margin:10px 0 0!important;min-height:92px!important;overflow:visible!important;background:transparent!important;transform:none!important}
+.book-card .zz-ticket-price,.shop-book-card .zz-ticket-price{width:126px!important;transform:none!important;filter:drop-shadow(0 7px 12px rgba(38,158,165,.18))!important}
+.book-card .zz-ticket-top,.shop-book-card .zz-ticket-top{height:26px!important;margin:0 13px 0 15px!important;padding:0 8px!important}
+.book-card .zz-ticket-old,.shop-book-card .zz-ticket-old{font-size:13px!important}
+.book-card .zz-ticket-old-label,.shop-book-card .zz-ticket-old-label{font-size:8px!important}
+.book-card .zz-ticket-bars,.shop-book-card .zz-ticket-bars{width:24px!important;height:14px!important}
+.book-card .zz-ticket-main,.shop-book-card .zz-ticket-main{height:58px!important;border-radius:32px!important;padding:4px 9px 6px 11px!important;gap:2px!important}
+.book-card .zz-ticket-current,.shop-book-card .zz-ticket-current{font-size:34px!important;letter-spacing:-.055em!important}
+.book-card .zz-ticket-currency,.shop-book-card .zz-ticket-currency{font-size:9px!important;margin-top:10px!important;padding:3px 6px!important}
+.book-card .zz-ticket-ribbon,.shop-book-card .zz-ticket-ribbon{min-width:92px!important;font-size:9px!important;padding:6px 9px 7px!important;margin-top:-2px!important}
+.book-card .price:not(.zz-ticket-current),.book-card .book-price:not(.zz-ticket-current),.book-card .old:not(.zz-ticket-old),.shop-book-card .price:not(.zz-ticket-current),.shop-book-card .old:not(.zz-ticket-old){display:none!important}
+.book-card .price-row{margin-top:2px!important}
+@media(max-width:700px){
+ .book-card .zz-ticket-wrap,.shop-book-card .zz-ticket-wrap{min-height:82px!important}
+ .book-card .zz-ticket-price,.shop-book-card .zz-ticket-price{width:112px!important}
+ .book-card .zz-ticket-main,.shop-book-card .zz-ticket-main{height:52px!important}
+ .book-card .zz-ticket-current,.shop-book-card .zz-ticket-current{font-size:30px!important}
+ .book-card .zz-ticket-ribbon,.shop-book-card .zz-ticket-ribbon{min-width:82px!important;font-size:8px!important}
+}
