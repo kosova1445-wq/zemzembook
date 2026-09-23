@@ -94,7 +94,7 @@
 <script src="assets/js/home-mobile-v6.js?v=1"></script>
 <script src="assets/js/branding.js?v=6"></script>
 <script src="assets/js/site-content.js?v=3"></script>
-<script src="assets/js/mobile-commerce-v3.js?v=4"></script><script src="assets/js/storefront-experience.js?v=9"></script><script src="assets/js/storefront-advanced.js?v=4"></script><script src="assets/js/storefront-observability.js?v=1"></script><script src="assets/js/storefront-controls.js?v=1"></script><script id="zzForceFreeLibraryNav">(()=>{const ensure=()=>{const nav=document.querySelector('[data-home-nav]');if(nav&&!nav.querySelector('a[href="free-library.html"]')){const ebook=nav.querySelector('a[href="ebooks.html"]');const a=document.createElement('a');a.href='free-library.html';a.innerHTML='<strong>Biblioteka Falas</strong>';ebook?.insertAdjacentElement('afterend',a)}const cats=document.querySelector('[data-home-categories]');if(cats&&!cats.querySelector('a[href="free-library.html"]')){const a=document.createElement('a');a.className='category-item category-item-ebook';a.href='free-library.html';a.innerHTML='<span class="category-icon">📚</span><span class="category-copy"><strong>Biblioteka Falas</strong><small>PDF falas të aprovuar</small></span><span class="category-arrow">›</span>';cats.appendChild(a)}};ensure();document.addEventListener('DOMContentLoaded',ensure);new MutationObserver(ensure).observe(document.documentElement,{childList:true,subtree:true})})();</script>
+<script src="assets/js/mobile-commerce-v3.js?v=4"></script><script src="assets/js/storefront-experience.js?v=10"></script><script src="assets/js/storefront-advanced.js?v=5"></script><script src="assets/js/storefront-observability.js?v=1"></script><script src="assets/js/storefront-controls.js?v=1"></script><script id="zzForceFreeLibraryNav">(()=>{const ensure=()=>{const nav=document.querySelector('[data-home-nav]');if(nav&&!nav.querySelector('a[href="free-library.html"]')){const ebook=nav.querySelector('a[href="ebooks.html"]');const a=document.createElement('a');a.href='free-library.html';a.innerHTML='<strong>Biblioteka Falas</strong>';ebook?.insertAdjacentElement('afterend',a)}const cats=document.querySelector('[data-home-categories]');if(cats&&!cats.querySelector('a[href="free-library.html"]')){const a=document.createElement('a');a.className='category-item category-item-ebook';a.href='free-library.html';a.innerHTML='<span class="category-icon">📚</span><span class="category-copy"><strong>Biblioteka Falas</strong><small>PDF falas të aprovuar</small></span><span class="category-arrow">›</span>';cats.appendChild(a)}};ensure();document.addEventListener('DOMContentLoaded',ensure);new MutationObserver(ensure).observe(document.documentElement,{childList:true,subtree:true})})();</script>
 <script id="zzForceRemoveEditorial">(()=>{const clean=()=>{document.querySelectorAll('#zzBookWeek,#zzPremiumDark').forEach(n=>n.remove())};clean();document.addEventListener('DOMContentLoaded',clean);new MutationObserver(clean).observe(document.documentElement,{childList:true,subtree:true})})();</script>
 <script src="assets/js/performance-vitals.js?v=1" defer></script>
 <script>
@@ -119,19 +119,17 @@ window.addEventListener('zemzem:catalog-ready',()=>{repair();setTimeout(repair,2
 [400,1200,2500,5000].forEach(ms=>setTimeout(repair,ms));
 })();
 </script><script>
-(()=>{if(window.__zzBookIdentityGuardV1)return;window.__zzBookIdentityGuardV1=1;
-function syncCard(card){
-  const id=String(card?.dataset?.bookId||'');if(!id)return;
-  card.querySelectorAll('a[href*="product.html?id="]').forEach(a=>{const href='product.html?id='+encodeURIComponent(id);if(a.getAttribute('href')!==href)a.setAttribute('href',href)});
-  card.querySelectorAll('[data-qv]').forEach(b=>b.dataset.qv=id);
-  card.querySelectorAll('[data-qv-id]').forEach(b=>b.dataset.qvId=id);
-  card.querySelectorAll('[data-wow-view]').forEach(b=>b.dataset.wowView=id);
-  card.querySelectorAll('[data-cmp]').forEach(b=>b.dataset.cmp=id);
-}
-function sync(){document.querySelectorAll('.book-card[data-book-id]').forEach(syncCard)}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync);else sync();
-new MutationObserver(sync).observe(document.documentElement,{childList:true,subtree:true});
-window.addEventListener('zemzem:catalog-ready',()=>{sync();setTimeout(sync,250);setTimeout(sync,900)});
+(()=>{if(window.__zzBookIdentityGuardV2)return;window.__zzBookIdentityGuardV2=1;
+function canonical(card){return String(card?.dataset?.bookId||'')}
+document.addEventListener('click',e=>{
+  const card=e.target.closest?.('.book-card[data-book-id]');if(!card)return;
+  const id=canonical(card);if(!id)return;
+  const link=e.target.closest?.('a[href*="product.html?id="]');
+  if(link){link.href='product.html?id='+encodeURIComponent(id);return}
+  const qv=e.target.closest?.('[data-qv],[data-qv-id],[data-wow-view]');
+  if(qv){if(qv.hasAttribute('data-qv'))qv.dataset.qv=id;if(qv.hasAttribute('data-qv-id'))qv.dataset.qvId=id;if(qv.hasAttribute('data-wow-view'))qv.dataset.wowView=id}
+  const cmp=e.target.closest?.('[data-cmp]');if(cmp)cmp.dataset.cmp=id;
+},true);
 })();
 </script></body>
 </html>
