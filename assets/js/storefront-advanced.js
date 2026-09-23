@@ -45,6 +45,6 @@ async function personalized(){
    z.renderBooks?.('#zzPersonalizedGrid',picks);
  }catch{}
 }
-function boot(){style();bar();history();product();pay();theme();a11y();personalized();const runCards=()=>{try{cards()}catch{}};runCards();window.addEventListener('zemzem:catalog-ready',()=>{runCards();setTimeout(runCards,250);setTimeout(runCards,900)},{once:true});setTimeout(runCards,1400)}
+function boot(){style();bar();history();product();theme();a11y();personalized();const runCards=()=>{try{cards()}catch{}};runCards();window.addEventListener('zemzem:catalog-ready',()=>{runCards();setTimeout(runCards,250);setTimeout(runCards,900)},{once:true});setTimeout(runCards,1400)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
