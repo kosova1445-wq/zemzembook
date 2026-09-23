@@ -83,7 +83,7 @@
       const tag=b.badgeText||(unavailable?'Pa stok':discount?(`−${discount}%`):b.bestseller?'Bestseller':b.featured?'Zgjedhja ZemZem':'I ri'),ends=b.offerEndsAt&&new Date(b.offerEndsAt)>new Date();
       const stockText=unavailable?'Nuk ka stok':'Ka në stok';
       const cover=b.coverUrl?`<img class="book-cover-img" src="${escHtml(b.coverUrl)}" alt="${escHtml(b.title)}" loading="lazy">`:`<div class="book-cover ${escHtml(b.cover||'c1')}"><span>${escHtml(b.title)}</span></div>`;
-      return `<article class="book-card shop-book-card">
+      return `<article class="book-card shop-book-card" data-book-id="${escHtml(b.id)}">
         <div class="shop-card-badges"><span class="shop-card-badge ${unavailable?'stockout':discount?'discount':b.bestseller?'best':''} badge-${escHtml(b.badgeStyle||'default')}">${escHtml(tag)}</span></div>
         <button class="shop-wishlist-btn" data-wishlist-id="${b.id}" type="button" aria-label="Shto në wishlist" title="Wishlist" onclick="toggleWishlist('${b.id}')">♡</button>
         <a class="book-card-cover-link shop-card-cover" href="product.html?id=${encodeURIComponent(b.id)}" aria-label="Shiko ${escHtml(b.title)}">${cover}</a>
