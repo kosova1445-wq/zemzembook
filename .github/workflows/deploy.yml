@@ -487,7 +487,9 @@ jobs:
           node --check assets/js/admin-checkout-settings.js
           ! grep -q "deri te −10% me PayPal" assets/js/storefront-advanced.js
           grep -q "id=\"checkoutNotice\"" checkout.html
-          node --check assets/js/app-v5.js\n          grep -q "CATALOG_CACHE_KEY" assets/js/app-v5.js\n          grep -q "requestIdleCallback" assets/js/app-v5.js
+          node --check assets/js/app-v5.js
+          grep -q "CATALOG_CACHE_KEY" assets/js/app-v5.js
+          grep -q "requestIdleCallback" assets/js/app-v5.js
           node --check assets/js/price-ticket-runtime.js
           grep -q "Unified catalog ticket v3" assets/css/price-ticket.css
           node --check assets/js/storefront-advanced.js
