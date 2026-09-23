@@ -487,6 +487,7 @@ jobs:
           node --check assets/js/checkout-v2.js
           grep -q "PayPal nuk aplikon zbritje automatike" checkout.html
           node --check assets/js/app-v5.js
+          grep -q "__zzIndexRecoveryV1" index.html
           node --check assets/js/free-library.js
           node --check assets/js/admin-free-library-integrated.js
           node --check service-worker.js
@@ -553,6 +554,8 @@ jobs:
           require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v3'" 'PWA service worker'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index.html 'assets/js/home-modern.js' 'Homepage modern script'
+          require_live https://www.zemzem.al/index.html /tmp/index-recovery.html '__zzIndexRecoveryV1' 'Homepage recovery runtime'
+          require_live https://www.zemzem.al/index.html /tmp/index-allbooks.html 'id="allBooksStatic"' 'Homepage all-books section'
           require_live https://www.zemzem.al/assets/js/home-modern.js /tmp/home-modern.js 'zz-hero-ticket' 'Homepage hero price ticket'
           require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
           require_live https://www.zemzem.al/product.html /tmp/product.html 'premium-price-ticket-wrap' 'Product price ticket'
