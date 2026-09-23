@@ -14,3 +14,12 @@
 .zz-settlement-card{position:relative}.zz-settlement-card:before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:3px;background:#2d7453}.zz-settlement-card .zz-partner-card-top{padding-left:5px}
 .zz-partner-dialog{border:0;border-radius:18px;padding:0;box-shadow:0 28px 90px rgba(0,0,0,.24);width:min(460px,92vw)}.zz-partner-dialog::backdrop{background:rgba(10,20,15,.48);backdrop-filter:blur(2px)}.zz-partner-dialog form{padding:22px;display:grid;gap:12px}.zz-partner-dialog h3{margin:0;font-size:18px}.zz-partner-dialog p{margin:0;color:#728078}.zz-partner-dialog label{font-size:10px;font-weight:800}.zz-partner-dialog input{display:block;width:100%;margin-top:5px;border:1px solid #d7e1dc;border-radius:10px;padding:10px}.zz-dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:6px}
 @media(max-width:1040px){.zz-partner-kpis{grid-template-columns:repeat(2,1fr)}.zz-partner-grid{grid-template-columns:1fr}}@media(max-width:640px){.zz-partner-kpis{grid-template-columns:1fr}.zz-partner-head{flex-direction:column;padding:20px}.zz-partner-head h2{font-size:23px}.zz-partner-toolbar{flex-direction:column;align-items:stretch}.zz-partner-card-top small{max-width:220px}}
+
+/* Partner book approval queue */
+.zz-partner-approval-panel{margin-bottom:14px}
+.zz-partner-approval-panel .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.zz-pending-book-card{background:linear-gradient(180deg,#fffdf8,#fff)}
+.zz-book-approval-cover{width:58px;height:78px;border-radius:8px;background:#eef2ef;display:grid;place-items:center;overflow:hidden;flex:0 0 auto;border:1px solid #e0e7e3}
+.zz-book-approval-cover img{width:100%;height:100%;object-fit:cover}
+.zz-partner-review-note{font-size:9px;line-height:1.5;color:#5f6d65;background:#f8faf9;border:1px solid #e8eeea;border-radius:9px;padding:8px 9px;margin:8px 0}
+.zz-pending-book-card .zz-partner-controls{justify-content:flex-end}
