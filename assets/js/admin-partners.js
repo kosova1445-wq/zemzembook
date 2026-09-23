@@ -39,9 +39,9 @@ function render(){
   <div><span>Fitim ZemZem (settlements)</span><strong>${money(profit)}</strong></div>
  </div>
  <div class="zz-partner-grid">
-  <article class="panel zz-partner-panel"><div class="panel-head"><div><h3>Libraritë partnere</h3><p>Aprovo dhe cakto marzhin.</p></div></div><div class="zz-partner-list">
+  <article class="panel zz-partner-panel"><div class="panel-head"><div><h3>Libraritë partnere</h3><p>Menaxho aplikimet, statusin dhe marzhin e secilit partner.</p></div></div><div class="zz-partner-toolbar"><div class="zz-partner-search"><input id="zzPartnerSearch" placeholder="Kërko librari, kontakt ose email…"></div><select id="zzPartnerStatusFilter"><option value="">Të gjitha statuset</option><option value="pending">Në pritje</option><option value="approved">Aktive</option><option value="suspended">Pezulluara</option><option value="rejected">Refuzuara</option></select></div><div class="zz-partner-list" id="zzPartnerList">
    ${ps.map(p=>`<div class="zz-partner-card">
-    <div class="zz-partner-card-top"><div><strong>${esc(p.name)}</strong><small>${esc(p.contact_name||'')} · ${esc(p.email||'')}</small></div><span class="${statusClass(p.partner_status)}">${statusLabel(p.partner_status)}</span></div>
+    <div class="zz-partner-card-top"><div class="zz-partner-identity"><div class="zz-partner-avatar">${esc((p.name||'L').trim().charAt(0).toUpperCase())}</div><div><strong>${esc(p.name)}</strong><small>${esc(p.contact_name||'')} · ${esc(p.email||'')}</small></div></div><span class="${statusClass(p.partner_status)}">${statusLabel(p.partner_status)}</span></div>
     <div class="zz-partner-metrics"><span><b>${p.book_count||0}</b> libra</span><span><b>${p.sold_qty||0}</b> të shitur</span><span><b>${money(p.unsettled_due)}</b> pa barazuar</span></div>
     <div class="zz-partner-controls">
      <label>Marzhi<select data-margin-type="${p.id}"><option value="fixed" ${p.margin_type==='fixed'?'selected':''}>€ fiks</option><option value="percent" ${p.margin_type==='percent'?'selected':''}>%</option></select></label>
@@ -67,6 +67,8 @@ async function load(){try{data=await rpc('admin_partner_snapshot',{});render()}c
 function previousMonth(){const d=new Date(),first=new Date(d.getFullYear(),d.getMonth()-1,1),last=new Date(d.getFullYear(),d.getMonth(),0);const f=x=>x.toISOString().slice(0,10);return [f(first),f(last)]}
 function bind(){
  q('#zzPartnerRefresh')?.addEventListener('click',load);
+ const filterPartners=()=>{const term=(q('#zzPartnerSearch')?.value||'').toLowerCase(),status=q('#zzPartnerStatusFilter')?.value||'';qa('#zzPartnerList .zz-partner-card').forEach((card,i)=>{const p=(data.partners||[])[i],hay=[p?.name,p?.contact_name,p?.email,p?.country].join(' ').toLowerCase();card.hidden=!!((term&&!hay.includes(term))||(status&&p?.partner_status!==status))})};
+ q('#zzPartnerSearch')?.addEventListener('input',filterPartners);q('#zzPartnerStatusFilter')?.addEventListener('change',filterPartners);
  qa('[data-save-partner]').forEach(b=>b.onclick=async()=>{const id=b.dataset.savePartner,p=(data.partners||[]).find(x=>x.id===id);await rpc('admin_partner_set_status',{p_supplier_id:id,p_status:p.partner_status,p_margin_type:q('[data-margin-type="'+id+'"]').value,p_margin_value:Number(q('[data-margin-value="'+id+'"]').value||0)});await load()});
  qa('[data-partner-status]').forEach(b=>b.onclick=async()=>{const [id,status]=b.dataset.partnerStatus.split('|'),mt=q('[data-margin-type="'+id+'"]')?.value||'fixed',mv=Number(q('[data-margin-value="'+id+'"]')?.value||2);await rpc('admin_partner_set_status',{p_supplier_id:id,p_status:status,p_margin_type:mt,p_margin_value:mv});await load()});
  qa('[data-settle-partner]').forEach(b=>b.onclick=()=>{const d=q('#zzSettlementDialog'),f=q('#zzSettlementForm'),[a,z]=previousMonth();f.supplier_id.value=b.dataset.settlePartner;f.period_start.value=a;f.period_end.value=z;q('#zzSettlementPartnerName').textContent=b.dataset.partnerName;d.showModal()});
