@@ -27,3 +27,17 @@
 @media (max-width: 390px){
   .ebook-hero h1,.ebook-detail-info h1{font-size:31px!important}.header-actions{gap:5px}.icon-btn{width:40px!important;height:40px!important}.ebook-admin-main{padding:10px!important}.ebook-panel{padding:12px!important}.account-shell{padding:14px 9px!important}
 }
+
+/* Keep grid children within the phone viewport, including configured logos. */
+@media (max-width: 900px){
+  .header .header-row{grid-template-columns:minmax(0,1fr) auto}
+  .header .header-row>*,.ebook-toolbar>*,.ebook-detail-grid>*{min-width:0}
+  .header .brand,.footer .brand{max-width:100%!important}
+  .header .search{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;border-radius:16px}
+  .header .search select{grid-column:1/-1;min-width:0;width:100%;padding:10px 12px;border-bottom:1px solid var(--line)}
+  .header .search input{min-width:0;width:100%;font-size:16px}
+  .header .search button{min-width:44px}
+  .header .nav{max-width:100%}
+  .ebook-toolbar select{min-width:0;max-width:100%}
+  .ebook-detail-info{overflow-wrap:anywhere}
+}
