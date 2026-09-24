@@ -443,6 +443,10 @@ jobs:
           upload "assets/js/admin-free-library-integrated.js"
           upload "assets/js/admin-free-library-manager.js"
           upload "assets/css/admin-free-library-manager.css"
+          upload "assets/js/admin-partner-fulfillment.js"
+          upload "assets/css/admin-partner-fulfillment.css"
+          upload "assets/js/partner-fulfillment.js"
+          upload "assets/css/partner-fulfillment.css"
           upload "assets/css/free-library.css"
           upload "fe-edukim.html"
           upload "histori.html"
@@ -506,6 +510,10 @@ jobs:
           node --check assets/js/admin-free-library-integrated.js
           node --check assets/js/admin-free-library-manager.js
           grep -q "__zzFreeLibraryManager" assets/js/admin-free-library-manager.js
+          node --check assets/js/admin-partner-fulfillment.js
+          node --check assets/js/partner-fulfillment.js
+          grep -q "__zzAdminPartnerFulfillment" assets/js/admin-partner-fulfillment.js
+          grep -q "__zzPartnerFulfillment" assets/js/partner-fulfillment.js
           node --check service-worker.js
           node --check assets/js/site-manager-runtime.js
           node --check assets/js/admin-site-manager.js
@@ -751,6 +759,10 @@ jobs:
           require_live https://www.zemzem.al/assets/js/free-library.js /tmp/free-library-js.html 'free_library_books' 'Free Library runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-final.html 'data-view="free-library"' 'Free Library main Admin navigation'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-manager-loader.html 'assets/js/admin-free-library-manager.js?v=1' 'Full Free Library admin manager'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-partner-fulfillment-loader.html 'assets/js/admin-partner-fulfillment.js?v=1' 'Admin partner fulfillment loader'
+          require_live https://www.zemzem.al/assets/js/admin-partner-fulfillment.js /tmp/admin-partner-fulfillment.js '__zzAdminPartnerFulfillment' 'Admin partner fulfillment runtime'
+          require_live https://www.zemzem.al/partner.html /tmp/partner-fulfillment-loader.html 'assets/js/partner-fulfillment.js?v=1' 'Partner fulfillment portal loader'
+          require_live https://www.zemzem.al/assets/js/partner-fulfillment.js /tmp/partner-fulfillment.js '__zzPartnerFulfillment' 'Partner fulfillment portal runtime'
           require_live https://www.zemzem.al/assets/js/admin-free-library-manager.js /tmp/admin-free-library-manager.js '__zzFreeLibraryManager' 'Free Library manager runtime'
           require_live https://www.zemzem.al/assets/css/admin-free-library-manager.css /tmp/admin-free-library-manager.css '.zzflm-dialog' 'Free Library manager styles'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-view-final.html 'id="view-free-library"' 'Free Library main Admin view'
