@@ -1,0 +1,22 @@
+/* ZemZem Admin Partner Center Pro */
+.zz-pcenter-mini-badges{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 2px}
+.zz-pcenter-mini-badges span{font-size:8px;font-weight:850;padding:5px 7px;border-radius:999px;background:#eef4f0;color:#315943;border:1px solid #dce7e0}
+.zz-pcenter-mini-badges .hot{background:#eef5ff;color:#315e96}.zz-pcenter-mini-badges .warn{background:#fff4df;color:#8a651e}
+.zz-pcenter-dialog{width:min(1080px,94vw);max-height:90vh;border:0;border-radius:22px;padding:0;box-shadow:0 28px 90px rgba(0,0,0,.26);overflow:hidden}
+.zz-pcenter-dialog::backdrop{background:rgba(8,16,12,.52);backdrop-filter:blur(3px)}
+.zz-pcenter-shell{background:#f5f8f6;color:#203229;max-height:90vh;overflow:auto}
+.zz-pcenter-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:22px 24px;background:linear-gradient(135deg,#153d2a,#285b41);color:#fff}
+.zz-pcenter-head .eyebrow{color:#bcd9c8}.zz-pcenter-head h2{margin:4px 0 3px;font-size:26px}.zz-pcenter-head p{margin:0;color:rgba(255,255,255,.72);font-size:11px}
+.zz-pcenter-close{width:38px;height:38px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:50%;font-size:22px}
+.zz-pcenter-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 18px 0}
+.zz-pcenter-kpis>div{background:#fff;border:1px solid #dde7e1;border-radius:14px;padding:13px}.zz-pcenter-kpis span{display:block;font-size:8px;color:#7d8982;text-transform:uppercase}.zz-pcenter-kpis strong{display:block;font-size:18px;margin-top:4px;color:#173d2b}
+.zz-pcenter-tabs{display:flex;gap:7px;flex-wrap:wrap;padding:14px 18px 8px}.zz-pcenter-tabs button{border:1px solid #dce5e0;background:#fff;color:#52645a;border-radius:10px;padding:9px 12px;font-weight:800;font-size:10px}.zz-pcenter-tabs button.active{background:#173d2b;color:#fff;border-color:#173d2b}
+.zz-pcenter-shell>section{padding:8px 18px 20px}
+.zz-pcenter-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;background:#fff;border:1px solid #dfe7e2;border-radius:16px;padding:16px}
+.zz-pcenter-form.compact{margin-top:14px}.zz-pcenter-form label{font-size:9px;font-weight:800;color:#65756d}.zz-pcenter-form input,.zz-pcenter-form select,.zz-pcenter-form textarea{display:block;width:100%;margin-top:5px;border:1px solid #d8e2dc;border-radius:9px;padding:9px;background:#fff}.zz-pcenter-form .span-2{grid-column:span 2}.zz-check{display:flex!important;align-items:center;gap:7px;margin-top:21px}.zz-check input{width:auto!important;margin:0!important}.zz-pcenter-actions{grid-column:1/-1;display:flex;justify-content:flex-end}
+.zz-pcenter-thread{display:grid;gap:8px;background:#fff;border:1px solid #dfe7e2;border-radius:16px;padding:14px;max-height:390px;overflow:auto}.zz-pcenter-thread>div{max-width:76%;padding:10px 12px;border-radius:12px}.zz-pcenter-thread .admin{margin-left:auto;background:#173d2b;color:#fff}.zz-pcenter-thread .partner{background:#eef4f0}.zz-pcenter-thread small{font-size:8px;opacity:.7}.zz-pcenter-thread p{margin:4px 0 0;font-size:10px;line-height:1.5}
+.zz-pcenter-inline-form{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}.zz-pcenter-inline-form textarea{border:1px solid #d8e2dc;border-radius:10px;padding:10px}
+.zz-pcenter-docs,.zz-pcenter-returns{display:grid;gap:8px}.zz-pcenter-docs>div,.zz-pcenter-returns>div{display:flex;justify-content:space-between;gap:12px;align-items:center;background:#fff;border:1px solid #dfe7e2;border-radius:12px;padding:11px}.zz-pcenter-docs b,.zz-pcenter-docs small,.zz-pcenter-returns b,.zz-pcenter-returns small{display:block}.zz-pcenter-docs small,.zz-pcenter-returns small{font-size:8px;color:#7c8982;margin-top:3px}.zz-pcenter-docs a{font-size:9px;font-weight:800;color:#275c42}.zz-pcenter-returns p{font-size:9px;color:#64736b;margin:4px 0 0}.zz-pcenter-returns>div>div:last-child{display:flex;gap:6px;flex-wrap:wrap}
+.zz-pcenter-ok{margin-top:10px;background:#e7f5ec;color:#246845;border:1px solid #cae7d4;border-radius:9px;padding:9px;font-size:10px}
+@media(max-width:800px){.zz-pcenter-kpis{grid-template-columns:1fr 1fr}.zz-pcenter-form{grid-template-columns:1fr 1fr}.zz-pcenter-form .span-2{grid-column:1/-1}}
+@media(max-width:560px){.zz-pcenter-kpis,.zz-pcenter-form{grid-template-columns:1fr}.zz-pcenter-form .span-2{grid-column:auto}.zz-pcenter-inline-form{grid-template-columns:1fr}.zz-pcenter-thread>div{max-width:92%}}
