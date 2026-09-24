@@ -568,7 +568,7 @@ jobs:
           require_live https://www.zemzem.al/index.html /tmp/index-allbooks.html 'id="allBooksStatic"' 'Homepage all-books section'
           require_live https://www.zemzem.al/index.html /tmp/index-branding-safe.html 'assets/js/branding.js?v=7' 'Homepage branding safe mode'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-safe.js 'BRAND_IS_HOME' 'Branding blocks extra homepage runtimes'
-          require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=2' 'Stable homepage single runtime'
+          require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=3' 'Stable homepage single runtime'
           require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
           require_live https://www.zemzem.al/product.html /tmp/product.html 'premium-price-ticket-wrap' 'Product price ticket'
 
@@ -712,6 +712,7 @@ jobs:
           require_live https://www.zemzem.al/index.html /tmp/home-free-library.html 'id="homeFreeLibrary"' 'Homepage Free Library restored'
           require_live https://www.zemzem.al/index.html /tmp/home-free-library-grid.html 'id="homeFreeLibraryGrid"' 'Homepage Free Library grid'
           require_live https://www.zemzem.al/index.html /tmp/home-free-library-menu.html 'href="free-library.html"' 'Homepage Free Library menu link'
+          require_live https://www.zemzem.al/index.html /tmp/home-free-library-category.html 'category-item-free-library' 'Top categories Free Library link'
           require_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js "function newsletter(){q('#zv2Newsletter')?.remove()}" 'Newsletter remains enabled'
           # shop.html can lag behind briefly on the hosting cache even after FTP succeeds.
           # Keep this as a warning so unrelated Admin-only releases are not marked failed.
