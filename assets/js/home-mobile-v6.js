@@ -1,5 +1,6 @@
 /* ZemZem mobile experience v6 */
 (()=>{
+  if(matchMedia('(min-width:901px)').matches)return;
   const q=(s,r=document)=>r.querySelector(s);
   const closeDrawer=()=>{const d=q('#zzMobileDrawer');if(!d)return;d.classList.remove('is-open');d.setAttribute('aria-hidden','true');document.body.classList.remove('zz-mobile-menu-open');q('[data-zz-menu-toggle]')?.setAttribute('aria-expanded','false')};
   const openDrawer=()=>{const d=q('#zzMobileDrawer');if(!d)return;d.classList.add('is-open');d.setAttribute('aria-hidden','false');document.body.classList.add('zz-mobile-menu-open');q('[data-zz-menu-toggle]')?.setAttribute('aria-expanded','true');q('.zz-mobile-drawer__close',d)?.focus({preventScroll:true})};
