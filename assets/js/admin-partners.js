@@ -96,6 +96,7 @@ function bind(){
  q('#zzSettlementForm')?.addEventListener('submit',async e=>{if(e.submitter?.value==='cancel')return;e.preventDefault();const f=e.currentTarget;try{await rpc('admin_partner_create_settlement',{p_supplier_id:f.supplier_id.value,p_period_start:f.period_start.value,p_period_end:f.period_end.value});q('#zzSettlementDialog').close();await load()}catch(err){alert(err.message)}});
  qa('[data-mark-paid]').forEach(b=>b.onclick=async()=>{const ref=prompt('Referenca e pagesës (opsionale):')||'';await rpc('admin_partner_mark_paid',{p_settlement_id:b.dataset.markPaid,p_reference:ref,p_notes:''});await load()});
 }
+window.ZemZemAdminPartners={getData:()=>data,reload:load};
 function boot(){ensureView();ensureNav();new MutationObserver(()=>ensureNav()).observe(document.body,{childList:true,subtree:true});document.addEventListener('click',e=>{if(e.target.closest('[data-view="partners"]'))setTimeout(load,50)});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
