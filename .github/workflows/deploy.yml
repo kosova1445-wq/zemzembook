@@ -709,12 +709,8 @@ jobs:
           require_live https://www.zemzem.al/histori.html /tmp/histori.html 'data-category="Histori"' 'Histori landing page'
           require_live https://www.zemzem.al/femije.html /tmp/femije.html 'data-category="Fëmijë"' 'Femije landing page'
           require_live https://www.zemzem.al/assets/js/performance-vitals.js /tmp/performance-vitals.js 'largest-contentful-paint' 'Core Web Vitals runtime'
-          curl -fsSL --retry 3 --retry-delay 2 "https://www.zemzem.al/index.html?verify=${GITHUB_SHA}" -o /tmp/index-no-free-library.html
-          if grep -Fq 'id="homeFreeLibrary"' /tmp/index-no-free-library.html; then
-            echo "::error::Homepage Free Library section is still visible"
-            exit 1
-          fi
-          echo "OK: Homepage Free Library removed"
+          require_live https://www.zemzem.al/index.html /tmp/home-free-library.html 'id="homeFreeLibrary"' 'Homepage Free Library restored'
+          require_live https://www.zemzem.al/index.html /tmp/home-free-library-grid.html 'id="homeFreeLibraryGrid"' 'Homepage Free Library grid'
           require_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js "function newsletter(){q('#zv2Newsletter')?.remove()}" 'Newsletter remains enabled'
           # shop.html can lag behind briefly on the hosting cache even after FTP succeeds.
           # Keep this as a warning so unrelated Admin-only releases are not marked failed.
