@@ -97,7 +97,18 @@ function bind(){
  qa('[data-mark-paid]').forEach(b=>b.onclick=async()=>{const ref=prompt('Referenca e pagesës (opsionale):')||'';await rpc('admin_partner_mark_paid',{p_settlement_id:b.dataset.markPaid,p_reference:ref,p_notes:''});await load()});
 }
 window.ZemZemAdminPartners={getData:()=>data,reload:load};
-function boot(){ensureView();ensureNav();new MutationObserver(()=>ensureNav()).observe(document.body,{childList:true,subtree:true});document.addEventListener('click',e=>{if(e.target.closest('[data-view="partners"]'))setTimeout(load,50)});}
+function boot(){
+ ensureView();ensureNav();
+ const side=document.querySelector('.side-nav');
+ if(side){
+   let queued=false;
+   new MutationObserver(()=>{
+     if(queued)return;queued=true;
+     requestAnimationFrame(()=>{queued=false;ensureNav()});
+   }).observe(side,{childList:true,subtree:false});
+ }
+ document.addEventListener('click',e=>{if(e.target.closest('[data-view="partners"]'))setTimeout(load,50)});
+}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 /* release: partner-center-pro-v2 */
