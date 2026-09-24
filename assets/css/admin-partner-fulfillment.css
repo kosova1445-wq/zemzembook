@@ -15,3 +15,8 @@
 .zzpf-meta{display:grid;grid-template-columns:1fr 1fr;gap:7px}.zzpf-meta>div{border:1px solid #e5ebe7;border-radius:9px;padding:8px}.zzpf-meta span,.zzpf-meta strong{display:block}.zzpf-meta span{font-size:7px;text-transform:uppercase;color:#89958f}.zzpf-meta strong{font-size:9px;margin-top:3px;overflow-wrap:anywhere}
 .zzpf-note{margin-top:9px;padding:9px;background:#fffaf0;border:1px solid #efe2bf;border-radius:9px}.zzpf-note b{font-size:8px}.zzpf-note p{margin:4px 0 0;font-size:9px;line-height:1.45}
 @media(max-width:900px){.zzpf-admin-grid{grid-template-columns:1fr}.zzpf-meta{grid-template-columns:1fr}}
+.zzpf-finance-admin{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:10px 0}
+.zzpf-finance-admin>div{border:1px solid #e4ebe7;border-radius:9px;padding:8px;background:#fbfdfc}
+.zzpf-finance-admin span,.zzpf-finance-admin strong{display:block}.zzpf-finance-admin span{font-size:7px;text-transform:uppercase;color:#89958f}.zzpf-finance-admin strong{font-size:10px;margin-top:3px;color:#173d2b}
+.zzpf-items li>div{min-width:0}.zzpf-items li small{display:block;margin-top:3px;font-size:7px;color:#7f8c85}
+@media(max-width:700px){.zzpf-finance-admin{grid-template-columns:1fr}}
