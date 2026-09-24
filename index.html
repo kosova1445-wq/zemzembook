@@ -78,6 +78,42 @@ if('serviceWorker' in navigator){
 }
 </script>
 <link rel="stylesheet" href="assets/css/home-index-upgrades.css?v=2">
+<!-- ZZ KEEP TOP CATEGORIES V4 -->
+<style id="zz-keep-top-categories-v4">
+@media (max-width:900px){
+  html body .zemzem-bookstore-v2 .hero-grid{grid-template-columns:1fr!important}
+  html body .zemzem-bookstore-v2 .category-box-premium{
+    display:block!important;
+    width:100%!important;
+    min-height:0!important;
+    height:auto!important;
+    overflow:visible!important;
+    margin:0 0 14px!important;
+  }
+  html body .zemzem-bookstore-v2 .premium-category-list{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+    padding:10px!important;
+  }
+  html body .zemzem-bookstore-v2 .premium-category-list .category-item{
+    display:grid!important;
+    min-height:58px!important;
+    border:1px solid #e8ece9!important;
+    border-radius:12px!important;
+  }
+}
+@media (max-width:560px){
+  html body .zemzem-bookstore-v2 .premium-category-list{
+    grid-template-columns:1fr!important;
+  }
+}
+html body .premium-category-list .category-item-free-library{
+  display:grid!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="container"><span data-home-topbar>🚚 Dërgesa: Kosovë 3 € · Shqipëri 6 € · Maqedoni e Veriut 6 €</span><div class="tiny-links"><a href="contact.html">Ndihmë</a><a href="about.html">Rreth nesh</a><a href="account.html">Llogaria ime</a></div></div></div>
