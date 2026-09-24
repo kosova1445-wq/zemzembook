@@ -60,8 +60,8 @@ function decorateDrawer(){
  const firstSection=q('.detail-section',host);firstSection?host.insertBefore(wrap,firstSection):host.appendChild(wrap);
 }
 function boot(){
- load();
  document.addEventListener('click',e=>{
+   if(e.target.closest('[data-view="orders"]'))setTimeout(load,80);
    const b=e.target.closest('[data-order-id]');
    if(b){
      activeOrderId=b.dataset.orderId;
@@ -80,7 +80,7 @@ function boot(){
    if(drawerQueued||!activeOrderId)return;drawerQueued=true;
    requestAnimationFrame(()=>{drawerQueued=false;decorateDrawer()});
  }).observe(detail,{childList:true,subtree:true});
- window.addEventListener('zemzem:admin-access-ready',load);
+ window.addEventListener('zemzem:admin-access-ready',()=>{if(q('#view-orders')?.classList.contains('active-view'))load()});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
