@@ -198,7 +198,7 @@ jobs:
           fi
 
           # Refresh shared runtime cache versions on all HTML pages before upload.
-          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=10#g'
+          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=7#g'
           sed -i 's#assets/js/checkout-v2.js?v=15#assets/js/checkout-v2.js?v=15#g' checkout.html
 
           # Force republish advanced Admin modules and bypass stale CDN/browser versions.
@@ -484,6 +484,8 @@ jobs:
           ! grep -q "deri te −10% me PayPal" assets/js/storefront-advanced.js
           grep -q "id=\"checkoutNotice\"" checkout.html
           node --check assets/js/app-v5.js
+          node --check assets/js/branding.js
+          grep -q "BRAND_IS_HOME" assets/js/branding.js
           node --check service-worker.js
           grep -q "zz-disable-legacy-sw" index.html
           grep -q "zz_catalog_cache_v2" assets/js/app-v5.js
@@ -561,6 +563,8 @@ jobs:
           require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "Intentionally no fetch handler" 'PWA service worker passthrough'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index-allbooks.html 'id="allBooksStatic"' 'Homepage all-books section'
+          require_live https://www.zemzem.al/index.html /tmp/index-branding-safe.html 'assets/js/branding.js?v=7' 'Homepage branding safe mode'
+          require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-safe.js 'BRAND_IS_HOME' 'Branding blocks extra homepage runtimes'
           require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=1' 'Stable homepage single runtime'
           require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
           require_live https://www.zemzem.al/product.html /tmp/product.html 'premium-price-ticket-wrap' 'Product price ticket'
