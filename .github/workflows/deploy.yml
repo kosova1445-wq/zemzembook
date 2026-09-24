@@ -460,6 +460,8 @@ jobs:
         run: |
           set -euo pipefail
           node --check assets/js/admin-collab.js
+          node --check assets/js/admin-command-palette.js
+          grep -q "__zzAdminCommandPaletteV1" assets/js/admin-command-palette.js
           node --check assets/js/admin-partners.js
           node --check assets/js/partner-portal.js
           grep -q "partner-edit-book" assets/js/partner-portal.js
@@ -549,6 +551,7 @@ jobs:
 
           require_live https://www.zemzem.al/assets/css/admin.css /tmp/admin-base.css 'overflow-y:auto' 'Desktop Admin sidebar scroll CSS'
           require_live https://www.zemzem.al/admin.html /tmp/admin-growth.html 'admin-growth-catalog.js' 'Admin growth module reference'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-command-palette.html 'assets/js/admin-command-palette.js?v=1' 'Admin global search command palette'
           require_live https://www.zemzem.al/assets/js/admin-growth-catalog.js /tmp/admin-growth.js 'Collections / Series' 'Admin Collections module'
           require_live https://www.zemzem.al/collections.html /tmp/collections.html 'collections.js' 'Public Collections page'
           require_live https://www.zemzem.al/assets/js/affiliate.js /tmp/affiliate.js 'zemzem_affiliate_ref' 'Affiliate tracker'
