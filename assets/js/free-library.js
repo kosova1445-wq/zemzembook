@@ -12,7 +12,54 @@ async function loadBooks(){const r=await fetch(FL_URL+'/rest/v1/free_library_boo
 function renderCategories(){const s=f$('#freeLibraryCategory');if(!s)return;const cats=[...new Set(FL_BOOKS.map(x=>x.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'sq'));s.innerHTML='<option value="">Të gjitha kategoritë</option>'+cats.map(c=>'<option value="'+fEsc(c)+'">'+fEsc(c)+'</option>').join('')}
 function filtered(){const q=(f$('#freeLibrarySearch')?.value||'').trim().toLowerCase(),cat=f$('#freeLibraryCategory')?.value||'';return FL_BOOKS.filter(b=>(!cat||b.category===cat)&&(!q||((b.title||'')+' '+(b.author_name||'')+' '+(b.category||'')).toLowerCase().includes(q)))}
 function renderBooks(){const rows=filtered(),grid=f$('#freeLibraryGrid'),count=f$('#freeLibraryCount');if(count)count.textContent=rows.length+' libra të aprovuar';if(!rows.length){grid.innerHTML='<div class="zzfl-empty">Ende nuk ka libra në këtë filtër.</div>';return}grid.innerHTML=rows.map(b=>'<article class="zzfl-card"><div class="zzfl-cover">'+(b.cover_path?'<img loading="lazy" src="'+fEsc(publicCover(b.cover_path))+'" alt="'+fEsc(b.title)+'">':'<div class="zzfl-placeholder">PDF<br>'+fEsc(b.title)+'</div>')+'</div><div class="zzfl-card-body"><div class="zzfl-cat">'+fEsc(b.category||'Libër falas')+'</div><h3>'+fEsc(b.title)+'</h3><div class="zzfl-author">'+fEsc(b.author_name||'Autor i pacaktuar')+'</div><p>'+fEsc((b.description||'').slice(0,170))+'</p><div class="zzfl-meta">⬇ '+Number(b.downloads||0)+' shkarkime · '+fEsc((b.language||'sq').toUpperCase())+'</div><div class="zzfl-card-actions"><button class="zzfl-download" data-download="'+b.id+'">Shkarko falas PDF</button><button class="zzfl-report" data-report="'+b.id+'">Raporto</button></div></div></article>').join('');document.querySelectorAll('[data-download]').forEach(btn=>btn.onclick=()=>downloadBook(btn.dataset.download));document.querySelectorAll('[data-report]').forEach(btn=>btn.onclick=()=>openReport(btn.dataset.report))}
-async function downloadBook(id){const b=FL_BOOKS.find(x=>String(x.id)===String(id));if(!b)return;const path=b.pdf_path.split('/').map(encodeURIComponent).join('/');const r=await fetch(FL_URL+'/storage/v1/object/authenticated/free-library-pdfs/'+path,{headers:{apikey:FL_KEY,Authorization:'Bearer '+FL_KEY}});if(!r.ok){alert('Shkarkimi nuk mund të hapej. Provo përsëri.');return}const blob=await r.blob(),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(b.title||'zemzem-libër')+'.pdf';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);try{const rr=await fetch(FL_URL+'/rest/v1/rpc/register_free_library_download',{method:'POST',headers:{apikey:FL_KEY,Authorization:'Bearer '+FL_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_book_id:b.id})});if(rr.ok)b.downloads=Number(await rr.json()||b.downloads||0);else b.downloads=Number(b.downloads||0)+1}catch{b.downloads=Number(b.downloads||0)+1}renderBooks()}
+async function stampFreeLibraryPdf(blob){
+ if(!window.PDFLib?.PDFDocument)throw new Error('PDF_WATERMARK_ENGINE_NOT_READY');
+ const bytes=await blob.arrayBuffer();
+ const pdf=await window.PDFLib.PDFDocument.load(bytes,{ignoreEncryption:false});
+ const font=await pdf.embedFont(window.PDFLib.StandardFonts.Helvetica);
+ const line1='Shkarkuar nga www.ZemZem.al • Material i ngarkuar në faqe nga vizitorët.';
+ const line2='Nëse dyshoni se kjo është kopje e paautorizuar, lajmëro në info@zemzem.al';
+ const rgb=window.PDFLib.rgb;
+ for(const page of pdf.getPages()){
+   const width=page.getWidth(),margin=18,maxWidth=Math.max(80,width-margin*2);
+   let size=7.2;
+   const maxText=Math.max(font.widthOfTextAtSize(line1,size),font.widthOfTextAtSize(line2,size));
+   if(maxText>maxWidth)size=Math.max(5.5,size*(maxWidth/maxText));
+   const h=size*2+9;
+   page.drawRectangle({x:0,y:0,width,height:h,color:rgb(1,1,1),opacity:.90});
+   page.drawLine({start:{x:margin,y:h},end:{x:width-margin,y:h},thickness:.45,color:rgb(.72,.78,.76),opacity:.9});
+   const w1=font.widthOfTextAtSize(line1,size),w2=font.widthOfTextAtSize(line2,size);
+   page.drawText(line1,{x:Math.max(margin,(width-w1)/2),y:size+5.2,size,font,color:rgb(.22,.34,.31),opacity:.95});
+   page.drawText(line2,{x:Math.max(margin,(width-w2)/2),y:3.2,size,font,color:rgb(.35,.43,.40),opacity:.95});
+ }
+ return new Blob([await pdf.save()],{type:'application/pdf'});
+}
+function freeLibraryFileName(title){
+ return String(title||'zemzem-liber').replace(/[\\/:*?"<>|]+/g,'-').replace(/\s+/g,' ').trim()+'.pdf';
+}
+async function downloadBook(id){
+ const b=FL_BOOKS.find(x=>String(x.id)===String(id));if(!b)return;
+ const btn=document.querySelector('[data-download="'+CSS.escape(String(id))+'"]'),old=btn?.textContent;
+ if(btn){btn.disabled=true;btn.textContent='Duke përgatitur PDF…'}
+ try{
+   const path=b.pdf_path.split('/').map(encodeURIComponent).join('/');
+   const r=await fetch(FL_URL+'/storage/v1/object/authenticated/free-library-pdfs/'+path,{headers:{apikey:FL_KEY,Authorization:'Bearer '+FL_KEY}});
+   if(!r.ok)throw new Error('PDF_FETCH_FAILED');
+   const source=await r.blob();
+   const blob=await stampFreeLibraryPdf(source);
+   const url=URL.createObjectURL(blob),a=document.createElement('a');
+   a.href=url;a.download=freeLibraryFileName(b.title);document.body.appendChild(a);a.click();a.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),5000);
+   try{const rr=await fetch(FL_URL+'/rest/v1/rpc/register_free_library_download',{method:'POST',headers:{apikey:FL_KEY,Authorization:'Bearer '+FL_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_book_id:b.id})});if(rr.ok)b.downloads=Number(await rr.json()||b.downloads||0);else b.downloads=Number(b.downloads||0)+1}catch{b.downloads=Number(b.downloads||0)+1}
+   renderBooks();
+ }catch(e){
+   console.error('Free Library watermark/download failed',e);
+   alert('PDF-ja nuk u përgatit me shenjimin e ZemZem. Provo përsëri pas pak.');
+ }finally{
+   const again=document.querySelector('[data-download="'+CSS.escape(String(id))+'"]');
+   if(again){again.disabled=false;again.textContent=old||'Shkarko falas PDF'}
+ }
+}
 function safeName(name){const ext=(String(name).split('.').pop()||'').toLowerCase();const base=String(name).replace(/\.[^.]+$/,'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]+/g,'-').replace(/^-|-$/g,'').slice(0,70)||'file';return base+'.'+ext}
 async function upload(bucket,path,file,token){const r=await fetch(FL_URL+'/storage/v1/object/'+bucket+'/'+path.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{apikey:FL_KEY,Authorization:'Bearer '+token,'Content-Type':file.type||'application/octet-stream','x-upsert':'false'},body:file});if(!r.ok){let msg='Upload dështoi';try{const d=await r.json();msg=d.message||d.error||msg}catch{}throw new Error(msg)}}
 function ensureReportModal(){if(f$('#freeLibraryReportModal'))return;document.body.insertAdjacentHTML('beforeend','<div id="freeLibraryReportModal" class="zzfl-modal" hidden><div class="zzfl-backdrop" data-close-report></div><div class="zzfl-dialog zzfl-report-dialog"><button class="zzfl-close" type="button" data-close-report aria-label="Mbyll">×</button><span class="zzfl-kicker">RAPORTO MATERIALIN</span><h2>Raporto problem ose copyright</h2><p class="zzfl-note" id="flReportBookTitle"></p><form id="freeLibraryReportForm"><input type="hidden" id="flReportBookId"><div class="zzfl-form-grid"><label><span>Arsyeja *</span><select id="flReportReason" required><option value="copyright">Copyright / të drejta autori</option><option value="broken_file">PDF nuk hapet</option><option value="wrong_metadata">Të dhëna të pasakta</option><option value="inappropriate">Përmbajtje e papërshtatshme</option><option value="other">Tjetër</option></select></label><label><span>Email (opsionale)</span><input id="flReportEmail" type="email" maxlength="254"></label><label class="wide"><span>Detaje</span><textarea id="flReportDetails" rows="5" maxlength="2000" placeholder="Shpjego shkurt problemin..."></textarea></label></div><div id="flReportStatus" class="zzfl-status"></div><button class="zzfl-btn primary full" type="submit">Dërgo raportin</button></form></div></div>');document.querySelectorAll('[data-close-report]').forEach(x=>x.addEventListener('click',closeReport));f$('#freeLibraryReportForm')?.addEventListener('submit',submitReport)}
