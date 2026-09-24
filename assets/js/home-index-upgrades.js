@@ -10,7 +10,7 @@ async function loadFreeLibrary(){
   const host=q('#homeFreeLibraryGrid');
   if(!host)return;
   try{
-    const r=await fetch(SB+'/rest/v1/free_library_books?status=eq.approved&select=id,title,author_name,category,language,cover_path,downloads,created_at&order=approved_at.desc.nullslast,created_at.desc&limit=4',{headers:{apikey:KEY},cache:'no-store'});
+    const r=await fetch(SB+'/rest/v1/free_library_books?status=eq.approved&select=id,title,author_name,category,language,cover_path,downloads,created_at,featured,sort_order&order=featured.desc,sort_order.asc,approved_at.desc.nullslast,created_at.desc&limit=4',{headers:{apikey:KEY},cache:'no-store'});
     if(!r.ok)throw new Error('HTTP '+r.status);
     const rows=await r.json();
     if(!Array.isArray(rows)||!rows.length){
