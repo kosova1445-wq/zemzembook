@@ -470,6 +470,7 @@ jobs:
           node --check assets/js/admin-command-palette.js
           grep -q "__zzAdminCommandPaletteV1" assets/js/admin-command-palette.js
           node --check assets/js/admin-partners.js
+          grep -q "Barazimi ekzistues u rifreskua me sukses" assets/js/admin-partners.js
           node --check assets/js/partner-portal.js
           grep -q "partner-edit-book" assets/js/partner-portal.js
           grep -q "partner-shell-pro" assets/js/partner-portal.js
@@ -571,6 +572,7 @@ jobs:
           require_live https://www.zemzem.al/product.html /tmp/product-stock.html "const stockText=unavailable?'Nuk ka stok':'Ka në stok';" 'Product stock hides exact quantity'
 
           require_live https://www.zemzem.al/assets/css/admin.css /tmp/admin-base.css 'overflow-y:auto' 'Desktop Admin sidebar scroll CSS'
+          require_live https://www.zemzem.al/assets/js/admin-partners.js /tmp/admin-partners-settlement-guard.js 'Barazimi ekzistues u rifreskua me sukses' 'Partner settlement duplicate guard'
           require_live https://www.zemzem.al/admin.html /tmp/admin-growth.html 'admin-growth-catalog.js' 'Admin growth module reference'
           require_live https://www.zemzem.al/admin.html /tmp/admin-command-palette.html 'assets/js/admin-command-palette.js?v=1' 'Admin global search command palette'
           require_live https://www.zemzem.al/assets/js/admin-growth-catalog.js /tmp/admin-growth.js 'Collections / Series' 'Admin Collections module'
@@ -602,7 +604,7 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-team-force.html 'id="zzTeamForceLauncher"' 'Forced Team Center launcher'
           require_live https://www.zemzem.al/admin.html /tmp/admin-team-view.html 'id="view-team-center"' 'Static Team Center view'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-team-center.js "teamCenterBtn=side.querySelector('[data-view=\"team-center\"]')" 'Booksto preserves Team Center'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-partners.html 'assets/js/admin-partners.js?v=3' 'Partner marketplace Admin module'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-partners.html 'assets/js/admin-partners.js?v=4' 'Partner marketplace Admin module'
           require_live https://www.zemzem.al/admin.html /tmp/admin-partners-nav.html 'id="adminPartnersNav"' 'Partner marketplace Admin navigation'
           require_live https://www.zemzem.al/assets/js/admin-partners.js /tmp/admin-partners-js.html '__zzAdminPartners' 'Partner marketplace Admin runtime'
           require_live https://www.zemzem.al/partner.html /tmp/partner-portal.html 'Shit më shumë libra, pa e komplikuar biznesin.' 'Partner bookstore portal'
