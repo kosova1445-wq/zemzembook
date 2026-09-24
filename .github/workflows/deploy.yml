@@ -523,7 +523,7 @@ jobs:
           node --check assets/js/partner-invoice.js
           grep -q "data-partner-invoice" assets/js/partner-fulfillment.js
           grep -q "margin_value" assets/js/partner-fulfillment.js
-          grep -q "margin_value" assets/js/admin-partner-fulfillment.js
+          grep -q "Përqindja" assets/js/admin-partner-fulfillment.js
           grep -q "__zzAdminPartnerFulfillment" assets/js/admin-partner-fulfillment.js
           grep -q "__zzPartnerFulfillment" assets/js/partner-fulfillment.js
           node --check service-worker.js
@@ -783,7 +783,7 @@ jobs:
           require_live https://www.zemzem.al/partner.html /tmp/partner-invoice-loader.html 'assets/js/partner-invoice.js?v=1' 'Partner invoice loader'
           require_live https://www.zemzem.al/assets/js/partner-invoice.js /tmp/partner-invoice.js '__zzPartnerInvoice' 'Partner invoice runtime'
           require_live https://www.zemzem.al/assets/js/partner-fulfillment.js /tmp/partner-margin-ui.js 'margin_value' 'Partner percentage UI'
-          require_live https://www.zemzem.al/assets/js/admin-partner-fulfillment.js /tmp/admin-partner-margin-ui.js 'margin_value' 'Admin partner percentage UI'
+          require_live https://www.zemzem.al/assets/js/admin-partner-fulfillment.js /tmp/admin-partner-margin-ui.js 'Përqindja' 'Admin partner percentage UI'
           require_live https://www.zemzem.al/assets/js/admin-free-library-manager.js /tmp/admin-free-library-manager.js '__zzFreeLibraryManager' 'Free Library manager runtime'
           require_live https://www.zemzem.al/assets/css/admin-free-library-manager.css /tmp/admin-free-library-manager.css '.zzflm-dialog' 'Free Library manager styles'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-view-final.html 'id="view-free-library"' 'Free Library main Admin view'
