@@ -482,7 +482,10 @@ jobs:
           node --check assets/js/admin-checkout-settings.js
           ! grep -q "deri te −10% me PayPal" assets/js/storefront-advanced.js
           grep -q "id=\"checkoutNotice\"" checkout.html
-          node --check assets/js/app-v5.js\n          node --check assets/js/home-stable.js\n          grep -q "IS_HOME" assets/js/app-v5.js
+          node --check assets/js/app-v5.js
+          node --check service-worker.js
+          grep -q "zz_catalog_cache_v2" assets/js/app-v5.js
+          grep -q "zz-home-performance-v2" index.html\n          node --check assets/js/home-stable.js\n          grep -q "IS_HOME" assets/js/app-v5.js
           grep -q "CATALOG_CACHE_KEY" assets/js/app-v5.js
           grep -q "requestIdleCallback" assets/js/app-v5.js
           node --check assets/js/price-ticket-runtime.js
@@ -551,7 +554,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-growth-advanced.js /tmp/admin-growth2.js 'Customer Lifetime Value' 'Admin Advanced Growth'
           require_live https://www.zemzem.al/assets/js/admin-experience-automation.js /tmp/admin-xp.js 'Smart Admin Assistant' 'Admin Experience Automation'
           require_live https://www.zemzem.al/assets/js/runtime-ops.js /tmp/runtime-ops.js 'zzMaintenance' 'Maintenance runtime'
-          require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-shell-v3'" 'PWA service worker'
+          require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-offline-v4'" 'PWA service worker'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index-allbooks.html 'id="allBooksStatic"' 'Homepage all-books section'
           require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=1' 'Stable homepage single runtime'\n          require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
@@ -685,7 +688,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'authors:authors.slice' 'Autocomplete authors and categories'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'bindShopAutocomplete' 'Shop autocomplete binding'
           require_live https://www.zemzem.al/assets/css/search-autocomplete.css /tmp/search-autocomplete.css '.zz-search-suggest' 'Autocomplete search styles'
-          require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=14' 'Homepage autocomplete asset version'
+          require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=15' 'Homepage autocomplete asset version'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release.html 'adminSecurityReleaseNav' 'Forced Security and Releases Admin menu'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release-view.html 'id="view-security-release"' 'Forced Security and Releases Admin view'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release-v2.html 'assets/js/admin-security-release.js?v=2' 'Security and Releases v2 runtime'
@@ -701,7 +704,7 @@ jobs:
           fi
           echo "OK: Homepage Free Library removed"
           require_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js "function newsletter(){q('#zv2Newsletter')?.remove()}" 'Newsletter remains enabled'
-          require_live https://www.zemzem.al/shop.html /tmp/shop-search.html 'assets/js/app-v5.js?v=14' 'Shop autocomplete asset version'
+          require_live https://www.zemzem.al/shop.html /tmp/shop-search.html 'assets/js/app-v5.js?v=15' 'Shop autocomplete asset version'
           require_live https://www.zemzem.al/product.html /tmp/product-3d.html 'book3dMarkup' '3D product renderer'
           require_live https://www.zemzem.al/assets/css/product.css /tmp/product-3d.css '3D physical book mockup' '3D product styles'
           require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-3d.html 'ebookSpineCoverFile' '3D eBook Admin spine upload'
@@ -721,7 +724,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/free-library.js /tmp/free-library-js.html 'free_library_books' 'Free Library runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-final.html 'data-view="free-library"' 'Free Library main Admin navigation'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-view-final.html 'id="view-free-library"' 'Free Library main Admin view'
-          require_live https://www.zemzem.al/service-worker.js /tmp/sw-v3.js "CACHE='zemzem-shell-v3'" 'PWA shell cache v3'
+          require_live https://www.zemzem.al/service-worker.js /tmp/sw-v3.js "CACHE='zemzem-offline-v4'" 'PWA shell cache v3'
           require_live https://www.zemzem.al/sitemap.xml /tmp/sitemap-free-library.xml 'https://www.zemzem.al/free-library.html' 'Free Library sitemap entry'
 
           echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
