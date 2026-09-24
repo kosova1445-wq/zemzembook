@@ -1,0 +1,55 @@
+
+/* ZemZem Admin visual themes */
+#adminApp{--zz-bg:#f5f7f9;--zz-surface:#ffffff;--zz-surface-2:#fbfcfc;--zz-text:#26323a;--zz-muted:#7b8790;--zz-line:#e5e9ec;--zz-sidebar:#1f3442;--zz-sidebar-2:#162732;--zz-accent:#d96f5c;--zz-accent-2:#bd5d4d;--zz-radius:18px;--zz-shadow:0 10px 30px rgba(35,52,66,.07)}
+#adminApp{background:var(--zz-bg)!important;color:var(--zz-text)!important}
+#adminApp .main{background:var(--zz-bg)!important}
+#adminApp .sidebar{background:linear-gradient(180deg,var(--zz-sidebar),var(--zz-sidebar-2))!important}
+#adminApp .admin-topbar,#adminApp .panel,#adminApp .stat-card,#adminApp .entity-card,#adminApp .customer-card,#adminApp .coupon-card,#adminApp .review-card,#adminApp .integration-card,#adminApp .zz-kpi,#adminApp .zz-sales-chart-card,#adminApp .site-editor-card,#adminApp .zz-release-box{background:var(--zz-surface)!important;border-color:var(--zz-line)!important;box-shadow:var(--zz-shadow)}
+#adminApp .panel,#adminApp .stat-card,#adminApp .entity-card,#adminApp .customer-card,#adminApp .coupon-card,#adminApp .review-card,#adminApp .integration-card,#adminApp .zz-kpi,#adminApp .zz-sales-chart-card,#adminApp .site-editor-card,#adminApp .zz-release-box{border-radius:var(--zz-radius)!important}
+#adminApp .admin-topbar{border-bottom-color:var(--zz-line)!important}
+#adminApp .primary-btn{background:var(--zz-accent)!important;color:#fff!important}
+#adminApp .primary-btn:hover{background:var(--zz-accent-2)!important}
+#adminApp .secondary-btn,#adminApp .icon-action,#adminApp .table-action,#adminApp .print-btn{background:var(--zz-surface-2)!important;color:var(--zz-text)!important;border-color:var(--zz-line)!important}
+#adminApp .text-btn,#adminApp .eyebrow{color:var(--zz-accent-2)!important}
+#adminApp .searchbox,#adminApp input,#adminApp select,#adminApp textarea{border-color:var(--zz-line)!important}
+#adminApp th{background:var(--zz-surface-2)!important;color:var(--zz-muted)!important}
+#adminApp td,#adminApp th,#adminApp .panel-head{border-color:var(--zz-line)!important}
+#adminApp .stat-card strong,#adminApp .cell-main,#adminApp .money,#adminApp h1,#adminApp h2,#adminApp h3,#adminApp .zz-kpi strong{color:var(--zz-text)!important}
+#adminApp .muted,#adminApp .muted-small,#adminApp .stat-card span,#adminApp .stat-card small,#adminApp .panel-head p,#adminApp .admin-user span{color:var(--zz-muted)!important}
+#zzThemePicker{display:flex!important;align-items:center!important;gap:8px!important;padding:7px 10px!important;border:1px solid var(--zz-line)!important;border-radius:12px!important;background:var(--zz-surface)!important;box-shadow:var(--zz-shadow)!important}
+#zzThemePicker label{font-size:10px!important;font-weight:900!important;color:var(--zz-muted)!important;text-transform:uppercase!important;white-space:nowrap!important}
+#zzThemeSelect{min-width:165px!important;height:36px!important;border:1px solid var(--zz-line)!important;border-radius:9px!important;background:var(--zz-surface-2)!important;color:var(--zz-text)!important;font-weight:800!important;padding:0 30px 0 10px!important}
+
+/* 1. ZemZem Classic */
+#adminApp[data-admin-theme="classic"]{--zz-bg:#f5f7f9;--zz-surface:#ffffff;--zz-surface-2:#fbfcfc;--zz-text:#26323a;--zz-muted:#7b8790;--zz-line:#e5e9ec;--zz-sidebar:#1f3442;--zz-sidebar-2:#162732;--zz-accent:#d96f5c;--zz-accent-2:#bd5d4d;--zz-radius:18px;--zz-shadow:0 10px 30px rgba(35,52,66,.07)}
+
+/* 2. Emerald */
+#adminApp[data-admin-theme="emerald"]{--zz-bg:#f2f7f4;--zz-surface:#ffffff;--zz-surface-2:#f6faf8;--zz-text:#18382b;--zz-muted:#72837a;--zz-line:#dce8e1;--zz-sidebar:#123b2b;--zz-sidebar-2:#0c2b20;--zz-accent:#15956f;--zz-accent-2:#0f7356;--zz-radius:16px;--zz-shadow:0 10px 28px rgba(18,59,43,.08)}
+#adminApp[data-admin-theme="emerald"] .nav-item.active{background:rgba(57,198,149,.18)!important}
+
+/* 3. Midnight */
+#adminApp[data-admin-theme="midnight"]{--zz-bg:#0f1720;--zz-surface:#17212b;--zz-surface-2:#1d2935;--zz-text:#ecf3f7;--zz-muted:#9fb0bc;--zz-line:#2a3946;--zz-sidebar:#091018;--zz-sidebar-2:#05090e;--zz-accent:#4aa3ff;--zz-accent-2:#2387eb;--zz-radius:14px;--zz-shadow:0 12px 30px rgba(0,0,0,.22)}
+#adminApp[data-admin-theme="midnight"] .searchbox,
+#adminApp[data-admin-theme="midnight"] input,
+#adminApp[data-admin-theme="midnight"] select,
+#adminApp[data-admin-theme="midnight"] textarea{background:#101a23!important;color:#edf4f8!important}
+#adminApp[data-admin-theme="midnight"] .nav-item{color:#b8c6d0!important}
+#adminApp[data-admin-theme="midnight"] .nav-item:hover,#adminApp[data-admin-theme="midnight"] .nav-item.active{background:rgba(74,163,255,.15)!important;color:#fff!important}
+#adminApp[data-admin-theme="midnight"] .avatar{background:#20384d!important;color:#78bfff!important}
+
+/* 4. Minimal Light */
+#adminApp[data-admin-theme="minimal"]{--zz-bg:#fafafa;--zz-surface:#ffffff;--zz-surface-2:#f7f7f7;--zz-text:#1d1d1f;--zz-muted:#767676;--zz-line:#e8e8e8;--zz-sidebar:#ffffff;--zz-sidebar-2:#f7f7f7;--zz-accent:#111111;--zz-accent-2:#000000;--zz-radius:10px;--zz-shadow:none}
+#adminApp[data-admin-theme="minimal"] .sidebar{color:#1d1d1f!important;border-right:1px solid var(--zz-line)!important}
+#adminApp[data-admin-theme="minimal"] .admin-brand.light{color:#111!important}
+#adminApp[data-admin-theme="minimal"] .nav-item{color:#555!important}
+#adminApp[data-admin-theme="minimal"] .nav-item:hover,#adminApp[data-admin-theme="minimal"] .nav-item.active{background:#eeeeee!important;color:#111!important}
+#adminApp[data-admin-theme="minimal"] .sidebar-head,#adminApp[data-admin-theme="minimal"] .sidebar-foot{border-color:#e8e8e8!important}
+#adminApp[data-admin-theme="minimal"] .sidebar-foot a,#adminApp[data-admin-theme="minimal"] .sidebar-foot button{color:#555!important}
+#adminApp[data-admin-theme="minimal"] .primary-btn{background:#111!important}
+#adminApp[data-admin-theme="minimal"] .stat-icon{border-radius:8px!important}
+
+@media(max-width:760px){
+  #zzThemePicker{width:100%!important;order:99!important}
+  #zzThemePicker label{display:none!important}
+  #zzThemeSelect{width:100%!important;min-width:0!important}
+}
