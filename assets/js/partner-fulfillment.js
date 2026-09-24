@@ -4,7 +4,7 @@ if(window.__zzPartnerFulfillment)return;window.__zzPartnerFulfillment=1;
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const labels={pending:'Për përgatitje',preparing:'Duke u përgatitur',shipped:'Nisur',delivered:'Dorëzuar'};
-let orders=[],busy=false;
+let orders=[],busy=false,initialized=false;
 const api=()=>window.ZemZemPartner;
 function statusPill(s){return '<span class="zzpfs-status '+esc(s||'pending')+'">'+esc(labels[s]||s||'—')+'</span>'}
 async function load(){orders=await api().rpc('partner_fulfillment_orders',{});return orders}
@@ -67,8 +67,13 @@ function bindForms(){
  });
 }
 async function enhance(){
- if(busy||!api()||!q('.partner-shell-pro'))return;busy=true;
- try{await load();ensureMenu();render();bindNav();if(location.hash==='#fulfillment')q('[data-partner-section="fulfillment"]')?.click()}catch(e){console.warn('Fulfillment:',e)}finally{busy=false}
+ if(busy||!api()||!q('.partner-shell-pro'))return;
+ if(initialized){ensureMenu();bindNav();return}
+ busy=true;
+ try{
+   await load();ensureMenu();render();bindNav();initialized=true;
+   if(location.hash==='#fulfillment')q('[data-partner-section="fulfillment"]')?.click();
+ }catch(e){console.warn('Fulfillment:',e)}finally{busy=false}
 }
 new MutationObserver(()=>setTimeout(enhance,80)).observe(document.documentElement,{childList:true,subtree:true});
 window.addEventListener('load',()=>setTimeout(enhance,300));
