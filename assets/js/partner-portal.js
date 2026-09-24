@@ -108,12 +108,15 @@ function renderDashboard(){
     <div class="partner-kpis partner-kpis-four">
       <div class="partner-kpi"><span>Shitur këtë muaj</span><strong>${Number(m.quantity||0)}</strong><small>libra të dorëzuar</small></div>
       <div class="partner-kpi"><span>Shuma që të takon</span><strong>${money(m.supplier_due)}</strong><small>këtë muaj</small></div>
+      <div class="partner-kpi"><span>Marzhi ZemZem</span><strong>${money(m.zemzem_profit)}</strong><small>${s.margin_type==='fixed'?money(s.margin_value):Number(s.margin_value||0)+'%'} markup</small></div>
       <div class="partner-kpi"><span>Shitje bruto</span><strong>${money(m.gross_sales)}</strong><small>këtë muaj</small></div>
-      <div class="partner-kpi"><span>Porosi aktive</span><strong>${openOrders}</strong><small>në proces</small></div>
     </div>
     <div class="partner-dashboard-grid">
       <div class="partner-card"><div class="partner-card-head"><div><h3>Aktiviteti i katalogut</h3><p>Gjendja aktuale e librave.</p></div><button class="partner-text-btn" data-open-section="books">Shiko katalogun →</button></div><div class="partner-overview-stats"><div><span>Libra gjithsej</span><b>${bookCount}</b></div><div><span>Publikuar</span><b>${Number(stats.published_count||0)}</b></div><div><span>Copë në stok</span><b>${stockTotal}</b></div></div></div>
-      <div class="partner-card"><div class="partner-card-head"><div><h3>Financat</h3><p>Marzhi dhe barazimet.</p></div><button class="partner-text-btn" data-open-section="settlements">Barazimet →</button></div><div class="partner-finance-summary"><span>Marzhi aktual</span><strong>${s.margin_type==='fixed'?money(s.margin_value):Number(s.margin_value)+'%'}</strong><small>Çmimi publik llogaritet automatikisht.</small></div></div>
+      <div class="partner-card"><div class="partner-card-head"><div><h3>Financat</h3><p>Ndarja e të ardhurave dhe barazimet.</p></div><button class="partner-text-btn" data-open-section="settlements">Barazimet →</button></div>
+      <div class="partner-finance-summary"><span>Marzhi aktual</span><strong>${s.margin_type==='fixed'?money(s.margin_value):Number(s.margin_value||0)+'%'}</strong><small>Çmimi publik llogaritet automatikisht.</small></div>
+      <div class="partner-overview-stats" style="margin-top:10px"><div><span>Partnerit</span><b>${money(m.supplier_due)}</b></div><div><span>ZemZem</span><b>${money(m.zemzem_profit)}</b></div><div><span>Bruto</span><b>${money(m.gross_sales)}</b></div></div>
+      </div>
     </div>
     <div class="partner-card"><div class="partner-card-head"><div><h3>Porositë e fundit</h3><p>Aktiviteti më i fundit i librave tuaj.</p></div><button class="partner-text-btn" data-open-section="orders">Të gjitha →</button></div><div class="partner-book-list"><table class="partner-table"><thead><tr><th>Porosia</th><th>Data</th><th>Copë</th><th>Shuma jote</th><th>Statusi</th></tr></thead><tbody>${orders.slice(0,5).map(o=>'<tr><td><b>#'+esc(o.order_number||String(o.id).slice(0,8))+'</b></td><td>'+new Date(o.created_at).toLocaleDateString('sq-AL')+'</td><td>'+Number(o.quantity_total||0)+'</td><td><b>'+money(o.supplier_due)+'</b></td><td><span class="status-pill '+esc(o.order_status)+'">'+esc(statusSq(o.order_status))+'</span></td></tr>').join('')||'<tr><td colspan="5">Ende nuk ka porosi.</td></tr>'}</tbody></table></div></div>
    </section>
@@ -159,7 +162,7 @@ function renderDashboard(){
 
    <section data-partner-panel="orders" hidden>
     <div class="partner-page-head"><div><span class="partner-kicker" style="color:#547363">POROSITË</span><h2>Porositë e librarisë</h2><p>Shiko vetëm porositë që përmbajnë librat e tu.</p></div></div>
-    <div class="partner-card" style="margin-top:0"><div class="partner-book-list"><table class="partner-table"><thead><tr><th>Porosia</th><th>Data</th><th>Copë</th><th>Shitje bruto</th><th>Të takon</th><th>Statusi</th></tr></thead><tbody>${orders.map(o=>'<tr><td><b>#'+esc(o.order_number||String(o.id).slice(0,8))+'</b></td><td>'+new Date(o.created_at).toLocaleDateString('sq-AL')+'</td><td>'+Number(o.quantity_total||0)+'</td><td>'+money(o.gross_sales)+'</td><td><b>'+money(o.supplier_due)+'</b></td><td><span class="status-pill '+esc(o.order_status)+'">'+esc(statusSq(o.order_status))+'</span></td></tr>').join('')||'<tr><td colspan="6">Ende nuk ka porosi.</td></tr>'}</tbody></table></div></div>
+    <div class="partner-card" style="margin-top:0"><div class="partner-book-list"><table class="partner-table"><thead><tr><th>Porosia</th><th>Data</th><th>Copë</th><th>Shitje bruto</th><th>Të takon</th><th>ZemZem</th><th>Statusi</th></tr></thead><tbody>${orders.map(o=>'<tr><td><b>#'+esc(o.order_number||String(o.id).slice(0,8))+'</b></td><td>'+new Date(o.created_at).toLocaleDateString('sq-AL')+'</td><td>'+Number(o.quantity_total||0)+'</td><td>'+money(o.gross_sales)+'</td><td><b>'+money(o.supplier_due)+'</b></td><td>'+money(o.zemzem_profit)+'</td><td><span class="status-pill '+esc(o.order_status)+'">'+esc(statusSq(o.order_status))+'</span></td></tr>').join('')||'<tr><td colspan="7">Ende nuk ka porosi.</td></tr>'}</tbody></table></div></div>
    </section>
 
    <section data-partner-panel="settlements" hidden>
