@@ -1,0 +1,17 @@
+/* Partner fulfillment visibility in Admin orders */
+.zzpf-partner-head{min-width:190px}
+.zzpf-partner-cell{min-width:190px}
+.zzpf-partner-mini{display:grid;gap:4px;padding:7px 8px;border:1px solid #e2e9e5;border-radius:10px;background:#fbfdfc;margin:3px 0}
+.zzpf-partner-mini strong{font-size:10px;color:#244534}.zzpf-partner-mini small{font-size:8px;color:#74837b;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.zzpf-direct{font-size:9px;color:#8a948f}
+.zzpf-status{display:inline-flex;align-items:center;width:max-content;padding:4px 7px;border-radius:999px;font-size:8px;font-weight:900;border:1px solid transparent}
+.zzpf-status.pending{background:#fff4df;color:#87651c;border-color:#f1dfae}.zzpf-status.preparing{background:#eef5ff;color:#315f96;border-color:#d8e5f6}.zzpf-status.shipped{background:#eeeefe;color:#514a9a;border-color:#d9d7f2}.zzpf-status.delivered{background:#e8f6ed;color:#246845;border-color:#cce8d5}
+.zzpf-order-partners{border-top:1px solid #e6ece8;padding-top:16px!important}
+.zzpf-section-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:12px}.zzpf-section-head>div>span{font-size:8px;font-weight:900;letter-spacing:.14em;color:#648071}.zzpf-section-head h3{margin:4px 0}.zzpf-section-head p{margin:0;font-size:9px;color:#819087}.zzpf-count{font-size:9px;font-weight:900;background:#eef4f0;color:#315943;padding:6px 8px;border-radius:999px}
+.zzpf-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.zzpf-admin-card{background:#fff;border:1px solid #dfe7e2;border-radius:14px;padding:13px;min-width:0}
+.zzpf-admin-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.zzpf-admin-card-head span{font-size:7px;letter-spacing:.12em;color:#7b8981;font-weight:900}.zzpf-admin-card-head h4{margin:3px 0 2px;font-size:14px}.zzpf-admin-card-head small{font-size:8px;color:#7a8780}
+.zzpf-items{list-style:none;padding:0;margin:10px 0;display:grid;gap:6px}.zzpf-items li{display:flex;justify-content:space-between;gap:10px;padding:7px 8px;background:#f7faf8;border-radius:8px;font-size:9px}.zzpf-items li b{white-space:nowrap}
+.zzpf-meta{display:grid;grid-template-columns:1fr 1fr;gap:7px}.zzpf-meta>div{border:1px solid #e5ebe7;border-radius:9px;padding:8px}.zzpf-meta span,.zzpf-meta strong{display:block}.zzpf-meta span{font-size:7px;text-transform:uppercase;color:#89958f}.zzpf-meta strong{font-size:9px;margin-top:3px;overflow-wrap:anywhere}
+.zzpf-note{margin-top:9px;padding:9px;background:#fffaf0;border:1px solid #efe2bf;border-radius:9px}.zzpf-note b{font-size:8px}.zzpf-note p{margin:4px 0 0;font-size:9px;line-height:1.45}
+@media(max-width:900px){.zzpf-admin-grid{grid-template-columns:1fr}.zzpf-meta{grid-template-columns:1fr}}
