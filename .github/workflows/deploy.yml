@@ -485,7 +485,9 @@ jobs:
           node --check assets/js/app-v5.js
           node --check service-worker.js
           grep -q "zz_catalog_cache_v2" assets/js/app-v5.js
-          grep -q "zz-home-performance-v2" index.html\n          node --check assets/js/home-stable.js\n          grep -q "IS_HOME" assets/js/app-v5.js
+          grep -q "zz-home-performance-v2" index.html
+          node --check assets/js/home-stable.js
+          grep -q "IS_HOME" assets/js/app-v5.js
           grep -q "CATALOG_CACHE_KEY" assets/js/app-v5.js
           grep -q "requestIdleCallback" assets/js/app-v5.js
           node --check assets/js/price-ticket-runtime.js
