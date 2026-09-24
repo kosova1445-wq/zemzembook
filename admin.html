@@ -38,6 +38,7 @@
 }
 </style>
   <link rel="stylesheet" href="assets/css/admin-partners.css?v=3">\n  <link rel="stylesheet" href="assets/css/admin-business-center.css?v=1">
+  <link rel="stylesheet" href="assets/css/admin-themes.css?v=1">
 </head>
 <body>
 <div id="authScreen" class="auth-screen">
@@ -514,87 +515,32 @@
 <script src="assets/js/admin-order-launch-reset.js?v=1" data-admin-order-launch-reset="1"></script>
 <script src="assets/js/admin-partners.js?v=3"></script>
 <script src="assets/js/admin-checkout-settings.js?v=1"></script><script src="assets/js/admin-command-palette.js?v=1"></script><script src="assets/js/admin-business-center.js?v=1"></script>
-<!-- ZZ FORCE ADMIN WORKSPACE PICKER -->
-<style id="zz-force-workspace-style">
-#zzForceWorkspacePicker{display:flex!important;align-items:center!important;gap:8px!important;padding:7px 10px!important;border:1px solid #dfe7e2!important;border-radius:12px!important;background:#fff!important;box-shadow:0 5px 16px rgba(23,61,43,.08)!important;visibility:visible!important;opacity:1!important}
-#zzForceWorkspacePicker label{font-size:10px!important;font-weight:900!important;color:#5f7468!important;text-transform:uppercase!important;white-space:nowrap!important}
-#zzForceWorkspaceSelect{display:block!important;min-width:170px!important;min-height:36px!important;border:1px solid #dfe7e2!important;border-radius:9px!important;background:#f7faf8!important;color:#173d2b!important;font-weight:800!important;padding:6px 30px 6px 10px!important}
-#zzForceWorkspaceNote{font-size:9px!important;color:#7a8a81!important;max-width:190px!important;line-height:1.2!important}
-#adminApp[data-force-template="simple"] .side-nav .zz-force-advanced,
-#adminApp[data-force-template="simple"] .side-nav .zz-force-owner,
-#adminApp[data-force-template="simple"] .side-nav .zz-force-extra{display:none!important}
-#adminApp[data-force-template="store"] .side-nav .zz-force-advanced,
-#adminApp[data-force-template="store"] .side-nav .zz-force-owner{display:none!important}
-#adminApp[data-force-template="pro"] .side-nav .zz-force-owner{display:none!important}
-@media(max-width:760px){
-  #zzForceWorkspacePicker{width:100%!important;order:99!important}
-  #zzForceWorkspacePicker label,#zzForceWorkspaceNote{display:none!important}
-  #zzForceWorkspaceSelect{width:100%!important;min-width:0!important}
-}
-</style>
-<script id="zz-force-workspace-runtime">
+
+<!-- ZZ ADMIN VISUAL THEMES -->
+<script id="zz-admin-theme-runtime">
 (()=>{
-  if(window.__zzForceWorkspaceRuntime)return;window.__zzForceWorkspaceRuntime=1;
-  const KEY='zz_force_admin_template_v1';
-  const defs={
-    simple:{label:'Simple Admin',note:'Vetëm funksionet kryesore të përditshme.'},
-    store:{label:'Store Manager',note:'Porosi, libra, klientë dhe checkout.'},
-    pro:{label:'Professional',note:'Business Center dhe modulet e avancuara.'},
-    owner:{label:'Owner Dashboard',note:'Të gjitha modulet dhe konfigurimet.'}
-  };
-  function kind(el){
-    const v=(el.dataset.view||'').toLowerCase();
-    const t=(el.textContent||'').toLowerCase();
-    const h=(el.getAttribute('href')||'').toLowerCase();
-    if(['admins','branding','security-release','integrations'].includes(v)||/administrator|siguria|logo & brand|integrim/.test(t))return'owner';
-    if(['business-center'].includes(v)||/business|intelligence|growth|experience|automation|workflow|report|marketing|forecast|analytics/.test(t))return'advanced';
-    if(['operations','checkout-settings','reviews','coupons','team-center','messages','partners'].includes(v)||/operations|checkout|review|kupon|team|messenger|partner|invoice|packing|gift/.test(t))return'extra';
-    if(h.includes('admin-ebooks'))return'core';
-    return'core';
-  }
-  function classify(){
-    document.querySelectorAll('.side-nav .nav-item').forEach(el=>{
-      el.classList.remove('zz-force-core','zz-force-extra','zz-force-advanced','zz-force-owner');
-      el.classList.add('zz-force-'+kind(el));
-    });
-  }
-  function apply(mode){
-    if(!defs[mode])mode='simple';
-    const app=document.getElementById('adminApp');
-    if(app)app.dataset.forceTemplate=mode;
-    try{localStorage.setItem(KEY,mode)}catch{}
-    const sel=document.getElementById('zzForceWorkspaceSelect');
-    if(sel)sel.value=mode;
-    const note=document.getElementById('zzForceWorkspaceNote');
-    if(note)note.textContent=defs[mode].note;
-    classify();
+  if(window.__zzAdminThemeRuntime)return;window.__zzAdminThemeRuntime=1;
+  const KEY='zemzem_admin_visual_theme';
+  const themes={classic:'ZemZem Classic',emerald:'Emerald',midnight:'Midnight',minimal:'Minimal Light'};
+  function apply(name){
+    if(!themes[name])name='classic';
+    const app=document.getElementById('adminApp');if(app)app.dataset.adminTheme=name;
+    try{localStorage.setItem(KEY,name)}catch{}
+    const sel=document.getElementById('zzThemeSelect');if(sel)sel.value=name;
   }
   function mount(){
-    const top=document.querySelector('.admin-topbar .top-actions');
-    if(!top)return false;
-    let box=document.getElementById('zzForceWorkspacePicker');
+    const top=document.querySelector('.admin-topbar .top-actions');if(!top)return false;
+    let box=document.getElementById('zzThemePicker');
     if(!box){
-      box=document.createElement('div');
-      box.id='zzForceWorkspacePicker';
-      box.innerHTML='<label for="zzForceWorkspaceSelect">Pamja</label><select id="zzForceWorkspaceSelect" aria-label="Pamja e Adminit"><option value="simple">Simple Admin</option><option value="store">Store Manager</option><option value="pro">Professional</option><option value="owner">Owner Dashboard</option></select><span id="zzForceWorkspaceNote"></span>';
+      box=document.createElement('div');box.id='zzThemePicker';
+      box.innerHTML='<label for="zzThemeSelect">Theme</label><select id="zzThemeSelect" aria-label="Theme i Adminit"><option value="classic">ZemZem Classic</option><option value="emerald">Emerald</option><option value="midnight">Midnight</option><option value="minimal">Minimal Light</option></select>';
       top.prepend(box);
-      document.getElementById('zzForceWorkspaceSelect').addEventListener('change',e=>apply(e.target.value));
+      document.getElementById('zzThemeSelect').addEventListener('change',e=>apply(e.target.value));
     }
-    let mode='simple';try{mode=localStorage.getItem(KEY)||'simple'}catch{}
-    apply(mode);
-    return true;
+    let current='classic';try{current=localStorage.getItem(KEY)||'classic'}catch{}
+    apply(current);return true;
   }
-  function boot(){
-    let tries=0;
-    const t=setInterval(()=>{
-      tries++;
-      classify();
-      if(mount()||tries>100)clearInterval(t);
-    },100);
-    const side=document.querySelector('.side-nav');
-    if(side)new MutationObserver(()=>{classify();mount()}).observe(side,{childList:true});
-    window.addEventListener('zemzem:admin-access-ready',()=>{classify();mount()});
-  }
+  function boot(){let n=0;const t=setInterval(()=>{n++;if(mount()||n>100)clearInterval(t)},100);window.addEventListener('zemzem:admin-access-ready',mount)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
