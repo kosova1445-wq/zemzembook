@@ -515,6 +515,9 @@ jobs:
           ! grep -q "pragun për −10% me PayPal" assets/js/storefront-advanced.js
           ! grep -q "new MutationObserver(cards)" assets/js/storefront-advanced.js
           node --check assets/js/free-library.js
+          grep -q "Shkarkuar nga www.ZemZem.al" assets/js/free-library.js
+          grep -q "kopje e paautorizuar" assets/js/free-library.js
+          grep -q "PDFLib.PDFDocument" assets/js/free-library.js
           node --check assets/js/admin-free-library-integrated.js
           node --check assets/js/admin-free-library-manager.js
           grep -q "__zzFreeLibraryManager" assets/js/admin-free-library-manager.js
@@ -778,6 +781,9 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-reports.html 'admin-reports.js' 'Admin reports module'
           require_live https://www.zemzem.al/author.html /tmp/author.html 'entity-page.js' 'Author profile page'
           require_live https://www.zemzem.al/publisher.html /tmp/publisher.html 'entity-page.js' 'Publisher profile page'
+          require_live https://www.zemzem.al/free-library.html /tmp/free-library-watermark-loader.html 'pdf-lib@1.17.1' 'Free Library PDF watermark engine'
+          require_live https://www.zemzem.al/free-library.html /tmp/free-library-v5.html 'assets/js/free-library.js?v=5' 'Free Library runtime v5'
+          require_live https://www.zemzem.al/assets/js/free-library.js /tmp/free-library-watermark.js 'Shkarkuar nga www.ZemZem.al' 'Free Library PDF watermark'
           require_live https://www.zemzem.al/free-library.html /tmp/free-library.html 'id="freeLibraryGrid"' 'Free Library public page'
           require_live https://www.zemzem.al/404.html /tmp/zemzem-404.html 'Faqja nuk u gjet' 'Branded ZemZem 404 page'
           require_live https://www.zemzem.al/free-library.html /tmp/free-library-seo.html 'rel="canonical" href="https://www.zemzem.al/free-library.html"' 'Free Library canonical SEO'
