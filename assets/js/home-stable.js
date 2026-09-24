@@ -12,7 +12,8 @@ function addFreeLibrary(){
   if(cats&&!cats.querySelector('a[href="free-library.html"]')){
     const a=document.createElement('a');a.className='category-item category-item-ebook';a.href='free-library.html';
     a.innerHTML='<span class="category-icon">📚</span><span class="category-copy"><strong>Biblioteka Falas</strong><small>PDF falas të aprovuar</small></span><span class="category-arrow">›</span>';
-    cats.appendChild(a);
+    const ebook=[...cats.querySelectorAll('a')].find(x=>/ebook/i.test(x.textContent||''));
+    if(ebook)ebook.insertAdjacentElement('afterend',a);else cats.appendChild(a);
   }
 }
 function bindBookCards(){
@@ -25,6 +26,15 @@ function bindBookCards(){
     if(e.target.closest('.book-card-cover-link,.book-meta,h3'))location.href='product.html?id='+encodeURIComponent(id);
   },true);
 }
-function boot(){addFreeLibrary();bindBookCards();document.documentElement.dataset.zzHomeStable='1'}
+function boot(){
+  addFreeLibrary();bindBookCards();document.documentElement.dataset.zzHomeStable='1';
+  if(!window.zzFreeLibraryCategoryObserver){
+    window.zzFreeLibraryCategoryObserver=new MutationObserver(()=>addFreeLibrary());
+    const nav=q('[data-home-nav]'),cats=q('[data-home-categories]');
+    if(nav)window.zzFreeLibraryCategoryObserver.observe(nav,{childList:true});
+    if(cats)window.zzFreeLibraryCategoryObserver.observe(cats,{childList:true});
+  }
+  setTimeout(addFreeLibrary,300);setTimeout(addFreeLibrary,1000);setTimeout(addFreeLibrary,2500);
+}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
