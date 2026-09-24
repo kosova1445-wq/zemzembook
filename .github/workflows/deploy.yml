@@ -714,6 +714,7 @@ jobs:
           require_live https://www.zemzem.al/index.html /tmp/home-free-library-menu.html 'href="free-library.html"' 'Homepage Free Library menu link'
           require_live https://www.zemzem.al/index.html /tmp/home-free-library-category.html 'category-item-free-library' 'Top categories Free Library link'
           require_live https://www.zemzem.al/index.html /tmp/home-free-library-main-cards.html 'category-card-free-library' 'Main category cards Free Library'
+          require_live https://www.zemzem.al/index.html /tmp/free-library-final-force-v6.html 'ZZ FINAL FREE LIBRARY FORCE V6' 'Final Free Library force runtime'
           require_live https://www.zemzem.al/index.html /tmp/home-stable-v5.html 'assets/js/home-stable.js?v=5' 'Persistent Free Library runtime v5'
           require_live https://www.zemzem.al/index.html /tmp/top-categories-responsive.html 'ZZ KEEP TOP CATEGORIES V4' 'Top categories responsive visibility'
           require_live https://www.zemzem.al/assets/js/home-mobile-v6.js /tmp/home-mobile-free-library.js 'Biblioteka Falas' 'Mobile Free Library category'
