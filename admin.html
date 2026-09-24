@@ -1145,5 +1145,95 @@ html body #adminApp #zzThemeSelect{
 })();
 </script>
 
+
+<!-- ZZ DASHBOARD LAYOUT RECOVERY V4 -->
+<style id="zz-dashboard-layout-recovery-v4">
+/* Critical recovery: dynamic dashboard modules must never become implicit 12-col grid items */
+html body #adminApp #view-dashboard:not(.active-view){display:none!important}
+html body #adminApp #view-dashboard.active-view{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+}
+html body #adminApp #view-dashboard.active-view > *{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  grid-column:auto!important;
+  box-sizing:border-box!important;
+}
+html body #adminApp #view-dashboard .stats-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px!important;
+  width:100%!important;
+}
+html body #adminApp #view-dashboard .dashboard-grid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.45fr) minmax(300px,.8fr)!important;
+  gap:14px!important;
+  width:100%!important;
+}
+html body #adminApp #view-dashboard #zzDashboardV2{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+}
+html body #adminApp #view-dashboard #zzDashboardV2 .zz-dash-kpis{
+  display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:10px!important;
+  width:100%!important;
+}
+html body #adminApp #view-dashboard #zzDashboardV2 .zz-dash-grid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:14px!important;
+  width:100%!important;
+}
+html body #adminApp #view-dashboard #zzDashboardV2 .zz-sales-chart-card{
+  width:100%!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+html body #adminApp #view-dashboard .zz-kpi,
+html body #adminApp #view-dashboard .stat-card,
+html body #adminApp #view-dashboard .panel{
+  min-width:0!important;
+  width:auto!important;
+}
+html body #adminApp #view-dashboard .zz-sales-chart,
+html body #adminApp #view-dashboard svg{
+  max-width:100%!important;
+}
+@media(max-width:1200px){
+  html body #adminApp #view-dashboard #zzDashboardV2 .zz-dash-kpis{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:1000px){
+  html body #adminApp #view-dashboard .stats-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  html body #adminApp #view-dashboard .dashboard-grid,
+  html body #adminApp #view-dashboard #zzDashboardV2 .zz-dash-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+@media(max-width:700px){
+  html body #adminApp #view-dashboard #zzDashboardV2 .zz-dash-kpis,
+  html body #adminApp #view-dashboard .stats-grid{
+    grid-template-columns:1fr 1fr!important;
+  }
+}
+@media(max-width:460px){
+  html body #adminApp #view-dashboard #zzDashboardV2 .zz-dash-kpis,
+  html body #adminApp #view-dashboard .stats-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+</style>
+
 </body>
 </html>
