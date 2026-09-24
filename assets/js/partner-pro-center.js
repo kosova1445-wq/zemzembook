@@ -66,3 +66,4 @@ async function enhance(){
 new MutationObserver(()=>setTimeout(enhance,80)).observe(document.documentElement,{childList:true,subtree:true});
 window.addEventListener('load',()=>setTimeout(enhance,250));
 })();
+/* release: partner-center-pro-v2 */

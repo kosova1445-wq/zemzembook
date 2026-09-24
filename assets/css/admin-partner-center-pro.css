@@ -20,3 +20,4 @@
 .zz-pcenter-ok{margin-top:10px;background:#e7f5ec;color:#246845;border:1px solid #cae7d4;border-radius:9px;padding:9px;font-size:10px}
 @media(max-width:800px){.zz-pcenter-kpis{grid-template-columns:1fr 1fr}.zz-pcenter-form{grid-template-columns:1fr 1fr}.zz-pcenter-form .span-2{grid-column:1/-1}}
 @media(max-width:560px){.zz-pcenter-kpis,.zz-pcenter-form{grid-template-columns:1fr}.zz-pcenter-form .span-2{grid-column:auto}.zz-pcenter-inline-form{grid-template-columns:1fr}.zz-pcenter-thread>div{max-width:92%}}
+/* release: partner-center-pro-v2 */

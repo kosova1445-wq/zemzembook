@@ -100,3 +100,4 @@ window.ZemZemAdminPartners={getData:()=>data,reload:load};
 function boot(){ensureView();ensureNav();new MutationObserver(()=>ensureNav()).observe(document.body,{childList:true,subtree:true});document.addEventListener('click',e=>{if(e.target.closest('[data-view="partners"]'))setTimeout(load,50)});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
+/* release: partner-center-pro-v2 */

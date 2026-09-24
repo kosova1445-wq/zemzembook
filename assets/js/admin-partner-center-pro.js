@@ -57,3 +57,4 @@ function openCenter(id){
 function boot(){ensureDialog();decorateCards();document.addEventListener('click',e=>{const b=e.target.closest('[data-open-partner-center]');if(b)openCenter(b.dataset.openPartnerCenter)});new MutationObserver(()=>decorateCards()).observe(document.body,{childList:true,subtree:true})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
+/* release: partner-center-pro-v2 */

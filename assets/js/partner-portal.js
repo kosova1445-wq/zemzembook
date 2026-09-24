@@ -278,3 +278,4 @@ window.ZemZemPartner={rpc,getDashboard:()=>dashboard,reload:async()=>{dashboard=
 async function boot(){loadSession();if(!await ensure()){renderAuth();return}try{status=await rpc('partner_my_status',{});if(!status.applied){renderApply();return}if(status.status!=='approved'||!status.enabled){renderPending();return}dashboard=await rpc('partner_dashboard',{});renderDashboard()}catch(err){q('#partnerApp').innerHTML='<div class="partner-card"><div class="partner-msg error">'+esc(err.message)+'</div></div>'}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{loadPartnerBranding();boot()});else{loadPartnerBranding();boot();}
 })();
+/* release: partner-center-pro-v2 */

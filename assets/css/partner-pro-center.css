@@ -27,3 +27,4 @@
 .zz-notify-list strong{font-size:11px}.zz-notify-list p{margin:4px 0;font-size:10px;color:#64736b}.zz-notify-list small{font-size:8px;color:#89958f}
 @media(max-width:1050px){.zz-b2b-strip{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:680px){.zz-b2b-strip{grid-template-columns:1fr}.zz-message-form{grid-template-columns:1fr}.zz-doc-card{grid-template-columns:42px 1fr}.zz-doc-card .btn{grid-column:1/-1}.zz-msg{max-width:92%}}
+/* release: partner-center-pro-v2 */
