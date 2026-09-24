@@ -472,6 +472,8 @@ jobs:
           node --check assets/js/admin-partners.js
           grep -q "Barazimi ekzistues u rifreskua me sukses" assets/js/admin-partners.js
           node --check assets/js/partner-portal.js
+          grep -q "Marzhi ZemZem" assets/js/partner-portal.js
+          grep -q "Ndarja e të ardhurave dhe barazimet" assets/js/partner-portal.js
           grep -q "partner-edit-book" assets/js/partner-portal.js
           grep -q "partner-shell-pro" assets/js/partner-portal.js
           node --check assets/js/admin-collaboration-suite.js
@@ -607,11 +609,13 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-partners.html 'assets/js/admin-partners.js?v=4' 'Partner marketplace Admin module'
           require_live https://www.zemzem.al/admin.html /tmp/admin-partners-nav.html 'id="adminPartnersNav"' 'Partner marketplace Admin navigation'
           require_live https://www.zemzem.al/assets/js/admin-partners.js /tmp/admin-partners-js.html '__zzAdminPartners' 'Partner marketplace Admin runtime'
+          require_live https://www.zemzem.al/partner.html /tmp/partner-finance-dashboard.html 'assets/js/partner-portal.js?v=12' 'Partner finance dashboard runtime'
+          require_live https://www.zemzem.al/assets/js/partner-portal.js /tmp/partner-finance-dashboard-js.html 'Marzhi ZemZem' 'Partner finance dashboard amounts'
           require_live https://www.zemzem.al/partner.html /tmp/partner-portal.html 'Shit më shumë libra, pa e komplikuar biznesin.' 'Partner bookstore portal'
           require_live https://www.zemzem.al/assets/js/admin-branding.js /tmp/admin-branding-partner-logo.js 'brandPartnerLogoPreview' 'Partner logo branding control'
           require_live https://www.zemzem.al/assets/js/partner-portal.js /tmp/partner-branding-runtime.js 'loadPartnerBranding' 'Partner logo branding runtime'
           require_live https://www.zemzem.al/partner.html /tmp/partner-portal-css.html 'assets/css/partner-portal.css?v=6' 'Professional partner portal styles'
-          require_live https://www.zemzem.al/partner.html /tmp/partner-portal-jsref.html 'assets/js/partner-portal.js?v=11' 'Partner portal script reference'
+          require_live https://www.zemzem.al/partner.html /tmp/partner-portal-jsref.html 'assets/js/partner-portal.js?v=12' 'Partner portal script reference'
           require_live https://www.zemzem.al/assets/js/partner-portal.js /tmp/partner-photo-upload.js 'partner-shell-pro' 'Partner professional sidebar runtime'
           require_live https://www.zemzem.al/assets/js/partner-portal.js /tmp/partner-profile-logo.js 'partner_profile_update' 'Partner profile logo runtime'
           require_live https://www.zemzem.al/assets/js/partner-portal.js /tmp/partner-portal-js.html 'partner_book_upsert_v2' 'Partner bookstore portal runtime'
