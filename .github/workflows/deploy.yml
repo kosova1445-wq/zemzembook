@@ -199,7 +199,7 @@ jobs:
 
           # Refresh shared runtime cache versions on all HTML pages before upload.
           find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=7#g'
-          sed -i 's#assets/js/checkout-v2.js?v=15#assets/js/checkout-v2.js?v=15#g' checkout.html
+          sed -i 's#assets/js/checkout-v2.js?v=16#assets/js/checkout-v2.js?v=15#g' checkout.html
 
           # Force republish advanced Admin modules and bypass stale CDN/browser versions.
           touch admin.html assets/js/admin-intelligence-suite.js assets/js/admin-growth-advanced.js assets/js/admin-experience-automation.js
@@ -488,6 +488,8 @@ jobs:
           node --check assets/js/storefront-controls.js
           node --check assets/js/pwa.js
           node --check assets/js/checkout-v2.js
+          grep -q "refreshCustomerSessionForCheckout" assets/js/checkout-v2.js
+          grep -q "Sesioni i llogarisë ka skaduar" assets/js/checkout-v2.js
           node --check assets/js/admin-checkout-settings.js
           ! grep -q "deri te −10% me PayPal" assets/js/storefront-advanced.js
           grep -q "id=\"checkoutNotice\"" checkout.html
@@ -631,6 +633,7 @@ jobs:
           require_live https://www.zemzem.al/product.html /tmp/product-review.html 'submit_verified_review' 'Verified review submit RPC hook'
           require_live https://www.zemzem.al/assets/css/product.css /tmp/product-review.css 'Verified buyer review form' 'Verified review form styles'
           require_live https://www.zemzem.al/checkout.html /tmp/checkout-coupon.html 'assets/js/checkout-v2.js' 'Checkout script reference'
+          require_live https://www.zemzem.al/assets/js/checkout-v2.js /tmp/checkout-v2-live.js 'refreshCustomerSessionForCheckout' 'Authenticated checkout account link'
           require_live https://www.zemzem.al/admin.html /tmp/admin-checkout-settings.html 'data-view="checkout-settings"' 'Admin checkout settings live'
           require_live https://www.zemzem.al/checkout.html /tmp/checkout-admin-managed.html 'id="checkoutNotice"' 'Admin-managed checkout live'
           require_live https://www.zemzem.al/checkout.html /tmp/checkout-paypal-no-discount.html 'id="checkoutNotice"' 'Admin-managed checkout notice live'
