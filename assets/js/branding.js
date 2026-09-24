@@ -1,13 +1,13 @@
 (()=>{
   const BRAND_PAGE_NAME=location.pathname.split('/').pop()||'index.html';
   const BRAND_IS_HOME=BRAND_PAGE_NAME==='index.html'||BRAND_PAGE_NAME==='';
-  if(!BRAND_IS_HOME&&(!document.querySelector('script[data-zemzem-affiliate]')){const s=document.createElement('script');s.src='assets/js/affiliate.js?v=1';s.defer=true;s.dataset.zemzemAffiliate='1';document.head.appendChild(s)}
-  if(!BRAND_IS_HOME&&(!document.querySelector('script[data-zemzem-pwa]')){const s=document.createElement('script');s.src='assets/js/pwa.js?v=3';s.defer=true;s.dataset.zemzemPwa='1';document.head.appendChild(s)}
-  if(!BRAND_IS_HOME&&(!document.querySelector('script[data-home-layout-runtime]')){const s=document.createElement('script');s.src='assets/js/home-layout-runtime.js?v=1';s.defer=true;s.dataset.homeLayoutRuntime='1';document.head.appendChild(s)}
-  if(!BRAND_IS_HOME&&(!document.querySelector('script[data-runtime-ops]')){const s=document.createElement('script');s.src='assets/js/runtime-ops.js?v=1';s.defer=true;s.dataset.runtimeOps='1';document.head.appendChild(s)}
-  if(!BRAND_IS_HOME&&(!document.querySelector('script[data-runtime-storefront]')){const s=document.createElement('script');s.src='assets/js/runtime-storefront.js?v=1';s.defer=true;s.dataset.runtimeStorefront='1';document.head.appendChild(s)}
-  if(!BRAND_IS_HOME&&(!document.querySelector('script[data-site-manager-runtime]')){const s=document.createElement('script');s.src='assets/js/site-manager-runtime.js?v=2';s.defer=true;s.dataset.siteManagerRuntime='1';document.head.appendChild(s)}
-  if(!BRAND_IS_HOME&&(!document.querySelector('script[data-site-manager-advanced-runtime]')){const s=document.createElement('script');s.src='assets/js/site-manager-advanced-runtime.js?v=2';s.defer=true;s.dataset.siteManagerAdvancedRuntime='1';document.head.appendChild(s)}
+  if(!BRAND_IS_HOME&&!document.querySelector('script[data-zemzem-affiliate]')){const s=document.createElement('script');s.src='assets/js/affiliate.js?v=1';s.defer=true;s.dataset.zemzemAffiliate='1';document.head.appendChild(s)}
+  if(!BRAND_IS_HOME&&!document.querySelector('script[data-zemzem-pwa]')){const s=document.createElement('script');s.src='assets/js/pwa.js?v=3';s.defer=true;s.dataset.zemzemPwa='1';document.head.appendChild(s)}
+  if(!BRAND_IS_HOME&&!document.querySelector('script[data-home-layout-runtime]')){const s=document.createElement('script');s.src='assets/js/home-layout-runtime.js?v=1';s.defer=true;s.dataset.homeLayoutRuntime='1';document.head.appendChild(s)}
+  if(!BRAND_IS_HOME&&!document.querySelector('script[data-runtime-ops]')){const s=document.createElement('script');s.src='assets/js/runtime-ops.js?v=1';s.defer=true;s.dataset.runtimeOps='1';document.head.appendChild(s)}
+  if(!BRAND_IS_HOME&&!document.querySelector('script[data-runtime-storefront]')){const s=document.createElement('script');s.src='assets/js/runtime-storefront.js?v=1';s.defer=true;s.dataset.runtimeStorefront='1';document.head.appendChild(s)}
+  if(!BRAND_IS_HOME&&!document.querySelector('script[data-site-manager-runtime]')){const s=document.createElement('script');s.src='assets/js/site-manager-runtime.js?v=2';s.defer=true;s.dataset.siteManagerRuntime='1';document.head.appendChild(s)}
+  if(!BRAND_IS_HOME&&!document.querySelector('script[data-site-manager-advanced-runtime]')){const s=document.createElement('script');s.src='assets/js/site-manager-advanced-runtime.js?v=2';s.defer=true;s.dataset.siteManagerAdvancedRuntime='1';document.head.appendChild(s)}
   'use strict';
   const SB_URL='https://ysvtrhizgcioyycwlkrk.supabase.co';
   const SB_KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
