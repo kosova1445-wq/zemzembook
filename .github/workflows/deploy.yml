@@ -1,4 +1,4 @@
-          require_live https://www.zemzem.al/admin.html /tmp/admin-business-center.html 'assets/js/admin-business-center.js?v=1' 'Admin Business Center loader'\n          require_live https://www.zemzem.al/admin.html /tmp/admin-business-center-nav.html 'data-view="business-center"' 'Admin Business Center nav'\nname: Deploy ZemZem to cPanel
+name: Deploy ZemZem to cPanel
 
 on:
   push:
@@ -460,7 +460,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check assets/js/admin-collab.js
-          node --check assets/js/admin-command-palette.js\n          node --check assets/js/admin-business-center.js\n          grep -q "__zzBusinessCenterV1" assets/js/admin-business-center.js
+          node --check assets/js/admin-command-palette.js
           grep -q "__zzAdminCommandPaletteV1" assets/js/admin-command-palette.js
           node --check assets/js/admin-partners.js
           node --check assets/js/partner-portal.js
