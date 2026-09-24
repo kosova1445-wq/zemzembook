@@ -1,0 +1,29 @@
+/* ZemZem Partner Center Pro */
+.zz-b2b-overview{display:grid;gap:12px;margin:12px 0 14px}
+.zz-b2b-strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.zz-b2b-strip>div{background:#fff;border:1px solid #dfe7e2;border-radius:14px;padding:14px;min-width:0}
+.zz-b2b-strip span,.zz-b2b-strip small{display:block;color:#78867e;font-size:9px}
+.zz-b2b-strip strong{display:block;margin-top:5px;font-size:16px;color:#173d2b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zz-tier{display:inline-flex!important;width:max-content;padding:5px 9px;border-radius:999px;font-size:10px!important}
+.zz-tier.standard{background:#eef2f0}.zz-tier.silver{background:#eef1f4}.zz-tier.gold{background:#fff4cf}.zz-tier.premium{background:#e8f2ec}
+.zz-b2b-target{background:#fff;border:1px solid #dfe7e2;border-radius:14px;padding:14px}
+.zz-b2b-target>div:first-child{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.zz-b2b-target span,.zz-b2b-target small{font-size:10px;color:#77857d}.zz-b2b-target strong{color:#173d2b}
+.zz-progress{height:8px;background:#edf2ef;border-radius:999px;overflow:hidden;margin:10px 0 7px}.zz-progress i{display:block;height:100%;background:#2f7a57;border-radius:999px}
+.zz-pro-dot{position:relative}.zz-pro-dot:before{content:"";width:8px;height:8px;border-radius:3px;background:currentColor;display:block}
+.zz-pro-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid #edf1ef;margin-bottom:8px}
+.zz-pro-toolbar strong,.zz-pro-toolbar small{display:block}.zz-pro-toolbar small{font-size:9px;color:#7a8780;margin-top:3px}
+.zz-qty{width:72px;border:1px solid #dbe4df;border-radius:8px;padding:7px}
+.zz-doc-grid{display:grid;gap:9px}.zz-doc-card{display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center;border:1px solid #e2e9e4;border-radius:12px;padding:12px}
+.zz-doc-icon{width:42px;height:42px;border-radius:10px;background:#e8f2ec;color:#285a41;display:grid;place-items:center;font-size:9px;font-weight:900}
+.zz-doc-card strong,.zz-doc-card small{display:block}.zz-doc-card small{font-size:9px;color:#7b8780;margin-top:3px}.zz-muted{font-size:9px;color:#8a968f}
+.zz-thread{display:grid;gap:10px;max-height:480px;overflow:auto;padding:6px 2px 14px}
+.zz-msg{max-width:78%;border-radius:14px;padding:10px 12px}.zz-msg.admin{background:#eef5f1}.zz-msg.partner{background:#173d2b;color:#fff;margin-left:auto}
+.zz-msg small{font-size:8px;opacity:.7}.zz-msg p{margin:5px 0 0;font-size:11px;line-height:1.5}
+.zz-message-form{display:grid;grid-template-columns:1fr auto;gap:8px;border-top:1px solid #edf1ef;padding-top:12px}.zz-message-form textarea{border:1px solid #dbe4df;border-radius:11px;padding:10px}
+.zz-return-list{display:grid;gap:8px}.zz-return-list>div{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px;border:1px solid #e4ebe7;border-radius:10px}
+.zz-return-list b,.zz-return-list small{display:block}.zz-return-list small{font-size:8px;color:#7b8780;margin-top:3px}.zz-return-list strong{font-size:9px;background:#f2f5f3;padding:5px 8px;border-radius:999px}
+.zz-notify-list{display:grid;gap:9px}.zz-notify-list article{display:flex;gap:10px;padding:11px;border:1px solid #e4ebe7;border-radius:11px}.zz-notify-dot{width:9px;height:9px;border-radius:50%;background:#2f7a57;margin-top:5px;flex:0 0 auto}
+.zz-notify-list strong{font-size:11px}.zz-notify-list p{margin:4px 0;font-size:10px;color:#64736b}.zz-notify-list small{font-size:8px;color:#89958f}
+@media(max-width:1050px){.zz-b2b-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){.zz-b2b-strip{grid-template-columns:1fr}.zz-message-form{grid-template-columns:1fr}.zz-doc-card{grid-template-columns:42px 1fr}.zz-doc-card .btn{grid-column:1/-1}.zz-msg{max-width:92%}}
