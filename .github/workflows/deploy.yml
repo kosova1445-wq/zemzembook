@@ -568,7 +568,7 @@ jobs:
           require_live https://www.zemzem.al/index.html /tmp/index-allbooks.html 'id="allBooksStatic"' 'Homepage all-books section'
           require_live https://www.zemzem.al/index.html /tmp/index-branding-safe.html 'assets/js/branding.js?v=7' 'Homepage branding safe mode'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-safe.js 'BRAND_IS_HOME' 'Branding blocks extra homepage runtimes'
-          require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=4' 'Stable homepage single runtime'
+          require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=5' 'Stable homepage single runtime'
           require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
           require_live https://www.zemzem.al/product.html /tmp/product.html 'premium-price-ticket-wrap' 'Product price ticket'
 
@@ -714,6 +714,7 @@ jobs:
           require_live https://www.zemzem.al/index.html /tmp/home-free-library-menu.html 'href="free-library.html"' 'Homepage Free Library menu link'
           require_live https://www.zemzem.al/index.html /tmp/home-free-library-category.html 'category-item-free-library' 'Top categories Free Library link'
           require_live https://www.zemzem.al/index.html /tmp/home-free-library-main-cards.html 'category-card-free-library' 'Main category cards Free Library'
+          require_live https://www.zemzem.al/index.html /tmp/home-stable-v5.html 'assets/js/home-stable.js?v=5' 'Persistent Free Library runtime v5'
           require_live https://www.zemzem.al/index.html /tmp/top-categories-responsive.html 'ZZ KEEP TOP CATEGORIES V4' 'Top categories responsive visibility'
           require_live https://www.zemzem.al/assets/js/home-mobile-v6.js /tmp/home-mobile-free-library.js 'Biblioteka Falas' 'Mobile Free Library category'
           require_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js "function newsletter(){q('#zv2Newsletter')?.remove()}" 'Newsletter remains enabled'
