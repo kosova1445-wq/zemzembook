@@ -176,5 +176,41 @@ html body .premium-category-list .category-item-free-library{
 
 
 <script src="assets/js/home-index-upgrades.js?v=2"></script>
+<!-- ZZ FINAL FREE LIBRARY FORCE V6 -->
+<script id="zz-final-free-library-force-v6">
+(function(){
+  function ensure(){
+    try{
+      var nav=document.querySelector('[data-home-nav]');
+      if(nav&&!nav.querySelector('a[href="free-library.html"]')){
+        var a=document.createElement('a');a.href='free-library.html';a.innerHTML='<strong>Biblioteka Falas</strong>';
+        var eb=[].slice.call(nav.querySelectorAll('a')).find(function(x){return /ebook/i.test(x.textContent||'')});
+        if(eb)eb.insertAdjacentElement('afterend',a);else nav.appendChild(a);
+      }
+      var cats=document.querySelector('[data-home-categories]');
+      if(cats&&!cats.querySelector('a[href="free-library.html"]')){
+        var b=document.createElement('a');b.href='free-library.html';b.className='category-item category-item-free-library';
+        b.innerHTML='<span class="category-icon">📚</span><span class="category-copy"><strong>Biblioteka Falas</strong><small>PDF falas të aprovuar</small></span><span class="category-arrow">›</span>';
+        var ceb=[].slice.call(cats.querySelectorAll('a')).find(function(x){return /ebook/i.test(x.textContent||'')});
+        if(ceb)ceb.insertAdjacentElement('afterend',b);else cats.appendChild(b);
+      }
+      var cards=document.querySelector('[data-home-category-cards]');
+      if(cards&&!cards.querySelector('a[href="free-library.html"]')){
+        var d=document.createElement('a');d.href='free-library.html';d.className='cat-card home-category-card category-card-free-library';
+        d.innerHTML='<div class="cat-icon">📚</div><strong>Biblioteka Falas</strong>';
+        cards.appendChild(d);
+      }
+    }catch(e){}
+  }
+  function start(){
+    ensure();
+    var obs=new MutationObserver(function(){ensure()});
+    obs.observe(document.documentElement,{childList:true,subtree:true});
+    setInterval(ensure,500);
+    setTimeout(ensure,50);setTimeout(ensure,250);setTimeout(ensure,750);setTimeout(ensure,1500);setTimeout(ensure,3000);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
 </body>
 </html>
