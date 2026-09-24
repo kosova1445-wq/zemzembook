@@ -274,6 +274,7 @@ function renderDashboard(){
  q('#logout')?.addEventListener('click',()=>{localStorage.removeItem(SESSION_KEY);session=null;renderAuth()});
  const initial=location.hash.replace('#','');if(['overview','books','add','orders','settlements','reports','account','help'].includes(initial))openSection(initial);
 }
+window.ZemZemPartner={rpc,getDashboard:()=>dashboard,reload:async()=>{dashboard=await rpc('partner_dashboard',{});return dashboard},money,esc};
 async function boot(){loadSession();if(!await ensure()){renderAuth();return}try{status=await rpc('partner_my_status',{});if(!status.applied){renderApply();return}if(status.status!=='approved'||!status.enabled){renderPending();return}dashboard=await rpc('partner_dashboard',{});renderDashboard()}catch(err){q('#partnerApp').innerHTML='<div class="partner-card"><div class="partner-msg error">'+esc(err.message)+'</div></div>'}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{loadPartnerBranding();boot()});else{loadPartnerBranding();boot();}
 })();
