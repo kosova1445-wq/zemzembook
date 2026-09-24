@@ -484,6 +484,7 @@ jobs:
           grep -q "id=\"checkoutNotice\"" checkout.html
           node --check assets/js/app-v5.js
           node --check service-worker.js
+          grep -q "zz-disable-legacy-sw" index.html
           grep -q "zz_catalog_cache_v2" assets/js/app-v5.js
           grep -q "zz-home-performance-v2" index.html
           node --check assets/js/home-stable.js
@@ -690,7 +691,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'authors:authors.slice' 'Autocomplete authors and categories'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'bindShopAutocomplete' 'Shop autocomplete binding'
           require_live https://www.zemzem.al/assets/css/search-autocomplete.css /tmp/search-autocomplete.css '.zz-search-suggest' 'Autocomplete search styles'
-          require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=15' 'Homepage autocomplete asset version'
+          require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=16' 'Homepage autocomplete asset version'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release.html 'adminSecurityReleaseNav' 'Forced Security and Releases Admin menu'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release-view.html 'id="view-security-release"' 'Forced Security and Releases Admin view'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release-v2.html 'assets/js/admin-security-release.js?v=2' 'Security and Releases v2 runtime'
@@ -706,7 +707,7 @@ jobs:
           fi
           echo "OK: Homepage Free Library removed"
           require_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js "function newsletter(){q('#zv2Newsletter')?.remove()}" 'Newsletter remains enabled'
-          require_live https://www.zemzem.al/shop.html /tmp/shop-search.html 'assets/js/app-v5.js?v=15' 'Shop autocomplete asset version'
+          require_live https://www.zemzem.al/shop.html /tmp/shop-search.html 'assets/js/app-v5.js?v=16' 'Shop autocomplete asset version'
           require_live https://www.zemzem.al/product.html /tmp/product-3d.html 'book3dMarkup' '3D product renderer'
           require_live https://www.zemzem.al/assets/css/product.css /tmp/product-3d.css '3D physical book mockup' '3D product styles'
           require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-3d.html 'ebookSpineCoverFile' '3D eBook Admin spine upload'
