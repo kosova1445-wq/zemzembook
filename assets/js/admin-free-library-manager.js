@@ -92,8 +92,12 @@ function decorateRows(){
 }
 function bind(){
  ensureUI();q('#freeLibraryAddBtn')?.addEventListener('click',()=>openModal());q('#freeLibraryManagerForm')?.addEventListener('submit',save);qa('[data-flm-close]').forEach(x=>x.addEventListener('click',closeModal));
- document.addEventListener('click',e=>{const edit=e.target.closest('[data-fl-edit]');if(edit){e.preventDefault();openModal(edit.dataset.flEdit)}const del=e.target.closest('[data-fl-delete]');if(del){e.preventDefault();removeBook(del.dataset.flDelete)}});
- const body=q('#freeLibraryAdminBody');if(body)new MutationObserver(decorateRows).observe(body,{childList:true,subtree:true});decorateRows();loadBooks().catch(()=>{});
+ document.addEventListener('click',e=>{
+   if(e.target.closest('[data-view="free-library"]'))setTimeout(()=>loadBooks().catch(()=>{}),80);
+   const edit=e.target.closest('[data-fl-edit]');if(edit){e.preventDefault();openModal(edit.dataset.flEdit)}
+   const del=e.target.closest('[data-fl-delete]');if(del){e.preventDefault();removeBook(del.dataset.flDelete)}
+ });
+ const body=q('#freeLibraryAdminBody');if(body)new MutationObserver(decorateRows).observe(body,{childList:true,subtree:true});decorateRows();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
 })();
