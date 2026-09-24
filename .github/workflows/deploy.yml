@@ -353,7 +353,8 @@ jobs:
           assets/js/admin-free-library-integrated.js
           assets/css/free-library.css"
 
-          printf '%s\n' "$CHANGED" | sed '/^[[:space:]]*$/d' | sort -u | while IFS= read -r file; do
+          printf '%s
+          ' "$CHANGED" | sed '/^[[:space:]]*$/d' | sort -u | while IFS= read -r file; do
             case "$file" in
               *.html|*.css|*.js|*.svg|robots.txt|sitemap.xml)
                 if [ -f "$file" ]; then upload "$file"; fi
@@ -557,10 +558,11 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-growth-advanced.js /tmp/admin-growth2.js 'Customer Lifetime Value' 'Admin Advanced Growth'
           require_live https://www.zemzem.al/assets/js/admin-experience-automation.js /tmp/admin-xp.js 'Smart Admin Assistant' 'Admin Experience Automation'
           require_live https://www.zemzem.al/assets/js/runtime-ops.js /tmp/runtime-ops.js 'zzMaintenance' 'Maintenance runtime'
-          require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "CACHE='zemzem-offline-v4'" 'PWA service worker'
+          require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "Intentionally no fetch handler" 'PWA service worker passthrough'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index-allbooks.html 'id="allBooksStatic"' 'Homepage all-books section'
-          require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=1' 'Stable homepage single runtime'\n          require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
+          require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=1' 'Stable homepage single runtime'
+          require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
           require_live https://www.zemzem.al/product.html /tmp/product.html 'premium-price-ticket-wrap' 'Product price ticket'
 
           require_live https://www.zemzem.al/assets/css/home-professional-v4.css /tmp/home-professional.css 'glossy pill style inspired by reference' 'Glossy category pill CSS'
@@ -727,7 +729,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/free-library.js /tmp/free-library-js.html 'free_library_books' 'Free Library runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-final.html 'data-view="free-library"' 'Free Library main Admin navigation'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-view-final.html 'id="view-free-library"' 'Free Library main Admin view'
-          require_live https://www.zemzem.al/service-worker.js /tmp/sw-v3.js "CACHE='zemzem-offline-v4'" 'PWA shell cache v3'
+          require_live https://www.zemzem.al/service-worker.js /tmp/sw-v4.js "Intentionally no fetch handler" 'PWA passthrough service worker'
           require_live https://www.zemzem.al/sitemap.xml /tmp/sitemap-free-library.xml 'https://www.zemzem.al/free-library.html' 'Free Library sitemap entry'
 
           echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
