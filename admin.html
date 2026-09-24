@@ -38,7 +38,6 @@
 }
 </style>
   <link rel="stylesheet" href="assets/css/admin-partners.css?v=3">\n  <link rel="stylesheet" href="assets/css/admin-business-center.css?v=1">
-  <link rel="stylesheet" href="assets/css/admin-themes.css?v=1">
 </head>
 <body>
 <div id="authScreen" class="auth-screen">
@@ -515,6 +514,153 @@
 <script src="assets/js/admin-order-launch-reset.js?v=1" data-admin-order-launch-reset="1"></script>
 <script src="assets/js/admin-partners.js?v=3"></script>
 <script src="assets/js/admin-checkout-settings.js?v=1"></script><script src="assets/js/admin-command-palette.js?v=1"></script><script src="assets/js/admin-business-center.js?v=1"></script>
+
+
+<!-- ZZ ADMIN THEMES INLINE FORCE -->
+<style id="zz-admin-themes-inline-force">
+#adminApp[data-admin-theme]{transition:background .2s ease,color .2s ease}
+#adminApp[data-admin-theme="classic"]{
+ --zt-bg:#f5f7f9;--zt-surface:#fff;--zt-soft:#fbfcfc;--zt-text:#26323a;--zt-muted:#7b8790;--zt-line:#e5e9ec;
+ --zt-side1:#1f3442;--zt-side2:#162732;--zt-sideText:#c7d2d8;--zt-accent:#d96f5c;--zt-accent2:#bd5d4d;--zt-radius:18px;--zt-shadow:0 10px 30px rgba(35,52,66,.07)
+}
+#adminApp[data-admin-theme="emerald"]{
+ --zt-bg:#eef6f1;--zt-surface:#fff;--zt-soft:#f5faf7;--zt-text:#17382a;--zt-muted:#6d8277;--zt-line:#d9e8df;
+ --zt-side1:#123c2b;--zt-side2:#09291d;--zt-sideText:#cce3d7;--zt-accent:#15956f;--zt-accent2:#0d7656;--zt-radius:16px;--zt-shadow:0 10px 28px rgba(18,59,43,.08)
+}
+#adminApp[data-admin-theme="midnight"]{
+ --zt-bg:#0d141c;--zt-surface:#17212b;--zt-soft:#1d2935;--zt-text:#edf4f8;--zt-muted:#9fb0bc;--zt-line:#2a3946;
+ --zt-side1:#060b11;--zt-side2:#020508;--zt-sideText:#b9c8d2;--zt-accent:#4aa3ff;--zt-accent2:#2387eb;--zt-radius:14px;--zt-shadow:0 12px 30px rgba(0,0,0,.24)
+}
+#adminApp[data-admin-theme="minimal"]{
+ --zt-bg:#f7f7f7;--zt-surface:#fff;--zt-soft:#f4f4f4;--zt-text:#1d1d1f;--zt-muted:#747474;--zt-line:#e3e3e3;
+ --zt-side1:#fff;--zt-side2:#f7f7f7;--zt-sideText:#505050;--zt-accent:#111;--zt-accent2:#000;--zt-radius:9px;--zt-shadow:none
+}
+
+/* Force all major surfaces */
+html body #adminApp[data-admin-theme]{background:var(--zt-bg)!important;color:var(--zt-text)!important}
+html body #adminApp[data-admin-theme] .main,
+html body #adminApp[data-admin-theme] .view{background:var(--zt-bg)!important;color:var(--zt-text)!important}
+html body #adminApp[data-admin-theme] .sidebar{
+ background:linear-gradient(180deg,var(--zt-side1),var(--zt-side2))!important;
+ color:var(--zt-sideText)!important;
+ border-color:var(--zt-line)!important;
+ box-shadow:none!important
+}
+html body #adminApp[data-admin-theme] .sidebar .nav-item{
+ color:var(--zt-sideText)!important;
+ background:transparent!important;
+ border-color:transparent!important
+}
+html body #adminApp[data-admin-theme] .sidebar .nav-item:hover{
+ background:color-mix(in srgb,var(--zt-accent) 12%,transparent)!important;
+ color:var(--zt-text)!important
+}
+html body #adminApp[data-admin-theme]:not([data-admin-theme="minimal"]) .sidebar .nav-item:hover,
+html body #adminApp[data-admin-theme]:not([data-admin-theme="minimal"]) .sidebar .nav-item.active{color:#fff!important}
+html body #adminApp[data-admin-theme] .sidebar .nav-item.active{
+ background:color-mix(in srgb,var(--zt-accent) 18%,transparent)!important;
+ border-left-color:var(--zt-accent)!important
+}
+html body #adminApp[data-admin-theme="minimal"] .sidebar .nav-item.active{
+ background:#ececec!important;color:#111!important
+}
+html body #adminApp[data-admin-theme="minimal"] .admin-brand.light,
+html body #adminApp[data-admin-theme="minimal"] .sidebar-foot a,
+html body #adminApp[data-admin-theme="minimal"] .sidebar-foot button,
+html body #adminApp[data-admin-theme="minimal"] .admin-owner-title{color:#333!important}
+html body #adminApp[data-admin-theme] .sidebar-head,
+html body #adminApp[data-admin-theme] .sidebar-foot{border-color:var(--zt-line)!important}
+
+/* Top bar */
+html body #adminApp[data-admin-theme] .admin-topbar{
+ background:var(--zt-surface)!important;
+ border-bottom:1px solid var(--zt-line)!important;
+ color:var(--zt-text)!important;
+ box-shadow:none!important
+}
+html body #adminApp[data-admin-theme] .admin-topbar h1,
+html body #adminApp[data-admin-theme] .admin-user strong{color:var(--zt-text)!important}
+html body #adminApp[data-admin-theme] .admin-user span{color:var(--zt-muted)!important}
+html body #adminApp[data-admin-theme] .avatar{background:var(--zt-soft)!important;color:var(--zt-accent)!important}
+html body #adminApp[data-admin-theme] .eyebrow{color:var(--zt-accent)!important}
+
+/* Cards / modules */
+html body #adminApp[data-admin-theme] .view .panel,
+html body #adminApp[data-admin-theme] .view .stat-card,
+html body #adminApp[data-admin-theme] .view .entity-card,
+html body #adminApp[data-admin-theme] .view .customer-card,
+html body #adminApp[data-admin-theme] .view .coupon-card,
+html body #adminApp[data-admin-theme] .view .review-card,
+html body #adminApp[data-admin-theme] .view .integration-card,
+html body #adminApp[data-admin-theme] .view .site-editor-card,
+html body #adminApp[data-admin-theme] .view .zz-kpi,
+html body #adminApp[data-admin-theme] .view .zz-sales-chart-card,
+html body #adminApp[data-admin-theme] .view .zz-release-box,
+html body #adminApp[data-admin-theme] .view article[class*="-card"],
+html body #adminApp[data-admin-theme] .view section[class*="-card"],
+html body #adminApp[data-admin-theme] .view div[class*="-card"]:not(.admin-user):not(.book-card){
+ background:var(--zt-surface)!important;
+ border-color:var(--zt-line)!important;
+ color:var(--zt-text)!important;
+ border-radius:var(--zt-radius)!important;
+ box-shadow:var(--zt-shadow)!important
+}
+html body #adminApp[data-admin-theme] .view .panel-head,
+html body #adminApp[data-admin-theme] .view [class*="-head"]:not(.admin-topbar){border-color:var(--zt-line)!important}
+html body #adminApp[data-admin-theme] .view h1,
+html body #adminApp[data-admin-theme] .view h2,
+html body #adminApp[data-admin-theme] .view h3,
+html body #adminApp[data-admin-theme] .view h4,
+html body #adminApp[data-admin-theme] .stat-card strong,
+html body #adminApp[data-admin-theme] .cell-main,
+html body #adminApp[data-admin-theme] .money,
+html body #adminApp[data-admin-theme] .zz-kpi strong{color:var(--zt-text)!important}
+html body #adminApp[data-admin-theme] .muted,
+html body #adminApp[data-admin-theme] .muted-small,
+html body #adminApp[data-admin-theme] .stat-card span,
+html body #adminApp[data-admin-theme] .stat-card small,
+html body #adminApp[data-admin-theme] .panel-head p{color:var(--zt-muted)!important}
+
+/* Controls */
+html body #adminApp[data-admin-theme] input,
+html body #adminApp[data-admin-theme] select,
+html body #adminApp[data-admin-theme] textarea,
+html body #adminApp[data-admin-theme] .searchbox{
+ background:var(--zt-soft)!important;
+ color:var(--zt-text)!important;
+ border-color:var(--zt-line)!important
+}
+html body #adminApp[data-admin-theme] .primary-btn{background:var(--zt-accent)!important;color:#fff!important;border-color:var(--zt-accent)!important}
+html body #adminApp[data-admin-theme="minimal"] .primary-btn{background:#111!important;color:#fff!important}
+html body #adminApp[data-admin-theme] .secondary-btn,
+html body #adminApp[data-admin-theme] .icon-action,
+html body #adminApp[data-admin-theme] .table-action,
+html body #adminApp[data-admin-theme] .print-btn{
+ background:var(--zt-soft)!important;color:var(--zt-text)!important;border-color:var(--zt-line)!important
+}
+html body #adminApp[data-admin-theme] .text-btn{color:var(--zt-accent)!important}
+html body #adminApp[data-admin-theme] table{color:var(--zt-text)!important}
+html body #adminApp[data-admin-theme] th{background:var(--zt-soft)!important;color:var(--zt-muted)!important}
+html body #adminApp[data-admin-theme] td,
+html body #adminApp[data-admin-theme] th{border-color:var(--zt-line)!important}
+
+/* Theme picker itself */
+html body #adminApp #zzThemePicker{
+ display:flex!important;align-items:center!important;gap:8px!important;padding:7px 10px!important;
+ border:1px solid var(--zt-line)!important;border-radius:11px!important;background:var(--zt-surface)!important;
+ box-shadow:var(--zt-shadow)!important;visibility:visible!important;opacity:1!important
+}
+html body #adminApp #zzThemePicker label{font-size:10px!important;font-weight:900!important;color:var(--zt-muted)!important;text-transform:uppercase!important}
+html body #adminApp #zzThemeSelect{
+ min-width:165px!important;height:36px!important;background:var(--zt-soft)!important;color:var(--zt-text)!important;
+ border:1px solid var(--zt-line)!important;border-radius:8px!important;font-weight:800!important
+}
+@media(max-width:760px){
+ html body #adminApp #zzThemePicker{width:100%!important;order:99!important}
+ html body #adminApp #zzThemePicker label{display:none!important}
+ html body #adminApp #zzThemeSelect{width:100%!important;min-width:0!important}
+}
+</style>
 
 <!-- ZZ ADMIN VISUAL THEMES -->
 <script id="zz-admin-theme-runtime">
