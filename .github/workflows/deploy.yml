@@ -523,6 +523,9 @@ jobs:
           grep -q "drawerQueued" assets/js/admin-partner-fulfillment.js
           node --check assets/js/partner-fulfillment.js
           node --check assets/js/partner-invoice.js
+          grep -q "JsBarcode" assets/js/partner-invoice.js
+          grep -q "QRious" assets/js/partner-invoice.js
+          grep -q "Barcode Code 128" assets/js/partner-invoice.js
           grep -q "data-partner-invoice" assets/js/partner-fulfillment.js
           grep -q "margin_value" assets/js/partner-fulfillment.js
           grep -q "Përqindja" assets/js/admin-partner-fulfillment.js
@@ -611,6 +614,9 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-partners.html 'assets/js/admin-partners.js?v=4' 'Partner marketplace Admin module'
           require_live https://www.zemzem.al/admin.html /tmp/admin-partners-nav.html 'id="adminPartnersNav"' 'Partner marketplace Admin navigation'
           require_live https://www.zemzem.al/assets/js/admin-partners.js /tmp/admin-partners-js.html '__zzAdminPartners' 'Partner marketplace Admin runtime'
+          require_live https://www.zemzem.al/partner.html /tmp/partner-invoice-v2.html 'assets/js/partner-invoice.js?v=2' 'Partner invoice v2 loader'
+          require_live https://www.zemzem.al/assets/js/partner-invoice.js /tmp/partner-invoice-admin-style.js 'JsBarcode' 'Partner invoice matches Admin'
+          require_live https://www.zemzem.al/assets/js/partner-invoice.js /tmp/partner-invoice-qr.js 'QRious' 'Partner invoice QR support'
           require_live https://www.zemzem.al/partner.html /tmp/partner-finance-dashboard.html 'assets/js/partner-portal.js?v=12' 'Partner finance dashboard runtime'
           require_live https://www.zemzem.al/assets/js/partner-portal.js /tmp/partner-finance-dashboard-js.html 'Marzhi ZemZem' 'Partner finance dashboard amounts'
           require_live https://www.zemzem.al/partner.html /tmp/partner-portal.html 'Shit më shumë libra, pa e komplikuar biznesin.' 'Partner bookstore portal'
@@ -783,7 +789,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-partner-fulfillment.js /tmp/admin-partner-fulfillment-loop-guard.js 'tableQueued' 'Admin fulfillment loop guard'
           require_live https://www.zemzem.al/partner.html /tmp/partner-fulfillment-loader.html 'assets/js/partner-fulfillment.js?v=2' 'Partner fulfillment portal loader'
           require_live https://www.zemzem.al/assets/js/partner-fulfillment.js /tmp/partner-fulfillment.js '__zzPartnerFulfillment' 'Partner fulfillment portal runtime'
-          require_live https://www.zemzem.al/partner.html /tmp/partner-invoice-loader.html 'assets/js/partner-invoice.js?v=1' 'Partner invoice loader'
+          require_live https://www.zemzem.al/partner.html /tmp/partner-invoice-loader.html 'assets/js/partner-invoice.js?v=2' 'Partner invoice loader'
           require_live https://www.zemzem.al/assets/js/partner-invoice.js /tmp/partner-invoice.js '__zzPartnerInvoice' 'Partner invoice runtime'
           require_live https://www.zemzem.al/assets/js/partner-fulfillment.js /tmp/partner-margin-ui.js 'margin_value' 'Partner percentage UI'
           require_live https://www.zemzem.al/assets/js/admin-partner-fulfillment.js /tmp/admin-partner-margin-ui.js 'Përqindja' 'Admin partner percentage UI'
