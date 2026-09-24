@@ -32,7 +32,8 @@ function decorateTable(){
      const tds=[...tr.children],statusCell=tds.find(x=>x.querySelector('.status-pill')||/Pending|Confirmed|Processing|Shipped|Delivered|Cancelled|Në pritje|Dorëzuar|Nisur/i.test(x.textContent||''));
      statusCell?tr.insertBefore(cell,statusCell):tr.insertBefore(cell,tr.lastElementChild);
    }
-   cell.innerHTML=list.length?list.map(x=>'<div class="zzpf-partner-mini"><strong>'+esc(x.supplier_name)+'</strong><small>'+Number(x.item_qty||0)+' artikuj · '+statusPill(x.fulfillment_status)+'</small></div>').join(''):'<span class="zzpf-direct">ZemZem / pa partner</span>';
+   const html=list.length?list.map(x=>'<div class="zzpf-partner-mini"><strong>'+esc(x.supplier_name)+'</strong><small>'+Number(x.item_qty||0)+' artikuj · '+statusPill(x.fulfillment_status)+'</small></div>').join(''):'<span class="zzpf-direct">ZemZem / pa partner</span>';
+   if(cell.innerHTML!==html)cell.innerHTML=html;
  });
 }
 function fulfillmentCard(x){
@@ -49,22 +50,36 @@ function decorateDrawer(){
  const host=q('#orderDetail');if(!host)return;
  const list=byOrder.get(String(activeOrderId))||[];
  const old=q('#zzpfOrderPartners',host);
- if(old)old.remove();
- if(!list.length)return;
- const wrap=document.createElement('section');wrap.id='zzpfOrderPartners';wrap.className='detail-section zzpf-order-partners';
- wrap.innerHTML='<div class="zzpf-section-head"><div><span>FULFILLMENT</span><h3>Partnerët / Libraritë e kësaj porosie</h3><p>Secili partner sheh vetëm artikujt e vet dhe të dhënat e transportit.</p></div><span class="zzpf-count">'+list.length+' partner'+(list.length===1?'':'ë')+'</span></div><div class="zzpf-admin-grid">'+list.map(fulfillmentCard).join('')+'</div>';
+ if(!list.length){if(old)old.remove();return}
+ const html='<div class="zzpf-section-head"><div><span>FULFILLMENT</span><h3>Partnerët / Libraritë e kësaj porosie</h3><p>Secili partner sheh vetëm artikujt e vet dhe të dhënat e transportit.</p></div><span class="zzpf-count">'+list.length+' partner'+(list.length===1?'':'ë')+'</span></div><div class="zzpf-admin-grid">'+list.map(fulfillmentCard).join('')+'</div>';
+ const sig=String(activeOrderId)+'|'+list.map(x=>[x.fulfillment_id,x.fulfillment_status,x.shipping_carrier||'',x.tracking_number||'',x.partner_note||'',x.shipped_at||'',x.delivered_at||''].join(':')).join('|');
+ if(old&&old.dataset.sig===sig)return;
+ if(old){old.dataset.sig=sig;old.innerHTML=html;return}
+ const wrap=document.createElement('section');wrap.id='zzpfOrderPartners';wrap.className='detail-section zzpf-order-partners';wrap.dataset.sig=sig;wrap.innerHTML=html;
  const firstSection=q('.detail-section',host);firstSection?host.insertBefore(wrap,firstSection):host.appendChild(wrap);
 }
 function boot(){
  load();
  document.addEventListener('click',e=>{
    const b=e.target.closest('[data-order-id]');
-   if(b){activeOrderId=b.dataset.orderId;setTimeout(()=>{decorateDrawer();load()},220);setTimeout(decorateDrawer,700)}
+   if(b){
+     activeOrderId=b.dataset.orderId;
+     setTimeout(()=>load(),220);
+     setTimeout(decorateDrawer,700);
+   }
  },true);
- const tbody=q('#ordersBody');if(tbody)new MutationObserver(()=>decorateTable()).observe(tbody,{childList:true,subtree:true});
- const detail=q('#orderDetail');if(detail)new MutationObserver(()=>decorateDrawer()).observe(detail,{childList:true,subtree:true});
+ let tableQueued=false,drawerQueued=false;
+ const tbody=q('#ordersBody');
+ if(tbody)new MutationObserver(()=>{
+   if(tableQueued)return;tableQueued=true;
+   requestAnimationFrame(()=>{tableQueued=false;decorateTable()});
+ }).observe(tbody,{childList:true,subtree:true});
+ const detail=q('#orderDetail');
+ if(detail)new MutationObserver(()=>{
+   if(drawerQueued||!activeOrderId)return;drawerQueued=true;
+   requestAnimationFrame(()=>{drawerQueued=false;decorateDrawer()});
+ }).observe(detail,{childList:true,subtree:true});
  window.addEventListener('zemzem:admin-access-ready',load);
- setInterval(()=>{decorateTable();decorateDrawer()},2500);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
