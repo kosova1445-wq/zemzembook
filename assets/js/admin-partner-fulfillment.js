@@ -40,6 +40,7 @@ function fulfillmentCard(x){
  const items=(x.items||[]).map(i=>'<li><span>'+esc(i.title)+'</span><b>× '+Number(i.quantity||0)+'</b></li>').join('');
  return '<article class="zzpf-admin-card">'+
    '<div class="zzpf-admin-card-head"><div><span>PARTNER / LIBRARI</span><h4>'+esc(x.supplier_name)+'</h4><small>'+esc(x.supplier_email||'')+(x.supplier_phone?' · '+esc(x.supplier_phone):'')+'</small></div>'+statusPill(x.fulfillment_status)+'</div>'+
+   '<div class="zzpf-finance-admin"><div><span>Përqindja</span><strong>'+esc(marginLabel)+'</strong></div><div><span>Të takon partnerit</span><strong>'+Number(x.supplier_due||0).toFixed(2)+' €</strong></div><div><span>Marzhi ZemZem</span><strong>'+Number(x.zemzem_margin_total||0).toFixed(2)+' €</strong></div></div>'+
    '<ul class="zzpf-items">'+items+'</ul>'+
    '<div class="zzpf-meta"><div><span>Transportuesi</span><strong>'+esc(x.shipping_carrier||'—')+'</strong></div><div><span>Tracking</span><strong>'+esc(x.tracking_number||'—')+'</strong></div><div><span>Nisur</span><strong>'+(x.shipped_at?new Date(x.shipped_at).toLocaleString('sq-AL'):'—')+'</strong></div><div><span>Dorëzuar</span><strong>'+(x.delivered_at?new Date(x.delivered_at).toLocaleString('sq-AL'):'—')+'</strong></div></div>'+
    (x.partner_note?'<div class="zzpf-note"><b>Shënim i partnerit</b><p>'+esc(x.partner_note)+'</p></div>':'')+
