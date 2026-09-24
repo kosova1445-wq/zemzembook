@@ -441,6 +441,8 @@ jobs:
           upload "assets/js/free-library.js"
           upload "assets/js/admin-free-library.js"
           upload "assets/js/admin-free-library-integrated.js"
+          upload "assets/js/admin-free-library-manager.js"
+          upload "assets/css/admin-free-library-manager.css"
           upload "assets/css/free-library.css"
           upload "fe-edukim.html"
           upload "histori.html"
@@ -502,6 +504,8 @@ jobs:
           ! grep -q "new MutationObserver(cards)" assets/js/storefront-advanced.js
           node --check assets/js/free-library.js
           node --check assets/js/admin-free-library-integrated.js
+          node --check assets/js/admin-free-library-manager.js
+          grep -q "__zzFreeLibraryManager" assets/js/admin-free-library-manager.js
           node --check service-worker.js
           node --check assets/js/site-manager-runtime.js
           node --check assets/js/admin-site-manager.js
