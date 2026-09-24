@@ -16,6 +16,17 @@ function addFreeLibrary(){
     if(ebook)ebook.insertAdjacentElement('afterend',a);else cats.appendChild(a);
   }
 }
+function addFreeLibraryCard(){
+  const cards=q('[data-home-category-cards]');
+  if(!cards)return;
+  if(!cards.querySelector('a[href="free-library.html"]')){
+    const a=document.createElement('a');
+    a.className='cat-card home-category-card category-card-free-library';
+    a.href='free-library.html';
+    a.innerHTML='<div class="cat-icon">📚</div><strong>Biblioteka Falas</strong>';
+    cards.appendChild(a);
+  }
+}
 function bindBookCards(){
   document.addEventListener('click',e=>{
     const card=e.target.closest?.('.book-card[data-book-id]');if(!card)return;
@@ -27,14 +38,19 @@ function bindBookCards(){
   },true);
 }
 function boot(){
-  addFreeLibrary();bindBookCards();document.documentElement.dataset.zzHomeStable='1';
+  addFreeLibrary();addFreeLibraryCard();bindBookCards();document.documentElement.dataset.zzHomeStable='1';
   if(!window.zzFreeLibraryCategoryObserver){
     window.zzFreeLibraryCategoryObserver=new MutationObserver(()=>addFreeLibrary());
     const nav=q('[data-home-nav]'),cats=q('[data-home-categories]');
     if(nav)window.zzFreeLibraryCategoryObserver.observe(nav,{childList:true});
     if(cats)window.zzFreeLibraryCategoryObserver.observe(cats,{childList:true});
   }
-  setTimeout(addFreeLibrary,300);setTimeout(addFreeLibrary,1000);setTimeout(addFreeLibrary,2500);
+  const keep=()=>{addFreeLibrary();addFreeLibraryCard()};
+  setTimeout(keep,300);setTimeout(keep,1000);setTimeout(keep,2500);
+  const cards=q('[data-home-category-cards]');
+  if(cards){
+    new MutationObserver(()=>addFreeLibraryCard()).observe(cards,{childList:true});
+  }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
