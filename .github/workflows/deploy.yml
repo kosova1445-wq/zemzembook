@@ -546,12 +546,13 @@ jobs:
           node --check assets/js/home-stable.js
           node --check assets/js/admin-collaboration-suite.js
           node --check assets/js/admin-invoice-settings.js
-          grep -Fq "$('[data-pro-category]:checked').map" assets/js/shop-pro.js
+          grep -Fq 'cats:$(' assets/js/shop-pro.js
+          grep -Fq 'data-pro-category]:checked' assets/js/shop-pro.js
           ! grep -Fq "zzFreeLibraryGlobalObserver.observe" assets/js/home-stable.js
           ! grep -Fq "new MutationObserver(moveGallery).observe(document.body" assets/js/admin-booksto.js
           ! grep -Fq "MutationObserver(()=>{ensureNav();ensureNotify()}).observe(document.body" assets/js/admin-collaboration-suite.js
           grep -Fq 'id="invLogoUpload"' assets/js/admin-invoice-settings.js
-          grep -Fq "request_url=\"${request_url}?verify=${GITHUB_SHA}\"" .github/workflows/deploy.yml
+          grep -Fq 'request_url="${request_url}?verify=${GITHUB_SHA}"' .github/workflows/deploy.yml
           grep -q "Partnerët" assets/js/admin-booksto.js
           grep -q "Automatizime" assets/js/admin-booksto.js
           grep -q "Premium Admin Sidebar v4" assets/css/admin-booksto.css
@@ -642,7 +643,7 @@ jobs:
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/css/shop-pro.css' 'Shop CSS reference'
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/js/shop-pro.js' 'Shop JS reference'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'zz-ticket-price' 'Shop price ticket'
-          require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-filter-audit.js "$('[data-pro-category]:checked').map" 'Production audit Shop filter'
+          require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-filter-audit.js 'cats:$(' 'Production audit Shop filter'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'OFERTË' 'Shop Albanian offer label'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-stock.js 'Ka në stok' 'Public stock hides exact quantity'
           require_live https://www.zemzem.al/product.html /tmp/product-stock.html "const stockText=unavailable?'Nuk ka stok':'Ka në stok';" 'Product stock hides exact quantity'
