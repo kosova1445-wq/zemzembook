@@ -16,6 +16,11 @@ function ensureUI(){
  const view=q('#view-free-library');if(!view)return;
  const refresh=q('#freeLibraryRefresh');
  if(refresh&&!q('#freeLibraryAddBtn')){const b=document.createElement('button');b.type='button';b.className='primary-btn';b.id='freeLibraryAddBtn';b.textContent='＋ Shto PDF';refresh.insertAdjacentElement('beforebegin',b)}
+ if(refresh&&!q('#freeLibraryPublicToggle')){
+   const wrap=document.createElement('div');wrap.id='freeLibraryPublicToggle';wrap.className='zzfl-public-toggle';
+   wrap.innerHTML='<span class="zzfl-public-label">Publikimi</span><button type="button" class="secondary-btn" id="freeLibraryToggleBtn">Duke kontrolluar…</button><small id="freeLibraryToggleNote">Biblioteka publike</small>';
+   refresh.insertAdjacentElement('beforebegin',wrap);
+ }
  if(!q('#freeLibraryManagerModal')){
   const html=
   '<div class="zzflm-modal" id="freeLibraryManagerModal" hidden>'+
@@ -45,6 +50,31 @@ function ensureUI(){
   '</div>';
   document.body.insertAdjacentHTML('beforeend',html);
  }
+}
+async function loadPublicStatus(){
+  const btn=q('#freeLibraryToggleBtn'),note=q('#freeLibraryToggleNote');if(!btn)return;
+  try{
+    const r=await api('rpc/get_free_library_public_status',{method:'POST',body:{}});
+    const v=Array.isArray(r)?r[0]:r,enabled=!!v?.enabled;
+    btn.dataset.enabled=enabled?'1':'0';
+    btn.textContent=enabled?'Aktive':'Jo aktive';
+    btn.classList.toggle('primary-btn',enabled);btn.classList.toggle('secondary-btn',!enabled);
+    if(note)note.textContent=enabled?'Shfaqet publikisht':'E fshehur nga vizitorët';
+  }catch(e){btn.textContent='Statusi s’u ngarkua';}
+}
+async function togglePublicStatus(){
+  const btn=q('#freeLibraryToggleBtn');if(!btn)return;
+  const next=btn.dataset.enabled!=='1';
+  btn.disabled=true;btn.textContent='Duke ruajtur…';
+  try{
+    const r=await api('rpc/admin_set_free_library_public_status',{method:'POST',body:{p_enabled:next}});
+    const v=Array.isArray(r)?r[0]:r,enabled=!!v?.enabled;
+    btn.dataset.enabled=enabled?'1':'0';btn.textContent=enabled?'Aktive':'Jo aktive';
+    btn.classList.toggle('primary-btn',enabled);btn.classList.toggle('secondary-btn',!enabled);
+    const note=q('#freeLibraryToggleNote');if(note)note.textContent=enabled?'Shfaqet publikisht':'E fshehur nga vizitorët';
+    window.toast?.(enabled?'Biblioteka Falas u aktivizua publikisht.':'Biblioteka Falas u çaktivizua publikisht.');
+  }catch(e){window.toast?.(e.message||'Ndryshimi dështoi.','error');await loadPublicStatus()}
+  finally{btn.disabled=false}
 }
 function closeModal(){const m=q('#freeLibraryManagerModal');if(m)m.hidden=true}
 async function openModal(id=null){
