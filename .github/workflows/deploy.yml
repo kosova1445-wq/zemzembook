@@ -549,6 +549,11 @@ jobs:
           grep -q "__zzPartnerFulfillment" assets/js/partner-fulfillment.js
           node --check service-worker.js
           node --check assets/js/site-manager-runtime.js
+          node --check assets/js/site-manager-advanced-runtime.js
+          ! grep -q "observer.observe(document.documentElement" assets/js/site-manager-runtime.js
+          ! grep -q "obs.observe(document.documentElement" assets/js/site-manager-advanced-runtime.js
+          grep -q "site-manager-runtime.js?v=3" assets/js/branding.js
+          grep -q "site-manager-advanced-runtime.js?v=3" assets/js/branding.js
           node --check assets/js/admin-site-manager.js
           node --check assets/js/admin-site-manager-pro.js
           node --check assets/js/admin-order-launch-reset.js
@@ -624,6 +629,10 @@ jobs:
           require_live https://www.zemzem.al/index.html /tmp/index-branding-safe.html 'assets/js/branding.js?v=7' 'Homepage branding safe mode'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-safe.js 'BRAND_IS_HOME' 'Branding blocks extra homepage runtimes'
           require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=5' 'Stable homepage single runtime'
+          require_live https://www.zemzem.al/ebooks.html /tmp/ebooks-perf-runtime.html 'assets/js/branding.js?v=10' 'eBook performance runtime'
+          require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-site-manager-v3.js 'site-manager-runtime.js?v=3' 'Site Manager runtime v3 loader'
+          require_live https://www.zemzem.al/assets/js/site-manager-runtime.js /tmp/site-manager-no-loop.js 'Performance guard: do not observe the entire document permanently' 'Site Manager observer loop removed'
+          require_live https://www.zemzem.al/assets/js/site-manager-advanced-runtime.js /tmp/site-manager-advanced-no-loop.js 'Performance guard: no permanent document-wide observer' 'Advanced Site Manager observer loop removed'
           require_live https://www.zemzem.al/ebooks.html /tmp/ebooks.html 'assets/css/price-ticket.css' 'eBook shared price ticket'
           require_live https://www.zemzem.al/product.html /tmp/product.html 'premium-price-ticket-wrap' 'Product price ticket'
 
