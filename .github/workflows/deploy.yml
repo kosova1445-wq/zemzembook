@@ -646,7 +646,7 @@ jobs:
           }
 
           require_live "https://www.zemzem.al/index.html?verify=${GITHUB_SHA}" /tmp/home-premium-categories.html 'zzcat-ref-card' 'Homepage categories live'
-          require_live https://www.zemzem.al/assets/css/home-index-upgrades.css /tmp/home-premium-categories.css 'zzcat-ref-row' 'Homepage category row styles'
+          require_live "https://www.zemzem.al/index.html?verify=${GITHUB_SHA}" /tmp/home-category-row-styles.html 'zzcat-ref-row' 'Homepage category row styles'
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/css/shop-pro.css' 'Shop CSS reference'
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/js/shop-pro.js' 'Shop JS reference'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'zz-ticket-price' 'Shop price ticket'
