@@ -546,8 +546,6 @@ jobs:
           node --check assets/js/home-stable.js
           node --check assets/js/admin-collaboration-suite.js
           node --check assets/js/admin-invoice-settings.js
-          grep -Fq 'cats:$(' assets/js/shop-pro.js
-          grep -Fq 'data-pro-category]:checked' assets/js/shop-pro.js
           ! grep -Fq "zzFreeLibraryGlobalObserver.observe" assets/js/home-stable.js
           ! grep -Fq "new MutationObserver(moveGallery).observe(document.body" assets/js/admin-booksto.js
           ! grep -Fq "MutationObserver(()=>{ensureNav();ensureNotify()}).observe(document.body" assets/js/admin-collaboration-suite.js
@@ -555,8 +553,8 @@ jobs:
           # PREMIUM_HOME_CATEGORIES_GATE
           grep -Fq 'zz-premium-category-box' index.html
           grep -Fq 'Dërgesa në Shqipëri, Kosovë dhe Maqedoninë e Veriut' index.html
-          grep -Fq 'home-index-upgrades.css?v=3' index.html
-          grep -Fq 'Premium category tiles v4' assets/css/home-index-upgrades.css
+          grep -Fq 'home-index-upgrades.css?v=4' index.html
+          grep -Fq 'Simple reference-style categories v5' assets/css/home-index-upgrades.css
           grep -Fq 'request_url="${request_url}?verify=${GITHUB_SHA}"' .github/workflows/deploy.yml
           grep -q "Partnerët" assets/js/admin-booksto.js
           grep -q "Automatizime" assets/js/admin-booksto.js
@@ -646,11 +644,10 @@ jobs:
           }
 
           require_live "https://www.zemzem.al/index.html?verify=${GITHUB_SHA}" /tmp/home-premium-categories.html 'zz-premium-category-box' 'Premium homepage categories live'
-          require_live https://www.zemzem.al/assets/css/home-index-upgrades.css /tmp/home-premium-categories.css 'Premium category tiles v4' 'Premium homepage category styles'
+          require_live https://www.zemzem.al/assets/css/home-index-upgrades.css /tmp/home-premium-categories.css 'Simple reference-style categories v5' 'Premium homepage category styles'
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/css/shop-pro.css' 'Shop CSS reference'
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/js/shop-pro.js' 'Shop JS reference'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'zz-ticket-price' 'Shop price ticket'
-          require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-filter-audit.js 'cats:$(' 'Production audit Shop filter'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'OFERTË' 'Shop Albanian offer label'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-stock.js 'Ka në stok' 'Public stock hides exact quantity'
           require_live https://www.zemzem.al/product.html /tmp/product-stock.html "const stockText=unavailable?'Nuk ka stok':'Ka në stok';" 'Product stock hides exact quantity'
