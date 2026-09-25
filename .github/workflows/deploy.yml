@@ -552,6 +552,11 @@ jobs:
           ! grep -Fq "new MutationObserver(moveGallery).observe(document.body" assets/js/admin-booksto.js
           ! grep -Fq "MutationObserver(()=>{ensureNav();ensureNotify()}).observe(document.body" assets/js/admin-collaboration-suite.js
           grep -Fq 'id="invLogoUpload"' assets/js/admin-invoice-settings.js
+          # PREMIUM_HOME_CATEGORIES_GATE
+          grep -Fq 'zz-premium-category-box' index.html
+          grep -Fq 'Dërgesa në Shqipëri, Kosovë dhe Maqedoninë e Veriut' index.html
+          grep -Fq 'home-index-upgrades.css?v=3' index.html
+          grep -Fq 'Premium category tiles v4' assets/css/home-index-upgrades.css
           grep -Fq 'request_url="${request_url}?verify=${GITHUB_SHA}"' .github/workflows/deploy.yml
           grep -q "Partnerët" assets/js/admin-booksto.js
           grep -q "Automatizime" assets/js/admin-booksto.js
@@ -640,6 +645,8 @@ jobs:
             return 1
           }
 
+          require_live "https://www.zemzem.al/index.html?verify=${GITHUB_SHA}" /tmp/home-premium-categories.html 'zz-premium-category-box' 'Premium homepage categories live'
+          require_live https://www.zemzem.al/assets/css/home-index-upgrades.css /tmp/home-premium-categories.css 'Premium category tiles v4' 'Premium homepage category styles'
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/css/shop-pro.css' 'Shop CSS reference'
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/js/shop-pro.js' 'Shop JS reference'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'zz-ticket-price' 'Shop price ticket'
