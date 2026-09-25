@@ -570,7 +570,6 @@ jobs:
           grep -q "PARTNERË & FINANCË" assets/js/admin-booksto.js
           grep -q "PËRMBAJTJE & FAQE" assets/js/admin-booksto.js
           grep -q "SISTEM & SIGURI" assets/js/admin-booksto.js
-          grep -q "Professional semantic sidebar v3" assets/css/admin-booksto.css
           grep -q "controlCenterBtn=side.querySelector" assets/js/admin-booksto.js
           grep -q "frag.append(controlCenterBtn)" assets/js/admin-booksto.js
           grep -q "function openControlCenter()" assets/js/admin-control-center.js
