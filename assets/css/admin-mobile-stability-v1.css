@@ -1,0 +1,46 @@
+/* ZemZem Admin mobile stability v1 */
+html,body{max-width:100%;overflow-x:hidden}
+#adminApp,.main,.view{min-width:0}
+@media(max-width:760px){
+  body{overflow-x:hidden!important}
+  #adminApp{display:block;min-height:100dvh}
+  #adminApp>.main,
+  #adminApp[data-admin-theme] .main{margin-left:0!important;width:100%!important;max-width:100%!important}
+  #adminApp .admin-topbar{position:sticky;top:0;z-index:100;padding:10px 10px 10px 56px!important;min-height:64px!important;background:#fff}
+  #adminApp .admin-topbar h1{font-size:18px!important}
+  #adminApp .top-actions{width:100%;gap:6px!important}
+  #adminApp .admin-user{display:none!important}
+  #adminApp #adminMessengerTopBtn{min-width:42px!important;width:42px!important;padding:0!important;justify-content:center!important}
+  #adminApp #adminMessengerTopBtn>span:not(.nav-badge){display:none!important}
+  #adminApp .view{padding:12px!important;max-width:100%!important}
+  #adminApp .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  #adminApp .stat-card{min-width:0!important;min-height:96px!important;padding:12px!important}
+  #adminApp .dashboard-grid,
+  #adminApp .entity-grid,
+  #adminApp .integration-grid,
+  #adminApp .site-editor-grid{grid-template-columns:1fr!important}
+  #adminApp .toolbar,
+  #adminApp .toolbar.wrap{align-items:stretch!important;gap:8px!important}
+  #adminApp .toolbar>*{max-width:100%!important}
+  #adminApp .searchbox{width:100%!important;min-width:0!important}
+  #adminApp input,#adminApp select,#adminApp textarea,#adminApp button{max-width:100%}
+  #adminApp .table-wrap{max-width:100%;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+  #adminApp table{min-width:720px}
+  #adminApp .modal-wrap{padding:0!important;align-items:stretch!important}
+  #adminApp .modal-card,
+  #adminApp .modal-card.large{width:100%!important;max-width:none!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important;overflow:auto!important}
+  #adminApp .book-form.three,
+  #adminApp .coupon-form{grid-template-columns:1fr!important}
+  #adminApp .book-form .span-2,#adminApp .book-form .span-3,
+  #adminApp .coupon-form .span-2,#adminApp .coupon-form .span-3{grid-column:auto!important}
+  #adminApp .zz-admin-chat-shell{grid-template-columns:1fr!important}
+  #zzTeamForceLauncher{display:none!important}
+  #adminApp *{animation-duration:.01ms!important;animation-iteration-count:1!important}
+}
+@media(max-width:420px){
+  #adminApp .stats-grid{grid-template-columns:1fr!important}
+  #adminApp .admin-sync{display:none!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #adminApp *,#adminApp *::before,#adminApp *::after{animation:none!important;transition:none!important}
+}
