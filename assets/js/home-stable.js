@@ -1,7 +1,7 @@
 (()=>{'use strict';
 if(window.__zzHomeStableSingleV1)return;window.__zzHomeStableSingleV1=1;
 const q=(s,r=document)=>r.querySelector(s);
-function addFreeLibrary(){
+function addFreeLibrary(){if(window.__zzFreeLibraryPublicEnabled!==true)return;
   const nav=q('[data-home-nav]');
   if(nav&&!nav.querySelector('a[href="free-library.html"]')){
     const a=document.createElement('a');a.href='free-library.html';a.textContent='Biblioteka Falas';
@@ -16,7 +16,7 @@ function addFreeLibrary(){
     if(ebook)ebook.insertAdjacentElement('afterend',a);else cats.appendChild(a);
   }
 }
-function addFreeLibraryCard(){
+function addFreeLibraryCard(){if(window.__zzFreeLibraryPublicEnabled!==true)return;
   const cards=q('[data-home-category-cards]');
   if(!cards)return;
   if(!cards.querySelector('a[href="free-library.html"]')){
