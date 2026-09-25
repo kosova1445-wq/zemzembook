@@ -18,7 +18,22 @@
     contact:svg('<path d="M4 5h16v14H4z"/><path d="m4 7 8 6 8-6"/>'),
     search:svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>'),
     bell:svg('<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/>'),
-    mail:svg('<path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/>')
+    mail:svg('<path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/>'),
+    cart:svg('<circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 10.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H7"/>'),
+    gift:svg('<path d="M4 10h16v11H4z"/><path d="M2.5 6h19v4h-19zM12 6v15"/><path d="M12 6H8.5A2.5 2.5 0 1 1 11 3.5L12 6Zm0 0h3.5A2.5 2.5 0 1 0 13 3.5L12 6Z"/>'),
+    partner:svg('<path d="M8 12 5.5 9.5a2 2 0 0 1 0-2.8l1.2-1.2a2 2 0 0 1 2.8 0L12 8l2.5-2.5a2 2 0 0 1 2.8 0l1.2 1.2a2 2 0 0 1 0 2.8L16 12"/><path d="m8 12 4 4 4-4M12 8v8"/>'),
+    invoice:svg('<path d="M6 3h9l3 3v15H6z"/><path d="M15 3v4h4M9 11h6M9 15h6M9 19h4"/>'),
+    chart:svg('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'),
+    megaphone:svg('<path d="M3 11v2l11 4V7L3 11Z"/><path d="M14 9c3-1 5-2 7-4v14c-2-2-4-3-7-4M6 14l1.5 5h3L9 15"/>'),
+    automation:svg('<path d="M7 7h10v10H7z"/><path d="M3 12h4M17 12h4M12 3v4M12 17v4"/><circle cx="12" cy="12" r="2"/>'),
+    brain:svg('<path d="M9 4a3 3 0 0 0-3 3v1a3 3 0 0 0-2 3c0 1.4.9 2.6 2.1 3A3.5 3.5 0 0 0 9.5 20H12V4H9Zm6 0a3 3 0 0 1 3 3v1a3 3 0 0 1 2 3c0 1.4-.9 2.6-2.1 3a3.5 3.5 0 0 1-3.4 6H12V4h3Z"/>'),
+    command:svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/>'),
+    warehouse:svg('<path d="m3 9 9-5 9 5v11H3z"/><path d="M7 12h10v8H7zM7 15h10"/>'),
+    truck:svg('<path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>'),
+    globe:svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>'),
+    blog:svg('<path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/>'),
+    shield:svg('<path d="M12 3 4.5 6v5.5c0 4.5 3.1 7.6 7.5 9.5 4.4-1.9 7.5-5 7.5-9.5V6L12 3Z"/><path d="m9 12 2 2 4-4"/>'),
+    bulk:svg('<rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>')
   };
   function iconize(el,icon,label){if(!el)return;const badge=el.querySelector('.nav-badge');el.innerHTML=`<span class="side-menu-icon">${icons[icon]||''}</span><span>${label}</span>`;if(badge)el.appendChild(badge)}
   function section(text,theme='neutral'){const d=document.createElement('div');d.className='side-section-label side-sector-'+theme;d.dataset.sector=theme;d.textContent=text;return d}
@@ -62,6 +77,113 @@
       window.zzSidebarSectorObserver.observe(side,{childList:true,subtree:false});
     }
   }
+
+  const sidebarGroupsV3=[
+    {key:'overview',label:'PËRMBLEDHJE'},
+    {key:'sales',label:'SHITJE & POROSI'},
+    {key:'catalog',label:'KATALOG & LIBRA'},
+    {key:'customers',label:'KLIENTË & MARKETING'},
+    {key:'partners',label:'PARTNERË & FINANCË'},
+    {key:'content',label:'PËRMBAJTJE & FAQE'},
+    {key:'system',label:'SISTEM & SIGURI'}
+  ];
+  function sidebarSemantic(el){
+    const view=(el.dataset?.view||'').toLowerCase();
+    const href=(el.getAttribute?.('href')||'').toLowerCase();
+    const raw=(el.textContent||'').replace(/\s+/g,' ').trim();
+    const t=(view+' '+href+' '+raw).toLowerCase();
+
+    let group='system',icon='settings',label=raw;
+    if(/dashboard/.test(t)){group='overview';icon='dashboard';label='Dashboard'}
+    else if(/team center/.test(t)){group='overview';icon='admins';label='Team Center'}
+    else if(/porosit|orders|checkout/.test(t)){group='sales';icon=/checkout/.test(t)?'cart':'orders';label=/checkout/.test(t)?'Checkout':'Porositë'}
+    else if(/shporta|abandoned/.test(t)){group='sales';icon='cart';label='Shporta të braktisura'}
+    else if(/gift card/.test(t)){group='sales';icon='gift';label='Gift Cards'}
+    else if(/shipping|dërges|kthim|returns/.test(t)){group='sales';icon='truck';}
+    else if(/shto lib|add-book/.test(t)){group='catalog';icon='book';label='Shto libër'}
+    else if(/librat fizik|books$|\bbooks\b/.test(t)){group='catalog';icon='book';label='Librat fizikë'}
+    else if(/ebook/.test(t)){group='catalog';icon='ebook';label=/biblioteka falas/.test(t)?'Biblioteka Falas':'eBook'}
+    else if(/biblioteka falas/.test(t)){group='catalog';icon='ebook';label='Biblioteka Falas'}
+    else if(/katalog|category|author|media manager/.test(t)){group='catalog';icon=/author/.test(t)?'user':'catalog';label=raw.replace('Category Lists','Kategoritë').replace('Author','Autorët')}
+    else if(/klient|customer|user \/ klient/.test(t)){group='customers';icon='user';label='Klientët'}
+    else if(/kupon|coupon/.test(t)){group='customers';icon='coupon';label='Kuponët'}
+    else if(/review/.test(t)){group='customers';icon='review';label='Reviews'}
+    else if(/marketing/.test(t)){group='customers';icon='megaphone';label='Marketing'}
+    else if(/komunik|mesazh|messenger/.test(t)){group='customers';icon='mail';label=/mesazh|messenger/.test(t)?'Mesazhet':'Komunikimi'}
+    else if(/growth|experience.*automation|automation/.test(t)){group='customers';icon='automation';label=/growth/.test(t)?'Growth & Customers':'Experience & Automation'}
+    else if(/partner/.test(t)){group='partners';icon='partner';label='Partnerët / Libraritë'}
+    else if(/fatur|invoice/.test(t)){group='partners';icon='invoice';}
+    else if(/profit|warehouse/.test(t)){group='partners';icon='warehouse';label='Profit & Warehouse'}
+    else if(/quote|proforma/.test(t)){group='partners';icon='invoice';label='Quotes / Proforma'}
+    else if(/bulk/.test(t)){group='partners';icon='bulk';label='Bulk Center'}
+    else if(/raport|report/.test(t)){group='partners';icon='chart';label='Raporte'}
+    else if(/operations/.test(t)){group='partners';icon='chart';label='Operations'}
+    else if(/logo|brand/.test(t)){group='content';icon='branding';label='Logo & Brand'}
+    else if(/site manager/.test(t)){group='content';icon='globe';label='Site Manager'}
+    else if(/faq|page|menu/.test(t)){group='content';icon='globe';}
+    else if(/blog/.test(t)){group='content';icon='blog';label='Blog'}
+    else if(/shop\.html|account\.html|contact\.html/.test(t)){group='content';icon=/contact/.test(t)?'contact':(/account/.test(t)?'user':'globe')}
+    else if(/control center/.test(t)){group='system';icon='settings';label='Control Center'}
+    else if(/security|siguria|release/.test(t)){group='system';icon='shield';label='Siguria & Releases'}
+    else if(/audit/.test(t)){group='system';icon='audit';label='Audit Log'}
+    else if(/integrim/.test(t)){group='system';icon='settings';label='Integrimet'}
+    else if(/administrator/.test(t)){group='system';icon='admins';label='Administratorët'}
+    else if(/intelligence/.test(t)){group='system';icon='brain';label='Intelligence Center'}
+    else if(/command center/.test(t)){group='system';icon='command';label='Command Center'}
+    else if(/advanced center/.test(t)){group='system';icon='settings';label='Advanced Center'}
+
+    return {group,icon,label:label||raw};
+  }
+  function applySemanticIcon(el,meta){
+    if(!el||!meta)return;
+    const badge=el.querySelector('.nav-badge');
+    const oldIcon=el.querySelector('.side-menu-icon');
+    const textSpan=[...el.children].find(x=>x.tagName==='SPAN'&&!x.classList.contains('side-menu-icon')&&!x.classList.contains('nav-badge'));
+    if(oldIcon)oldIcon.innerHTML=icons[meta.icon]||icons.settings;
+    else el.insertAdjacentHTML('afterbegin','<span class="side-menu-icon">'+(icons[meta.icon]||icons.settings)+'</span>');
+    const target=textSpan||[...el.children].find(x=>x.tagName==='SPAN'&&!x.classList.contains('side-menu-icon'));
+    if(target)target.textContent=meta.label;
+    else if(!badge){const s=document.createElement('span');s.textContent=meta.label;el.appendChild(s)}
+    el.dataset.sidebarGroup=meta.group;
+    el.title=meta.label;
+  }
+  function professionalizeSidebarV3(){
+    const side=q('.side-nav');if(!side)return;
+    const items=[...side.children].filter(el=>el.matches('.nav-item,.side-page-link,.side-extra-item,[data-invoice-center],a.nav-item'));
+    if(!items.length)return;
+    const signature=items.map(el=>(el.dataset?.view||el.getAttribute?.('href')||'')+'|'+(el.textContent||'').trim()).join('~');
+    if(side.dataset.proSidebarSignature===signature)return;
+
+    const buckets=new Map(sidebarGroupsV3.map(g=>[g.key,[]]));
+    items.forEach(el=>{
+      const meta=sidebarSemantic(el);
+      applySemanticIcon(el,meta);
+      (buckets.get(meta.group)||buckets.get('system')).push(el);
+    });
+
+    const frag=document.createDocumentFragment();
+    sidebarGroupsV3.forEach(g=>{
+      const rows=buckets.get(g.key)||[];
+      if(!rows.length)return;
+      frag.append(section(g.label,g.key));
+      rows.forEach(el=>frag.append(el));
+    });
+    side.replaceChildren(frag);
+    side.dataset.proSidebarSignature=[...side.querySelectorAll('.nav-item,.side-page-link,.side-extra-item,[data-invoice-center]')].map(el=>(el.dataset?.view||el.getAttribute?.('href')||'')+'|'+(el.textContent||'').trim()).join('~');
+    decorateSidebarSectors(side);
+  }
+  function startProfessionalSidebarV3(){
+    const side=q('.side-nav');if(!side)return;
+    professionalizeSidebarV3();
+    let tick=0;
+    const obs=new MutationObserver(()=>{
+      cancelAnimationFrame(tick);
+      tick=requestAnimationFrame(()=>professionalizeSidebarV3());
+    });
+    obs.observe(side,{childList:true,subtree:false});
+    [250,700,1600,3200].forEach(ms=>setTimeout(professionalizeSidebarV3,ms));
+  }
+
   function buildTopbar(){
     const bar=q('.admin-topbar');if(!bar||bar.dataset.bookstoReady)return;bar.dataset.bookstoReady='1';
     const titleWrap=bar.firstElementChild;if(titleWrap)titleWrap.classList.add('topbar-page-title');
