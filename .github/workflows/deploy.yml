@@ -551,10 +551,13 @@ jobs:
           ! grep -Fq "MutationObserver(()=>{ensureNav();ensureNotify()}).observe(document.body" assets/js/admin-collaboration-suite.js
           grep -Fq 'id="invLogoUpload"' assets/js/admin-invoice-settings.js
           # PREMIUM_HOME_CATEGORIES_GATE
-          grep -Fq 'zz-premium-category-box' index.html
+          grep -Fq 'zzcat-ref-card' index.html
           grep -Fq 'Dërgesa në Shqipëri, Kosovë dhe Maqedoninë e Veriut' index.html
           grep -Fq 'home-index-upgrades.css?v=4' index.html
-          grep -Fq 'Simple reference-style categories v5' assets/css/home-index-upgrades.css
+          grep -Fq 'zzcat-ref-row' index.html
+          # MOBILE_HOME_CATEGORIES_GATE
+          grep -Fq 'zz-mobile-categories-v1' index.html
+          grep -Fq 'grid-template-columns:56px minmax(0,1fr) 24px' index.html
           grep -Fq 'request_url="${request_url}?verify=${GITHUB_SHA}"' .github/workflows/deploy.yml
           grep -q "Partnerët" assets/js/admin-booksto.js
           grep -q "Automatizime" assets/js/admin-booksto.js
@@ -643,8 +646,8 @@ jobs:
             return 1
           }
 
-          require_live "https://www.zemzem.al/index.html?verify=${GITHUB_SHA}" /tmp/home-premium-categories.html 'zz-premium-category-box' 'Premium homepage categories live'
-          require_live https://www.zemzem.al/assets/css/home-index-upgrades.css /tmp/home-premium-categories.css 'Simple reference-style categories v5' 'Premium homepage category styles'
+          require_live "https://www.zemzem.al/index.html?verify=${GITHUB_SHA}" /tmp/home-premium-categories.html 'zzcat-ref-card' 'Homepage categories live'
+          require_live https://www.zemzem.al/assets/css/home-index-upgrades.css /tmp/home-premium-categories.css 'zzcat-ref-row' 'Homepage category row styles'
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/css/shop-pro.css' 'Shop CSS reference'
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/js/shop-pro.js' 'Shop JS reference'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'zz-ticket-price' 'Shop price ticket'
