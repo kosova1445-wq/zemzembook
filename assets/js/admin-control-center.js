@@ -61,15 +61,55 @@ function renderOverview(){
 function settingRow(key,field,label,enabled,desc){
  return '<div class="zzcc-setting"><div><strong>'+esc(label)+'</strong><small>'+esc(desc)+'</small></div><button class="'+(enabled?'on':'off')+'" data-setting-key="'+esc(key)+'" data-setting-field="'+esc(field)+'" data-setting-value="'+(enabled?'1':'0')+'">'+(enabled?'Aktive':'Jo aktive')+'</button></div>';
 }
+function featureRow(f){
+ return '<div class="zzcc-setting"><div><strong>'+esc(f.label||f.key)+'</strong><small>'+esc(f.description||'Feature flag')+'</small></div><button class="'+(f.enabled?'on':'off')+'" data-feature-flag="'+esc(f.key)+'" data-feature-enabled="'+(f.enabled?'1':'0')+'">'+(f.enabled?'Aktive':'Jo aktive')+'</button></div>';
+}
+function siteFeatureRow(key,label,desc,enabled){
+ return '<div class="zzcc-setting"><div><strong>'+esc(label)+'</strong><small>'+esc(desc)+'</small></div><button class="'+(enabled?'on':'off')+'" data-site-feature="'+esc(key)+'" data-site-feature-enabled="'+(enabled?'1':'0')+'">'+(enabled?'Aktive':'Jo aktive')+'</button></div>';
+}
+function settingsGroup(title,desc,rows){
+ return '<section class="zzcc-settings-group"><div class="zzcc-settings-group-head"><h4>'+esc(title)+'</h4><p>'+esc(desc)+'</p></div>'+rows+'</section>';
+}
 function renderSettings(){
- const s=data?.settings||{},inv=s.invoice||{};
- q('#zzccBody').innerHTML='<article class="zzcc-card"><h3>Central Settings</h3><p class="muted">Kontrollet kryesore në një vend. Settings të specializuara mbeten edhe në modulet e tyre.</p>'+
- settingRow('free_library_public','enabled','Biblioteka Falas',!!s.free_library_public?.enabled,'Shfaq ose fsheh bibliotekën publike.')+
- settingRow('maintenance','enabled','Maintenance Mode',!!s.maintenance?.enabled,'Mbyll përkohësisht storefront-in për mirëmbajtje.')+
- settingRow('invoice','barcode_enabled','Barcode në faturë',inv.barcode_enabled!==false,'Code 128 në faturat profesionale.')+
- settingRow('invoice','qr_enabled','QR Code në faturë',inv.qr_enabled!==false,'QR në faturat profesionale.')+
- '</article>';
+ const s=data?.settings||{},inv=s.invoice||{},flags=data?.feature_flags||[],sf=data?.site_features||{};
+ const fmap=new Map(flags.map(x=>[x.key,x]));
+ const pick=(keys)=>keys.map(k=>fmap.get(k)).filter(Boolean).map(featureRow).join('');
+ const systemRows=
+   settingRow('free_library_public','enabled','Biblioteka Falas',!!s.free_library_public?.enabled,'Shfaq ose fsheh bibliotekën publike.')+
+   settingRow('maintenance','enabled','Maintenance Mode',!!s.maintenance?.enabled,'Mbyll përkohësisht storefront-in për mirëmbajtje.')+
+   settingRow('invoice','barcode_enabled','Barcode në faturë',inv.barcode_enabled!==false,'Code 128 në faturat profesionale.')+
+   settingRow('invoice','qr_enabled','QR Code në faturë',inv.qr_enabled!==false,'QR në faturat profesionale.');
+ const paymentRows=pick(['paypal','cod','gift_cards_public','b2b']);
+ const commerceRows=pick(['wishlist','reviews','back_in_stock','bundles','loyalty','affiliate','pwa']);
+ const ebookRows=pick(['ebook_conversion','kindle_send']);
+ const homeRows=
+   siteFeatureRow('home_new','Të sapoardhurat', 'Seksioni i librave të rinj në Ballinë.',sf.home_new!==false)+
+   siteFeatureRow('home_offers','Oferta','Shfaq seksionin Oferta në Ballinë.',sf.home_offers!==false)+
+   siteFeatureRow('home_trending','Libra të zgjedhur','Shfaq seksionin Trending / të zgjedhur.',sf.home_trending!==false)+
+   siteFeatureRow('home_categories','Kategoritë','Shfaq kategoritë kryesore në Ballinë.',sf.home_categories!==false)+
+   siteFeatureRow('home_bestsellers','Më të shiturit','Shfaq Bestseller në Ballinë.',sf.home_bestsellers!==false)+
+   siteFeatureRow('home_all_books','Të gjithë librat','Shfaq katalogun e plotë në fund të Ballinës.',sf.home_all_books!==false);
+ const productRows=
+   siteFeatureRow('product_reviews','Reviews te produkti','Shfaq recensionet në faqen e librit.',sf.product_reviews!==false)+
+   siteFeatureRow('product_related','Produkte të ngjashme','Shfaq rekomandimet e ngjashme.',sf.product_related!==false)+
+   siteFeatureRow('product_recent','Ke parë së fundmi','Shfaq librat e parë së fundmi.',sf.product_recent!==false)+
+   siteFeatureRow('ebooks_languages','Gjuhët e eBook','Shfaq filtrat e gjuhëve në katalogun eBook.',sf.ebooks_languages!==false)+
+   siteFeatureRow('checkout_gift_wrap','Gift Wrap në checkout','Lejon paketimin dhuratë në checkout.',sf.checkout_gift_wrap!==false);
+
+ q('#zzccBody').innerHTML=
+   '<article class="zzcc-card"><div class="zzcc-card-head"><div><h3>Central Settings</h3><p class="muted">Kontrolle reale të lidhura direkt me konfigurimin e ZemZem.</p></div><span class="zzcc-settings-count">'+(4+flags.length+11)+' kontrolle</span></div>'+
+   '<div class="zzcc-settings-grid">'+
+    settingsGroup('System & Fatura','Kontrollet bazë të sistemit dhe faturës.',systemRows)+
+    settingsGroup('Checkout & Pagesa','Metodat e pagesës dhe funksionet e blerjes.',paymentRows)+
+    settingsGroup('Commerce & Customers','Funksione për klientët dhe rritjen.',commerceRows)+
+    settingsGroup('eBook & Digital','Funksionet digjitale.',ebookRows)+
+    settingsGroup('Ballina','Seksionet kryesore të homepage.',homeRows)+
+    settingsGroup('Produkt & Checkout','Funksionet në faqen e librit dhe checkout.',productRows)+
+   '</div></article>';
+
  qa('[data-setting-key]').forEach(b=>b.onclick=async()=>{b.disabled=true;try{await rpc('admin_control_center_toggle',{p_key:b.dataset.settingKey,p_field:b.dataset.settingField,p_value:b.dataset.settingValue!=='1'});await load('settings')}catch(e){window.toast?.(e.message||'Ndryshimi dështoi.','error')}finally{b.disabled=false}});
+ qa('[data-feature-flag]').forEach(b=>b.onclick=async()=>{b.disabled=true;try{await rpc('admin_control_center_set_feature_flag',{p_key:b.dataset.featureFlag,p_enabled:b.dataset.featureEnabled!=='1'});await load('settings')}catch(e){window.toast?.(e.message||'Ndryshimi dështoi.','error')}finally{b.disabled=false}});
+ qa('[data-site-feature]').forEach(b=>b.onclick=async()=>{b.disabled=true;try{await rpc('admin_control_center_set_site_feature',{p_key:b.dataset.siteFeature,p_enabled:b.dataset.siteFeatureEnabled!=='1'});await load('settings')}catch(e){window.toast?.(e.message||'Ndryshimi dështoi.','error')}finally{b.disabled=false}});
 }
 function renderErrors(){
  const rows=data?.errors||[];
