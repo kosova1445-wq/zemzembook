@@ -114,26 +114,69 @@ html body .premium-category-list .category-item-free-library{
   opacity:1!important;
 }
 </style>
-  <style id="zz-reference-menu-v6">
-html body.zemzem-bookstore-v2 .zzref-categories{display:block!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important;padding:0!important}
-html body.zemzem-bookstore-v2 .zzref-title{height:54px!important;display:flex!important;align-items:center!important;padding:0 18px!important;background:#11b4bb!important;color:#fff!important;font-size:18px!important;font-weight:700!important;line-height:1!important;border:0!important;border-radius:0!important}
-html body.zemzem-bookstore-v2 .zzref-list{display:grid!important;grid-template-columns:1fr!important;gap:9px!important;padding:10px 0 0!important;background:transparent!important}
-html body.zemzem-bookstore-v2 .zzref-item{display:grid!important;grid-template-columns:58px minmax(0,1fr) 24px!important;align-items:center!important;min-height:58px!important;height:58px!important;padding:0!important;margin:0!important;background:#fff!important;border:1px solid #e6eaec!important;border-radius:0!important;box-shadow:none!important;overflow:hidden!important;transform:none!important}
-html body.zemzem-bookstore-v2 .zzref-item:hover{background:#fff!important;border-color:#d9e2e5!important;transform:none!important;box-shadow:none!important}
-html body.zemzem-bookstore-v2 .zzref-icon{width:58px!important;height:58px!important;display:grid!important;place-items:center!important;margin:0!important;padding:0!important;background:#12b7be!important;color:#fff!important;border:0!important;border-radius:0!important}
-html body.zemzem-bookstore-v2 .zzref-icon svg{width:25px!important;height:25px!important;display:block!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-html body.zemzem-bookstore-v2 .zzref-label{display:block!important;padding:0 16px!important;margin:0!important}
-html body.zemzem-bookstore-v2 .zzref-label strong{display:block!important;color:#26343c!important;font-size:13px!important;font-weight:700!important;line-height:1.2!important}
-html body.zemzem-bookstore-v2 .zzref-arrow{display:block!important;padding-right:10px!important;color:#11aeb6!important;font-size:21px!important;line-height:1!important;border:0!important}
-html body.zemzem-bookstore-v2 .zzref-benefits{padding:14px 0 16px!important;background:#fff!important;border:0!important}
-html body.zemzem-bookstore-v2 .zzref-benefits .feature-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
-html body.zemzem-bookstore-v2 .zzref-benefit{display:grid!important;grid-template-columns:44px minmax(0,1fr)!important;align-items:center!important;gap:11px!important;min-height:74px!important;padding:13px 14px!important;background:#fff!important;border:1px solid #e6eaec!important;border-radius:0!important;box-shadow:none!important}
-html body.zemzem-bookstore-v2 .zzref-benefit-icon{width:40px!important;height:40px!important;display:grid!important;place-items:center!important;border-radius:50%!important;background:#e9f8f8!important;color:#0eaab2!important}
-html body.zemzem-bookstore-v2 .zzref-benefit-icon svg{width:21px!important;height:21px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-html body.zemzem-bookstore-v2 .zzref-benefit strong{display:block!important;margin:0 0 3px!important;color:#26343c!important;font-size:11px!important;line-height:1.25!important;font-weight:800!important}
-html body.zemzem-bookstore-v2 .zzref-benefit span{display:block!important;color:#7a858c!important;font-size:9px!important;line-height:1.3!important}
-@media(max-width:900px){html body.zemzem-bookstore-v2 .zzref-benefits .feature-grid{grid-template-columns:1fr!important}}
-@media(max-width:560px){html body.zemzem-bookstore-v2 .zzref-list{grid-template-columns:1fr!important}}
+  <style id="zz-category-reference-v7">
+html body.zemzem-bookstore-v2 .zzcat-ref-card{
+  display:block!important;
+  padding:12px!important;
+  background:#f6fbfb!important;
+  border:0!important;
+  border-radius:22px!important;
+  box-shadow:0 14px 34px rgba(22,78,83,.08)!important;
+  overflow:hidden!important;
+}
+html body.zemzem-bookstore-v2 .zzcat-ref-head{
+  display:flex!important;align-items:center!important;gap:12px!important;
+  min-height:72px!important;padding:0 20px!important;margin:-12px -12px 10px!important;
+  background:linear-gradient(135deg,#0fb3ba,#088d95)!important;
+  color:#fff!important;border-radius:22px 22px 0 0!important;
+}
+html body.zemzem-bookstore-v2 .zzcat-ref-head strong{
+  font-size:22px!important;font-weight:800!important;line-height:1!important;
+}
+html body.zemzem-bookstore-v2 .zzcat-ref-menuicon{
+  width:32px!important;height:32px!important;display:grid!important;place-items:center!important;color:#fff!important;
+}
+html body.zemzem-bookstore-v2 .zzcat-ref-menuicon svg{width:28px!important;height:28px!important}
+html body.zemzem-bookstore-v2 .zzcat-ref-list{
+  display:grid!important;grid-template-columns:1fr!important;gap:10px!important;
+}
+html body.zemzem-bookstore-v2 .zzcat-ref-row{
+  display:grid!important;grid-template-columns:74px minmax(0,1fr) 32px!important;
+  align-items:center!important;min-height:72px!important;padding:0!important;
+  background:#fff!important;border:0!important;border-radius:18px!important;
+  box-shadow:0 4px 13px rgba(35,72,77,.045)!important;
+  overflow:hidden!important;text-decoration:none!important;
+}
+html body.zemzem-bookstore-v2 .zzcat-ref-icon{
+  width:74px!important;height:72px!important;display:grid!important;place-items:center!important;
+  background:linear-gradient(180deg,#11b8bf,#079ba3)!important;color:#fff!important;
+  border-radius:16px!important;margin:0!important;
+}
+html body.zemzem-bookstore-v2 .zzcat-ref-icon svg{
+  width:31px!important;height:31px!important;display:block!important;
+}
+html body.zemzem-bookstore-v2 .zzcat-ref-label{
+  padding:0 20px!important;color:#0f285f!important;
+  font-size:16px!important;font-weight:800!important;line-height:1.2!important;
+}
+html body.zemzem-bookstore-v2 .zzcat-ref-arrow{
+  color:#0a9fa7!important;font-size:28px!important;line-height:1!important;padding-right:14px!important;
+}
+html body.zemzem-bookstore-v2 .zzcat-ref-row:hover{
+  transform:translateY(-1px)!important;box-shadow:0 9px 22px rgba(35,72,77,.08)!important;
+}
+@media(max-width:900px){
+  html body.zemzem-bookstore-v2 .zzcat-ref-card{width:100%!important}
+}
+@media(max-width:560px){
+  html body.zemzem-bookstore-v2 .zzcat-ref-card{padding:10px!important;border-radius:18px!important}
+  html body.zemzem-bookstore-v2 .zzcat-ref-head{min-height:62px!important;margin:-10px -10px 10px!important;border-radius:18px 18px 0 0!important}
+  html body.zemzem-bookstore-v2 .zzcat-ref-head strong{font-size:19px!important}
+  html body.zemzem-bookstore-v2 .zzcat-ref-row{grid-template-columns:62px minmax(0,1fr) 28px!important;min-height:62px!important;border-radius:15px!important}
+  html body.zemzem-bookstore-v2 .zzcat-ref-icon{width:62px!important;height:62px!important;border-radius:14px!important}
+  html body.zemzem-bookstore-v2 .zzcat-ref-icon svg{width:27px!important;height:27px!important}
+  html body.zemzem-bookstore-v2 .zzcat-ref-label{font-size:15px!important;padding:0 14px!important}
+}
 </style>
   <link rel="stylesheet" href="assets/css/mobile-stability-v1.css?v=1">
 </head>
@@ -142,16 +185,46 @@ html body.zemzem-bookstore-v2 .zzref-benefit span{display:block!important;color:
 <header class="header"><div class="container"><div class="header-row"><a class="brand" href="index.html"><span class="brand-mark"></span><span>ZemZem</span></a><form class="search" id="homeSearchForm"><select id="homeCategory" aria-label="Kategoria"><option value="">Të gjitha</option><option value="Fe & Edukim">Fe & Edukim</option><option value="Histori">Histori</option><option value="Fëmijë">Fëmijë</option><option value="Gjuhë të huaja">Gjuhë të huaja</option></select><input id="homeSearch" autocomplete="off" placeholder="Kërko titull, autor ose ISBN..."><button type="submit" aria-label="Kërko">⌕</button></form><div class="header-actions"><a class="icon-btn" href="account.html" aria-label="Llogaria">♡</a><a class="icon-btn" href="checkout.html" aria-label="Shporta">🛒<span class="badge" data-cart-count>0</span></a></div></div><nav class="nav"><div class="nav-row" data-home-nav><span class="category-trigger">☰ Kategoritë</span><a href="index.html">Ballina</a><a href="shop.html">Libra fizikë</a><a href="ebooks.html"><strong>eBook</strong></a><a href="free-library.html"><strong>Biblioteka Falas</strong></a><a href="#oferta">Oferta</a><a href="blog.html">Blog</a><a href="about.html">Rreth nesh</a><span class="nav-spacer"></span><a class="support" data-home-support href="contact.html">☎ Porosit & Pyet</a></div></nav></div></header>
 
 <section class="hero-wrap"><div class="container"><div class="hero-grid">
-  <aside class="category-box category-box-premium zz-premium-category-box zzref-categories">
-  <div class="zzref-title">Kategoritë</div>
-  <div class="category-list premium-category-list zzref-list" data-home-categories>
-    <a class="category-item zzref-item" href="fe-edukim.html"><span class="category-icon zzref-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h16v10M2 20h20M8 10V7.5L12 4l4 3.5V10M12 4V2M7 20v-5h3v5M14 20v-5h3v5"/></svg></span><span class="category-copy zzref-label"><strong>Fe &amp; Edukim</strong></span><span class="category-arrow zzref-arrow">›</span></a>
-    <a class="category-item zzref-item" href="histori.html"><span class="category-icon zzref-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22V5.5ZM21 5.5A3.5 3.5 0 0 0 17.5 2H13v17h4.5A3.5 3.5 0 0 1 21 22V5.5Z"/></svg></span><span class="category-copy zzref-label"><strong>Histori</strong></span><span class="category-arrow zzref-arrow">›</span></a>
-    <a class="category-item zzref-item" href="femije.html"><span class="category-icon zzref-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 20c.6-4 2.6-6 5.5-6s4.9 2 5.5 6M13 16.5c1-.9 2.2-1.4 3.8-1.4 2.5 0 4 1.6 4.7 4.9"/></svg></span><span class="category-copy zzref-label"><strong>Fëmijë</strong></span><span class="category-arrow zzref-arrow">›</span></a>
-    <a class="category-item zzref-item" href="shop.html?q=Fikh"><span class="category-icon zzref-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v17M6 6h12M4 20h16M7 6l-3 6h6L7 6Zm10 0-3 6h6l-3-6Z"/></svg></span><span class="category-copy zzref-label"><strong>Fikh</strong></span><span class="category-arrow zzref-arrow">›</span></a>
-    <a class="category-item zzref-item" href="gjuhe-te-huaja.html"><span class="category-icon zzref-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span><span class="category-copy zzref-label"><strong>Gjuhë të huaja</strong></span><span class="category-arrow zzref-arrow">›</span></a>
-    <a class="category-item category-item-ebook zzref-item" href="ebooks.html"><span class="category-icon zzref-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2.5" width="14" height="19" rx="2"/><path d="M9 6h6M10 17h4M12 19h.01"/></svg></span><span class="category-copy zzref-label"><strong>eBook</strong></span><span class="category-arrow zzref-arrow">›</span></a>
-    <a class="category-item category-item-free-library zzref-item" href="free-library.html"><span class="category-icon zzref-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16v11H4zM2.5 6h19v4h-19zM12 6v15"/><path d="M12 6H8.5A2.5 2.5 0 1 1 11 3.5L12 6Zm0 0h3.5A2.5 2.5 0 1 0 13 3.5L12 6Z"/></svg></span><span class="category-copy zzref-label"><strong>Biblioteka Falas</strong></span><span class="category-arrow zzref-arrow">›</span></a>
+  <aside class="category-box category-box-premium zzcat-ref-card">
+  <div class="zzcat-ref-head">
+    <span class="zzcat-ref-menuicon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="4" cy="6" r="1.2"/><path d="M8 6h11"/>
+        <circle cx="4" cy="12" r="1.2"/><path d="M8 12h11"/>
+        <circle cx="4" cy="18" r="1.2"/><path d="M8 18h11"/>
+      </svg>
+    </span>
+    <strong>Kategoritë</strong>
+  </div>
+  <div class="zzcat-ref-list" data-home-categories>
+    <a class="zzcat-ref-row" href="fe-edukim.html">
+      <span class="zzcat-ref-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10h16v10M2 20h20M8 10V7.5L12 4l4 3.5V10M12 4V2M7 20v-5h3v5M14 20v-5h3v5"/></svg></span>
+      <span class="zzcat-ref-label">Fe &amp; Edukim</span><span class="zzcat-ref-arrow">›</span>
+    </a>
+    <a class="zzcat-ref-row" href="histori.html">
+      <span class="zzcat-ref-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5A3.5 3.5 0 0 1 6.5 2H11v17H6.5A3.5 3.5 0 0 0 3 22V5.5ZM21 5.5A3.5 3.5 0 0 0 17.5 2H13v17h4.5A3.5 3.5 0 0 1 21 22V5.5Z"/></svg></span>
+      <span class="zzcat-ref-label">Histori</span><span class="zzcat-ref-arrow">›</span>
+    </a>
+    <a class="zzcat-ref-row" href="femije.html">
+      <span class="zzcat-ref-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 20c.6-4 2.6-6 5.5-6s4.9 2 5.5 6M13 16.5c1-.9 2.2-1.4 3.8-1.4 2.5 0 4 1.6 4.7 4.9"/></svg></span>
+      <span class="zzcat-ref-label">Fëmijë</span><span class="zzcat-ref-arrow">›</span>
+    </a>
+    <a class="zzcat-ref-row" href="shop.html?q=Fikh">
+      <span class="zzcat-ref-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v17M6 6h12M4 20h16M7 6l-3 6h6L7 6Zm10 0-3 6h6l-3-6Z"/></svg></span>
+      <span class="zzcat-ref-label">Fikh</span><span class="zzcat-ref-arrow">›</span>
+    </a>
+    <a class="zzcat-ref-row" href="gjuhe-te-huaja.html">
+      <span class="zzcat-ref-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span>
+      <span class="zzcat-ref-label">Gjuhë të huaja</span><span class="zzcat-ref-arrow">›</span>
+    </a>
+    <a class="zzcat-ref-row" href="ebooks.html">
+      <span class="zzcat-ref-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2.5" width="14" height="19" rx="2"/><path d="M9 6h6M10 17h4M12 19h.01"/></svg></span>
+      <span class="zzcat-ref-label">eBook</span><span class="zzcat-ref-arrow">›</span>
+    </a>
+    <a class="zzcat-ref-row category-item-free-library" href="free-library.html">
+      <span class="zzcat-ref-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16v11H4zM2.5 6h19v4h-19zM12 6v15"/><path d="M12 6H8.5A2.5 2.5 0 1 1 11 3.5L12 6Zm0 0h3.5A2.5 2.5 0 1 0 13 3.5L12 6Z"/></svg></span>
+      <span class="zzcat-ref-label">Biblioteka Falas</span><span class="zzcat-ref-arrow">›</span>
+    </a>
   </div>
 </aside>
   <div class="hero home-hero"><div class="hero-copy"><div class="eyebrow">ZEMZEM · LIBRARI ONLINE</div><h1>Libra me vlerë, zgjedhur me kujdes.</h1><p>Shfleto libra fizikë dhe eBook në shqip, me porosi të sigurta dhe dërgesë rajonale.</p><div class="hero-actions"><a class="btn btn-primary" href="shop.html">Shiko librat</a><a class="btn btn-light" href="ebooks.html">Shiko eBook →</a></div></div><div class="hero-visual"><div class="mini-book"></div></div></div>
