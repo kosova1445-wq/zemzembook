@@ -40,15 +40,9 @@ function bindBookCards(){
 function boot(){
   const keep=()=>{addFreeLibrary();addFreeLibraryCard()};
   keep();bindBookCards();document.documentElement.dataset.zzHomeStable='1';
-  if(!window.zzFreeLibraryGlobalObserver){
-    let queued=false;
-    window.zzFreeLibraryGlobalObserver=new MutationObserver(()=>{
-      if(queued)return;queued=true;
-      requestAnimationFrame(()=>{queued=false;keep()});
-    });
-    window.zzFreeLibraryGlobalObserver.observe(document.body||document.documentElement,{childList:true,subtree:true});
-  }
-  [150,300,600,1000,1500,2500,4000,7000].forEach(ms=>setTimeout(keep,ms));
+  // Production performance: avoid a document-wide observer.
+  // Free Library visibility is now controlled centrally and only needs bounded rechecks.
+  [150,400,900,1800,3500].forEach(ms=>setTimeout(keep,ms));
   window.addEventListener('pageshow',keep);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)keep()});
 }
