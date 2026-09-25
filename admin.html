@@ -41,6 +41,7 @@
   <link rel="stylesheet" href="assets/css/admin-partner-center-pro.css?v=2">
 <link rel="stylesheet" href="assets/css/admin-free-library-manager.css?v=1">
 <link rel="stylesheet" href="assets/css/admin-partner-fulfillment.css?v=2">
+  <link rel="stylesheet" href="assets/css/admin-mobile-stability-v1.css?v=1">
 </head>
 <body>
 <div id="authScreen" class="auth-screen">
@@ -431,7 +432,13 @@
       document.querySelector('main.main')?.appendChild(v);
     }
   }
-  function boot(){ensure();setInterval(ensure,700);new MutationObserver(ensure).observe(document.documentElement,{childList:true,subtree:true});}
+  function boot(){
+    ensure();
+    // One delayed pass handles modules injected just after DOM ready.
+    // Permanent polling/whole-page observation caused avoidable mobile CPU load.
+    setTimeout(ensure,600);
+    window.addEventListener('zemzem:admin-access-ready',ensure,{once:true});
+  }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
@@ -505,8 +512,8 @@
   }
   function boot(){
     ensure();
-    setInterval(ensure,700);
-    new MutationObserver(ensure).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','class','style']});
+    setTimeout(ensure,600);
+    window.addEventListener('zemzem:admin-access-ready',ensure,{once:true});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
@@ -975,8 +982,11 @@ html body #adminApp #zzThemeSelect{
   function boot(){
     decorate();renameThemes();
     const side=document.querySelector('#adminApp .side-nav');
-    if(side)new MutationObserver(()=>{decorate();renameThemes()}).observe(side,{childList:true,subtree:false});
-    setInterval(()=>{decorate();renameThemes()},1200);
+    if(side && !side.__zzThemeObserver){
+      const observer=new MutationObserver(()=>{decorate();renameThemes()});
+      observer.observe(side,{childList:true,subtree:false});
+      side.__zzThemeObserver=observer;
+    }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
   window.addEventListener('zemzem:admin-access-ready',boot);
