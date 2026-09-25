@@ -73,5 +73,7 @@ if(window.ZemZemSiteManager)setCfg(window.ZemZemSiteManager);
 else{
  let n=0;const t=setInterval(()=>{n++;if(window.ZemZemSiteManager){clearInterval(t);setCfg(window.ZemZemSiteManager)}else if(n>40)clearInterval(t)},250);
 }
-const obs=new MutationObserver(()=>{if(CFG&&applied)requestAnimationFrame(apply)});obs.observe(document.documentElement,{childList:true,subtree:true});
+// Performance guard: no permanent document-wide observer.
+ // Footer/section structure is stable after the controlled delayed applies above.
+ window.addEventListener('zemzem:catalog-ready',()=>{if(CFG)setTimeout(apply,120)},{once:true});
 })();
