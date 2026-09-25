@@ -180,7 +180,7 @@ html body .premium-category-list .category-item-free-library{
 <!-- ZZ FINAL FREE LIBRARY FORCE V6 -->
 <script id="zz-final-free-library-force-v6">
 (function(){
-  function ensure(){
+  function ensure(){if(window.__zzFreeLibraryPublicEnabled!==true)return;
     try{
       var nav=document.querySelector('[data-home-nav]');
       if(nav&&!nav.querySelector('a[href="free-library.html"]')){
