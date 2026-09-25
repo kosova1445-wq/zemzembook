@@ -66,8 +66,8 @@ function build(){
  q('#zzsmAddFooter').onclick=()=>{cfg.footer_links.push({label:'Link i ri',href:'#',icon:'•',visible:true,custom:true});renderFooter()};
  q('#zzsmResetSections').onclick=()=>{if(confirm('T’i rikthejmë seksionet fillestare?')){cfg.home_sections=clone(SECTION_DEFAULTS);renderSections()}};
  q('#zzsmResetFooter').onclick=()=>{if(confirm('T’i rikthejmë linket fillestare të footer-it?')){cfg.footer_links=clone(FOOTER_DEFAULTS);renderFooter()}};
- q('#zzsmOrderEnabled').onchange=e=>{cfg.advanced.section_order_enabled=e.target.checked};
- q('#zzsmFooterIcons').onchange=e=>{cfg.advanced.footer_icons=e.target.checked};
+ q('#zzsmOrderEnabled')?.addEventListener('change',e=>{cfg.advanced.section_order_enabled=e.target.checked});
+ q('#zzsmFooterIcons')?.addEventListener('change',e=>{cfg.advanced.footer_icons=e.target.checked});
  palettes();
  return true;
 }
