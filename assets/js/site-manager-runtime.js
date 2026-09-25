@@ -124,7 +124,9 @@ async function load(){
     const r=await fetch(SB_URL+'/rest/v1/site_content?key=eq.site_manager_v1&select=content&limit=1',{headers:{apikey:SB_KEY,Accept:'application/json'},cache:'no-store'});
     if(!r.ok)throw new Error('HTTP '+r.status);
     const rows=await r.json();CFG=rows?.[0]?.content||{};window.ZemZemSiteManager=CFG;apply();
-    if(!observer){observer=new MutationObserver(()=>requestAnimationFrame(apply));observer.observe(document.documentElement,{childList:true,subtree:true})}
+    // Performance guard: do not observe the entire document permanently.
+    // A permanent subtree observer caused self-triggering DOM loops on catalog pages.
+    [120,500,1400].forEach(ms=>setTimeout(apply,ms));
     window.dispatchEvent(new CustomEvent('zemzem:site-manager-ready',{detail:CFG}));
   }catch(e){console.warn('ZemZem Site Manager',e)}
 }
