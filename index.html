@@ -114,6 +114,7 @@ html body .premium-category-list .category-item-free-library{
   opacity:1!important;
 }
 </style>
+  <link rel="stylesheet" href="assets/css/mobile-stability-v1.css?v=1">
 </head>
 <body>
 <div class="topbar"><div class="container"><span data-home-topbar>🚚 Dërgesa: Kosovë 3 € · Shqipëri 6 € · Maqedoni e Veriut 6 €</span><div class="tiny-links"><a href="contact.html">Ndihmë</a><a href="about.html">Rreth nesh</a><a href="account.html">Llogaria ime</a></div></div></div>
@@ -204,10 +205,12 @@ html body .premium-category-list .category-item-free-library{
   }
   function start(){
     ensure();
-    var obs=new MutationObserver(function(){ensure()});
-    obs.observe(document.documentElement,{childList:true,subtree:true});
-    setInterval(ensure,500);
-    setTimeout(ensure,50);setTimeout(ensure,250);setTimeout(ensure,750);setTimeout(ensure,1500);setTimeout(ensure,3000);
+    // Mobile stability: avoid a permanent DOM observer + 500ms polling loop.
+    // The target markup is already present on normal loads; a few delayed checks
+    // are enough for legacy cached variants without keeping the main thread busy.
+    setTimeout(ensure,120);
+    setTimeout(ensure,700);
+    setTimeout(ensure,1800);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
