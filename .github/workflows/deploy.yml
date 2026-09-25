@@ -606,15 +606,21 @@ jobs:
 
           require_live() {
             local url="$1" out="$2" needle="$3" label="$4"
+            local request_url="$url"
+            # Production audit: HTML can be served from hosting/browser edge cache after FTP.
+            # Cache-bust every plain .html verification with the exact release SHA.
+            if [[ "$request_url" == *.html ]]; then
+              request_url="${request_url}?verify=${GITHUB_SHA}"
+            fi
             for attempt in 1 2 3 4 5 6 7 8; do
-              if fetch_live "$url" "$out" && grep -Fq "$needle" "$out"; then
+              if fetch_live "$request_url" "$out" && grep -Fq "$needle" "$out"; then
                 echo "OK: $label"
                 return 0
               fi
               echo "Waiting for live update: $label (attempt $attempt/8)"
               sleep 5
             done
-            echo "::error title=Live verification failed::$label was not found at $url"
+            echo "::error title=Live verification failed::$label was not found at $request_url"
             echo "Expected: $needle"
             echo "Response preview:"
             head -c 1200 "$out" || true
