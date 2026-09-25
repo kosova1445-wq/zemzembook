@@ -158,11 +158,13 @@ function runCommand(r){
 function openCommand(){ensureCommand();const o=q('#zzCommandOverlay');o.hidden=false;const i=q('#zzCommandInput');i.value='';q('#zzCommandResults').innerHTML=commands.map((x,n)=>'<div class="zz-command-row" data-command-i="'+n+'"><div><strong>'+esc(x[1])+'</strong></div><span class="zz-command-tag">Komandë</span></div>').join('');qa('[data-command-i]',q('#zzCommandResults')).forEach((el,n)=>el.onclick=()=>runCommand({view:commands[n][0]}));setTimeout(()=>i.focus(),20)}
 function boot(){
  ensureView();ensureNav();ensureNotify();ensureCommand();
- new MutationObserver(()=>{ensureNav();ensureNotify()}).observe(document.body,{childList:true,subtree:true});
+ const side=q('.side-nav');if(side){let queued=false;new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;ensureNav()})}).observe(side,{childList:true,subtree:false})}
+ const top=q('.admin-topbar')||q('.top-actions');if(top)new MutationObserver(ensureNotify).observe(top,{childList:true,subtree:false});
  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openCommand()}});
  document.addEventListener('click',e=>{if(e.target.closest('[data-view="team-center"]'))setTimeout(refresh,40)});
  window.addEventListener('zemzem:admin-access-ready',()=>setTimeout(refresh,100));
- setTimeout(refresh,800);setInterval(()=>{if(document.visibilityState==='visible')refresh()},30000);
+ setTimeout(()=>{if(q('#view-team-center')?.classList.contains('active-view'))refresh()},800);
+ setInterval(()=>{if(document.visibilityState==='visible'&&q('#view-team-center')?.classList.contains('active-view'))refresh()},60000);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
