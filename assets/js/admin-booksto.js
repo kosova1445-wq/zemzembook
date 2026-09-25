@@ -110,10 +110,10 @@
     else if(/review/.test(t)){group='customers';icon='review';label='Reviews'}
     else if(/marketing/.test(t)){group='customers';icon='megaphone';label='Marketing'}
     else if(/komunik|mesazh|messenger/.test(t)){group='customers';icon='mail';label=/mesazh|messenger/.test(t)?'Mesazhet':'Komunikimi'}
-    else if(/growth|experience.*automation|automation/.test(t)){group='customers';icon='automation';label=/growth/.test(t)?'Growth & Customers':'Experience & Automation'}
-    else if(/partner/.test(t)){group='partners';icon='partner';label='Partnerët / Libraritë'}
+    else if(/growth|experience.*automation|automation/.test(t)){group='customers';icon='automation';label=/growth/.test(t)?'Growth':'Automatizime'}
+    else if(/partner/.test(t)){group='partners';icon='partner';label='Partnerët'}
     else if(/fatur|invoice/.test(t)){group='partners';icon='invoice';}
-    else if(/profit|warehouse/.test(t)){group='partners';icon='warehouse';label='Profit & Warehouse'}
+    else if(/profit|warehouse/.test(t)){group='partners';icon='warehouse';label='Profit & Stok'}
     else if(/quote|proforma/.test(t)){group='partners';icon='invoice';label='Quotes / Proforma'}
     else if(/bulk/.test(t)){group='partners';icon='bulk';label='Bulk Center'}
     else if(/raport|report/.test(t)){group='partners';icon='chart';label='Raporte'}
@@ -128,9 +128,9 @@
     else if(/audit/.test(t)){group='system';icon='audit';label='Audit Log'}
     else if(/integrim/.test(t)){group='system';icon='settings';label='Integrimet'}
     else if(/administrator/.test(t)){group='system';icon='admins';label='Administratorët'}
-    else if(/intelligence/.test(t)){group='system';icon='brain';label='Intelligence Center'}
-    else if(/command center/.test(t)){group='system';icon='command';label='Command Center'}
-    else if(/advanced center/.test(t)){group='system';icon='settings';label='Advanced Center'}
+    else if(/intelligence/.test(t)){group='system';icon='brain';label='Intelligence'}
+    else if(/command center/.test(t)){group='system';icon='command';label='Command'}
+    else if(/advanced center/.test(t)){group='system';icon='settings';label='Advanced'}
 
     return {group,icon,label:label||raw};
   }
