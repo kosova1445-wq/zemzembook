@@ -532,6 +532,9 @@ jobs:
           grep -q "__zzFreeLibraryManager" assets/js/admin-free-library-manager.js
           node --check assets/js/admin-partner-fulfillment.js
           node --check assets/js/admin-control-center.js
+          grep -q 'id="view-control-center"' admin.html
+          grep -q "'control-center':'Control Center'" assets/js/admin-v2.js
+          grep -q "control-center'?'operations'" assets/js/admin-v2.js
           grep -q 'id="adminControlCenterNav"' admin.html
           grep -q 'data-view="control-center"' admin.html
           grep -q "__zzAdminControlCenter" assets/js/admin-control-center.js
@@ -603,9 +606,12 @@ jobs:
 
           require_live https://www.zemzem.al/assets/css/admin.css /tmp/admin-base.css 'overflow-y:auto' 'Desktop Admin sidebar scroll CSS'
           require_live https://www.zemzem.al/assets/js/admin-partners.js /tmp/admin-partners-settlement-guard.js 'Barazimi ekzistues u rifreskua me sukses' 'Partner settlement duplicate guard'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-native.html 'id="view-control-center"' 'Native Admin Control Center view'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-v3-loader.html 'assets/js/admin-control-center.js?v=3' 'Admin Control Center v3 loader'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-v22-loader.html 'assets/js/admin-v2.js?v=22' 'Admin navigation v22'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-static-nav.html 'id="adminControlCenterNav"' 'Permanent Admin Control Center nav'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-v2-loader.html 'assets/js/admin-control-center.js?v=2' 'Admin Control Center v2 loader'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-loader.html 'assets/js/admin-control-center.js?v=2' 'Admin Control Center loader'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-v2-loader.html 'assets/js/admin-control-center.js?v=3' 'Admin Control Center v2 loader'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-loader.html 'assets/js/admin-control-center.js?v=3' 'Admin Control Center loader'
           require_live https://www.zemzem.al/assets/js/admin-control-center.js /tmp/admin-control-center.js '__zzAdminControlCenter' 'Admin Control Center runtime'
           require_live https://www.zemzem.al/assets/css/admin-control-center.css /tmp/admin-control-center.css '.zzcc-head' 'Admin Control Center styles'
           require_live https://www.zemzem.al/admin.html /tmp/free-library-toggle-v4.html 'assets/js/admin-free-library-manager.js?v=4' 'Free Library toggle wired'
