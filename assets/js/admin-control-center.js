@@ -9,8 +9,17 @@ function ensureNav(){
  const side=q('.side-nav');if(!side||q('[data-view="control-center"]'))return;
  const btn=document.createElement('button');btn.className='nav-item';btn.dataset.view='control-center';
  btn.innerHTML='<span class="nav-icon">◉</span><span>Control Center</span>';
+ btn.onclick=()=>openControlCenter();
  const anchor=q('[data-view="security-release"]',side)||q('[data-view="reports"]',side);
  anchor?side.insertBefore(btn,anchor):side.appendChild(btn);
+}
+function openControlCenter(){
+ ensureView();
+ qa('.nav-item[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view==='control-center'));
+ qa('.view').forEach(v=>v.classList.toggle('active-view',v.id==='view-control-center'));
+ const title=q('#viewTitle');if(title)title.textContent='Control Center';
+ if(window.innerWidth<=760)q('.sidebar')?.classList.remove('mobile-open');
+ setTimeout(()=>load('overview'),30);
 }
 function ensureView(){
  if(q('#view-control-center'))return;
@@ -101,7 +110,7 @@ function bindGo(){qa('[data-go]').forEach(b=>b.onclick=()=>q('[data-view="'+b.da
 function boot(){
  ensureNav();ensureView();
  document.addEventListener('click',e=>{
-  const nav=e.target.closest('[data-view="control-center"]');if(nav)setTimeout(()=>load('overview'),60);
+  const nav=e.target.closest('[data-view="control-center"]');if(nav){e.preventDefault();openControlCenter();}
   const tab=e.target.closest('[data-cc-tab]');if(tab){e.preventDefault();render(tab.dataset.ccTab)}
  });
  q('#zzccRefresh')?.addEventListener('click',()=>load(q('[data-cc-tab].active')?.dataset.ccTab||'overview'));
