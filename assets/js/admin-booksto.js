@@ -258,8 +258,8 @@ function ensure(){
  if(actions){actions.classList.add('zz-book-editor-actions');form.appendChild(actions)}
  tabs.onclick=e=>{const b=e.target.closest('[data-book-tab]');if(!b)return;const key=b.dataset.bookTab;qa('[data-book-tab]',tabs).forEach(x=>x.classList.toggle('active',x===b));qa('.zz-book-editor-panel',form).forEach(p=>p.classList.toggle('active',p.dataset.panel===key));modal.scrollTop=0};
  const openFirst=()=>{const b=q('[data-book-tab="basic"]',tabs);b?.click()};
- q('#newBookBtn')?.addEventListener('click',()=>setTimeout(openFirst,30));
- document.addEventListener('click',e=>{if(e.target.closest('[data-book-id]'))setTimeout(openFirst,30)});
+ q('#newBookBtn')?.addEventListener('click',()=>setTimeout(()=>{openFirst();moveGallery()},30));
+ document.addEventListener('click',e=>{if(e.target.closest('[data-book-id]'))setTimeout(()=>{openFirst();moveGallery()},30)});
  return true
 }
 function moveGallery(){
@@ -268,7 +268,7 @@ function moveGallery(){
 }
 function boot(){
  let n=0;const t=setInterval(()=>{n++;if(ensure()||n>50)clearInterval(t)},120);
- new MutationObserver(moveGallery).observe(document.body,{childList:true,subtree:true});
+ setTimeout(moveGallery,250);setTimeout(moveGallery,900);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
