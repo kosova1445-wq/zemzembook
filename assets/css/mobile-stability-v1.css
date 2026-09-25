@@ -1,0 +1,30 @@
+/* ZemZem mobile stability v1 */
+html{overflow-x:hidden;-webkit-text-size-adjust:100%}
+body{max-width:100%;overflow-x:hidden}
+img,svg,video,canvas{max-width:100%}
+@media(max-width:680px){
+  html{scroll-behavior:auto!important}
+  body{touch-action:pan-y;overscroll-behavior-y:auto}
+  .container{max-width:100%!important}
+  .zemzem-bookstore-v2 .category-box-premium{display:none!important}
+  .zemzem-bookstore-v2 .hero-grid{display:block!important}
+  .zemzem-bookstore-v2 .home-hero,
+  .zemzem-bookstore-v2 .home-slide{min-height:320px!important;height:auto!important}
+  .zemzem-bookstore-v2 .home-slide{padding:24px 18px 58px!important}
+  .zemzem-bookstore-v2 .home-slide-cover,
+  .zemzem-bookstore-v2 .hero-visual{display:none!important}
+  .zemzem-bookstore-v2 .section{content-visibility:auto;contain-intrinsic-size:520px}
+  .zemzem-bookstore-v2 .book-card{contain:layout paint style}
+  .zz-mobile-dock,
+  .zz-mobile-drawer__backdrop{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  .zz-mobile-dock{background:#fff!important}
+  .zemzem-bookstore-v2 *{animation-duration:.01ms!important;animation-iteration-count:1!important}
+  .zemzem-bookstore-v2 .book-grid:not(.home-carousel-track){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:360px){
+  .zemzem-bookstore-v2 .book-grid:not(.home-carousel-track){grid-template-columns:1fr!important}
+  .zemzem-bookstore-v2 .home-hero,.zemzem-bookstore-v2 .home-slide{min-height:290px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
