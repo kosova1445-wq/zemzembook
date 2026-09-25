@@ -188,7 +188,7 @@ jobs:
           # Keep the safe book-create helper in the live admin without changing the classic admin design.
           ADMIN_BOOK_HELPER_TAG='<script src="assets/js/admin-book-helper.js?v=2"></script>'
           if [ -f admin.html ] && ! grep -Fq 'assets/js/admin-book-helper.js' admin.html; then
-            sed -i "s#<script src=\"assets/js/admin-booksto.js?v=6\"></script>#<script src=\"assets/js/admin-booksto.js?v=6\"></script>${ADMIN_BOOK_HELPER_TAG}#" admin.html
+            sed -i "s#<script src=\"assets/js/admin-booksto.js?v=7\"></script>#<script src=\"assets/js/admin-booksto.js?v=7\"></script>${ADMIN_BOOK_HELPER_TAG}#" admin.html
           fi
 
           # Homepage featured-books manager: load it directly in admin so it is always visible in Faqja & Menu.
@@ -198,7 +198,7 @@ jobs:
           fi
 
           # Refresh shared runtime cache versions on all HTML pages before upload.
-          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=7#g'
+          find . -maxdepth 1 -name '*.html' -type f -print0 | xargs -0 sed -i -E 's#assets/js/branding.js\\?v=[0-9]+#assets/js/branding.js?v=11#g'
           sed -i 's#assets/js/checkout-v2.js?v=16#assets/js/checkout-v2.js?v=15#g' checkout.html
 
           # Force republish advanced Admin modules and bypass stale CDN/browser versions.
@@ -541,6 +541,17 @@ jobs:
           grep -q "paypal" assets/js/admin-control-center.js
           grep -q "wishlist" assets/js/admin-control-center.js
           node --check assets/js/admin-booksto.js
+          # FINAL_PRODUCTION_AUDIT_GATES
+          node --check assets/js/shop-pro.js
+          node --check assets/js/home-stable.js
+          node --check assets/js/admin-collaboration-suite.js
+          node --check assets/js/admin-invoice-settings.js
+          grep -Fq "$('[data-pro-category]:checked').map" assets/js/shop-pro.js
+          ! grep -Fq "zzFreeLibraryGlobalObserver.observe" assets/js/home-stable.js
+          ! grep -Fq "new MutationObserver(moveGallery).observe(document.body" assets/js/admin-booksto.js
+          ! grep -Fq "MutationObserver(()=>{ensureNav();ensureNotify()}).observe(document.body" assets/js/admin-collaboration-suite.js
+          grep -Fq 'id="invLogoUpload"' assets/js/admin-invoice-settings.js
+          grep -Fq "request_url=\"${request_url}?verify=${GITHUB_SHA}\"" .github/workflows/deploy.yml
           grep -q "Partnerët" assets/js/admin-booksto.js
           grep -q "Automatizime" assets/js/admin-booksto.js
           grep -q "Premium Admin Sidebar v4" assets/css/admin-booksto.css
@@ -631,23 +642,24 @@ jobs:
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/css/shop-pro.css' 'Shop CSS reference'
           require_live https://www.zemzem.al/shop.html /tmp/shop.html 'assets/js/shop-pro.js' 'Shop JS reference'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'zz-ticket-price' 'Shop price ticket'
+          require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-filter-audit.js "$('[data-pro-category]:checked').map" 'Production audit Shop filter'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-pro.js 'OFERTË' 'Shop Albanian offer label'
           require_live https://www.zemzem.al/assets/js/shop-pro.js /tmp/shop-stock.js 'Ka në stok' 'Public stock hides exact quantity'
           require_live https://www.zemzem.al/product.html /tmp/product-stock.html "const stockText=unavailable?'Nuk ka stok':'Ka në stok';" 'Product stock hides exact quantity'
 
           require_live https://www.zemzem.al/assets/css/admin.css /tmp/admin-base.css 'overflow-y:auto' 'Desktop Admin sidebar scroll CSS'
           require_live https://www.zemzem.al/assets/js/admin-partners.js /tmp/admin-partners-settlement-guard.js 'Barazimi ekzistues u rifreskua me sukses' 'Partner settlement duplicate guard'
-          require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-sidebar-v3-loader.html 'assets/js/admin-booksto.js?v=6' 'Professional Admin sidebar v3'
+          require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-sidebar-v3-loader.html 'assets/js/admin-booksto.js?v=7' 'Professional Admin sidebar v3'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-sidebar-v3.js 'professionalizeSidebarV3' 'Semantic Admin sidebar grouping'
           require_live https://www.zemzem.al/assets/css/admin-booksto.css /tmp/admin-sidebar-v3.css 'Professional semantic sidebar v3' 'Professional Admin sidebar styles'
-          require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-sidebar-premium-v4.html 'assets/js/admin-booksto.js?v=6' 'Premium Admin sidebar v4'
+          require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-sidebar-premium-v4.html 'assets/js/admin-booksto.js?v=7' 'Premium Admin sidebar v4'
           require_live https://www.zemzem.al/assets/css/admin-booksto.css /tmp/admin-sidebar-premium-v4.css 'Premium Admin Sidebar v4' 'Premium Admin sidebar styles'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-v5-loader.html 'assets/js/admin-control-center.js?v=6' 'Expanded Control Center loader'
           require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-control-center-v6-loader.html 'assets/js/admin-control-center.js?v=6' 'Expanded Control Center loader v6'
           require_live https://www.zemzem.al/assets/js/admin-control-center.js /tmp/admin-control-center-expanded.js 'Checkout & Pagesa' 'Expanded Control Center settings'
           require_live https://www.zemzem.al/assets/css/admin-control-center.css /tmp/admin-control-center-settings-grid.css '.zzcc-settings-grid' 'Expanded Control Center styles'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-v4-loader.html 'assets/js/admin-control-center.js?v=6' 'Control Center click runtime v4'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-booksto-v4-loader.html 'assets/js/admin-booksto.js?v=6' 'Booksto sidebar runtime v4'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-booksto-v4-loader.html 'assets/js/admin-booksto.js?v=7' 'Booksto sidebar runtime v4'
           require_live https://www.zemzem.al/assets/js/admin-control-center.js /tmp/admin-control-center-click.js 'function openControlCenter()' 'Control Center rebuilt sidebar click'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-control-center.js 'frag.append(controlCenterBtn)' 'Booksto preserves Control Center'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-native.html 'id="view-control-center"' 'Native Admin Control Center view'
@@ -680,10 +692,10 @@ jobs:
           require_live https://www.zemzem.al/service-worker.js /tmp/sw.js "Intentionally no fetch handler" 'PWA service worker passthrough'
           require_live https://www.zemzem.al/assets/css/price-ticket.css /tmp/price-ticket.css '.zz-ticket-price' 'Shared price ticket CSS'
           require_live https://www.zemzem.al/index.html /tmp/index-allbooks.html 'id="allBooksStatic"' 'Homepage all-books section'
-          require_live https://www.zemzem.al/index.html /tmp/index-branding-safe.html 'assets/js/branding.js?v=7' 'Homepage branding safe mode'
+          require_live https://www.zemzem.al/index.html /tmp/index-branding-safe.html 'assets/js/branding.js?v=11' 'Homepage branding safe mode'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-safe.js 'BRAND_IS_HOME' 'Branding blocks extra homepage runtimes'
-          require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=5' 'Stable homepage single runtime'
-          require_live https://www.zemzem.al/ebooks.html /tmp/ebooks-perf-runtime.html 'assets/js/branding.js?v=10' 'eBook performance runtime'
+          require_live https://www.zemzem.al/index.html /tmp/index-home-stable-v1.html 'assets/js/home-stable.js?v=6' 'Stable homepage single runtime'
+          require_live https://www.zemzem.al/ebooks.html /tmp/ebooks-perf-runtime.html 'assets/js/branding.js?v=11' 'eBook performance runtime'
           require_live https://www.zemzem.al/assets/js/branding.js /tmp/branding-site-manager-v3.js 'site-manager-runtime.js?v=3' 'Site Manager runtime v3 loader'
           require_live https://www.zemzem.al/assets/js/site-manager-runtime.js /tmp/site-manager-no-loop.js 'Performance guard: do not observe the entire document permanently' 'Site Manager observer loop removed'
           require_live https://www.zemzem.al/assets/js/site-manager-advanced-runtime.js /tmp/site-manager-advanced-no-loop.js 'Performance guard: no permanent document-wide observer' 'Advanced Site Manager observer loop removed'
@@ -718,7 +730,7 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-messenger.html 'id="adminMessengerTopBtn"' 'Admin messenger marker'
           require_live https://www.zemzem.al/admin.html /tmp/admin-messenger-script.html 'assets/js/admin-collab.js?v=4' 'Admin messenger script reference'
           require_live https://www.zemzem.al/assets/js/admin-collab.js /tmp/admin-collab-live.js '__zzAdminCollabV3' 'Admin messenger runtime'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-team-center.html 'assets/js/admin-collaboration-suite.js?v=1' 'Admin Team Center suite'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-team-center.html 'assets/js/admin-collaboration-suite.js?v=2' 'Admin Team Center suite'
           require_live https://www.zemzem.al/assets/js/admin-collaboration-suite.js /tmp/admin-team-center-js.js '__zzCollaborationSuite' 'Admin Team Center runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library.html 'zz-free-library-force-runtime' 'Free Library integrated Admin marker'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-view.html 'id="view-free-library"' 'Free Library integrated Admin view'
@@ -800,6 +812,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/storefront-controls.js /tmp/storefront-controls.js 'storefront_runtime_config_v1' 'Storefront runtime controls'
           require_live https://www.zemzem.al/admin.html /tmp/admin-pro20-ref.html 'admin-pro-20.js' 'Advanced Center reference'
           require_live https://www.zemzem.al/assets/js/admin-invoice-settings.js /tmp/admin-invoice-settings.js 'Konfigurimi i faturës' 'Invoice settings module'
+          require_live https://www.zemzem.al/assets/js/admin-invoice-settings.js /tmp/admin-invoice-audit.js 'id="invLogoUpload"' 'Production audit Invoice Settings'
           require_live https://www.zemzem.al/assets/js/invoice-professional.js /tmp/invoice-professional.js 'invoiceBarcode' 'Invoice barcode and QR renderer'
           require_live https://www.zemzem.al/assets/js/admin-documents.js /tmp/admin-docs.js 'Packing Slip' 'Packing slip renderer'
           require_live https://www.zemzem.al/assets/js/admin-documents.js /tmp/admin-docs.js 'Faturë' 'Invoice renderer'
@@ -825,7 +838,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'authors:authors.slice' 'Autocomplete authors and categories'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'bindShopAutocomplete' 'Shop autocomplete binding'
           require_live https://www.zemzem.al/assets/css/search-autocomplete.css /tmp/search-autocomplete.css '.zz-search-suggest' 'Autocomplete search styles'
-          require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=16' 'Homepage autocomplete asset version'
+          require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=17' 'Homepage autocomplete asset version'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release.html 'adminSecurityReleaseNav' 'Forced Security and Releases Admin menu'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release-view.html 'id="view-security-release"' 'Forced Security and Releases Admin view'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release-v2.html 'assets/js/admin-security-release.js?v=2' 'Security and Releases v2 runtime'
@@ -840,13 +853,13 @@ jobs:
           require_live https://www.zemzem.al/index.html /tmp/home-free-library-category.html 'category-item-free-library' 'Top categories Free Library link'
           require_live https://www.zemzem.al/index.html /tmp/home-free-library-main-cards.html 'category-card-free-library' 'Main category cards Free Library'
           require_live https://www.zemzem.al/index.html /tmp/free-library-final-force-v6.html 'ZZ FINAL FREE LIBRARY FORCE V6' 'Final Free Library force runtime'
-          require_live https://www.zemzem.al/index.html /tmp/home-stable-v5.html 'assets/js/home-stable.js?v=5' 'Persistent Free Library runtime v5'
+          require_live https://www.zemzem.al/index.html /tmp/home-stable-v5.html 'assets/js/home-stable.js?v=6' 'Persistent Free Library runtime v5'
           require_live https://www.zemzem.al/index.html /tmp/top-categories-responsive.html 'ZZ KEEP TOP CATEGORIES V4' 'Top categories responsive visibility'
           require_live https://www.zemzem.al/assets/js/home-mobile-v6.js /tmp/home-mobile-free-library.js 'Biblioteka Falas' 'Mobile Free Library category'
           require_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js "function newsletter(){q('#zv2Newsletter')?.remove()}" 'Newsletter remains enabled'
           # shop.html can lag behind briefly on the hosting cache even after FTP succeeds.
           # Keep this as a warning so unrelated Admin-only releases are not marked failed.
-          if curl -fsSL --retry 3 --retry-delay 2 "https://www.zemzem.al/shop.html?verify=${GITHUB_SHA}" -o /tmp/shop-search.html && grep -Fq 'assets/js/app-v5.js?v=16' /tmp/shop-search.html; then
+          if curl -fsSL --retry 3 --retry-delay 2 "https://www.zemzem.al/shop.html?verify=${GITHUB_SHA}" -o /tmp/shop-search.html && grep -Fq 'assets/js/app-v5.js?v=17' /tmp/shop-search.html; then
             echo "OK: Shop autocomplete asset version"
           else
             echo "::warning::Shop autocomplete asset version is still cached; deploy itself succeeded."
@@ -867,7 +880,7 @@ jobs:
           require_live https://www.zemzem.al/author.html /tmp/author.html 'entity-page.js' 'Author profile page'
           require_live https://www.zemzem.al/publisher.html /tmp/publisher.html 'entity-page.js' 'Publisher profile page'
           require_live https://www.zemzem.al/free-library.html /tmp/free-library-watermark-loader.html 'pdf-lib@1.17.1' 'Free Library PDF watermark engine'
-          require_live https://www.zemzem.al/free-library.html /tmp/free-library-v5.html 'assets/js/free-library.js?v=5' 'Free Library runtime v5'
+          require_live https://www.zemzem.al/free-library.html /tmp/free-library-v5.html 'assets/js/free-library.js?v=6' 'Free Library runtime v5'
           require_live https://www.zemzem.al/assets/js/free-library.js /tmp/free-library-watermark.js 'Shkarkuar nga www.ZemZem.al' 'Free Library PDF watermark'
           require_live https://www.zemzem.al/free-library.html /tmp/free-library.html 'id="freeLibraryGrid"' 'Free Library public page'
           require_live https://www.zemzem.al/404.html /tmp/zemzem-404.html 'Faqja nuk u gjet' 'Branded ZemZem 404 page'
