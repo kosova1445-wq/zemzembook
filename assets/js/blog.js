@@ -6,7 +6,7 @@
   const safeUrl=v=>{const s=String(v||'').trim();return /^(https?:\/\/|\/|\.\/|\.\.\/|[a-z0-9_-]+\.html)/i.test(s)?s:''};
   const fmtDate=v=>v?new Intl.DateTimeFormat('sq-AL',{day:'2-digit',month:'long',year:'numeric'}).format(new Date(v)):'—';
   const month=v=>v?new Intl.DateTimeFormat('sq-AL',{month:'short'}).format(new Date(v)).replace('.',''):'';
-  let categories=[],posts=[],page=1,perPage=6,activeCategory='',searchTerm='',sortMode='latest';
+  let categories=[],posts=[],page=1,perPage=7,activeCategory='',searchTerm='',sortMode='latest';
 
   async function get(path){const r=await fetch(`${SB_URL}/rest/v1/${path}`,{headers:{apikey:SB_KEY,Accept:'application/json'},cache:'no-store'});if(!r.ok)throw new Error('Nuk u ngarkua Blogu.');return r.json()}
   async function loadData(){
@@ -32,14 +32,25 @@
   function postCard(p){
     const d=p.published_at||p.created_at,cat=catById(p.category_id);
     const media=p.cover_url?`<img src="${esc(safeUrl(p.cover_url))}" alt="${esc(p.title)}" loading="lazy">`:`<div class="blog-placeholder">Z</div>`;
-    return `<article class="blog-card"><a class="blog-card-media" href="article.html?slug=${encodeURIComponent(p.slug)}">${media}<span class="blog-date-chip">${esc(new Date(d).getDate())}<br>${esc(month(d))}</span></a><div class="blog-card-body"><div class="blog-meta"><span>👤 ${esc(p.author_name||'ZemZem')}</span>${cat?`<span>▣ ${esc(cat.name)}</span>`:''}</div><h2><a href="article.html?slug=${encodeURIComponent(p.slug)}">${esc(p.title)}</a></h2><p>${esc(p.excerpt||'')}</p><div class="blog-card-actions"><a class="blog-read" href="article.html?slug=${encodeURIComponent(p.slug)}">Lexo më shumë →</a><button class="blog-share" type="button" data-share="${esc(p.slug)}" aria-label="Shpërndaje">↗</button></div></div></article>`
+    return `<article class="blog-card"><a class="blog-card-media" href="article.html?slug=${encodeURIComponent(p.slug)}">${media}<span class="blog-date-chip">${esc(new Date(d).getDate())}<br>${esc(month(d))}</span></a><div class="blog-card-body"><div class="blog-meta"><span>👤 ${esc(p.author_name||'ZemZem')}</span>${cat?`<span>▣ ${esc(cat.name)}</span>`:''}</div><h2><a href="article.html?slug=${encodeURIComponent(p.slug)}">${esc(p.title||'Pa titull')}</a></h2><p>${esc(p.excerpt||'')}</p><div class="blog-card-actions"><a class="blog-read" href="article.html?slug=${encodeURIComponent(p.slug)}">Lexo më shumë →</a><button class="blog-share" type="button" data-share="${esc(p.slug)}" aria-label="Shpërndaje">↗</button></div></div></article>`
+  }
+  function featuredCard(p){
+    const d=p.published_at||p.created_at,cat=catById(p.category_id);
+    const media=p.cover_url?`<img src="${esc(safeUrl(p.cover_url))}" alt="${esc(p.title)}">`:`<div class="blog-placeholder">Z</div>`;
+    return `<article class="blog-featured"><a class="blog-featured-media" href="article.html?slug=${encodeURIComponent(p.slug)}">${media}<span class="blog-date-chip">${esc(new Date(d).getDate())}<br>${esc(month(d))}</span></a><div class="blog-featured-body"><div class="blog-meta"><span>👤 ${esc(p.author_name||'ZemZem')}</span><span>◷ ${esc(fmtDate(d))}</span>${cat?`<span>▣ ${esc(cat.name)}</span>`:''}</div><h2 class="blog-featured-title"><a href="article.html?slug=${encodeURIComponent(p.slug)}">${esc(p.title||'Pa titull')}</a></h2><p class="blog-featured-excerpt">${esc(p.excerpt||'')}</p><div class="blog-featured-actions"><a class="blog-read" href="article.html?slug=${encodeURIComponent(p.slug)}">Lexo më shumë →</a><button class="blog-share" type="button" data-share="${esc(p.slug)}" aria-label="Shpërndaje">↗</button></div></div></article>`
   }
   function renderList(){
-    const host=$('#blogGrid'),count=$('#blogResultCount');if(!host)return;
+    const host=$('#blogGrid'),featured=$('#blogFeatured'),count=$('#blogResultCount');if(!host)return;
     const list=filteredPosts(),totalPages=Math.max(1,Math.ceil(list.length/perPage));if(page>totalPages)page=totalPages;
     const start=(page-1)*perPage,rows=list.slice(start,start+perPage);
     if(count)count.textContent=list.length?`Duke shfaqur ${start+1}–${Math.min(start+rows.length,list.length)} nga ${list.length} artikuj`:'Nuk ka artikuj për këtë filtër';
-    host.innerHTML=rows.length?rows.map(postCard).join(''):'<div class="blog-empty"><strong>Nuk ka ende artikuj këtu.</strong><br>Artikujt e publikuar nga Admini do të shfaqen automatikisht.</div>';
+    if(!rows.length){
+      if(featured)featured.innerHTML='';
+      host.innerHTML='<div class="blog-empty"><strong>Nuk ka ende artikuj këtu.</strong><br>Artikujt e publikuar nga Admini do të shfaqen automatikisht.</div>';
+    }else{
+      if(featured)featured.innerHTML=featuredCard(rows[0]);
+      host.innerHTML=rows.slice(1).map(postCard).join('');
+    }
     renderPagination(totalPages);bindShare();
   }
   function renderPagination(total){const host=$('#blogPagination');if(!host)return;if(total<=1){host.innerHTML='';return}let html=`<button data-p="${Math.max(1,page-1)}">←</button>`;for(let i=1;i<=total;i++){if(total>8&&i>3&&i<total-2&&Math.abs(i-page)>1){if(!html.includes('data-gap'))html+='<button data-gap disabled>…</button>';continue}html+=`<button data-p="${i}" class="${i===page?'active':''}">${i}</button>`}html+=`<button data-p="${Math.min(total,page+1)}">→</button>`;host.innerHTML=html;$$('#blogPagination [data-p]').forEach(b=>b.onclick=()=>{page=Number(b.dataset.p)||1;renderList();scrollTo({top:$('.blog-section')?.offsetTop-90||0,behavior:'smooth'})})}
