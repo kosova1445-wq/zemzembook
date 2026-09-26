@@ -111,8 +111,8 @@ ok(/zemzem:admin-lazy-ready/i.test(adminLazy),'Admin lazy loader preserves ready
 ok(/rel=["']preconnect["'][^>]*ysvtrhizgcioyycwlkrk\.supabase\.co/i.test(index),'Homepage preconnects to Supabase');
 ok(/rel=["']preconnect["'][^>]*ysvtrhizgcioyycwlkrk\.supabase\.co/i.test(shop),'Shop preconnects to Supabase');
 ok(/rel=["']preconnect["'][^>]*ysvtrhizgcioyycwlkrk\.supabase\.co/i.test(product),'Product preconnects to Supabase');
-ok(/rel=["']preload["'][^>]*app-v5\.js\?v=17/i.test(shop),'Shop preloads core storefront runtime');
-ok(/rel=["']preload["'][^>]*app-v5\.js\?v=17/i.test(product),'Product preloads core storefront runtime');
+ok(/rel=["']preload["'][^>]*app-v5\\.js\\?v=\\d+/i.test(shop),'Shop preloads core storefront runtime');
+ok(/rel=["']preload["'][^>]*app-v5\\.js\\?v=\\d+/i.test(product),'Product preloads core storefront runtime');
 ok(/fetchpriority=["']high["']/i.test(product),'Product prioritizes main cover for LCP');
 ok(/loading=["']lazy["'][^>]*decoding=["']async["']/i.test(product),'Product lazily decodes secondary images');
 
