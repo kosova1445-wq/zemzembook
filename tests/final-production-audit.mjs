@@ -56,6 +56,15 @@ ok(/max-width:760px/i.test(admin),'Admin includes mobile breakpoint rules');
 const adminScripts=[...admin.matchAll(/<script\b[^>]*\ssrc=["'][^"']+["'][^>]*>/gi)].map(x=>x[0]);
 if(adminScripts.length>35) warn.push('Admin still has '+adminScripts.length+' external scripts; all are deferred, but module consolidation remains a future optimization.');
 
+// Sensitive page cache/indexing guards
+const htaccessSensitive=read('.htaccess');
+ok(/\^\(admin\.\*\|account\|checkout\|partner\)\\\.html\$/i.test(htaccessSensitive),'Sensitive HTML pages have dedicated server rules');
+ok(/Cache-Control\s+["']no-store, no-cache, must-revalidate, max-age=0["']/i.test(htaccessSensitive),'Sensitive HTML disables browser/proxy caching');
+ok(/X-Robots-Tag\s+["']noindex, nofollow, noarchive["']/i.test(htaccessSensitive),'Sensitive HTML is blocked from indexing and archiving');
+ok(/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(checkout),'Checkout keeps noindex meta');
+ok(/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(account),'Account keeps noindex meta');
+ok(/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(partner),'Partner portal keeps noindex meta');
+
 // Static delivery / cache guards
 const htaccess=read('.htaccess');
 ok(/mod_brotli\.c/i.test(htaccess),'Apache enables Brotli when available');
