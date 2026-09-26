@@ -658,7 +658,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-partners.js /tmp/admin-partners-settlement-guard.js 'Barazimi ekzistues u rifreskua me sukses' 'Partner settlement duplicate guard'
           require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-sidebar-v3-loader.html 'assets/js/admin-booksto.js?v=7' 'Professional Admin sidebar v3'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-sidebar-v3.js 'professionalizeSidebarV3' 'Semantic Admin sidebar grouping'
-          require_live https://www.zemzem.al/assets/css/admin-booksto.css /tmp/admin-sidebar-v3.css 'Professional semantic sidebar v3' 'Professional Admin sidebar styles'
+          require_live https://www.zemzem.al/assets/css/admin-booksto.css /tmp/admin-sidebar-v3.css 'Premium Admin Sidebar v4' 'Professional Admin sidebar styles'
           require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-sidebar-premium-v4.html 'assets/js/admin-booksto.js?v=7' 'Premium Admin sidebar v4'
           require_live https://www.zemzem.al/assets/css/admin-booksto.css /tmp/admin-sidebar-premium-v4.css 'Premium Admin Sidebar v4' 'Premium Admin sidebar styles'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-v5-loader.html 'assets/js/admin-control-center.js?v=6' 'Expanded Control Center loader'
