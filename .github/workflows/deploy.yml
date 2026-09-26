@@ -7,6 +7,10 @@ on:
       - 'README.md'
   workflow_dispatch:
 
+concurrency:
+  group: zemzem-cpanel-production
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest

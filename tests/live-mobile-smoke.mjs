@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 
 const base='https://www.zemzem.al';
-const expectedSha=process.env.GITHUB_SHA||'';
+const expectedSha=process.env.EXPECTED_SHA||process.env.GITHUB_SHA||'';
 
 async function waitForLiveSha(){
   if(!expectedSha)return;

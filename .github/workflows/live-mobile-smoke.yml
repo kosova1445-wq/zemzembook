@@ -2,25 +2,17 @@ name: Live Mobile Smoke
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths:
-      - 'index.html'
-      - 'shop.html'
-      - 'product.html'
-      - 'checkout.html'
-      - 'account.html'
-      - 'admin.html'
-      - 'partner.html'
-      - 'assets/js/**'
-      - 'assets/css/**'
-      - 'tests/live-mobile-smoke.mjs'
-      - '.github/workflows/live-mobile-smoke.yml'
+  workflow_run:
+    workflows: ["Deploy ZemZem to cPanel"]
+    types: [completed]
 
 jobs:
   smoke:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 12
+    env:
+      EXPECTED_SHA: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
