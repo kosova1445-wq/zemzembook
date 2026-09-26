@@ -90,6 +90,14 @@ ok(/image\/avif/i.test(htaccess),'AVIF cache policy is configured');
 ok(/font\/woff2/i.test(htaccess),'WOFF2 cache policy is configured');
 ok(/max-age=2592000/i.test(htaccess),'Long-lived static asset caching remains enabled');
 
+// Blog moderation Admin guards
+ok(/admin-blog\.js\?v=2/i.test(admin),'Admin loads Blog management module');
+ok(/admin-blog-final\.js\?v=2/i.test(admin),'Admin loads Blog moderation module');
+const adminBlogFinal=read('assets/js/admin-blog-final.js');
+ok(/data-blog-tab=["']comments["']/i.test(adminBlogFinal),'Blog Admin exposes Comments tab');
+ok(/status:'approved'/i.test(adminBlogFinal),'Blog Admin can approve comments');
+ok(/status:'rejected'/i.test(adminBlogFinal),'Blog Admin can reject comments');
+
 // Admin startup/performance guards
 const adminHtml=read('admin.html');
 const adminLazy=read('assets/js/admin-lazy-loader.js');
