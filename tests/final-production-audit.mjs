@@ -56,6 +56,15 @@ ok(/max-width:760px/i.test(admin),'Admin includes mobile breakpoint rules');
 const adminScripts=[...admin.matchAll(/<script\b[^>]*\ssrc=["'][^"']+["'][^>]*>/gi)].map(x=>x[0]);
 if(adminScripts.length>35) warn.push('Admin still has '+adminScripts.length+' external scripts; all are deferred, but module consolidation remains a future optimization.');
 
+// Connection startup and LCP guards
+ok(/rel=["']preconnect["'][^>]*ysvtrhizgcioyycwlkrk\.supabase\.co/i.test(index),'Homepage preconnects to Supabase');
+ok(/rel=["']preconnect["'][^>]*ysvtrhizgcioyycwlkrk\.supabase\.co/i.test(shop),'Shop preconnects to Supabase');
+ok(/rel=["']preconnect["'][^>]*ysvtrhizgcioyycwlkrk\.supabase\.co/i.test(product),'Product preconnects to Supabase');
+ok(/rel=["']preload["'][^>]*app-v5\.js\?v=17/i.test(shop),'Shop preloads core storefront runtime');
+ok(/rel=["']preload["'][^>]*app-v5\.js\?v=17/i.test(product),'Product preloads core storefront runtime');
+ok(/fetchpriority=["']high["']/i.test(product),'Product prioritizes main cover for LCP');
+ok(/loading=["']lazy["'][^>]*decoding=["']async["']/i.test(product),'Product lazily decodes secondary images');
+
 // Performance instrumentation must keep CWV thresholds and observers intact
 const vitals=read('assets/js/performance-vitals.js');
 ok(/largest-contentful-paint/i.test(vitals),'Performance monitor observes LCP');
