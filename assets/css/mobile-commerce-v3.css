@@ -33,3 +33,17 @@
   body.shop-page-modern img,
   body.shop-page-modern svg{max-width:100%}
 }
+
+/* Product mobile containment: keep 3D scene and sticky UI inside viewport. */
+@media(max-width:700px){
+  body.product-page{overflow-x:clip}
+  body.product-page .container,
+  body.product-page .product-site-header,
+  body.product-page .product-main-section,
+  body.product-page .premium-product-layout,
+  body.product-page .premium-product-summary,
+  body.product-page .premium-media-card{max-width:100%}
+  body.product-page .zz-book3d-scene{max-width:100vw}
+  body.product-page img,
+  body.product-page svg{max-width:100%}
+}
