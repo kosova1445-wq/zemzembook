@@ -1,3 +1,7 @@
+RewriteEngine On
+RewriteRule ^rss\.xml$ rss.php [L]
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
 ErrorDocument 404 /404.html
 # ZemZem security baseline for Apache/cPanel
 Options -Indexes
