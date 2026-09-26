@@ -67,6 +67,38 @@ ok(/CLS.*\.1|name===['"]CLS['"].*\.1/s.test(vitals),'CLS good threshold is 0.1')
 ok(/keepalive\s*:\s*true/i.test(vitals),'Vitals telemetry uses keepalive');
 ok(/page_path/i.test(vitals),'Vitals telemetry records page path');
 
+// Error monitoring / observability guards
+const observability=read('assets/js/storefront-observability.js');
+ok(/addEventListener\(['"]error['"]/i.test(observability),'Storefront observability captures window errors');
+ok(/unhandledrejection/i.test(observability),'Storefront observability captures unhandled promise rejections');
+ok(/client-error/i.test(observability),'Storefront observability sends client errors to telemetry');
+ok(/keepalive\s*:\s*true/i.test(observability),'Storefront observability uses keepalive');
+
+const runtimeOps=read('assets/js/runtime-ops.js');
+ok(/runtime_boot/i.test(runtimeOps),'Runtime ops reports boot failures');
+ok(/storefront-telemetry/i.test(runtimeOps),'Runtime ops sends telemetry');
+ok(/unhandledrejection/i.test(runtimeOps),'Runtime ops captures promise failures');
+
+// Checkout resilience guards
+ok(/create_cod_order_public/i.test(checkoutJs),'Checkout supports direct COD order creation');
+ok(/paypal-create/i.test(checkoutJs),'Checkout supports PayPal order creation');
+ok(/quote_order_public/i.test(checkoutJs),'Checkout supports direct server-side quote');
+ok(/quote-order/i.test(checkoutJs),'Checkout keeps quote Edge fallback');
+ok(/create-order/i.test(checkoutJs),'Checkout keeps COD Edge fallback');
+ok(/refreshCustomerSessionForCheckout/i.test(checkoutJs),'Checkout refreshes expired customer sessions');
+
+// Partner settlement/invoice guards
+const partnerFulfillment=read('assets/js/partner-fulfillment.js');
+const partnerInvoice=read('assets/js/partner-invoice.js');
+const adminPartners=read('assets/js/admin-partners.js');
+ok(/partner_update_fulfillment/i.test(partnerFulfillment),'Partner fulfillment updates are wired to RPC');
+ok(/partner_customer_invoice/i.test(partnerInvoice),'Partner invoice fetches customer invoice data');
+ok(/JsBarcode/i.test(partnerInvoice),'Partner invoice includes barcode support');
+ok(/QRious/i.test(partnerInvoice),'Partner invoice includes QR support');
+ok(/admin_partner_create_settlement/i.test(adminPartners),'Admin can create partner settlements');
+ok(/admin_partner_mark_paid/i.test(adminPartners),'Admin can mark partner settlements paid');
+ok(/duplicate key|unique constraint/i.test(adminPartners),'Partner settlement duplicate guard exists');
+
 // Service-worker/cache guard: keep the worker small and explicit
 if(fs.existsSync('service-worker.js')){
   const sw=read('service-worker.js');
