@@ -1,6 +1,6 @@
 (()=>{
 if(window.__zzAdminBlogFinal)return;window.__zzAdminBlogFinal=1;
-const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)],E=v=>String(v??'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[m]));
+const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)],E=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const D='zz_blog_autosave_v1';
 async function G(p){return typeof api==='function'?api(p):[]} async function P(p,b){return typeof api==='function'?api(p,{method:'PATCH',body:b,prefer:'return=minimal'}):null}
 function panel(k,t){const v=q('#view-blog');v.insertAdjacentHTML('beforeend','<div class="blog-admin-panel" data-blog-panel="'+k+'"><div class="blog-admin-card"><h3>'+t+'</h3><div id="blogFinal_'+k+'">Duke ngarkuar…</div></div></div>')}
