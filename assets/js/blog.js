@@ -12,7 +12,7 @@
   async function loadData(){
     [categories,posts]=await Promise.all([
       get('blog_categories?select=id,name,slug,description,parent_id,sort_order,is_active&is_active=eq.true&order=sort_order.asc,name.asc'),
-      get('blog_posts?select=id,title,slug,excerpt,content,cover_url,category_id,author_name,published_at,created_at,is_featured&status=eq.published&order=published_at.desc.nullslast,created_at.desc&limit=200')
+      get('blog_posts?select=id,title,slug,excerpt,content,cover_url,category_id,author_name,published_at,created_at,is_featured,views_count,publish_at,unpublish_at&status=eq.published&order=published_at.desc.nullslast,created_at.desc&limit=200')
     ]);
   }
   const catById=id=>categories.find(c=>c.id===id);
@@ -56,12 +56,58 @@
   function renderPagination(total){const host=$('#blogPagination');if(!host)return;if(total<=1){host.innerHTML='';return}let html=`<button data-p="${Math.max(1,page-1)}">←</button>`;for(let i=1;i<=total;i++){if(total>8&&i>3&&i<total-2&&Math.abs(i-page)>1){if(!html.includes('data-gap'))html+='<button data-gap disabled>…</button>';continue}html+=`<button data-p="${i}" class="${i===page?'active':''}">${i}</button>`}html+=`<button data-p="${Math.min(total,page+1)}">→</button>`;host.innerHTML=html;$$('#blogPagination [data-p]').forEach(b=>b.onclick=()=>{page=Number(b.dataset.p)||1;renderList();scrollTo({top:$('.blog-section')?.offsetTop-90||0,behavior:'smooth'})})}
   function renderCategories(){const host=$('#blogCategoryTree');if(!host)return;const countFor=id=>{const ids=new Set(descendantIds(categories.find(c=>c.id===id)));return posts.filter(p=>ids.has(p.category_id)).length};host.innerHTML=`<div class="blog-cat-parent"><div class="blog-cat-line"><a href="blog.html">Të gjitha</a><span>${posts.length}</span></div></div>`+rootCats().map(root=>{const kids=childrenOf(root.id);return `<div class="blog-cat-parent"><div class="blog-cat-line"><a href="blog.html?category=${encodeURIComponent(root.slug)}">${esc(root.name)}</a>${kids.length?'<button type="button" aria-label="Nënkategoritë">＋</button>':`<span>${countFor(root.id)}</span>`}</div>${kids.length?`<div class="blog-subcats">${kids.map(k=>`<a href="blog.html?category=${encodeURIComponent(k.slug)}"><span>${esc(k.name)}</span><span>${countFor(k.id)}</span></a>`).join('')}</div>`:''}</div>`}).join('');$$('.blog-cat-parent button').forEach(b=>b.onclick=()=>{const s=b.closest('.blog-cat-parent').querySelector('.blog-subcats');if(!s)return;s.hidden=!s.hidden;b.textContent=s.hidden?'＋':'−'})}
   function renderLatest(){const host=$('#blogLatest');if(!host)return;host.innerHTML=posts.slice(0,4).map(p=>`<div class="blog-latest-item"><div class="blog-latest-thumb">${p.cover_url?`<img src="${esc(safeUrl(p.cover_url))}" alt="" loading="lazy">`:''}</div><div><small>▣ ${esc(fmtDate(p.published_at||p.created_at))}</small><a href="article.html?slug=${encodeURIComponent(p.slug)}">${esc(p.title)}</a></div></div>`).join('')||'<div class="blog-result-count">Ende s’ka artikuj të publikuar.</div>'}
+  function renderMostRead(){
+    const host=$('#blogMostRead');if(!host)return;
+    const top=[...posts].sort((a,b)=>Number(b.views_count||0)-Number(a.views_count||0)).slice(0,5);
+    host.innerHTML=top.map((p,i)=>`<a class="blog-most-item" href="article.html?slug=${encodeURIComponent(p.slug)}"><span>${i+1}</span><div><strong>${esc(p.title)}</strong><small>👁 ${Number(p.views_count||0)} lexime</small></div></a>`).join('')||'<div class="blog-result-count">Ende s’ka të dhëna.</div>';
+  }
+  async function incrementArticleView(p){
+    if(!p?.id)return;
+    const key='zz_blog_view_'+p.id;
+    try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1')}catch{}
+    try{
+      await fetch(`${SB_URL}/rest/v1/rpc/increment_blog_post_view`,{method:'POST',headers:{apikey:SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_post_id:p.id}),cache:'no-store'});
+      p.views_count=Number(p.views_count||0)+1;
+    }catch{}
+  }
+  function renderRelated(p){
+    const host=$('#relatedPosts');if(!host)return;
+    let rel=posts.filter(x=>x.id!==p.id&&x.category_id===p.category_id);
+    if(rel.length<3)rel=[...rel,...posts.filter(x=>x.id!==p.id&&x.category_id!==p.category_id&&!rel.some(r=>r.id===x.id))];
+    rel=rel.slice(0,3);
+    host.innerHTML=rel.map(postCard).join('')||'<div class="blog-empty">Nuk ka artikuj të tjerë për momentin.</div>';
+  }
+  function setMeta(selector,attr,value){
+    let el=document.querySelector(selector);
+    if(!el){el=document.createElement('meta');const m=selector.match(/meta\[(name|property)="([^"]+)"\]/);if(m)el.setAttribute(m[1],m[2]);document.head.appendChild(el)}
+    el.setAttribute(attr,value);
+  }
+  function enhanceArticleSeo(p){
+    const url=`https://www.zemzem.al/article.html?slug=${encodeURIComponent(p.slug)}`;
+    const desc=(p.excerpt||p.content||'').replace(/\s+/g,' ').trim().slice(0,160);
+    document.title=`${p.title} | ZemZem Blog`;
+    setMeta('meta[name="description"]','content',desc);
+    setMeta('meta[property="og:title"]','content',p.title);
+    setMeta('meta[property="og:description"]','content',desc);
+    setMeta('meta[property="og:url"]','content',url);
+    setMeta('meta[property="og:type"]','content','article');
+    if(p.cover_url)setMeta('meta[property="og:image"]','content',safeUrl(p.cover_url));
+    setMeta('meta[name="twitter:card"]','content','summary_large_image');
+    setMeta('meta[name="twitter:title"]','content',p.title);
+    setMeta('meta[name="twitter:description"]','content',desc);
+    if(p.cover_url)setMeta('meta[name="twitter:image"]','content',safeUrl(p.cover_url));
+    let can=document.querySelector('link[rel="canonical"]');if(can)can.href=url;
+    const old=document.querySelector('#articleStructuredData');if(old)old.remove();
+    const s=document.createElement('script');s.type='application/ld+json';s.id='articleStructuredData';
+    s.textContent=JSON.stringify({'@context':'https://schema.org','@type':'Article',headline:p.title,description:desc,image:p.cover_url?[safeUrl(p.cover_url)]:undefined,datePublished:p.published_at||p.created_at,dateModified:p.updated_at||p.published_at||p.created_at,author:{'@type':'Person',name:p.author_name||'ZemZem'},publisher:{'@type':'Organization',name:'ZemZem'},mainEntityOfPage:url});
+    document.head.appendChild(s);
+  }
   function bindSearch(){const form=$('#blogSearchForm'),input=$('#blogSearch'),sort=$('#blogSort');if(form)form.onsubmit=e=>{e.preventDefault();searchTerm=input.value.trim();page=1;renderList()};if(sort)sort.onchange=()=>{sortMode=sort.value;page=1;renderList()}}
   function bindShare(){$$('[data-share]').forEach(b=>b.onclick=async()=>{const slug=b.dataset.share,url=`${location.origin}${location.pathname.replace(/blog\.html$/,'article.html')}?slug=${encodeURIComponent(slug)}`;try{if(navigator.share)await navigator.share({title:'ZemZem Blog',url});else{await navigator.clipboard.writeText(url);b.textContent='✓';setTimeout(()=>b.textContent='↗',1200)}}catch{}})}
-  function renderArticle(){const slug=new URLSearchParams(location.search).get('slug')||'';const p=posts.find(x=>x.slug===slug),host=$('#articleHost');if(!host)return;if(!p){host.innerHTML='<div class="blog-empty"><strong>Artikulli nuk u gjet.</strong><br><a href="blog.html">Kthehu te Blogu</a></div>';return}const d=p.published_at||p.created_at,cat=catById(p.category_id),cover=$('#articleCover');if(cover){cover.innerHTML=p.cover_url?`<img src="${esc(safeUrl(p.cover_url))}" alt="${esc(p.title)}">`:'';if(!p.cover_url)cover.style.display='none'}$('#articleTitle').textContent=p.title;$('#articleMeta').innerHTML=`<span>👤 ${esc(p.author_name||'ZemZem')}</span><span>◷ ${esc(fmtDate(d))}</span>${cat?`<span>▣ ${esc(cat.name)}</span>`:''}`;$('#articleExcerpt').textContent=p.excerpt||'';const content=$('#articleContent');content.innerHTML=String(p.content||'').split(/\n{2,}/).map(block=>{const t=block.trim();if(!t)return'';if(t.startsWith('### '))return`<h3>${esc(t.slice(4))}</h3>`;if(t.startsWith('## '))return`<h2>${esc(t.slice(3))}</h2>`;return`<p>${esc(t).replace(/\n/g,'<br>')}</p>`}).join('');document.title=`${p.title} | ZemZem Blog`;const desc=(p.excerpt||p.content||'').replace(/\s+/g,' ').slice(0,155);let meta=document.querySelector('meta[name="description"]');if(meta)meta.content=desc;let can=document.querySelector('link[rel="canonical"]');if(can)can.href=`https://www.zemzem.al/article.html?slug=${encodeURIComponent(p.slug)}`;const bc=$('#articleBreadcrumb');if(bc)bc.innerHTML=`<a href="index.html">Ballina</a> / <a href="blog.html">Blog</a> / ${esc(p.title)}`}
+  function renderArticle(){const slug=new URLSearchParams(location.search).get('slug')||'';const p=posts.find(x=>x.slug===slug),host=$('#articleHost');if(!host)return;if(!p){host.innerHTML='<div class="blog-empty"><strong>Artikulli nuk u gjet.</strong><br><a href="blog.html">Kthehu te Blogu</a></div>';return}const d=p.published_at||p.created_at,cat=catById(p.category_id),cover=$('#articleCover');if(cover){cover.innerHTML=p.cover_url?`<img src="${esc(safeUrl(p.cover_url))}" alt="${esc(p.title)}">`:'';if(!p.cover_url)cover.style.display='none'}$('#articleTitle').textContent=p.title;$('#articleMeta').innerHTML=`<span>👤 ${esc(p.author_name||'ZemZem')}</span><span>◷ ${esc(fmtDate(d))}</span>${cat?`<span>▣ ${esc(cat.name)}</span>`:''}<span>👁 ${Number(p.views_count||0)} lexime</span>`;$('#articleExcerpt').textContent=p.excerpt||'';const content=$('#articleContent');content.innerHTML=String(p.content||'').split(/\n{2,}/).map(block=>{const t=block.trim();if(!t)return'';if(t.startsWith('### '))return`<h3>${esc(t.slice(4))}</h3>`;if(t.startsWith('## '))return`<h2>${esc(t.slice(3))}</h2>`;return`<p>${esc(t).replace(/\n/g,'<br>')}</p>`}).join('');const bc=$('#articleBreadcrumb');if(bc)bc.innerHTML=`<a href="index.html">Ballina</a> / <a href="blog.html">Blog</a> / ${esc(p.title)}`;enhanceArticleSeo(p);renderRelated(p);incrementArticleView(p);bindShare();}
   async function init(){
     const qs=new URLSearchParams(location.search);activeCategory=qs.get('category')||'';
-    try{await loadData();renderCategories();renderLatest();if(document.body.dataset.blogPage==='article')renderArticle();else{renderList();bindSearch()}}
+    try{await loadData();renderCategories();renderLatest();renderMostRead();if(document.body.dataset.blogPage==='article')renderArticle();else{renderList();bindSearch()}}
     catch(e){const h=$('#blogGrid')||$('#articleHost');if(h)h.innerHTML=`<div class="blog-empty">${esc(e.message)}</div>`}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
