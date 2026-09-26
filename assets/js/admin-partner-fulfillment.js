@@ -38,6 +38,7 @@ function decorateTable(){
 }
 function fulfillmentCard(x){
  const items=(x.items||[]).map(i=>'<li><span>'+esc(i.title)+'</span><b>× '+Number(i.quantity||0)+'</b></li>').join('');
+ const marginLabel=x.margin_type==='percent'?(Number(x.margin_value||0).toFixed(2).replace(/\\.00$/,'')+'%'):(x.margin_type==='fixed'?(Number(x.margin_value||0).toFixed(2)+' €'):'—');
  return '<article class="zzpf-admin-card">'+
    '<div class="zzpf-admin-card-head"><div><span>PARTNER / LIBRARI</span><h4>'+esc(x.supplier_name)+'</h4><small>'+esc(x.supplier_email||'')+(x.supplier_phone?' · '+esc(x.supplier_phone):'')+'</small></div>'+statusPill(x.fulfillment_status)+'</div>'+
    '<div class="zzpf-finance-admin"><div><span>Përqindja</span><strong>'+esc(marginLabel)+'</strong></div><div><span>Të takon partnerit</span><strong>'+Number(x.supplier_due||0).toFixed(2)+' €</strong></div><div><span>Marzhi ZemZem</span><strong>'+Number(x.zemzem_margin_total||0).toFixed(2)+' €</strong></div></div>'+
