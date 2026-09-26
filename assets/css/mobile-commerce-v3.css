@@ -19,3 +19,17 @@
 @media(max-width:360px){#shopBooks.shop-pro-grid{gap:7px!important}#shopBooks .book-card{padding:6px}.zz-commerce-dock small{font-size:7px}.premium-media-stage{min-height:320px!important}.premium-main-cover{max-height:285px!important}.zz-product-buy-dock{grid-template-columns:.8fr 1.35fr 44px}.zz-checkout-dock{grid-template-columns:.7fr 1.3fr}}
 @media(prefers-reduced-motion:reduce){.zz-skeleton-cover,.zz-skeleton-line{animation:none}}
 @media(max-width:900px){.filter.shop-pro-filter{display:block!important}}
+
+
+/* Production mobile containment: horizontal navs scroll internally, never widen the page. */
+@media(max-width:700px){
+  body.shop-page-modern{overflow-x:clip}
+  body.shop-page-modern .header,
+  body.shop-page-modern .nav,
+  body.shop-page-modern .shop-modern-hero,
+  body.shop-page-modern .shop-catalog-section{max-width:100%}
+  body.shop-page-modern .nav{width:auto;overscroll-behavior-inline:contain}
+  body.shop-page-modern .nav-row{max-width:none}
+  body.shop-page-modern img,
+  body.shop-page-modern svg{max-width:100%}
+}
