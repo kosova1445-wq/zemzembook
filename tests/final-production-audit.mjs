@@ -56,6 +56,15 @@ ok(/max-width:760px/i.test(admin),'Admin includes mobile breakpoint rules');
 const adminScripts=[...admin.matchAll(/<script\b[^>]*\ssrc=["'][^"']+["'][^>]*>/gi)].map(x=>x[0]);
 if(adminScripts.length>35) warn.push('Admin still has '+adminScripts.length+' external scripts; all are deferred, but module consolidation remains a future optimization.');
 
+// Admin startup/performance guards
+const adminHtml=read('admin.html');
+const adminLazy=read('assets/js/admin-lazy-loader.js');
+ok(/rel=["']preconnect["'][^>]*ysvtrhizgcioyycwlkrk\.supabase\.co/i.test(adminHtml),'Admin preconnects to Supabase');
+ok(/rel=["']preload["'][^>]*admin-v2\.js\?v=22/i.test(adminHtml),'Admin preloads core runtime');
+ok(/PRELOAD_AHEAD\s*=\s*5/i.test(adminLazy),'Admin lazy loader warms modules ahead');
+ok(/requestIdleCallback/i.test(adminLazy),'Admin lazy loader yields during long module load');
+ok(/zemzem:admin-lazy-ready/i.test(adminLazy),'Admin lazy loader preserves ready event');
+
 // Connection startup and LCP guards
 ok(/rel=["']preconnect["'][^>]*ysvtrhizgcioyycwlkrk\.supabase\.co/i.test(index),'Homepage preconnects to Supabase');
 ok(/rel=["']preconnect["'][^>]*ysvtrhizgcioyycwlkrk\.supabase\.co/i.test(shop),'Shop preconnects to Supabase');
