@@ -9,4 +9,6 @@ Disallow: /ebook-checkout.html
 Disallow: /paypal-return.html
 Disallow: /ebook-paypal-return.html
 
+Disallow: /partner.html
+
 Sitemap: https://www.zemzem.al/sitemap.xml

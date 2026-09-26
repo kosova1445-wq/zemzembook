@@ -1,0 +1,32 @@
+name: Production Final Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'index.html'
+      - 'shop.html'
+      - 'product.html'
+      - 'checkout.html'
+      - 'account.html'
+      - 'admin.html'
+      - 'partner.html'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - 'assets/js/**'
+      - 'assets/css/**'
+      - 'tests/final-production-audit.mjs'
+      - '.github/workflows/production-final-audit.yml'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run final production audit
+        run: node tests/final-production-audit.mjs
