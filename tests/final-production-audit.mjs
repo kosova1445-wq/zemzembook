@@ -56,6 +56,14 @@ ok(/max-width:760px/i.test(admin),'Admin includes mobile breakpoint rules');
 const adminScripts=[...admin.matchAll(/<script\b[^>]*\ssrc=["'][^"']+["'][^>]*>/gi)].map(x=>x[0]);
 if(adminScripts.length>35) warn.push('Admin still has '+adminScripts.length+' external scripts; all are deferred, but module consolidation remains a future optimization.');
 
+// Low-risk production security header guards
+const securityHeaders=read('.htaccess');
+ok(/X-Permitted-Cross-Domain-Policies\s+["']none["']/i.test(securityHeaders),'Cross-domain policy files are disabled');
+ok(/Origin-Agent-Cluster\s+["']\?1["']/i.test(securityHeaders),'Origin-Agent-Cluster isolation is enabled');
+ok(/X-DNS-Prefetch-Control\s+["']on["']/i.test(securityHeaders),'DNS prefetch policy is explicit');
+ok(/X-Content-Type-Options\s+["']nosniff["']/i.test(securityHeaders),'MIME sniffing protection remains enabled');
+ok(/X-Frame-Options\s+["']SAMEORIGIN["']/i.test(securityHeaders),'Clickjacking protection remains enabled');
+
 // Sensitive page cache/indexing guards
 const htaccessSensitive=read('.htaccess');
 ok(/\^\(admin\.\*\|account\|checkout\|partner\)\\\.html\$/i.test(htaccessSensitive),'Sensitive HTML pages have dedicated server rules');
