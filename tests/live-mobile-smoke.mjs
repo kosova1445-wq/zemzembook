@@ -1,6 +1,24 @@
 import { chromium } from 'playwright';
 
 const base='https://www.zemzem.al';
+const expectedSha=process.env.GITHUB_SHA||'';
+
+async function waitForLiveSha(){
+  if(!expectedSha)return;
+  const deadline=Date.now()+240000;
+  while(Date.now()<deadline){
+    try{
+      const r=await fetch(base+'/release.json?smoke='+Date.now(),{cache:'no-store'});
+      const d=await r.json();
+      if(d?.sha===expectedSha){console.log('✓ live release SHA',expectedSha);return}
+      console.log('live SHA:',d?.sha||'unknown','expected:',expectedSha);
+    }catch(e){console.log('release check:',e.message)}
+    await new Promise(r=>setTimeout(r,10000));
+  }
+  throw new Error('Live release did not reach expected SHA within smoke window');
+}
+
+await waitForLiveSha();
 const browser=await chromium.launch({headless:true});
 const context=await browser.newContext({
   viewport:{width:390,height:844},
