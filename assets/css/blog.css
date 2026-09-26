@@ -39,3 +39,28 @@
 .article-content blockquote{margin:24px 0;padding:18px 20px;border-left:4px solid var(--salmon);background:#fff7f3;border-radius:0 12px 12px 0}
 @media(max-width:1180px){.related-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.related-grid{grid-template-columns:1fr}.article-content{font-size:16px;line-height:1.85}}
+
+
+/* Blog final features v4 */
+.article-share{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:18px 0 24px;padding:14px 0;border-top:1px solid #eee1dc;border-bottom:1px solid #eee1dc}
+.article-share span{font-size:12px;font-weight:900;color:var(--navy)}
+.article-share a,.article-share button{border:1px solid #e7d5ce;background:#fff7f3;color:var(--navy);border-radius:999px;padding:9px 13px;font-size:11px;font-weight:900;cursor:pointer;text-decoration:none}
+.article-share a:hover,.article-share button:hover{background:var(--salmon);color:#fff;border-color:var(--salmon)}
+.blog-comments{margin-top:28px;background:#fff;border:1px solid #eaded8;border-radius:18px;padding:24px}
+.blog-comment-form{display:grid;gap:12px;margin-bottom:24px}
+.comment-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.blog-comment-form input,.blog-comment-form textarea{width:100%;box-sizing:border-box;border:1px solid #e8d8d2;background:#fffaf7;border-radius:12px;padding:12px 14px;color:var(--navy);outline:none}
+.blog-comment-form input:focus,.blog-comment-form textarea:focus{border-color:var(--salmon)}
+.comment-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.comment-actions span{font-size:11px;color:var(--muted)}
+.blog-comments-list{display:grid;gap:12px}
+.blog-comment{border-top:1px solid #f0e2dd;padding-top:14px}
+.blog-comment:first-child{border-top:0}
+.blog-comment>div{display:flex;justify-content:space-between;gap:12px}
+.blog-comment strong{font-size:13px;color:var(--navy)}
+.blog-comment small{font-size:10px;color:var(--muted)}
+.blog-comment p{margin:8px 0 0;font-size:13px;line-height:1.65;color:#51616b}
+.newsletter-message{font-size:10px;margin-top:7px;min-height:14px;color:#fff}
+.blog-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.blog-tag{display:inline-flex;padding:5px 9px;border-radius:999px;background:#fff1eb;color:var(--salmon-dark);font-size:10px;font-weight:900}
+@media(max-width:700px){.comment-grid{grid-template-columns:1fr}.blog-comments{padding:18px}}
