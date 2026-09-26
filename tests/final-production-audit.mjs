@@ -9,7 +9,7 @@ for(const p of pages){
   const c=read(p);
   ok(has(c,/name=["']viewport["']/i),p+' has mobile viewport');
   ok(has(c,/performance-vitals\.js/i),p+' records Core Web Vitals');
-  const scripts=[...c.matchAll(/<script\b[^>]*src=["'][^"']+["'][^>]*>/gi)].map(x=>x[0]);
+  const scripts=[...c.matchAll(/<script\b[^>]*\ssrc=["'][^"']+["'][^>]*>/gi)].map(x=>x[0]);
   ok(scripts.every(s=>/\bdefer\b/i.test(s)),p+' external scripts are deferred');
 }
 for(const p of ['checkout.html','account.html','admin.html','partner.html']){
@@ -37,7 +37,7 @@ ok(/Disallow:\s*\/admin\.html/i.test(read('robots.txt')),'Admin blocked from cra
 ok(/Disallow:\s*\/partner\.html/i.test(read('robots.txt')),'Partner portal blocked from crawling');
 
 const admin=read('admin.html');
-const adminScripts=[...admin.matchAll(/<script\b[^>]*src=["'][^"']+["'][^>]*>/gi)].map(x=>x[0]);
+const adminScripts=[...admin.matchAll(/<script\b[^>]*\ssrc=["'][^"']+["'][^>]*>/gi)].map(x=>x[0]);
 if(adminScripts.length>35) warn.push('Admin still has '+adminScripts.length+' external scripts; all are deferred, but module consolidation remains a future optimization.');
 
 for(const w of warn) console.warn('WARN:',w);
