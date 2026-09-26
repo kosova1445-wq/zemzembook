@@ -21,3 +21,21 @@
 @media(max-width:1180px){.blog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:900px){.blog-featured{grid-template-columns:1fr}.blog-featured-media{min-height:320px}.blog-featured-title{font-size:26px}}
 @media(max-width:700px){.blog-grid{grid-template-columns:1fr}.blog-featured-body{padding:22px 20px}.blog-featured-media{min-height:260px}}
+
+
+/* Blog enhancements v3 */
+.blog-most-read{display:grid;gap:8px}
+.blog-most-item{display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:start;padding:10px;border-radius:12px;background:#fff;color:var(--navy);text-decoration:none;border:1px solid #f2e2dc}
+.blog-most-item>span{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--salmon);color:#fff;font-weight:900}
+.blog-most-item strong{display:block;font-size:11px;line-height:1.35;margin-bottom:4px}
+.blog-most-item small{font-size:9px;color:var(--muted)}
+.related-section{margin-top:26px}
+.related-section .section-head{margin-bottom:14px}
+.related-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.related-grid .blog-card-media{height:180px}
+.related-grid .blog-card h2{font-size:16px}
+.article-content{font-size:17px;line-height:1.9}
+.article-content p{margin-bottom:20px}
+.article-content blockquote{margin:24px 0;padding:18px 20px;border-left:4px solid var(--salmon);background:#fff7f3;border-radius:0 12px 12px 0}
+@media(max-width:1180px){.related-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.related-grid{grid-template-columns:1fr}.article-content{font-size:16px;line-height:1.85}}
