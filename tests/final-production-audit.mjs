@@ -62,7 +62,7 @@ ok(/\^\(admin\.\*\|account\|checkout\|partner\)\\\.html\$/i.test(htaccessSensiti
 ok(/Cache-Control\s+["']no-store, no-cache, must-revalidate, max-age=0["']/i.test(htaccessSensitive),'Sensitive HTML disables browser/proxy caching');
 ok(/X-Robots-Tag\s+["']noindex, nofollow, noarchive["']/i.test(htaccessSensitive),'Sensitive HTML is blocked from indexing and archiving');
 ok(/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(checkout),'Checkout keeps noindex meta');
-ok(/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(account),'Account keeps noindex meta');
+ok(/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(read('account.html')),'Account keeps noindex meta');
 ok(/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(partner),'Partner portal keeps noindex meta');
 
 // Static delivery / cache guards
