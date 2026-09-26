@@ -192,7 +192,7 @@ jobs:
           # Keep the safe book-create helper in the live admin without changing the classic admin design.
           ADMIN_BOOK_HELPER_TAG='<script src="assets/js/admin-book-helper.js?v=2"></script>'
           if [ -f admin.html ] && ! grep -Fq 'assets/js/admin-book-helper.js' admin.html; then
-            sed -i "s#<script src=\"assets/js/admin-booksto.js?v=7\"></script>#<script src=\"assets/js/admin-booksto.js?v=7\"></script>${ADMIN_BOOK_HELPER_TAG}#" admin.html
+            sed -i "s#<script src=\"assets/js/admin-booksto.js?v=8\"></script>#<script src=\"assets/js/admin-booksto.js?v=8\"></script>${ADMIN_BOOK_HELPER_TAG}#" admin.html
           fi
 
           # Homepage featured-books manager: load it directly in admin so it is always visible in Faqja & Menu.
@@ -660,17 +660,17 @@ jobs:
 
           require_live https://www.zemzem.al/assets/css/admin.css /tmp/admin-base.css 'overflow-y:auto' 'Desktop Admin sidebar scroll CSS'
           require_live https://www.zemzem.al/assets/js/admin-partners.js /tmp/admin-partners-settlement-guard.js 'Barazimi ekzistues u rifreskua me sukses' 'Partner settlement duplicate guard'
-          require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-sidebar-v3-loader.html 'assets/js/admin-booksto.js?v=7' 'Professional Admin sidebar v3'
+          require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-sidebar-v3-loader.html 'assets/js/admin-booksto.js?v=8' 'Professional Admin sidebar v3'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-sidebar-v3.js 'professionalizeSidebarV3' 'Semantic Admin sidebar grouping'
           require_live https://www.zemzem.al/assets/css/admin-booksto.css /tmp/admin-sidebar-v3.css 'Premium Admin Sidebar v4' 'Professional Admin sidebar styles'
-          require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-sidebar-premium-v4.html 'assets/js/admin-booksto.js?v=7' 'Premium Admin sidebar v4'
+          require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-sidebar-premium-v4.html 'assets/js/admin-booksto.js?v=8' 'Premium Admin sidebar v4'
           require_live https://www.zemzem.al/assets/css/admin-booksto.css /tmp/admin-sidebar-premium-v4.css 'Premium Admin Sidebar v4' 'Premium Admin sidebar styles'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-v5-loader.html 'assets/js/admin-control-center.js?v=6' 'Expanded Control Center loader'
           require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-control-center-v6-loader.html 'assets/js/admin-control-center.js?v=6' 'Expanded Control Center loader v6'
           require_live https://www.zemzem.al/assets/js/admin-control-center.js /tmp/admin-control-center-expanded.js 'Checkout & Pagesa' 'Expanded Control Center settings'
           require_live https://www.zemzem.al/assets/css/admin-control-center.css /tmp/admin-control-center-settings-grid.css '.zzcc-settings-grid' 'Expanded Control Center styles'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-v4-loader.html 'assets/js/admin-control-center.js?v=6' 'Control Center click runtime v4'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-booksto-v4-loader.html 'assets/js/admin-booksto.js?v=7' 'Booksto sidebar runtime v4'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-booksto-v4-loader.html 'assets/js/admin-booksto.js?v=8' 'Booksto sidebar runtime v4'
           require_live https://www.zemzem.al/assets/js/admin-control-center.js /tmp/admin-control-center-click.js 'function openControlCenter()' 'Control Center rebuilt sidebar click'
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-control-center.js 'frag.append(controlCenterBtn)' 'Booksto preserves Control Center'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-native.html 'id="view-control-center"' 'Native Admin Control Center view'
@@ -833,6 +833,9 @@ jobs:
           require_live https://www.zemzem.al/product.html /tmp/product-complete.html 'assets/js/branding.js' 'Product global branding outside renderer'
           require_live https://www.zemzem.al/product.html /tmp/product-no-bundle.html 'zzForceRemoveProductBundle' 'Force-remove product bundle marker'
           require_live https://www.zemzem.al/assets/js/admin-blog.js /tmp/admin-blog-media.js 'data-media-target="blogPostCover"' 'Blog uses Media Manager'
+          require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-blog-loader.html 'assets/js/admin-blog.js?v=3' 'Blog Admin module loader'
+          require_live "https://www.zemzem.al/admin.html?verify=${GITHUB_SHA}" /tmp/admin-blog-final-loader.html 'assets/js/admin-blog-final.js?v=3' 'Blog moderation module loader'
+          require_live https://www.zemzem.al/assets/js/admin-blog-final.js /tmp/admin-blog-comments.js 'data-blog-tab="comments"' 'Blog Comments moderation tab'
           require_live https://www.zemzem.al/admin.html /tmp/admin-category-media.html 'data-f="image_url"' 'Homepage categories use Media Manager'
           require_live https://www.zemzem.al/assets/js/site-content.js /tmp/category-media-render.js 'safeImage' 'Homepage category media renderer'
           require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-media.html 'ebookMediaFrontBtn' 'eBook uses shared Media Manager'
