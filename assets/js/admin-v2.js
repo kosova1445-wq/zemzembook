@@ -201,6 +201,7 @@ async function enterAdmin(){
     if(!await requireAdmin2FA())throw new Error('2FA nuk u verifikua.');
     $('#authScreen').hidden=true;$('#adminApp').hidden=false;
     await loadAll();
+    window.dispatchEvent(new CustomEvent('zemzem:admin-authenticated',{detail:{role:currentAdminAccess?.role||null}}));
   }catch(e){clearSession();$('#authScreen').hidden=false;$('#adminApp').hidden=true;authMessage(e.message,'error')}
 }
 async function loadAll(){
