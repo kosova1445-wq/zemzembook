@@ -77,7 +77,7 @@
 
     function fallbackCoverClass(b){return esc(b.cover||'c1')}
     function coverHtml(b,cls=''){
-      if(b.coverUrl)return `<img class="premium-book-image ${cls}" src="${esc(b.coverUrl)}" alt="${esc(b.title)}">`;
+      if(b.coverUrl)return `<img class="premium-book-image ${cls}" src="${esc(b.coverUrl)}" alt="${esc(b.title)}" fetchpriority="high" decoding="async">`;
       return `<div class="book-cover ${fallbackCoverClass(b)} premium-book-fallback ${cls}"><span>${esc(b.title)}</span></div>`;
     }
     function book3dMarkup(b){
@@ -118,10 +118,10 @@
       <div class="premium-product-layout">
         <section class="premium-media-card" aria-label="Kopertina e librit">
           <div class="premium-media-stage" id="premiumMediaStage">
-            ${threeD?book3dMarkup(b):(gallery.length?`<img id="premiumMainImage" class="premium-book-image premium-main-cover" src="${esc(gallery[0])}" alt="${esc(b.title)}">`:coverHtml(b,'premium-main-cover'))}
+            ${threeD?book3dMarkup(b):(gallery.length?`<img id="premiumMainImage" class="premium-book-image premium-main-cover" src="${esc(gallery[0])}" alt="${esc(b.title)}" fetchpriority="high" decoding="async">`:coverHtml(b,'premium-main-cover'))}
             ${gallery.length?'<button class="premium-zoom" id="premiumZoom" type="button" aria-label="Zmadho fotografinë">⌕</button>':''}
           </div>
-          <div class="premium-thumbs">${threeD?`<button type="button" class="premium-thumb premium-thumb-3d active" data-view-3d aria-label="Pamje 3D"><span>3D</span></button>`:''}${gallery.length?gallery.map((url,i)=>`<button type="button" class="premium-thumb ${!threeD&&i===0?'active':''}" data-gallery-url="${esc(url)}" aria-label="${i===0?'Kopertina para':i===1&&b.coverSpineUrl?'Shpina':i===2&&b.coverBackUrl?'Kopertina prapa':'Fotografia '+(i+1)}"><img src="${esc(url)}" alt=""></button>`).join(''):`<button type="button" class="premium-thumb active" aria-label="Kopertina">${coverHtml(b)}</button>`}</div>
+          <div class="premium-thumbs">${threeD?`<button type="button" class="premium-thumb premium-thumb-3d active" data-view-3d aria-label="Pamje 3D"><span>3D</span></button>`:''}${gallery.length?gallery.map((url,i)=>`<button type="button" class="premium-thumb ${!threeD&&i===0?'active':''}" data-gallery-url="${esc(url)}" aria-label="${i===0?'Kopertina para':i===1&&b.coverSpineUrl?'Shpina':i===2&&b.coverBackUrl?'Kopertina prapa':'Fotografia '+(i+1)}"><img src="${esc(url)}" alt="" loading="lazy" decoding="async"></button>`).join(''):`<button type="button" class="premium-thumb active" aria-label="Kopertina">${coverHtml(b)}</button>`}</div>
         </section>
 
         <section class="premium-product-summary">
