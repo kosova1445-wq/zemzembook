@@ -1,0 +1,35 @@
+name: Live Mobile Smoke
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'index.html'
+      - 'shop.html'
+      - 'product.html'
+      - 'checkout.html'
+      - 'account.html'
+      - 'admin.html'
+      - 'partner.html'
+      - 'assets/js/**'
+      - 'assets/css/**'
+      - 'tests/live-mobile-smoke.mjs'
+      - '.github/workflows/live-mobile-smoke.yml'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Test live mobile production
+        run: node tests/live-mobile-smoke.mjs
