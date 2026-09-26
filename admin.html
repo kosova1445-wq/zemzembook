@@ -231,11 +231,11 @@
 <div id="bookModal" class="modal-wrap" hidden><div class="modal-backdrop" data-close="book"></div><div class="modal-card large"><div class="modal-head"><div><div class="eyebrow">KATALOGU FIZIK</div><h2 id="bookModalTitle">Libër fizik i ri</h2></div><button class="drawer-close" data-close="book">×</button></div><form id="bookForm" class="book-form three"><input type="hidden" id="bookId"><input type="hidden" id="bookFormat" value="physical"><div class="field span-3"><div class="cover-upload"><div id="coverPreview" class="cover-preview">Pa kopertinë</div><div class="upload-box"><label>Kopertina para / kryesore (JPG, PNG, WebP · max 5 MB)</label><input id="bookCover" type="file" accept="image/jpeg,image/png,image/webp"><input id="bookCoverUrl" type="hidden"><button type="button" class="secondary-btn" data-media-target="bookCoverUrl" data-media-preview="coverPreview">Nga Media Manager</button><p class="muted-small">Ngarkohet direkt në Supabase Storage.</p></div></div></div><div class="field span-3 book-3d-admin-block"><div class="book-3d-admin-head"><div><strong>Mockup 3D i librit</strong><p>Ngarko kopertinën para, shpinën dhe kopertinën prapa. Kur të tria janë të pranishme, mund ta shfaqësh librin në 3D.</p></div><label class="book-3d-mode-label">Pamja<select id="bookCoverMode"><option value="3d">3D</option><option value="flat">Flat</option></select></label></div><div class="book-3d-admin-grid"><label><span>1. Kopertina para</span><div id="book3dFrontPreview" class="book-3d-upload-preview">Përdor kopertinën kryesore</div><label class="book-3d-file-button" for="bookCover">Zgjidh foto para</label></label><label><span>2. Shpina</span><div id="book3dSpinePreview" class="book-3d-upload-preview">Pa foto</div><input id="bookSpineCover" type="file" accept="image/jpeg,image/png,image/webp"><input id="bookSpineCoverUrl" type="hidden"><button type="button" class="secondary-btn" data-media-target="bookSpineCoverUrl" data-media-preview="book3dSpinePreview">Nga Media Manager</button></label><label><span>3. Kopertina prapa</span><div id="book3dBackPreview" class="book-3d-upload-preview">Pa foto</div><input id="bookBackCover" type="file" accept="image/jpeg,image/png,image/webp"><input id="bookBackCoverUrl" type="hidden"><button type="button" class="secondary-btn" data-media-target="bookBackCoverUrl" data-media-preview="book3dBackPreview">Nga Media Manager</button></label></div><div class="book-3d-admin-bottom"><label>Trashësia e librit (mm, opsionale)<input id="bookThickness" type="number" min="1" max="200" step="0.1" placeholder="p.sh. 28"></label><div id="book3dPreview" class="admin-book-3d-preview"><div class="admin-book-3d-back"><img id="book3dPreviewBack" alt=""></div><div class="admin-book-3d-main"><div class="admin-book-3d-spine"><img id="book3dPreviewSpine" alt=""></div><div class="admin-book-3d-front"><img id="book3dPreviewFront" alt=""></div></div></div></div><p class="muted-small">3D aktivizohet vetëm kur ekzistojnë të tria: para + shpina + prapa. Në të kundërt faqja përdor automatikisht kopertinën e zakonshme.</p></div><div class="field span-3"><label>Titulli *</label><input id="bookTitle" required></div><div class="field"><label>SKU *</label><input id="bookSku" required></div><div class="field"><label>Slug *</label><input id="bookSlug" required></div><div class="field"><label>ISBN</label><input id="bookIsbn"></div><div class="field"><label>Çmimi € *</label><input id="bookPrice" type="number" min="0" step="0.01" required></div><div class="field"><label>Çmimi i vjetër €</label><input id="bookOldPrice" type="number" min="0" step="0.01"></div><div class="field"><label>Kostoja €</label><input id="bookCostPrice" type="number" min="0" step="0.01" placeholder="Për raportin e fitimit"></div><div class="field"><label>Badge publik</label><input id="bookBadgeText" maxlength="28" placeholder="p.sh. EKSKLUZIVE"></div><div class="field"><label>Stili i badge</label><select id="bookBadgeStyle"><option value="default">Default</option><option value="new">I ri</option><option value="best">Bestseller</option><option value="offer">Ofertë</option><option value="exclusive">Ekskluzive</option></select></div><div class="field"><label>Oferta mbaron</label><input id="bookOfferEnds" type="datetime-local"></div><div class="field"><label>Stoku</label><input id="bookStock" type="number" min="0" step="1" value="0"></div><div class="field"><label>Pragu i stokut të ulët</label><input id="bookLowStock" type="number" min="0" step="1" value="5"></div><div class="field"><label>Statusi</label><select id="bookStatus"><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></div><div class="field"><label>Publiko automatikisht</label><input id="bookPublishAt" type="datetime-local"></div><div class="field"><label>Fsheh automatikisht</label><input id="bookUnpublishAt" type="datetime-local"></div><div class="field"><label>Formati</label><input value="Libër fizik" disabled></div><div class="field"><label>Gjuha</label><input id="bookLanguage" value="sq"></div><div class="field"><label>Faqe</label><input id="bookPages" type="number" min="1"></div><div class="field"><label>Data e botimit</label><input id="bookReleaseDate" type="date"></div><div class="field"><label>Shteti / Vendi</label><input id="bookCountry" placeholder="p.sh. Kosovë"></div><div class="field"><label>Dimensionet</label><input id="bookDimensions" placeholder="p.sh. 17 × 24 cm"></div><div class="field"><label>Pesha (gram)</label><input id="bookWeight" type="number" min="1" step="1" placeholder="p.sh. 650"></div><div class="field"><label>Autori</label><select id="bookAuthor"></select></div><div class="field"><label>Kategoria</label><select id="bookCategory"></select></div><div class="field"><label>Botuesi</label><select id="bookPublisher"></select></div><div class="field span-3"><label>Përshkrimi i shkurtër</label><textarea id="bookShort" rows="2"></textarea></div><div class="field span-3"><label>Përshkrimi</label><textarea id="bookDescription" rows="4"></textarea></div><div class="checks span-3"><label><input type="checkbox" id="bookFeatured"> Featured</label><label><input type="checkbox" id="bookBestseller"> Bestseller</label><label><input type="checkbox" id="bookPreorder"> Preorder</label><label><input type="checkbox" id="bookBackorder"> Lejo Backorder</label><label><input type="checkbox" id="bookTrackStock" checked> Track stock</label><label><input type="checkbox" id="bookGiftWrap"> Paketim dhurate</label><label>Tarifa dhuratës € <input id="bookGiftWrapPrice" type="number" min="0" step=".01" value="0" style="width:90px"></label></div><div class="modal-actions span-3"><button type="button" class="danger-btn" id="deleteBookBtn" hidden>Fshi librin</button><span style="flex:1"></span><button type="button" class="secondary-btn" data-close="book">Anulo</button><button type="submit" class="primary-btn" id="saveBookBtn">Ruaj librin</button></div></form></div></div>
 
 <div id="toast" class="admin-toast" hidden></div>
-<script src="assets/js/admin-v2.js?v=22"></script>
-<script src="assets/js/admin-free-library-integrated.js?v=3"></script>
-<script src="assets/js/admin-booksto.js?v=7"></script>
-<script src="assets/js/admin-collab.js?v=4"></script>
-<script src="assets/js/admin-collaboration-suite.js?v=2"></script>
+<script defer src="assets/js/admin-v2.js?v=22"></script>
+<script defer src="assets/js/admin-free-library-integrated.js?v=3"></script>
+<script defer src="assets/js/admin-booksto.js?v=7"></script>
+<script defer src="assets/js/admin-collab.js?v=4"></script>
+<script defer src="assets/js/admin-collaboration-suite.js?v=2"></script>
 <script>
 (()=>{
   const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];let loaded=false,current=null;const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const val=id=>q(id)?.value?.trim()||'';const fallback={topbar_text:'Dërgesa: Kosovë 3 € · Shqipëri 6 € · Maqedoni e Veriut 6 €',primary_menu:[{label:'Ballina',href:'index.html',visible:true},{label:'Libra fizikë',href:'shop.html',visible:true},{label:'eBook',href:'ebooks.html',visible:true},{label:'Biblioteka Falas',href:'free-library.html',visible:true},{label:'Oferta',href:'index.html#oferta',visible:true},{label:'Rreth nesh',href:'about.html',visible:true}],support_label:'Porosit & Pyet',support_href:'contact.html',hero:{eyebrow:'Librari online në shqip',title:'Libra që mbeten me ty.',description:'Zbulo libra në shqip, tituj islamë, edukativë, historikë dhe eBook të përzgjedhur. Porosit thjesht, paguaj sigurt dhe ndiq blerjet nga një vend i vetëm.',primary_label:'Shfleto librat',primary_href:'shop.html',secondary_label:'Shiko eBook →',secondary_href:'ebooks.html'},categories_heading:'Kategoritë',categories_kicker:'Koleksionet',home_categories:[{label:'Fe & Edukim',description:'Kur’an, hadith dhe edukim',href:'shop.html?category=Fe%20%26%20Edukim',visible:true},{label:'Histori',description:'Ngjarje dhe trashëgimi',href:'shop.html?category=Histori',visible:true},{label:'Fëmijë',description:'Tregime dhe edukim',href:'shop.html?category=F%C3%ABmij%C3%AB',visible:true},{label:'Gjuhë të huaja',description:'Fjalorë dhe materiale mësimore',href:'shop.html?category=Gjuh%C3%AB%20t%C3%AB%20huaja',visible:true},{label:'eBook',description:'Biblioteka digjitale ZemZem',href:'ebooks.html',visible:true}]};const copy=o=>JSON.parse(JSON.stringify(o));const allBooksFallback={visible:true,kicker:'Katalogu i plotë',title:'Të gjithë librat',description:'Shfleto të gjithë librat fizikë të publikuar në ZemZem.',limit:20,sort:'newest'};const whyFallback={kicker:'Pse ZemZem?',title:'Blerje më e thjeshtë, nga libri te dera jote.',description:'Katër arsye pse përvoja ZemZem është ndërtuar për të qenë e qartë dhe praktike.',cards:[{icon:'✓',title:'Porosi e sigurt',description:'Checkout i qartë dhe të dhënat e pagesës trajtohen përmes kanaleve të dedikuara.',visible:true},{icon:'🚚',title:'Dërgesë rajonale',description:'Transport për Kosovë, Shqipëri dhe Maqedoni të Veriut me tarifa të dukshme.',visible:true},{icon:'💳',title:'COD & PayPal',description:'Zgjidh pagesën në pranim ose PayPal sipas kushteve që shfaqen në checkout.',visible:true},{icon:'📱',title:'eBook pa pritje',description:'Titujt digjitalë ruhen në llogarinë tënde dhe hapen nga biblioteka ZemZem.',visible:true}]};
@@ -249,29 +249,29 @@
   function init(){buildView();addSidebarButton();q('#siteAddMenu').onclick=addMenu;q('#siteSaveTop').onclick=saveConfig;q('#siteSaveBottom').onclick=saveConfig;q('#siteReload').onclick=loadConfig}document.addEventListener('DOMContentLoaded',()=>setTimeout(init,90));
 })();
 </script>
-<script src="assets/js/admin-home-books.js?v=4" data-admin-home-books="1"></script>
-<script src="assets/js/admin-enterprise.js?v=1" data-admin-enterprise="1"></script>
-<script src="assets/js/admin-enterprise-tools.js?v=1" data-admin-enterprise-tools="1"></script>
-<script src="assets/js/admin-enterprise-config.js?v=1" data-admin-enterprise-config="1"></script>
-<script src="assets/js/admin-marketing-suite.js?v=1" data-admin-marketing-suite="1"></script>
-<script src="assets/js/admin-stock-forecast.js?v=1" data-admin-stock-forecast="1"></script>
-<script src="assets/js/admin-abandoned.js?v=1" data-admin-abandoned="1"></script>
-<script src="assets/js/admin-reports.js?v=1" data-admin-reports="1"></script>
-<script src="assets/js/admin-gift-cards.js?v=1" data-admin-gift-cards="1"></script>
-<script src="assets/js/admin-team.js?v=11" data-admin-team="1" data-admin-team-live="1"></script>
-<script src="assets/js/admin-social-contacts.js?v=2" data-admin-social-contacts="1"></script>
-<script src="assets/js/admin-site-design.js?v=14" data-admin-site-design="1"></script>
-<script src="assets/js/admin-branding.js?v=7" data-admin-branding="1"></script>
-<script src="assets/js/admin-media.js?v=2" data-admin-media="1"></script>
-<script src="assets/js/admin-documents.js?v=4" data-admin-documents="1"></script>
-<script src="assets/js/admin-dashboard-v2.js?v=3" data-admin-dashboard-v2="1"></script>
-<script src="assets/js/admin-operations.js?v=1" data-admin-operations="1"></script>
-<script src="assets/js/admin-extras-suite.js?v=1" data-admin-extras="1"></script>
-<script src="assets/js/admin-growth-customers.js?v=1" data-admin-growth-customers="1"></script>
-<script src="assets/js/admin-order-editor.js?v=1" data-admin-order-editor="1"></script>\n<script src="assets/js/admin-growth-catalog.js?v=2" data-admin-growth-catalog="1"></script>\n<script src="assets/js/admin-super-suite.js?v=1" data-admin-super-suite="1"></script>\n<script src="assets/js/admin-workflow-studio.js?v=1" data-admin-workflow-studio="1"></script>
-<script src="assets/js/admin-intelligence-suite.js?v=2" data-admin-intelligence-suite="1"></script>
-<script src="assets/js/admin-growth-advanced.js?v=2" data-admin-growth-advanced="1"></script>
-<script src="assets/js/admin-experience-automation.js?v=2" data-admin-experience-automation="1"></script>
+<script defer src="assets/js/admin-home-books.js?v=4" data-admin-home-books="1"></script>
+<script defer src="assets/js/admin-enterprise.js?v=1" data-admin-enterprise="1"></script>
+<script defer src="assets/js/admin-enterprise-tools.js?v=1" data-admin-enterprise-tools="1"></script>
+<script defer src="assets/js/admin-enterprise-config.js?v=1" data-admin-enterprise-config="1"></script>
+<script defer src="assets/js/admin-marketing-suite.js?v=1" data-admin-marketing-suite="1"></script>
+<script defer src="assets/js/admin-stock-forecast.js?v=1" data-admin-stock-forecast="1"></script>
+<script defer src="assets/js/admin-abandoned.js?v=1" data-admin-abandoned="1"></script>
+<script defer src="assets/js/admin-reports.js?v=1" data-admin-reports="1"></script>
+<script defer src="assets/js/admin-gift-cards.js?v=1" data-admin-gift-cards="1"></script>
+<script defer src="assets/js/admin-team.js?v=11" data-admin-team="1" data-admin-team-live="1"></script>
+<script defer src="assets/js/admin-social-contacts.js?v=2" data-admin-social-contacts="1"></script>
+<script defer src="assets/js/admin-site-design.js?v=14" data-admin-site-design="1"></script>
+<script defer src="assets/js/admin-branding.js?v=7" data-admin-branding="1"></script>
+<script defer src="assets/js/admin-media.js?v=2" data-admin-media="1"></script>
+<script defer src="assets/js/admin-documents.js?v=4" data-admin-documents="1"></script>
+<script defer src="assets/js/admin-dashboard-v2.js?v=3" data-admin-dashboard-v2="1"></script>
+<script defer src="assets/js/admin-operations.js?v=1" data-admin-operations="1"></script>
+<script defer src="assets/js/admin-extras-suite.js?v=1" data-admin-extras="1"></script>
+<script defer src="assets/js/admin-growth-customers.js?v=1" data-admin-growth-customers="1"></script>
+<script defer src="assets/js/admin-order-editor.js?v=1" data-admin-order-editor="1"></script>\n<script defer src="assets/js/admin-growth-catalog.js?v=2" data-admin-growth-catalog="1"></script>\n<script defer src="assets/js/admin-super-suite.js?v=1" data-admin-super-suite="1"></script>\n<script defer src="assets/js/admin-workflow-studio.js?v=1" data-admin-workflow-studio="1"></script>
+<script defer src="assets/js/admin-intelligence-suite.js?v=2" data-admin-intelligence-suite="1"></script>
+<script defer src="assets/js/admin-growth-advanced.js?v=2" data-admin-growth-advanced="1"></script>
+<script defer src="assets/js/admin-experience-automation.js?v=2" data-admin-experience-automation="1"></script>
 <script id="adminAdvancedFallbackLoader">
 (()=>{
   const mods=[
@@ -294,8 +294,8 @@
   setTimeout(ensure,1800);
 })();
 </script>
-<script src="assets/js/admin-invoice-settings.js?v=4" data-admin-invoice-settings="1"></script>
-<script src="assets/js/admin-invoice-center.js?v=5" data-admin-invoice-center="1"></script>
+<script defer src="assets/js/admin-invoice-settings.js?v=4" data-admin-invoice-settings="1"></script>
+<script defer src="assets/js/admin-invoice-center.js?v=5" data-admin-invoice-center="1"></script>
 
 <script id="menuTypographyInline">
 (()=>{
@@ -530,12 +530,12 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
-<script src="assets/js/branding.js?v=9"></script><script src="assets/js/admin-pro-20.js?v=4" data-admin-pro20="1"></script><script src="assets/js/admin-security-release.js?v=2"></script>
-<script src="assets/js/admin-site-manager.js?v=2" data-admin-site-manager="1"></script>
-<script src="assets/js/admin-site-manager-pro.js?v=3" data-admin-site-manager-pro="1"></script>
-<script src="assets/js/admin-order-launch-reset.js?v=1" data-admin-order-launch-reset="1"></script>
-<script src="assets/js/admin-partners.js?v=5"></script>
-<script src="assets/js/admin-checkout-settings.js?v=1"></script><script src="assets/js/admin-command-palette.js?v=1"></script><script src="assets/js/admin-business-center.js?v=1"></script>
+<script defer src="assets/js/branding.js?v=9"></script><script defer src="assets/js/admin-pro-20.js?v=4" data-admin-pro20="1"></script><script defer src="assets/js/admin-security-release.js?v=2"></script>
+<script defer src="assets/js/admin-site-manager.js?v=2" data-admin-site-manager="1"></script>
+<script defer src="assets/js/admin-site-manager-pro.js?v=3" data-admin-site-manager-pro="1"></script>
+<script defer src="assets/js/admin-order-launch-reset.js?v=1" data-admin-order-launch-reset="1"></script>
+<script defer src="assets/js/admin-partners.js?v=5"></script>
+<script defer src="assets/js/admin-checkout-settings.js?v=1"></script><script defer src="assets/js/admin-command-palette.js?v=1"></script><script defer src="assets/js/admin-business-center.js?v=1"></script>
 
 
 <!-- ZZ ADMIN THEMES INLINE FORCE -->
@@ -1260,9 +1260,10 @@ html body #adminApp #view-dashboard svg{
 }
 </style>
 
-<script src="assets/js/admin-partner-center-pro.js?v=2"></script>
-<script src="assets/js/admin-free-library-manager.js?v=4"></script>
-<script src="assets/js/admin-partner-fulfillment.js?v=4"></script>
-<script src="assets/js/admin-control-center.js?v=6"></script>
+<script defer src="assets/js/admin-partner-center-pro.js?v=2"></script>
+<script defer src="assets/js/admin-free-library-manager.js?v=4"></script>
+<script defer src="assets/js/admin-partner-fulfillment.js?v=4"></script>
+<script defer src="assets/js/admin-control-center.js?v=6"></script>
+<script defer src="assets/js/performance-vitals.js?v=1"></script>
 </body>
 </html>
