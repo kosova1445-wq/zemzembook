@@ -28,3 +28,6 @@
 .ebook-language-nav button:hover{border-color:#9fcbd4;transform:translateY(-1px)}.ebook-language-nav button.active{background:#0f879d;border-color:#0f879d;color:#fff;box-shadow:0 8px 18px rgba(15,135,157,.18)}
 .ebook-language-count{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#edf4f6;color:#61747e;font-size:11px}.ebook-language-nav button.active .ebook-language-count{background:rgba(255,255,255,.18);color:#fff}
 @media(max-width:720px){.ebook-language-section{padding:18px}.ebook-language-nav{display:grid;grid-template-columns:1fr 1fr}.ebook-language-nav button{justify-content:space-between;border-radius:14px}}@media(max-width:430px){.ebook-language-nav{grid-template-columns:1fr}}
+
+/* performance v5 */
+.ebook-card{content-visibility:auto;contain-intrinsic-size:420px;contain:layout paint style}
