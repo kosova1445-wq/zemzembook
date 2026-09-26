@@ -20,13 +20,9 @@ async function loadAll(){
   }
   window.dispatchEvent(new CustomEvent('zemzem:admin-lazy-ready'));
 }
-function schedule(){
-  if('requestIdleCallback' in window) requestIdleCallback(loadAll,{timeout:2200});
-  else setTimeout(loadAll,900);
+function scheduleAuthenticatedLoad(){
+  if('requestIdleCallback' in window) requestIdleCallback(loadAll,{timeout:1600});
+  else setTimeout(loadAll,350);
 }
-if(document.readyState==='complete') schedule();
-else window.addEventListener('load',schedule,{once:true});
-for(const ev of ['pointerdown','keydown','touchstart']) {
-  window.addEventListener(ev,loadAll,{once:true,passive:true});
-}
+window.addEventListener('zemzem:admin-authenticated',scheduleAuthenticatedLoad,{once:true});
 })();
