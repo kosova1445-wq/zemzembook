@@ -56,6 +56,15 @@ ok(/max-width:760px/i.test(admin),'Admin includes mobile breakpoint rules');
 const adminScripts=[...admin.matchAll(/<script\b[^>]*\ssrc=["'][^"']+["'][^>]*>/gi)].map(x=>x[0]);
 if(adminScripts.length>35) warn.push('Admin still has '+adminScripts.length+' external scripts; all are deferred, but module consolidation remains a future optimization.');
 
+// Static delivery / cache guards
+const htaccess=read('.htaccess');
+ok(/mod_brotli\.c/i.test(htaccess),'Apache enables Brotli when available');
+ok(/BROTLI_COMPRESS/i.test(htaccess),'Brotli compression covers text assets');
+ok(/Vary\s+["']Accept-Encoding["']/i.test(htaccess),'Compression varies by Accept-Encoding');
+ok(/image\/avif/i.test(htaccess),'AVIF cache policy is configured');
+ok(/font\/woff2/i.test(htaccess),'WOFF2 cache policy is configured');
+ok(/max-age=2592000/i.test(htaccess),'Long-lived static asset caching remains enabled');
+
 // Admin startup/performance guards
 const adminHtml=read('admin.html');
 const adminLazy=read('assets/js/admin-lazy-loader.js');
