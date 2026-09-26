@@ -56,6 +56,14 @@ ok(/max-width:760px/i.test(admin),'Admin includes mobile breakpoint rules');
 const adminScripts=[...admin.matchAll(/<script\b[^>]*\ssrc=["'][^"']+["'][^>]*>/gi)].map(x=>x[0]);
 if(adminScripts.length>35) warn.push('Admin still has '+adminScripts.length+' external scripts; all are deferred, but module consolidation remains a future optimization.');
 
+// CSP readiness guards
+const cspHeaders=read('.htaccess');
+ok(/Content-Security-Policy-Report-Only/i.test(cspHeaders),'CSP readiness runs in report-only mode');
+ok(!/Header\s+always\s+set\s+Content-Security-Policy\s+["']/i.test(cspHeaders),'Enforcing CSP is not enabled yet');
+ok(/object-src\s+'none'/i.test(cspHeaders),'CSP report-only blocks object plugins in policy design');
+ok(/base-uri\s+'self'/i.test(cspHeaders),'CSP report-only restricts base URI in policy design');
+ok(/frame-ancestors\s+'self'/i.test(cspHeaders),'CSP report-only preserves same-origin framing policy');
+
 // Low-risk production security header guards
 const securityHeaders=read('.htaccess');
 ok(/X-Permitted-Cross-Domain-Policies\s+["']none["']/i.test(securityHeaders),'Cross-domain policy files are disabled');
