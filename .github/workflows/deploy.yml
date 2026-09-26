@@ -317,6 +317,7 @@ jobs:
           assets/js/admin-site-manager-pro.js
           assets/js/admin-order-launch-reset.js
           assets/js/admin-blog.js
+          assets/js/admin-blog-final.js
           assets/css/admin-blog.css
           assets/css/admin.css
           assets/css/admin-v2.css
@@ -423,6 +424,8 @@ jobs:
           upload "assets/js/admin-site-manager.js"
           upload "assets/js/admin-site-manager-pro.js"
           upload "assets/js/admin-order-launch-reset.js"
+          upload "assets/js/admin-blog.js"
+          upload "assets/js/admin-blog-final.js"
           upload "assets/js/site-manager-advanced-runtime.js"
           upload "assets/js/admin-enterprise.js"
           upload "assets/js/admin-enterprise-tools.js"
@@ -483,6 +486,8 @@ jobs:
           grep -q "Ndarja e të ardhurave dhe barazimet" assets/js/partner-portal.js
           grep -q "partner-edit-book" assets/js/partner-portal.js
           grep -q "partner-shell-pro" assets/js/partner-portal.js
+          node --check assets/js/admin-blog.js
+          node --check assets/js/admin-blog-final.js
           node --check assets/js/admin-collaboration-suite.js
           node --check assets/js/admin-super-suite.js
           node --check assets/js/admin-workflow-studio.js
