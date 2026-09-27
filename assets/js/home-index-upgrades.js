@@ -26,10 +26,8 @@ async function loadFreeLibrary(){
 }
 
 function bindNewsletterStatus(){
-  const form=q('#homeNewsletterForm'),status=q('#homeNewsletterStatus');
-  if(!form||!status)return;
-  const observer=new MutationObserver(()=>{if(status.textContent.trim())status.setAttribute('role','status')});
-  observer.observe(status,{childList:true,subtree:true,characterData:true});
+  const status=q('#homeNewsletterStatus');
+  if(status)status.setAttribute('role','status');
 }
 
 function run(){loadFreeLibrary();bindNewsletterStatus()}
