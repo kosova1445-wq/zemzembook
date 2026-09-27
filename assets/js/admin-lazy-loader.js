@@ -4,10 +4,11 @@ if(window.__zzAdminLazyLoader)return;window.__zzAdminLazyLoader=1;
 const placeholders=[...document.querySelectorAll('script[type="application/x-zemzem-lazy"][data-src]')];
 let started=false;
 const IS_MOBILE=matchMedia('(max-width:760px)').matches;
-const PRELOAD_AHEAD=IS_MOBILE?2:5;
+const PRELOAD_AHEAD=5;
+const MOBILE_PRELOAD_AHEAD=2;
 
 function warm(index){
-  for(let i=index;i<Math.min(placeholders.length,index+PRELOAD_AHEAD);i++){
+  for(let i=index;i<Math.min(placeholders.length,index+(IS_MOBILE?MOBILE_PRELOAD_AHEAD:PRELOAD_AHEAD));i++){
     const ph=placeholders[i];
     if(!ph?.dataset?.src||ph.dataset.warmed==='1')continue;
     ph.dataset.warmed='1';
