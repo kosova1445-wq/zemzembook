@@ -210,6 +210,8 @@ jobs:
 
           # Always republish the complete protected production set.
           CHANGED="$CHANGED
+          .htaccess
+          rss.php
           index.html
           404.html
           shop.html
@@ -363,7 +365,7 @@ jobs:
           printf '%s
           ' "$CHANGED" | sed '/^[[:space:]]*$/d' | sort -u | while IFS= read -r file; do
             case "$file" in
-              *.html|*.css|*.js|*.svg|*.webmanifest|robots.txt|sitemap.xml)
+              *.html|*.css|*.js|*.svg|*.webmanifest|*.php|.htaccess|robots.txt|sitemap.xml)
                 if [ -f "$file" ]; then upload "$file"; fi
                 ;;
               *) echo "Skipped non-site file: $file" ;;
