@@ -3,7 +3,8 @@
 if(window.__zzAdminLazyLoader)return;window.__zzAdminLazyLoader=1;
 const placeholders=[...document.querySelectorAll('script[type="application/x-zemzem-lazy"][data-src]')];
 let started=false;
-const PRELOAD_AHEAD=5;
+const IS_MOBILE=matchMedia('(max-width:760px)').matches;
+const PRELOAD_AHEAD=IS_MOBILE?2:5;
 
 function warm(index){
   for(let i=index;i<Math.min(placeholders.length,index+PRELOAD_AHEAD);i++){
@@ -36,10 +37,10 @@ async function loadAll(){
       s.onerror=()=>{console.warn('Admin lazy module failed:',s.src);resolve()};
       ph.replaceWith(s);
     });
-    if(i>0&&i%8===0){
+    if(i>0&&i%(IS_MOBILE?3:8)===0){
       await new Promise(resolve=>{
-        if('requestIdleCallback' in window)requestIdleCallback(()=>resolve(),{timeout:120});
-        else setTimeout(resolve,0);
+        if('requestIdleCallback' in window)requestIdleCallback(()=>resolve(),{timeout:IS_MOBILE?250:120});
+        else setTimeout(resolve,IS_MOBILE?16:0);
       });
     }
   }
@@ -48,8 +49,8 @@ async function loadAll(){
 }
 
 function scheduleAuthenticatedLoad(){
-  if('requestIdleCallback' in window)requestIdleCallback(loadAll,{timeout:1200});
-  else setTimeout(loadAll,250);
+  if('requestIdleCallback' in window)requestIdleCallback(loadAll,{timeout:IS_MOBILE?1800:1200});
+  else setTimeout(loadAll,IS_MOBILE?600:250);
 }
 window.addEventListener('zemzem:admin-authenticated',scheduleAuthenticatedLoad,{once:true});
 })();
