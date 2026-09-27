@@ -64,7 +64,7 @@
   }
 
   function getFilters(){
-    return {q:($('#shopSearch')?.value||param('q')).trim().toLowerCase(),cats:$('[data-pro-category]:checked').map(x=>x.dataset.proCategory),author:$('#shopProAuthor')?.value||'',lang:$('#shopProLanguage')?.value||'',format:$('#shopProFormat')?.value||'',country:$('#shopProCountry')?.value||'',pages:$('#shopProPages')?.value||'',min:Number($('#shopProMin')?.value||0),max:Number($('#shopProMax')?.value||0),stock:!!$('#shopProStock')?.checked,offer:!!$('#shopProOffer')?.checked,sort:$('#sortBooks')?.value||'new'};
+    return {q:($('#shopSearch')?.value||param('q')).trim().toLowerCase(),cats:$$('[data-pro-category]:checked').map(x=>x.dataset.proCategory),author:$('#shopProAuthor')?.value||'',lang:$('#shopProLanguage')?.value||'',format:$('#shopProFormat')?.value||'',country:$('#shopProCountry')?.value||'',pages:$('#shopProPages')?.value||'',min:Number($('#shopProMin')?.value||0),max:Number($('#shopProMax')?.value||0),stock:!!$('#shopProStock')?.checked,offer:!!$('#shopProOffer')?.checked,sort:$('#sortBooks')?.value||'new'};
   }
 
   function filtered(){
