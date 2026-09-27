@@ -52,6 +52,8 @@
 - [x] robots.txt tregon sitemap.
 
 ## Security
+- [x] Notification worker automatik çdo 5 minuta; test teknik HTTP 200.
+- [x] Backup konfigurimi automatik çdo ditë në 03:15 UTC.
 - [x] RLS aktiv në tabelat publike.
 - [x] Tabelat administrative pa policy u kufizuan për admin.
 - [x] Partner internal RPC nuk janë të ekzekutueshme nga anon.
@@ -66,9 +68,9 @@
 - [x] Partner RLS performance warnings u hoqën.
 
 ## Final release
-- [ ] Production Final Audit = success.
-- [ ] Validate Storefront SEO = success.
-- [ ] Validate ZemZem Frontend = success.
-- [ ] Deploy ZemZem to cPanel = success.
-- [ ] Live Mobile Smoke = success ose skipped vetëm kur kushtet nuk kërkojnë run.
-- [ ] Krijo branch/tag Production Stable pas deploy-it green.
+- [x] Production Final Audit = success.
+- [x] Validate Storefront SEO = success.
+- [x] Validate ZemZem Frontend = success.
+- [x] Deploy ZemZem to cPanel = success.
+- [x] Live Mobile Smoke = success.
+- [x] Production Stable v2.0 u krijua pas deploy-it green.
