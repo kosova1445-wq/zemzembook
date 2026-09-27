@@ -2,7 +2,8 @@
 header('Content-Type: application/xml; charset=UTF-8');
 header('Cache-Control: public, max-age=900');
 $base='https://www.zemzem.al';
-$api='https://ysvtrhizgcioyycwlkrk.supabase.co/rest/v1/blog_posts?select=slug,updated_at,published_at,created_at&status=eq.published&order=published_at.desc.nullslast,created_at.desc&limit=500';
+$blogApi='https://ysvtrhizgcioyycwlkrk.supabase.co/rest/v1/blog_posts?select=slug,updated_at,published_at,created_at&status=eq.published&order=published_at.desc.nullslast,created_at.desc&limit=500';
+$bookApi='https://ysvtrhizgcioyycwlkrk.supabase.co/rest/v1/books?select=id,updated_at,created_at&status=eq.published&order=updated_at.desc.nullslast,created_at.desc&limit=1000';
 $key='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD';
 function get_json($url,$key){
   if(function_exists('curl_init')){
@@ -19,12 +20,19 @@ if(is_file($staticFile)){
   $xml=@simplexml_load_file($staticFile);
   if($xml){foreach($xml->url as $u){echo '<url><loc>'.x((string)$u->loc).'</loc>';if(isset($u->lastmod)&&trim((string)$u->lastmod)!=='')echo '<lastmod>'.x((string)$u->lastmod).'</lastmod>';if(isset($u->changefreq)&&trim((string)$u->changefreq)!=='')echo '<changefreq>'.x((string)$u->changefreq).'</changefreq>';if(isset($u->priority)&&trim((string)$u->priority)!=='')echo '<priority>'.x((string)$u->priority).'</priority>';echo '</url>';}}
 }
-foreach(get_json($api,$key) as $p){
+foreach(get_json($blogApi,$key) as $p){
   $slug=$p['slug']??''; if(!$slug)continue;
   $lm=$p['updated_at']??$p['published_at']??$p['created_at']??null;
   echo '<url><loc>'.x($base.'/article.html?slug='.rawurlencode($slug)).'</loc>';
   if($lm)echo '<lastmod>'.x(gmdate('Y-m-d',strtotime($lm))).'</lastmod>';
   echo '<changefreq>monthly</changefreq><priority>0.70</priority></url>';
+}
+foreach(get_json($bookApi,$key) as $b){
+  $id=$b['id']??''; if(!$id)continue;
+  $lm=$b['updated_at']??$b['created_at']??null;
+  echo '<url><loc>'.x($base.'/product.html?id='.rawurlencode($id)).'</loc>';
+  if($lm)echo '<lastmod>'.x(gmdate('Y-m-d',strtotime($lm))).'</lastmod>';
+  echo '<changefreq>weekly</changefreq><priority>0.80</priority></url>';
 }
 echo '</urlset>';
 ?>
