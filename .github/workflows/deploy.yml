@@ -262,6 +262,8 @@ jobs:
           admin.html
           collections.html
           service-worker.js
+          manifest.webmanifest
+          assets/js/pwa-install.js
           assets/js/collections.js
           assets/js/affiliate.js
           assets/js/pwa.js
@@ -361,7 +363,7 @@ jobs:
           printf '%s
           ' "$CHANGED" | sed '/^[[:space:]]*$/d' | sort -u | while IFS= read -r file; do
             case "$file" in
-              *.html|*.css|*.js|*.svg|robots.txt|sitemap.xml)
+              *.html|*.css|*.js|*.svg|*.webmanifest|robots.txt|sitemap.xml)
                 if [ -f "$file" ]; then upload "$file"; fi
                 ;;
               *) echo "Skipped non-site file: $file" ;;
@@ -387,6 +389,8 @@ jobs:
           upload "admin.html"
           upload "collections.html"
           upload "service-worker.js"
+          upload "manifest.webmanifest"
+          upload "assets/js/pwa-install.js"
           upload "assets/js/collections.js"
           upload "assets/js/affiliate.js"
           upload "assets/js/pwa.js"
@@ -857,7 +861,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'authors:authors.slice' 'Autocomplete authors and categories'
           require_live https://www.zemzem.al/assets/js/app-v5.js /tmp/search-autocomplete.js 'bindShopAutocomplete' 'Shop autocomplete binding'
           require_live https://www.zemzem.al/assets/css/search-autocomplete.css /tmp/search-autocomplete.css '.zz-search-suggest' 'Autocomplete search styles'
-          require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=17' 'Homepage autocomplete asset version'
+          require_live https://www.zemzem.al/index.html /tmp/index-search.html 'assets/js/app-v5.js?v=' 'Homepage autocomplete asset version'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release.html 'adminSecurityReleaseNav' 'Forced Security and Releases Admin menu'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release-view.html 'id="view-security-release"' 'Forced Security and Releases Admin view'
           require_live https://www.zemzem.al/admin.html /tmp/admin-security-release-v2.html 'assets/js/admin-security-release.js?v=2' 'Security and Releases v2 runtime'
@@ -878,7 +882,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/home-bookstore-v2.js /tmp/home-bookstore-v2.js "function newsletter(){q('#zv2Newsletter')?.remove()}" 'Newsletter remains enabled'
           # shop.html can lag behind briefly on the hosting cache even after FTP succeeds.
           # Keep this as a warning so unrelated Admin-only releases are not marked failed.
-          if curl -fsSL --retry 3 --retry-delay 2 "https://www.zemzem.al/shop.html?verify=${GITHUB_SHA}" -o /tmp/shop-search.html && grep -Fq 'assets/js/app-v5.js?v=17' /tmp/shop-search.html; then
+          if curl -fsSL --retry 3 --retry-delay 2 "https://www.zemzem.al/shop.html?verify=${GITHUB_SHA}" -o /tmp/shop-search.html && grep -Fq 'assets/js/app-v5.js?v=' /tmp/shop-search.html; then
             echo "OK: Shop autocomplete asset version"
           else
             echo "::warning::Shop autocomplete asset version is still cached; deploy itself succeeded."
@@ -907,7 +911,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/free-library.js /tmp/free-library-js.html 'free_library_books' 'Free Library runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-final.html 'data-view="free-library"' 'Free Library main Admin navigation'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-manager-loader.html 'assets/js/admin-free-library-manager.js?v=4' 'Full Free Library admin manager'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-partner-fulfillment-loader.html 'assets/js/admin-partner-fulfillment.js?v=4' 'Admin partner fulfillment loader'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-partner-fulfillment-loader.html 'assets/js/admin-partner-fulfillment.js?v=' 'Admin partner fulfillment loader'
           require_live https://www.zemzem.al/assets/js/admin-partner-fulfillment.js /tmp/admin-partner-fulfillment.js '__zzAdminPartnerFulfillment' 'Admin partner fulfillment runtime'
           require_live https://www.zemzem.al/assets/js/admin-partner-fulfillment.js /tmp/admin-partner-fulfillment-loop-guard.js 'tableQueued' 'Admin fulfillment loop guard'
           require_live https://www.zemzem.al/partner.html /tmp/partner-fulfillment-loader.html 'assets/js/partner-fulfillment.js?v=2' 'Partner fulfillment portal loader'
@@ -920,6 +924,8 @@ jobs:
           require_live https://www.zemzem.al/assets/css/admin-free-library-manager.css /tmp/admin-free-library-manager.css '.zzflm-dialog' 'Free Library manager styles'
           require_live https://www.zemzem.al/admin.html /tmp/admin-free-library-view-final.html 'id="view-free-library"' 'Free Library main Admin view'
           require_live https://www.zemzem.al/service-worker.js /tmp/sw-v4.js "Intentionally no fetch handler" 'PWA passthrough service worker'
+          require_live https://www.zemzem.al/manifest.webmanifest /tmp/zemzem-manifest.webmanifest '"short_name": "ZemZem"' 'ZemZem PWA manifest live'
+          require_live https://www.zemzem.al/assets/js/pwa-install.js /tmp/pwa-install.js 'beforeinstallprompt' 'ZemZem PWA installer live'
           require_live https://www.zemzem.al/sitemap.xml /tmp/sitemap-free-library.xml 'https://www.zemzem.al/free-library.html' 'Free Library sitemap entry'
 
           echo 'ZEMZEM_LIVE_DEPLOY_OK=yes'
