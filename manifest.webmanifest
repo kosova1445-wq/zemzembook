@@ -1,0 +1,25 @@
+{
+  "name": "ZemZem – Librari Online",
+  "short_name": "ZemZem",
+  "description": "Libra fizikë, eBook dhe artikuj nga ZemZem.al",
+  "lang": "sq",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#233a4a",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
