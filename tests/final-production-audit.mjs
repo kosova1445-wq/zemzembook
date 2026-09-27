@@ -102,7 +102,7 @@ ok(/status:'rejected'/i.test(adminBlogFinal),'Blog Admin can reject comments');
 const adminHtml=read('admin.html');
 const adminLazy=read('assets/js/admin-lazy-loader.js');
 ok(/rel=["']preconnect["'][^>]*ysvtrhizgcioyycwlkrk\.supabase\.co/i.test(adminHtml),'Admin preconnects to Supabase');
-ok(/rel=["']preload["'][^>]*admin-v2\.js\?v=22/i.test(adminHtml),'Admin preloads core runtime');
+ok(/rel=["']preload["'][^>]*admin-v2\.js\?v=\d+/i.test(adminHtml),'Admin preloads core runtime');
 ok(/PRELOAD_AHEAD\s*=\s*5/i.test(adminLazy),'Admin lazy loader warms modules ahead');
 ok(/requestIdleCallback/i.test(adminLazy),'Admin lazy loader yields during long module load');
 ok(/zemzem:admin-lazy-ready/i.test(adminLazy),'Admin lazy loader preserves ready event');
