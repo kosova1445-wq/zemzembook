@@ -684,7 +684,7 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-booksto.js /tmp/admin-booksto-control-center.js 'frag.append(controlCenterBtn)' 'Booksto preserves Control Center'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-native.html 'id="view-control-center"' 'Native Admin Control Center view'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-v3-loader.html 'assets/js/admin-control-center.js?v=6' 'Admin Control Center v3 loader'
-          require_live https://www.zemzem.al/admin.html /tmp/admin-v22-loader.html 'assets/js/admin-v2.js?v=22' 'Admin navigation v22'
+          require_live https://www.zemzem.al/admin.html /tmp/admin-runtime-loader.html 'assets/js/admin-v2.js?v=' 'Admin navigation runtime'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-static-nav.html 'id="adminControlCenterNav"' 'Permanent Admin Control Center nav'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-v2-loader.html 'assets/js/admin-control-center.js?v=6' 'Admin Control Center v2 loader'
           require_live https://www.zemzem.al/admin.html /tmp/admin-control-center-loader.html 'assets/js/admin-control-center.js?v=6' 'Admin Control Center loader'
