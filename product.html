@@ -8,12 +8,15 @@
   <meta name="description" content="Shiko detajet, çmimin, stokun dhe informacionin e librit në ZemZem.al. Porosit libra fizikë online me pagesë të sigurt dhe transport rajonal.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>Detajet e Librit – Bli Online | ZemZem</title>
-    <link rel="preload" href="assets/js/app-v5.js?v=17" as="script">
+    <link rel="preload" href="assets/js/app-v5.js?v=18" as="script">
 <link rel="stylesheet" href="assets/css/style.css"><link rel="stylesheet" href="assets/css/brand.css?v=4">
   <link rel="stylesheet" href="assets/css/product.css?v=9">
   <link rel="stylesheet" href="assets/css/commerce.css?v=1">
   <link rel="stylesheet" href="assets/css/price-ticket.css?v=3">
-<link rel="stylesheet" href="assets/css/mobile-commerce-v3.css?v=3"><link rel="stylesheet" href="assets/css/search-autocomplete.css?v=1"></head>
+<link rel="stylesheet" href="assets/css/mobile-commerce-v3.css?v=3"><link rel="stylesheet" href="assets/css/search-autocomplete.css?v=1">  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
 <body class="product-page">
   <div class="topbar product-topbar">
     <div class="container">
@@ -65,7 +68,7 @@
     </div>
   </footer>
 
-  <script defer src="assets/js/app-v5.js?v=17"></script>
+  <script defer src="assets/js/app-v5.js?v=18"></script>
   <script defer src="assets/js/seo-product.js?v=2"></script>
   <script>
   (()=>{
@@ -293,7 +296,7 @@
   })();
   </script>
   <script defer src="assets/js/branding.js?v=11"></script>
-<script defer src="assets/js/mobile-commerce-v3.js?v=4"></script><script defer src="assets/js/storefront-experience.js?v=2"></script><script defer src="assets/js/storefront-advanced.js?v=1"></script><script defer src="assets/js/storefront-observability.js?v=1"></script><script defer src="assets/js/storefront-controls.js?v=1"></script>
+<script defer src="assets/js/mobile-commerce-v3.js?v=5"></script><script defer src="assets/js/storefront-experience.js?v=2"></script><script defer src="assets/js/storefront-advanced.js?v=1"></script><script defer src="assets/js/storefront-observability.js?v=1"></script><script defer src="assets/js/storefront-controls.js?v=1"></script>
 <script id="zzForceRemoveProductBundle">
 (()=>{
   const kill=()=>{
@@ -307,13 +310,17 @@
       }
     });
   };
-  kill();
-  document.addEventListener('DOMContentLoaded',kill);
+  function runChecks(){
+    kill();
+    setTimeout(kill,120);
+    setTimeout(kill,700);
+    setTimeout(kill,1800);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',runChecks,{once:true});else runChecks();
   window.addEventListener('zemzem:catalog-ready',()=>setTimeout(kill,0));
-  new MutationObserver(kill).observe(document.documentElement,{childList:true,subtree:true});
-  setInterval(kill,500);
 })();
 </script>
 <script defer src="assets/js/performance-vitals.js?v=1"></script>
+<script defer src="assets/js/pwa-install.js?v=1"></script>
 </body>
 </html>
