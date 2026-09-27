@@ -21,5 +21,46 @@
       "type": "image/svg+xml",
       "purpose": "maskable"
     }
+  ],
+  "id": "/",
+  "dir": "ltr",
+  "orientation": "any",
+  "shortcuts": [
+    {
+      "name": "Librat",
+      "short_name": "Shop",
+      "url": "/shop.html",
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "eBook",
+      "short_name": "eBook",
+      "url": "/ebooks.html",
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Blog",
+      "short_name": "Blog",
+      "url": "/blog.html",
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
   ]
 }
