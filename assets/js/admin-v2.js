@@ -33,7 +33,8 @@ function setAdminSync(text,ok=true){const e=$('#adminSync');if(!e)return;e.textC
 function setButtonBusy(button,busy,text='Duke punuar…'){if(!button)return;if(busy)button.dataset.label=button.textContent;button.disabled=busy;button.textContent=busy?text:(button.dataset.label||button.textContent)}
 function saveSession(d){
   if(!d?.access_token)return;
-  session={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+(Number(d.expires_in)||3600),user:d.user||null};
+  const now=Math.floor(Date.now()/1000),startedAt=Number(session?.started_at)||now;
+  session={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:now+(Number(d.expires_in)||3600),started_at:startedAt,user:d.user||null};
   sessionStorage.setItem(SESSION_KEY,JSON.stringify(session));
 }
 function loadSession(){try{session=JSON.parse(sessionStorage.getItem(SESSION_KEY)||'null')}catch{session=null}}
@@ -51,7 +52,9 @@ async function refreshSession(){
 }
 async function ensureSession(){
   if(!session)return false;
-  if((session.expires_at||0)-Math.floor(Date.now()/1000)<90){try{await refreshSession()}catch{clearSession();return false}}
+  const now=Math.floor(Date.now()/1000);
+  if(session.started_at&&now-Number(session.started_at)>28800){clearSession();return false}
+  if((session.expires_at||0)-now<90){try{await refreshSession()}catch{clearSession();return false}}
   return true;
 }
 async function api(path,{method='GET',body,prefer}={}){
