@@ -166,7 +166,7 @@ public class MainActivity extends FragmentActivity {
         settings.setSupportMultipleWindows(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        settings.setUserAgentString(settings.getUserAgentString() + " ZemZemAndroid/1.3.0");
+        settings.setUserAgentString(settings.getUserAgentString() + " ZemZemAndroid/1.4.0");
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
@@ -396,7 +396,7 @@ public class MainActivity extends FragmentActivity {
                 "window.ZemZemNative.favorite=function(title,url){ZemZemAndroid.favorite(title||document.title,url||location.href);};" +
                 "window.ZemZemNative.about=function(){ZemZemAndroid.about();};" +
                 "window.ZemZemNative.settings=function(){ZemZemAndroid.settings();};" +
-                "try{var cart=JSON.parse(localStorage.getItem('zemzem_cart')||'[]');var cn=Array.isArray(cart)?cart.reduce(function(s,x){return s+(Number(x.qty)||0)},0):0;ZemZemAndroid.setBadge('cart',cn);}catch(e){}" +
+                "try{var syncCartBadge=function(){try{var cart=JSON.parse(localStorage.getItem('zemzem_cart')||'[]');var cn=Array.isArray(cart)?cart.reduce(function(s,x){return s+(Number(x.qty)||0)},0):0;ZemZemAndroid.setBadge('cart',cn)}catch(e){}};syncCartBadge();if(!window.zzCartBadgeTimer)window.zzCartBadgeTimer=setInterval(syncCartBadge,1200);}catch(e){}" +
                 "try{Object.defineProperty(navigator,'share',{configurable:true,value:function(d){ZemZemAndroid.share((d&&d.title)||document.title,(d&&d.url)||location.href);return Promise.resolve();}});}catch(e){}" +
                 "if(location.pathname.indexOf('product.html')>=0&&!document.getElementById('zz-native-product-actions')){" +
                 "var bar=document.createElement('div');bar.id='zz-native-product-actions';bar.style.cssText='position:fixed;right:12px;bottom:76px;z-index:2147483000;display:flex;gap:8px';" +
@@ -901,7 +901,7 @@ public class MainActivity extends FragmentActivity {
                 "Kontakt"
         };
         new AlertDialog.Builder(this)
-                .setTitle("Rreth ZemZem · v1.3.0")
+                .setTitle("Rreth ZemZem · v1.4.0")
                 .setMessage("ZemZem.al\nShtëpi botuese dhe shpërndarëse")
                 .setItems(items, (d, which) -> {
                     switch (which) {
@@ -933,12 +933,12 @@ public class MainActivity extends FragmentActivity {
                 reader.close();
 
                 JSONObject data = new JSONObject(json.toString());
-                int latestCode = data.optInt("versionCode", 4);
-                String latestName = data.optString("versionName", "1.2.0");
+                int latestCode = data.optInt("versionCode", 7);
+                String latestName = data.optString("versionName", "1.4.0");
                 String downloadUrl = data.optString("downloadUrl", HOME_URL);
 
                 runOnUiThread(() -> {
-                    if (latestCode > 4) {
+                    if (latestCode > 7) {
                         new AlertDialog.Builder(this)
                                 .setTitle("Ka version të ri")
                                 .setMessage("Versioni " + latestName + " është i disponueshëm.")
