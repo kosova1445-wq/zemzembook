@@ -20,7 +20,7 @@ function apply(){
     card.dataset.bookId=id;
     const meta=card.querySelector('.book-meta,.shop-card-meta');if(!meta)return;
     let wrap=meta.querySelector('.zz-ticket-wrap');
-    if(!wrap){
+    if(wrap){meta.querySelectorAll('.zz-ticket-wrap').forEach((x,i)=>{if(i)x.remove()});wrap=meta.querySelector('.zz-ticket-wrap')}else{
       const action=meta.querySelector('.price-row,.shop-card-actions,.add-btn');
       if(action)action.insertAdjacentHTML('beforebegin',ticket(b));else meta.insertAdjacentHTML('beforeend',ticket(b));
     }else if(!wrap.dataset.unifiedPriceTicket){
