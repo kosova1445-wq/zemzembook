@@ -88,3 +88,8 @@ setTimeout(registerNativePushToken,1800);setTimeout(registerNativePushToken,6000
 
 
 // deployment validation trigger 2026-10-01
+
+// Remove deprecated PayPal/COD promo strip everywhere (desktop, mobile and Android WebView).
+function removeLegacyPaymentPromo(){document.querySelectorAll('.premium-payment-note').forEach(el=>el.remove())}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',removeLegacyPaymentPromo);else removeLegacyPaymentPromo();
+new MutationObserver(removeLegacyPaymentPromo).observe(document.documentElement,{subtree:true,childList:true});
