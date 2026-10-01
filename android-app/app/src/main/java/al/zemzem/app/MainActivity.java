@@ -13,11 +13,16 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebResourceError;
 import android.widget.Toast;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Button;
+import android.view.Gravity;
 
 public class MainActivity extends Activity {
     private static final String HOME_URL = "https://www.zemzem.al/";
@@ -25,6 +30,7 @@ public class MainActivity extends Activity {
 
     private WebView webView;
     private ProgressBar progressBar;
+    private LinearLayout errorView;
     private ValueCallback<Uri[]> filePathCallback;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -48,6 +54,41 @@ public class MainActivity extends Activity {
                 6
         );
         root.addView(progressBar, progressParams);
+
+        errorView = new LinearLayout(this);
+        errorView.setOrientation(LinearLayout.VERTICAL);
+        errorView.setGravity(Gravity.CENTER);
+        errorView.setPadding(48, 48, 48, 48);
+        errorView.setBackgroundColor(0xFFFFFFFF);
+        errorView.setVisibility(View.GONE);
+
+        TextView errorTitle = new TextView(this);
+        errorTitle.setText("Nuk ka lidhje me internetin");
+        errorTitle.setTextSize(20);
+        errorTitle.setGravity(Gravity.CENTER);
+
+        TextView errorText = new TextView(this);
+        errorText.setText("Kontrollo lidhjen dhe provo përsëri.");
+        errorText.setTextSize(14);
+        errorText.setGravity(Gravity.CENTER);
+        errorText.setPadding(0, 16, 0, 24);
+
+        Button retryButton = new Button(this);
+        retryButton.setText("Provo përsëri");
+        retryButton.setOnClickListener(v -> {
+            errorView.setVisibility(View.GONE);
+            webView.setVisibility(View.VISIBLE);
+            webView.reload();
+        });
+
+        errorView.addView(errorTitle);
+        errorView.addView(errorText);
+        errorView.addView(retryButton);
+        root.addView(errorView, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        ));
+
         setContentView(root);
 
         WebSettings settings = webView.getSettings();
@@ -111,11 +152,26 @@ public class MainActivity extends Activity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 progressBar.setVisibility(View.VISIBLE);
+                errorView.setVisibility(View.GONE);
+                webView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onReceivedError(
+                    WebView view,
+                    WebResourceRequest request,
+                    WebResourceError error
+            ) {
+                if (request.isForMainFrame()) {
+                    progressBar.setVisibility(View.GONE);
+                    webView.setVisibility(View.GONE);
+                    errorView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
