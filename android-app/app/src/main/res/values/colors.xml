@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="zemzem_green">#0F6B4A</color>
-    <color name="zemzem_green_dark">#0A4F38</color>
+    <color name="zemzem_teal">#159DA8</color>
+    <color name="zemzem_green">#173D2B</color>
+    <color name="zemzem_white">#FFFFFF</color>
     <color name="zemzem_icon_background">#FFFFFF</color>
 </resources>
