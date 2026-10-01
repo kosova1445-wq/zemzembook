@@ -86,6 +86,8 @@ function renderDashboard(){
       <div><span>Libra</span><b>${bookCount}</b></div><div><span>Në stok</span><b>${stockTotal}</b></div><div><span>Shitje muaj</span><b>${Number(m.quantity||0)}</b></div>
     </div>
 
+    <div class="partner-mobile-menu-head"><strong>Menyja kryesore</strong><span>Menaxhoni librat, porositë dhe aktivitetet tuaja.</span></div>
+
     <div class="partner-menu-group"><div class="partner-menu-label">KRYESORE</div>
       <button class="active" data-partner-section="overview"><span class="partner-menu-icon">${picon('dashboard')}</span><span class="partner-menu-text">Dashboard</span></button>
       <button data-partner-section="books"><span class="partner-menu-icon">${picon('books')}</span><span class="partner-menu-text">Librat e mi</span><span class="partner-menu-badge">${bookCount}</span></button>
