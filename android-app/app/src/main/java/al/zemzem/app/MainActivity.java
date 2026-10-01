@@ -396,6 +396,7 @@ public class MainActivity extends FragmentActivity {
                 "window.ZemZemNative.favorite=function(title,url){ZemZemAndroid.favorite(title||document.title,url||location.href);};" +
                 "window.ZemZemNative.about=function(){ZemZemAndroid.about();};" +
                 "window.ZemZemNative.settings=function(){ZemZemAndroid.settings();};" +
+                "window.ZemZemNative.getPushToken=function(){return ZemZemAndroid.getPushToken();};" +
                 "try{var syncCartBadge=function(){try{var cart=JSON.parse(localStorage.getItem('zemzem_cart')||'[]');var cn=Array.isArray(cart)?cart.reduce(function(s,x){return s+(Number(x.qty)||0)},0):0;ZemZemAndroid.setBadge('cart',cn)}catch(e){}};syncCartBadge();if(!window.zzCartBadgeTimer)window.zzCartBadgeTimer=setInterval(syncCartBadge,1200);}catch(e){}" +
                 "try{Object.defineProperty(navigator,'share',{configurable:true,value:function(d){ZemZemAndroid.share((d&&d.title)||document.title,(d&&d.url)||location.href);return Promise.resolve();}});}catch(e){}" +
                 "if(location.pathname.indexOf('product.html')>=0&&!document.getElementById('zz-native-product-actions')){" +
@@ -549,6 +550,11 @@ public class MainActivity extends FragmentActivity {
         @JavascriptInterface
         public void setBadge(String type, int count) {
             runOnUiThread(() -> updateNativeBadge(type, count));
+        }
+
+        @JavascriptInterface
+        public String getPushToken() {
+            return getSharedPreferences(PREFS, MODE_PRIVATE).getString("fcm_token", "");
         }
     }
 
