@@ -15,3 +15,12 @@
 .zzpfs-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 @media(max-width:760px){.zzpfs-finance{grid-template-columns:1fr 1fr}}
 @media(max-width:460px){.zzpfs-finance{grid-template-columns:1fr}}
+
+.zzpfs-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-bottom:2px}
+.zzpfs-step{position:relative;padding:9px 7px;border:1px solid #e2e9e5;border-radius:10px;background:#fafcfb;color:#8a9690;text-align:center}
+.zzpfs-step span{display:grid;place-items:center;width:22px;height:22px;margin:0 auto 5px;border-radius:50%;background:#eef2f0;font-size:8px;font-weight:900}
+.zzpfs-step b{display:block;font-size:8px;line-height:1.2}
+.zzpfs-step.done{background:#eef8f2;border-color:#d5eadc;color:#1c6442}
+.zzpfs-step.done span{background:#d8efdf;color:#1b6843}
+.zzpfs-action-approve{background:#17603f!important}.zzpfs-action-ship{background:#235e91!important}.zzpfs-action-deliver{background:#276b49!important}
+@media(max-width:560px){.zzpfs-flow{grid-template-columns:1fr 1fr}.zzpfs-actions{width:100%}.zzpfs-actions .btn{flex:1}}
