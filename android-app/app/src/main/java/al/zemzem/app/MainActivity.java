@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -44,6 +43,7 @@ public class MainActivity extends Activity {
         settings.setDisplayZoomControls(false);
         settings.setSupportMultipleWindows(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        settings.setUserAgentString(settings.getUserAgentString() + " ZemZemAndroid/1.0.1");
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
@@ -84,35 +84,57 @@ public class MainActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                Uri uri = request.getUrl();
-                String scheme = uri.getScheme();
-
-                if ("http".equalsIgnoreCase(scheme) || "https".equalsIgnoreCase(scheme)) {
-                    return false;
-                }
-
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                    return true;
-                } catch (Exception ignored) {
-                    return false;
-                }
+                return handleUri(request.getUrl());
             }
         });
 
         webView.setDownloadListener((url, userAgent, contentDisposition, mimetype, contentLength) -> {
             try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
             } catch (Exception e) {
                 Toast.makeText(this, "Shkarkimi nuk mund të hapet.", Toast.LENGTH_SHORT).show();
             }
         });
 
         if (savedInstanceState == null) {
-            webView.loadUrl(HOME_URL);
+            Uri incoming = getIntent() != null ? getIntent().getData() : null;
+            webView.loadUrl(isZemZemUri(incoming) ? incoming.toString() : HOME_URL);
         } else {
             webView.restoreState(savedInstanceState);
+        }
+    }
+
+    private boolean handleUri(Uri uri) {
+        if (uri == null) return false;
+
+        String scheme = uri.getScheme() == null ? "" : uri.getScheme().toLowerCase();
+
+        if (("http".equals(scheme) || "https".equals(scheme)) && isZemZemUri(uri)) {
+            return false;
+        }
+
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, uri));
+            return true;
+        } catch (Exception e) {
+            Toast.makeText(this, "Ky link nuk mund të hapet.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+    }
+
+    private boolean isZemZemUri(Uri uri) {
+        if (uri == null || uri.getHost() == null) return false;
+        String host = uri.getHost().toLowerCase();
+        return "zemzem.al".equals(host) || "www.zemzem.al".equals(host);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        Uri uri = intent != null ? intent.getData() : null;
+        if (webView != null && isZemZemUri(uri)) {
+            webView.loadUrl(uri.toString());
         }
     }
 
