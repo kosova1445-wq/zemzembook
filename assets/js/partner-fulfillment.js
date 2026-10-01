@@ -3,7 +3,7 @@
 if(window.__zzPartnerFulfillment)return;window.__zzPartnerFulfillment=1;
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const labels={pending:'Për përgatitje',preparing:'Duke u përgatitur',shipped:'Nisur',delivered:'Dorëzuar'};
+const labels={pending:'Në pritje për aprovim',preparing:'Aprovuar / në përgatitje',shipped:'Nisur',delivered:'Dorëzuar'};
 let orders=[],busy=false,initialized=false;
 const api=()=>window.ZemZemPartner;
 function statusPill(s){return '<span class="zzpfs-status '+esc(s||'pending')+'">'+esc(labels[s]||s||'—')+'</span>'}
@@ -25,11 +25,22 @@ function orderCard(o){
   '<div class="zzpfs-items"><h4>Artikujt e tu</h4><ul>'+items+'</ul></div>'+
   (o.customer_note?'<div class="zzpfs-customer-note"><b>Shënim i klientit</b><p>'+esc(o.customer_note)+'</p></div>':'')+
   '<form class="zzpfs-form" data-fulfillment-form="'+o.fulfillment_id+'">'+
-    '<label>Statusi<select name="status" '+(delivered?'disabled':'')+'><option value="pending">Për përgatitje</option><option value="preparing">Duke u përgatitur</option><option value="shipped">Nisur</option><option value="delivered">Dorëzuar</option></select></label>'+
+    '<input type="hidden" name="status" value="'+esc(o.fulfillment_status||'pending')+'">'+
+    '<div class="zzpfs-flow span-2">'+
+      '<div class="zzpfs-step '+((o.fulfillment_status||'pending')==='pending'?'active done':'done')+'"><span>1</span><b>Porosia erdhi</b></div>'+
+      '<div class="zzpfs-step '+(['preparing','shipped','delivered'].includes(o.fulfillment_status)?'active done':'')+'"><span>2</span><b>Aprovo</b></div>'+
+      '<div class="zzpfs-step '+(['shipped','delivered'].includes(o.fulfillment_status)?'active done':'')+'"><span>3</span><b>Nise</b></div>'+
+      '<div class="zzpfs-step '+(o.fulfillment_status==='delivered'?'active done':'')+'"><span>4</span><b>Dorëzuar</b></div>'+
+    '</div>'+
     '<label>Transportuesi<input name="carrier" value="'+esc(o.shipping_carrier||'')+'" placeholder="p.sh. Posta / DHL / transport privat" '+(delivered?'readonly':'')+'></label>'+
     '<label>Tracking / Nr. dërgesës<input name="tracking" value="'+esc(o.tracking_number||'')+'" placeholder="Numri i gjurmimit" '+(delivered?'readonly':'')+'></label>'+
     '<label class="span-2">Shënime transporti<textarea name="note" rows="3" placeholder="Shënime për dërgesën…" '+(delivered?'readonly':'')+'>'+esc(o.partner_note||'')+'</textarea></label>'+
-    '<div class="zzpfs-form-foot span-2"><div><small>'+Number(o.item_qty||0)+' artikuj për këtë partner</small>'+(o.shipped_at?'<small>Nisur: '+new Date(o.shipped_at).toLocaleString('sq-AL')+'</small>':'')+(o.delivered_at?'<small>Dorëzuar: '+new Date(o.delivered_at).toLocaleString('sq-AL')+'</small>':'')+'</div><div class="zzpfs-actions"><button type="button" class="btn secondary" data-partner-invoice="'+o.order_id+'">Fatura / PDF</button>'+(delivered?'<span class="zzpfs-locked">✓ Dorëzimi është final</span>':'<button class="btn primary">Ruaj transportin</button>')+'</div></div>'+
+    '<div class="zzpfs-form-foot span-2"><div><small>'+Number(o.item_qty||0)+' artikuj për këtë partner</small>'+(o.shipped_at?'<small>Nisur: '+new Date(o.shipped_at).toLocaleString('sq-AL')+'</small>':'')+(o.delivered_at?'<small>Dorëzuar: '+new Date(o.delivered_at).toLocaleString('sq-AL')+'</small>':'')+'</div><div class="zzpfs-actions"><button type="button" class="btn secondary" data-partner-invoice="'+o.order_id+'">Fatura / PDF</button>'+
+      (o.fulfillment_status==='pending'?'<button type="button" class="btn primary zzpfs-action-approve" data-fulfillment-action="preparing">Aprovo porosinë</button>':'')+
+      (o.fulfillment_status==='preparing'?'<button type="button" class="btn primary zzpfs-action-ship" data-fulfillment-action="shipped">Shëno si të nisur</button>':'')+
+      (o.fulfillment_status==='shipped'?'<button type="button" class="btn primary zzpfs-action-deliver" data-fulfillment-action="delivered">Shëno si të dorëzuar</button>':'')+
+      (delivered?'<span class="zzpfs-locked">✓ Dorëzimi është final</span>':'')+
+    '</div></div>'+
     '<div class="zzpfs-state span-2"></div>'+
   '</form>'+
  '</article>';
@@ -59,16 +70,18 @@ function bindInvoiceButtons(){
 }
 function bindForms(){
  qa('[data-fulfillment-form]').forEach(f=>{
-   f.onsubmit=async e=>{
-     e.preventDefault();const id=f.dataset.fulfillmentForm,st=q('.zzpfs-state',f),btn=q('button',f);
-     const x=Object.fromEntries(new FormData(f));
-     if(['shipped','delivered'].includes(x.status)&&(!x.carrier.trim()||!x.tracking.trim())){st.innerHTML='<div class="partner-msg error">Për Nisur/Dorëzuar duhen transportuesi dhe tracking-u.</div>';return}
-     if(btn)btn.disabled=true;st.innerHTML='<div class="partner-msg">Po ruhet…</div>';
+   const save=async nextStatus=>{
+     const id=f.dataset.fulfillmentForm,st=q('.zzpfs-state',f),buttons=qa('[data-fulfillment-action]',f);
+     const x=Object.fromEntries(new FormData(f));x.status=nextStatus||x.status||'pending';
+     if(['shipped','delivered'].includes(x.status)&&(!String(x.carrier||'').trim()||!String(x.tracking||'').trim())){st.innerHTML='<div class="partner-msg error">Para se ta shënosh si të nisur, plotëso transportuesin dhe tracking-un.</div>';return}
+     buttons.forEach(b=>b.disabled=true);st.innerHTML='<div class="partner-msg">Po ruhet ndryshimi…</div>';
      try{
        await api().rpc('partner_update_fulfillment',{p_fulfillment_id:id,p_status:x.status,p_shipping_carrier:x.carrier||null,p_tracking_number:x.tracking||null,p_partner_note:x.note||null});
-       await load();render();st.innerHTML='<div class="partner-msg">U ruajt me sukses.</div>';
-     }catch(err){st.innerHTML='<div class="partner-msg error">'+esc(err.message)+'</div>';if(btn)btn.disabled=false}
+       await load();render();
+     }catch(err){st.innerHTML='<div class="partner-msg error">'+esc(err.message)+'</div>';buttons.forEach(b=>b.disabled=false)}
    };
+   f.onsubmit=e=>e.preventDefault();
+   qa('[data-fulfillment-action]',f).forEach(b=>b.onclick=()=>save(b.dataset.fulfillmentAction));
  });
 }
 async function enhance(){
