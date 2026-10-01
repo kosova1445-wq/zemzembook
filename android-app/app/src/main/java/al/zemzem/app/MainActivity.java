@@ -54,6 +54,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity {
     private static final String HOME_URL = "https://www.zemzem.al/";
@@ -548,7 +553,9 @@ public class MainActivity extends Activity {
     private void showAccountMenu() {
         String[] items = {
                 "Llogaria ime",
+                "Shto/hiq nga të preferuarat",
                 "Të preferuarat",
+                "Shpërndaje faqen",
                 "Të fundit",
                 "Shkarkimet",
                 "Rreth aplikacionit"
@@ -558,10 +565,12 @@ public class MainActivity extends Activity {
                 .setItems(items, (dialog, which) -> {
                     switch (which) {
                         case 0: webView.loadUrl("https://www.zemzem.al/account.html"); break;
-                        case 1: showSavedList("Të preferuarat", PREF_FAVORITES); break;
-                        case 2: showSavedList("Të fundit", PREF_HISTORY); break;
-                        case 3: showSavedList("Shkarkimet", PREF_DOWNLOADS); break;
-                        case 4: showAboutDialog(); break;
+                        case 1: toggleFavorite(webView.getTitle(), webView.getUrl()); break;
+                        case 2: showSavedList("Të preferuarat", PREF_FAVORITES); break;
+                        case 3: shareContent(webView.getTitle(), webView.getUrl()); break;
+                        case 4: showSavedList("Të fundit", PREF_HISTORY); break;
+                        case 5: showSavedList("Shkarkimet", PREF_DOWNLOADS); break;
+                        case 6: showAboutDialog(); break;
                     }
                 })
                 .show();
@@ -648,21 +657,71 @@ public class MainActivity extends Activity {
     }
 
     private void showAboutDialog() {
-        String message = "Versioni 1.2.0\n\n" +
-                "ZemZem.al\nShtëpi botuese dhe shpërndarëse\n\n" +
-                "Privacy Policy • Terms • Kontakt";
+        String[] items = {
+                "Kontrollo update",
+                "Privacy Policy",
+                "Terms",
+                "Kontakt"
+        };
         new AlertDialog.Builder(this)
-                .setTitle("Rreth ZemZem")
-                .setMessage(message)
-                .setPositiveButton("Kontrollo update", (d,w) -> checkForUpdate())
-                .setNeutralButton("Privacy", (d,w) -> webView.loadUrl("https://www.zemzem.al/privacy.html"))
+                .setTitle("Rreth ZemZem · v1.2.0")
+                .setMessage("ZemZem.al\nShtëpi botuese dhe shpërndarëse")
+                .setItems(items, (d, which) -> {
+                    switch (which) {
+                        case 0: checkForUpdate(); break;
+                        case 1: webView.loadUrl("https://www.zemzem.al/privacy.html"); break;
+                        case 2: webView.loadUrl("https://www.zemzem.al/terms.html"); break;
+                        case 3: webView.loadUrl("https://www.zemzem.al/contact.html"); break;
+                    }
+                })
                 .setNegativeButton("Mbyll", null)
                 .show();
     }
 
     private void checkForUpdate() {
         Toast.makeText(this, "Po kontrolloj versionin më të fundit...", Toast.LENGTH_SHORT).show();
-        webView.loadUrl("https://www.zemzem.al/");
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL endpoint = new URL("https://www.zemzem.al/android-version.json");
+                connection = (HttpURLConnection) endpoint.openConnection();
+                connection.setConnectTimeout(7000);
+                connection.setReadTimeout(7000);
+                connection.setUseCaches(false);
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder json = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) json.append(line);
+                reader.close();
+
+                JSONObject data = new JSONObject(json.toString());
+                int latestCode = data.optInt("versionCode", 4);
+                String latestName = data.optString("versionName", "1.2.0");
+                String downloadUrl = data.optString("downloadUrl", HOME_URL);
+
+                runOnUiThread(() -> {
+                    if (latestCode > 4) {
+                        new AlertDialog.Builder(this)
+                                .setTitle("Ka version të ri")
+                                .setMessage("Versioni " + latestName + " është i disponueshëm.")
+                                .setPositiveButton("Përditëso", (d,w) -> {
+                                    try {
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl)));
+                                    } catch (Exception ignored) {}
+                                })
+                                .setNegativeButton("Më vonë", null)
+                                .show();
+                    } else {
+                        Toast.makeText(this, "Aplikacioni është i përditësuar.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> Toast.makeText(this, "Kontrolli i update dështoi.", Toast.LENGTH_SHORT).show());
+            } finally {
+                if (connection != null) connection.disconnect();
+            }
+        }).start();
     }
 
     @Override
