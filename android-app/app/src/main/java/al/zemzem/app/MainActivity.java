@@ -37,6 +37,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 
 import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -56,6 +59,7 @@ public class MainActivity extends Activity {
     private SwipeRefreshLayout swipeRefresh;
     private ProgressBar progressBar;
     private LinearLayout errorView;
+    private LinearLayout splashView;
     private ValueCallback<Uri[]> filePathCallback;
     private Uri cameraImageUri;
 
@@ -94,6 +98,12 @@ public class MainActivity extends Activity {
 
         errorView = buildOfflineView();
         root.addView(errorView, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        ));
+
+        splashView = buildSplashView();
+        root.addView(splashView, new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
         ));
@@ -155,6 +165,7 @@ public class MainActivity extends Activity {
                 progressBar.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
                 injectNativeHelpers();
+                hideSplash();
             }
 
             @Override
@@ -187,6 +198,47 @@ public class MainActivity extends Activity {
         } else {
             webView.restoreState(savedInstanceState);
         }
+    }
+
+    private LinearLayout buildSplashView() {
+        LinearLayout view = new LinearLayout(this);
+        view.setOrientation(LinearLayout.VERTICAL);
+        view.setGravity(Gravity.CENTER);
+        view.setBackgroundColor(Color.WHITE);
+
+        ImageView logo = new ImageView(this);
+        logo.setImageResource(R.drawable.zemzem_mark);
+        int size = (int) (112 * getResources().getDisplayMetrics().density);
+        view.addView(logo, new LinearLayout.LayoutParams(size, size));
+
+        TextView brand = new TextView(this);
+        brand.setText("ZEMZEM");
+        brand.setTextSize(26);
+        brand.setTextColor(0xFF159DA8);
+        brand.setGravity(Gravity.CENTER);
+        brand.setPadding(0, 18, 0, 6);
+        view.addView(brand);
+
+        TextView subtitle = new TextView(this);
+        subtitle.setText("Shtëpi botuese dhe shpërndarëse");
+        subtitle.setTextSize(13);
+        subtitle.setTextColor(0xFF60706A);
+        subtitle.setGravity(Gravity.CENTER);
+        view.addView(subtitle);
+
+        return view;
+    }
+
+    private void hideSplash() {
+        if (splashView == null || splashView.getVisibility() != View.VISIBLE) return;
+        splashView.animate()
+                .alpha(0f)
+                .setDuration(280)
+                .withEndAction(() -> {
+                    splashView.setVisibility(View.GONE);
+                    splashView.setAlpha(1f);
+                })
+                .start();
     }
 
     private LinearLayout buildOfflineView() {
