@@ -73,6 +73,7 @@ function renderPending(){
 function renderDashboard(){
  const s=dashboard.supplier||{},m=dashboard.month||{},stats=dashboard.stats||{},books=dashboard.books||[],orders=dashboard.orders||[],sets=dashboard.settlements||[];
  const openOrders=Number(stats.open_orders||0),openSets=Number(stats.open_settlements||0),bookCount=Number(stats.book_count||books.length),stockTotal=Number(stats.stock_total||0);
+ try{if(window.ZemZemAndroid&&typeof window.ZemZemAndroid.setBadge==='function')window.ZemZemAndroid.setBadge('partner',openOrders)}catch{}
  const statusSq=v=>({pending:'Në pritje',confirmed:'Konfirmuar',processing:'Në përpunim',shipped:'Dërguar',delivered:'Dorëzuar',cancelled:'Anuluar',refunded:'Rimbursuar',draft:'Draft',published:'Publikuar'})[v]||v||'—';
  const partnerInitial=(s.name||'P').trim().charAt(0).toUpperCase();
  q('#partnerApp').innerHTML=`
