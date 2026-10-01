@@ -7,7 +7,7 @@ function friendlyCheckoutError(error){const raw=String(error?.message||error||''
 function itemsPayload(){const wrap=!!cq('#giftWrapAll')?.checked;return CZ().cartDetails().map(x=>({book_id:String(x.book.id),quantity:Number(x.qty),gift_wrap:wrap&&!!x.book.giftWrapAvailable}))}
 function customerSession(){return CZ().getCustomerSession?.()||null}
 async function callEdge(name,body,auth=false){const z=CZ(),s=customerSession(),h={'Content-Type':'application/json',apikey:z.SUPABASE_PUBLISHABLE_KEY};if(auth&&s?.access_token)h.Authorization=`Bearer ${s.access_token}`;const r=await fetch(`${z.SUPABASE_URL}/functions/v1/${name}`,{method:'POST',headers:h,body:JSON.stringify(body)});const t=await r.text();let d={};try{d=t?JSON.parse(t):{}}catch{}if(!r.ok||d?.ok===false)throw new Error(d?.message||d?.error||`HTTP ${r.status}`);return d}
-function rawCouponCode(){return String(cq('#couponCode')?.value||'').trim()}function rawGiftCardCode(){return String(cq('#giftCardCode')?.value||'').trim()}function formPayload(forQuote=false){const f=new FormData(cq('#checkoutForm'));return{payment_method:String(f.get('payment_method')||'cod'),checkout_token:CZ().getCheckoutToken(),first_name:String(f.get('first_name')||'').trim(),last_name:String(f.get('last_name')||'').trim(),email:String(f.get('email')||'').trim(),phone:String(f.get('phone')||'').trim(),address:String(f.get('address')||'').trim(),address_line2:String(f.get('address_line2')||'').trim(),city:String(f.get('city')||'').trim(),postal_code:String(f.get('postal_code')||'').trim(),country_code:String(cq('#country')?.value||'KS'),notes:String(f.get('notes')||'').trim(),coupon_code:forQuote?rawCouponCode():appliedCouponCode,gift_card_code:forQuote?rawGiftCardCode():appliedGiftCardCode,affiliate_code:window.ZemZemGetAffiliateCode?.()||'',items:itemsPayload()}}
+function rawCouponCode(){return String(cq('#couponCode')?.value||'').trim()}function rawGiftCardCode(){return String(cq('#giftCardCode')?.value||'').trim()}function formPayload(forQuote=false){const f=new FormData(cq('#checkoutForm'));const selected=String(f.get('payment_method')||'cod');const paypalVisible=!!document.querySelector('input[name="payment_method"][value="paypal"]');return{payment_method:(selected==='paypal'&&paypalVisible)?'paypal':'cod',checkout_token:CZ().getCheckoutToken(),first_name:String(f.get('first_name')||'').trim(),last_name:String(f.get('last_name')||'').trim(),email:String(f.get('email')||'').trim(),phone:String(f.get('phone')||'').trim(),address:String(f.get('address')||'').trim(),address_line2:String(f.get('address_line2')||'').trim(),city:String(f.get('city')||'').trim(),postal_code:String(f.get('postal_code')||'').trim(),country_code:String(cq('#country')?.value||'KS'),notes:String(f.get('notes')||'').trim(),coupon_code:forQuote?rawCouponCode():appliedCouponCode,gift_card_code:forQuote?rawGiftCardCode():appliedGiftCardCode,affiliate_code:window.ZemZemGetAffiliateCode?.()||'',items:itemsPayload()}}
 async function saveAbandonedCart(){clearTimeout(abandonedTimer);const p=formPayload(true),email=String(p.email||'').trim();if(!p.items.length||!email.includes('@'))return;try{const z=CZ();await fetch(`${z.SUPABASE_URL}/rest/v1/rpc/save_abandoned_cart`,{method:'POST',headers:{apikey:z.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_checkout_token:p.checkout_token,p_email:email,p_items:p.items,p_country_code:p.country_code,p_payment_method:p.payment_method})})}catch{}}
 async function recoverAbandonedCart(){const token=new URLSearchParams(location.search).get('recover');if(!/^[0-9a-f-]{36}$/i.test(String(token||'')))return false;try{const z=CZ(),r=await fetch(`${z.SUPABASE_URL}/rest/v1/rpc/recover_abandoned_cart`,{method:'POST',headers:{apikey:z.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_checkout_token:token})});if(!r.ok)return false;const d=await r.json();if(!Array.isArray(d?.items))return false;localStorage.setItem('zemzem_checkout_token',token);z.setCart(d.items.map(x=>({id:String(x.book_id),qty:Number(x.quantity||1)})));const f=cq('#checkoutForm');if(f&&d.email)f.elements.email.value=d.email;if(d.country_code){cq('#country').value=d.country_code;cq('#country').dispatchEvent(new Event('change',{bubbles:true}));}const pm=String(d.payment_method||'cod'),radio=cq(`input[name="payment_method"][value="${pm}"]`);if(radio)radio.checked=true;history.replaceState(null,'',location.pathname);renderQuote();return true}catch{return false}}
 async function callQuoteDirect(p){const z=CZ(),s=customerSession(),body=JSON.stringify({p_items:p.items,p_country_code:p.country_code,p_payment_method:p.payment_method,p_coupon_code:p.coupon_code||null,p_gift_card_code:p.gift_card_code||null,p_email:p.email||null});const attempt=async(auth)=>{const h={apikey:z.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'};if(auth)h.Authorization=`Bearer ${auth}`;const r=await fetch(`${z.SUPABASE_URL}/rest/v1/rpc/quote_order_public`,{method:'POST',headers:h,body,cache:'no-store'});const t=await r.text();let d={};try{d=t?JSON.parse(t):{}}catch{}if(!r.ok){const er=new Error(d?.message||d?.hint||d?.details||d?.code||('HTTP '+r.status));er.status=r.status;throw er}return{quote:d}};if(s?.access_token){try{return await attempt(s.access_token)}catch(e){if(![401,403].includes(Number(e.status)))throw e}}return await attempt(z.SUPABASE_PUBLISHABLE_KEY)}
@@ -31,14 +31,32 @@ async function loadAdminCheckoutSettings(){
   set('checkoutPageTitle',cfg.checkout_title);set('checkoutPageSubtitle',cfg.checkout_subtitle);set('checkoutNotice',cfg.notice_text);
   set('paypalLabel',cfg.paypal_label);set('paypalNote',cfg.paypal_note);set('codLabel',cfg.cod_label);set('codNote',cfg.cod_note);
   const bn=document.getElementById('checkoutBuildNotice');if(bn){bn.textContent=cfg.build_notice||'';bn.hidden=cfg.show_build_notice===false}
-  const paypal=document.querySelector('input[name="payment_method"][value="paypal"]')?.closest('.pay-option');
+  const payWrap=document.querySelector('.pay-options');
+  let paypal=document.querySelector('input[name="payment_method"][value="paypal"]')?.closest('.pay-option');
   const cod=document.querySelector('input[name="payment_method"][value="cod"]')?.closest('.pay-option');
-  if(paypal){paypal.hidden=cfg.show_paypal!==true;paypal.style.display=cfg.show_paypal===true?'':'none'}if(cod){cod.hidden=cfg.show_cod===false;cod.style.display=cfg.show_cod===false?'none':''}
+  if(cfg.show_paypal===true){
+    if(!paypal&&payWrap){
+      paypal=document.createElement('label');
+      paypal.className='pay-option';
+      paypal.innerHTML='<input type="radio" name="payment_method" value="paypal"><div><div class="pay-title" id="paypalLabel"></div><div class="pay-note" id="paypalNote"></div></div>';
+      payWrap.insertBefore(paypal,payWrap.firstChild);
+      paypal.querySelector('input')?.addEventListener('change',()=>updateQuote());
+    }
+    set('paypalLabel',cfg.paypal_label||'PayPal');
+    set('paypalNote',cfg.paypal_note||'Pagesë online e verifikuar në server.');
+  }else if(paypal){
+    paypal.remove();
+  }
+  if(cod){
+    cod.hidden=cfg.show_cod===false;
+    cod.style.display=cfg.show_cod===false?'none':'';
+  }
   if(cfg.show_paypal!==true){
-    const pr=document.querySelector('input[name="payment_method"][value="paypal"]');
     const cr=document.querySelector('input[name="payment_method"][value="cod"]');
-    if(pr)pr.checked=false;
-    if(cr){cr.checked=true;cr.closest('.pay-option')?.classList.add('active')}
+    if(cr){
+      cr.checked=true;
+      cr.closest('.pay-option')?.classList.add('active');
+    }
   }
   const codBonus=document.querySelector('.pay-bonus.cod-fee');if(codBonus)codBonus.textContent='+'+Number(cfg.cod_fee_global??0).toFixed(2).replace(/\.00$/,'')+' € tarifë COD';if(cfg.show_payment_progress!==true)document.getElementById('zzPayProg')?.remove();
   const country=document.getElementById('country');if(country&&zones.length){
