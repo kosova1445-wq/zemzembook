@@ -12,9 +12,9 @@ async function init(){
   q('#collectionsTitle').textContent=c.name;q('#collectionsIntro').textContent=c.description||'';
   const items=await api('book_collection_items?collection_id=eq.'+c.id+'&select=book_id,sort_order&order=sort_order.asc');const ids=items.map(x=>x.book_id);
   if(!ids.length){root.innerHTML='<div class="empty">Ky collection nuk ka libra ende.</div>';return}
-  const bs=await api('storefront_books?id=in.('+ids.join(',')+')&select=id,title,slug,price,cover_url,author_name,status');
+  const bs=await api('storefront_books?id=in.('+ids.join(',')+')&select=id,title,slug,price,compare_at_price,cover_url,author_name,status');
   const map=new Map(bs.map(x=>[x.id,x]));const ordered=items.map(i=>map.get(i.book_id)).filter(Boolean);
-  root.className='book-grid';root.innerHTML=ordered.map(b=>`<article class="book-card"><a href="product.html?slug=${encodeURIComponent(b.slug)}"><div class="book-cover">${b.cover_url?`<img class="book-cover-img" src="${esc(b.cover_url)}" alt="${esc(b.title)}">`:esc(b.title)}</div></a><div class="book-meta"><h3>${esc(b.title)}</h3><div class="author">${esc(b.author_name||'')}</div><div class="price-row"><span class="price">${money(b.price)}</span><a class="add-btn" href="product.html?slug=${encodeURIComponent(b.slug)}">→</a></div></div></article>`).join('');
+  root.className='book-grid';root.innerHTML=ordered.map(b=>`<article class="book-card"><a href="product.html?slug=${encodeURIComponent(b.slug)}"><div class="book-cover">${b.cover_url?`<img class="book-cover-img" src="${esc(b.cover_url)}" alt="${esc(b.title)}">`:esc(b.title)}</div></a><div class="book-meta"><h3>${esc(b.title)}</h3><div class="author">${esc(b.author_name||'')}</div><div class="price-row"><span class="zz-catalog-price"><strong>${money(b.price)}</strong>${b.compare_at_price&&Number(b.compare_at_price)>Number(b.price)?`<del>${money(b.compare_at_price)}</del>`:''}</span><a class="add-btn" href="product.html?slug=${encodeURIComponent(b.slug)}">→</a></div></div></article>`).join('');
  }catch(e){root.innerHTML='<div class="empty">'+esc(e.message)+'</div>'}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
