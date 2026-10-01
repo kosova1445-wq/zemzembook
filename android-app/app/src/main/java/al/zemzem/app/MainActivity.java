@@ -494,7 +494,7 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public void about() {
-            runOnUiThread(this::showAboutDialog);
+            runOnUiThread(MainActivity.this::showAboutDialog);
         }
     }
 
