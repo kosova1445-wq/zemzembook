@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Gravity;
+import android.os.SystemClock;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
@@ -78,6 +79,7 @@ public class MainActivity extends Activity {
     private LinearLayout bottomNav;
     private ValueCallback<Uri[]> filePathCallback;
     private Uri cameraImageUri;
+    private long lastBackPress = 0L;
 
     @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface"})
     @Override
@@ -151,7 +153,7 @@ public class MainActivity extends Activity {
         settings.setSupportMultipleWindows(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        settings.setUserAgentString(settings.getUserAgentString() + " ZemZemAndroid/1.2.0");
+        settings.setUserAgentString(settings.getUserAgentString() + " ZemZemAndroid/1.2.1");
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
@@ -193,6 +195,8 @@ public class MainActivity extends Activity {
                 swipeRefresh.setRefreshing(false);
                 injectNativeHelpers();
                 rememberHistory(url);
+                updateBottomNav(url);
+                handlePaymentReturn(url);
                 hideSplash();
             }
 
@@ -525,11 +529,43 @@ public class MainActivity extends Activity {
         button.setText(label);
         button.setTextSize(11);
         button.setAllCaps(false);
+        button.setTag(label);
+        button.setTextColor(0xFF173D2B);
+        button.setBackgroundColor(Color.TRANSPARENT);
         button.setPadding(2, 0, 2, 0);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
         button.setLayoutParams(params);
         button.setOnClickListener(v -> action.run());
         nav.addView(button);
+    }
+
+    private void updateBottomNav(String url) {
+        if (bottomNav == null) return;
+        for (int i = 0; i < bottomNav.getChildCount(); i++) {
+            View child = bottomNav.getChildAt(i);
+            if (!(child instanceof Button)) continue;
+            Button b = (Button) child;
+            String label = String.valueOf(b.getTag());
+            boolean active =
+                    ("Ballina".equals(label) && (url.endsWith("/") || url.endsWith("index.html"))) ||
+                    ("Shop".equals(label) && url.contains("shop.html")) ||
+                    ("Shporta".equals(label) && (url.contains("checkout.html") || url.contains("paypal-return.html"))) ||
+                    ("Llogaria".equals(label) && url.contains("account.html"));
+            b.setTextColor(active ? 0xFF159DA8 : 0xFF173D2B);
+            b.setTextSize(active ? 12 : 11);
+        }
+    }
+
+    private void handlePaymentReturn(String url) {
+        if (url == null) return;
+        String lower = url.toLowerCase();
+        if (lower.contains("paypal-return.html") || lower.contains("ebook-paypal-return.html")) {
+            if (lower.contains("cancel") || lower.contains("status=cancel")) {
+                Toast.makeText(this, "Pagesa u anulua.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Kthim nga pagesa PayPal.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void showSearchDialog() {
@@ -664,7 +700,7 @@ public class MainActivity extends Activity {
                 "Kontakt"
         };
         new AlertDialog.Builder(this)
-                .setTitle("Rreth ZemZem · v1.2.0")
+                .setTitle("Rreth ZemZem · v1.2.1")
                 .setMessage("ZemZem.al\nShtëpi botuese dhe shpërndarëse")
                 .setItems(items, (d, which) -> {
                     switch (which) {
@@ -788,8 +824,15 @@ public class MainActivity extends Activity {
     public void onBackPressed() {
         if (webView != null && webView.canGoBack()) {
             webView.goBack();
-        } else {
+            return;
+        }
+
+        long now = SystemClock.elapsedRealtime();
+        if (now - lastBackPress < 1800) {
             super.onBackPressed();
+        } else {
+            lastBackPress = now;
+            Toast.makeText(this, "Shtyp prapë për të dalë.", Toast.LENGTH_SHORT).show();
         }
     }
 }
