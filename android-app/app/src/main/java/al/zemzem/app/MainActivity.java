@@ -11,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -38,6 +39,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ImageView;
+import android.widget.EditText;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
@@ -48,18 +52,25 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class MainActivity extends Activity {
     private static final String HOME_URL = "https://www.zemzem.al/";
     private static final String CHANNEL_ID = "zemzem_updates";
     private static final int FILE_CHOOSER_REQUEST = 1001;
     private static final int NOTIFICATION_PERMISSION_REQUEST = 1002;
+    private static final String PREFS = "zemzem_app";
+    private static final String PREF_FAVORITES = "favorites";
+    private static final String PREF_HISTORY = "history";
+    private static final String PREF_DOWNLOADS = "downloads";
 
     private WebView webView;
     private SwipeRefreshLayout swipeRefresh;
     private ProgressBar progressBar;
     private LinearLayout errorView;
     private LinearLayout splashView;
+    private LinearLayout bottomNav;
     private ValueCallback<Uri[]> filePathCallback;
     private Uri cameraImageUri;
 
@@ -82,10 +93,13 @@ public class MainActivity extends Activity {
         swipeRefresh.setOnRefreshListener(() -> webView.reload());
         swipeRefresh.setOnChildScrollUpCallback((parent, child) -> webView.getScrollY() > 0);
 
-        root.addView(swipeRefresh, new FrameLayout.LayoutParams(
+        FrameLayout.LayoutParams webParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
-        ));
+        );
+        int bottomNavHeight = (int) (62 * getResources().getDisplayMetrics().density);
+        webParams.bottomMargin = bottomNavHeight;
+        root.addView(swipeRefresh, webParams);
 
         progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
         progressBar.setMax(100);
@@ -108,6 +122,14 @@ public class MainActivity extends Activity {
                 FrameLayout.LayoutParams.MATCH_PARENT
         ));
 
+        bottomNav = buildBottomNavigation();
+        FrameLayout.LayoutParams navParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                bottomNavHeight
+        );
+        navParams.gravity = Gravity.BOTTOM;
+        root.addView(bottomNav, navParams);
+
         setContentView(root);
 
         WebSettings settings = webView.getSettings();
@@ -124,7 +146,7 @@ public class MainActivity extends Activity {
         settings.setSupportMultipleWindows(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        settings.setUserAgentString(settings.getUserAgentString() + " ZemZemAndroid/1.1.0");
+        settings.setUserAgentString(settings.getUserAgentString() + " ZemZemAndroid/1.2.0");
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
@@ -165,6 +187,7 @@ public class MainActivity extends Activity {
                 progressBar.setVisibility(View.GONE);
                 swipeRefresh.setRefreshing(false);
                 injectNativeHelpers();
+                rememberHistory(url);
                 hideSplash();
             }
 
@@ -331,6 +354,7 @@ public class MainActivity extends Activity {
 
             DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
             manager.enqueue(request);
+            rememberDownload(fileName);
             Toast.makeText(this, "Shkarkimi filloi.", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             try {
@@ -347,6 +371,8 @@ public class MainActivity extends Activity {
                 "window.ZemZemNative=window.ZemZemNative||{};" +
                 "window.ZemZemNative.share=function(title,url){ZemZemAndroid.share(title||document.title,url||location.href);};" +
                 "window.ZemZemNative.notify=function(title,body){ZemZemAndroid.notify(title||'ZemZem',body||'');};" +
+                "window.ZemZemNative.favorite=function(title,url){ZemZemAndroid.favorite(title||document.title,url||location.href);};" +
+                "window.ZemZemNative.about=function(){ZemZemAndroid.about();};" +
                 "try{Object.defineProperty(navigator,'share',{configurable:true,value:function(d){ZemZemAndroid.share((d&&d.title)||document.title,(d&&d.url)||location.href);return Promise.resolve();}});}catch(e){}" +
                 "})();";
         webView.evaluateJavascript(script, null);
@@ -460,6 +486,183 @@ public class MainActivity extends Activity {
         public void notify(String title, String body) {
             runOnUiThread(() -> showLocalNotification(title, body));
         }
+
+        @JavascriptInterface
+        public void favorite(String title, String url) {
+            runOnUiThread(() -> toggleFavorite(title, url));
+        }
+
+        @JavascriptInterface
+        public void about() {
+            runOnUiThread(this::showAboutDialog);
+        }
+    }
+
+
+    private LinearLayout buildBottomNavigation() {
+        LinearLayout nav = new LinearLayout(this);
+        nav.setOrientation(LinearLayout.HORIZONTAL);
+        nav.setGravity(Gravity.CENTER);
+        nav.setBackgroundColor(Color.WHITE);
+        nav.setPadding(4, 4, 4, 4);
+        nav.setElevation(18f);
+
+        addNavButton(nav, "Ballina", () -> webView.loadUrl(HOME_URL));
+        addNavButton(nav, "Shop", () -> webView.loadUrl("https://www.zemzem.al/shop.html"));
+        addNavButton(nav, "Kërko", this::showSearchDialog);
+        addNavButton(nav, "Shporta", () -> webView.loadUrl("https://www.zemzem.al/checkout.html"));
+        addNavButton(nav, "Llogaria", this::showAccountMenu);
+        return nav;
+    }
+
+    private void addNavButton(LinearLayout nav, String label, Runnable action) {
+        Button button = new Button(this);
+        button.setText(label);
+        button.setTextSize(11);
+        button.setAllCaps(false);
+        button.setPadding(2, 0, 2, 0);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
+        button.setLayoutParams(params);
+        button.setOnClickListener(v -> action.run());
+        nav.addView(button);
+    }
+
+    private void showSearchDialog() {
+        EditText input = new EditText(this);
+        input.setHint("Kërko libra...");
+        input.setSingleLine(true);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Kërko në ZemZem")
+                .setView(input)
+                .setPositiveButton("Kërko", (dialog, which) -> {
+                    String q = input.getText().toString().trim();
+                    if (!q.isEmpty()) {
+                        webView.loadUrl("https://www.zemzem.al/shop.html?q=" + Uri.encode(q));
+                    }
+                })
+                .setNegativeButton("Anulo", null)
+                .show();
+    }
+
+    private void showAccountMenu() {
+        String[] items = {
+                "Llogaria ime",
+                "Të preferuarat",
+                "Të fundit",
+                "Shkarkimet",
+                "Rreth aplikacionit"
+        };
+        new AlertDialog.Builder(this)
+                .setTitle("ZemZem")
+                .setItems(items, (dialog, which) -> {
+                    switch (which) {
+                        case 0: webView.loadUrl("https://www.zemzem.al/account.html"); break;
+                        case 1: showSavedList("Të preferuarat", PREF_FAVORITES); break;
+                        case 2: showSavedList("Të fundit", PREF_HISTORY); break;
+                        case 3: showSavedList("Shkarkimet", PREF_DOWNLOADS); break;
+                        case 4: showAboutDialog(); break;
+                    }
+                })
+                .show();
+    }
+
+    private void toggleFavorite(String title, String url) {
+        if (url == null || url.trim().isEmpty()) return;
+        SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        LinkedHashSet<String> set = new LinkedHashSet<>(prefs.getStringSet(PREF_FAVORITES, new LinkedHashSet<>()));
+        String item = (title == null ? "ZemZem" : title.replace("|", " ")) + "|" + url;
+        boolean removed = false;
+        for (String existing : new ArrayList<>(set)) {
+            if (existing.endsWith("|" + url)) {
+                set.remove(existing);
+                removed = true;
+            }
+        }
+        if (!removed) set.add(item);
+        prefs.edit().putStringSet(PREF_FAVORITES, set).apply();
+        Toast.makeText(this, removed ? "U hoq nga të preferuarat." : "U shtua te të preferuarat.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void rememberHistory(String url) {
+        if (url == null || !url.startsWith("https://www.zemzem.al/")) return;
+        if (url.endsWith("/") || url.contains("checkout") || url.contains("account")) return;
+        SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        LinkedHashSet<String> set = new LinkedHashSet<>(prefs.getStringSet(PREF_HISTORY, new LinkedHashSet<>()));
+        for (String existing : new ArrayList<>(set)) {
+            if (existing.endsWith("|" + url)) set.remove(existing);
+        }
+        set.add(webView.getTitle().replace("|"," ") + "|" + url);
+        while (set.size() > 20) {
+            String first = set.iterator().next();
+            set.remove(first);
+        }
+        prefs.edit().putStringSet(PREF_HISTORY, set).apply();
+    }
+
+    private void rememberDownload(String fileName) {
+        SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        LinkedHashSet<String> set = new LinkedHashSet<>(prefs.getStringSet(PREF_DOWNLOADS, new LinkedHashSet<>()));
+        set.add(fileName);
+        while (set.size() > 30) {
+            String first = set.iterator().next();
+            set.remove(first);
+        }
+        prefs.edit().putStringSet(PREF_DOWNLOADS, set).apply();
+    }
+
+    private void showSavedList(String title, String key) {
+        SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        Set<String> raw = prefs.getStringSet(key, new LinkedHashSet<>());
+        List<String> items = new ArrayList<>(raw);
+
+        if (items.isEmpty()) {
+            new AlertDialog.Builder(this)
+                    .setTitle(title)
+                    .setMessage("Ende nuk ka të dhëna.")
+                    .setPositiveButton("OK", null)
+                    .show();
+            return;
+        }
+
+        String[] labels = new String[items.size()];
+        for (int i = 0; i < items.size(); i++) {
+            String item = items.get(i);
+            labels[i] = item.contains("|") ? item.substring(0, item.indexOf('|')) : item;
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setItems(labels, (dialog, which) -> {
+                    String item = items.get(which);
+                    if (PREF_DOWNLOADS.equals(key)) {
+                        Intent downloads = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
+                        startActivity(downloads);
+                    } else if (item.contains("|")) {
+                        String url = item.substring(item.indexOf('|') + 1);
+                        webView.loadUrl(url);
+                    }
+                })
+                .setNegativeButton("Mbyll", null)
+                .show();
+    }
+
+    private void showAboutDialog() {
+        String message = "Versioni 1.2.0\n\n" +
+                "ZemZem.al\nShtëpi botuese dhe shpërndarëse\n\n" +
+                "Privacy Policy • Terms • Kontakt";
+        new AlertDialog.Builder(this)
+                .setTitle("Rreth ZemZem")
+                .setMessage(message)
+                .setPositiveButton("Kontrollo update", (d,w) -> checkForUpdate())
+                .setNeutralButton("Privacy", (d,w) -> webView.loadUrl("https://www.zemzem.al/privacy.html"))
+                .setNegativeButton("Mbyll", null)
+                .show();
+    }
+
+    private void checkForUpdate() {
+        Toast.makeText(this, "Po kontrolloj versionin më të fundit...", Toast.LENGTH_SHORT).show();
+        webView.loadUrl("https://www.zemzem.al/");
     }
 
     @Override
