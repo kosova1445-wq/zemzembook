@@ -475,3 +475,11 @@
   .partner-menu-icon{width:34px!important;height:34px!important}
   .partner-menu-text{font-size:10px!important}
 }
+
+/* Partner finance summary - lightweight and responsive */
+.zz-fin-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 10px}
+.zz-fin-summary>div{background:#fff;border:1px solid #dfe7e2;border-radius:15px;padding:15px;box-shadow:0 5px 16px rgba(24,61,43,.035)}
+.zz-fin-summary span,.zz-fin-summary small{display:block}.zz-fin-summary span{font-size:8px;text-transform:uppercase;letter-spacing:.04em;color:#7c8982;font-weight:800}.zz-fin-summary strong{display:block;margin-top:6px;font-size:21px;color:#173d2b}.zz-fin-summary small{margin-top:4px;font-size:8px;color:#8a9690}
+.zz-fin-note{display:flex;align-items:center;gap:10px;padding:12px 14px!important;background:#f5faf7!important}.zz-fin-note strong{font-size:10px;white-space:nowrap}.zz-fin-note span{font-size:9px;line-height:1.45;color:#65746c}
+@media(max-width:700px){.zz-fin-summary{grid-template-columns:1fr 1fr}.zz-fin-summary>div:last-child{grid-column:1/-1}.zz-fin-note{align-items:flex-start;flex-direction:column}}
+@media(max-width:380px){.zz-fin-summary{grid-template-columns:1fr}.zz-fin-summary>div:last-child{grid-column:auto}}
