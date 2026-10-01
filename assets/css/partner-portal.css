@@ -53,3 +53,58 @@
 .partner-edit-notice{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff7df;border:1px solid #f0ddaa;border-radius:12px;padding:12px 13px;margin-bottom:4px}
 .partner-edit-notice[hidden]{display:none!important}.partner-edit-notice strong,.partner-edit-notice small{display:block}.partner-edit-notice strong{font-size:11px;color:#6f5213}.partner-edit-notice small{font-size:9px;color:#8b7542;margin-top:2px}
 @media(max-width:660px){.partner-edit-notice{align-items:flex-start;flex-direction:column}.partner-edit-notice .btn{width:100%}}
+
+
+/* ===== Mobile partner portal responsive fix v7 ===== */
+@media (max-width: 700px){
+  html,body{max-width:100%;overflow-x:hidden}
+  .partner-top{height:64px}
+  .partner-top-inner{padding:0 14px}
+  .partner-brand img{width:118px}
+  .partner-login-link{padding:8px 10px}
+  .partner-hero-wrap{padding:14px 10px 0}
+  .partner-hero{padding:22px 18px;border-radius:18px;gap:20px}
+  .partner-hero h1{font-size:27px;line-height:1.08}
+  .partner-hero p{font-size:13px}
+  .partner-formula{padding:16px}
+  .partner-how{padding:0 10px;gap:8px}
+  .partner-app-wrap{padding:0 10px 36px;margin-top:12px}
+  .partner-shell,.partner-shell-pro{display:block;width:100%;min-width:0}
+  .partner-side,.partner-side-pro{width:100%;max-width:100%;position:static;margin:0 0 18px;overflow:hidden;border-radius:18px}
+  .partner-profile-card{padding:16px 14px;border-radius:0}
+  .partner-profile-logo{width:48px;height:48px}
+  .partner-profile-copy strong{max-width:calc(100vw - 120px);font-size:16px}
+  .partner-side-mini{grid-template-columns:repeat(2,1fr)}
+  .partner-side-mini>div{padding:11px 5px}
+  .partner-side-mini>div:nth-child(3){grid-column:1/-1;border-top:1px solid #e6ece8}
+  .partner-menu-group{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px!important;overflow:visible!important;padding:9px!important;margin:0!important}
+  .partner-menu-group+.partner-menu-group{border-top:1px solid #eef2ef}
+  .partner-menu-label{display:none}
+  .partner-side-pro .partner-menu-group button{width:100%!important;min-width:0!important;min-height:48px!important;margin:0!important;padding:7px!important;gap:7px!important;white-space:normal!important;overflow:hidden}
+  .partner-side-pro .partner-menu-group button:hover{transform:none}
+  .partner-menu-icon{width:32px;height:32px;flex:0 0 32px}
+  .partner-menu-text{font-size:10px;line-height:1.2;overflow:hidden;text-overflow:ellipsis}
+  .partner-menu-badge{margin-left:auto;flex:0 0 auto}
+  .partner-side-pro .partner-menu-primary{margin:0!important}
+  .partner-content{width:100%;min-width:0}
+  .partner-page-head{margin:0 2px 12px}
+  .partner-page-head h2{font-size:25px;line-height:1.08}
+  .partner-card{padding:15px;border-radius:15px;margin-top:10px}
+  .partner-kpis,.partner-kpis-four{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .partner-kpi{padding:13px 11px}
+  .partner-kpi strong{font-size:20px}
+  .partner-dashboard-grid,.partner-grid,.partner-grid.three,.partner-help-grid,.partner-add-layout{grid-template-columns:1fr!important;gap:10px}
+  .partner-overview-stats{grid-template-columns:1fr}
+  .partner-form{grid-template-columns:1fr}
+  .partner-form .full{grid-column:auto}
+  .partner-price-card{position:static}
+  .partner-book-list{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .partner-table{min-width:620px}
+  .partner-photo-grid{grid-template-columns:1fr}
+  .partner-profile-upload{align-items:flex-start}
+  .partner-footer{padding:18px 12px}
+}
+@media (max-width: 380px){
+  .partner-menu-group{grid-template-columns:1fr}
+  .partner-kpis,.partner-kpis-four{grid-template-columns:1fr}
+}
