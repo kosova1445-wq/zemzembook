@@ -27,6 +27,11 @@ public class ZemZemMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage message) {
         super.onMessageReceived(message);
 
+        if (!getSharedPreferences("zemzem_app", MODE_PRIVATE)
+                .getBoolean("notifications_enabled", true)) {
+            return;
+        }
+
         String title = "ZemZem";
         String body = "";
         String url = "https://www.zemzem.al/";
@@ -39,6 +44,15 @@ public class ZemZemMessagingService extends FirebaseMessagingService {
         if (message.getData().get("title") != null) title = message.getData().get("title");
         if (message.getData().get("body") != null) body = message.getData().get("body");
         if (message.getData().get("url") != null) url = message.getData().get("url");
+
+        String type = message.getData().get("type");
+        if ("order_new".equals(type) && (title == null || "ZemZem".equals(title))) {
+            title = "Porosi e re";
+        } else if ("order_status".equals(type) && (title == null || "ZemZem".equals(title))) {
+            title = "Statusi i porosisë u ndryshua";
+        } else if ("partner_order".equals(type) && (title == null || "ZemZem".equals(title))) {
+            title = "Porosi e re për partnerin";
+        }
 
         showNotification(title, body, url);
     }
