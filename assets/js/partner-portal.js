@@ -12,6 +12,9 @@ async function loadPartnerBranding(){
  }catch{}
 }
 function loadSession(){try{session=JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch{session=null}}
+function setPartnerMarketingVisible(visible){
+ document.querySelectorAll('.partner-hero-wrap,.partner-how').forEach(el=>{el.hidden=!visible;el.style.display=visible?'':'none'});
+}
 function saveSession(d){session={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600),user:d.user};localStorage.setItem(SESSION_KEY,JSON.stringify(session))}
 async function raw(path,{method='GET',body,token}={}){const h={apikey:KEY};if(body!==undefined)h['Content-Type']='application/json';if(token)h.Authorization='Bearer '+token;const r=await fetch(URL+path,{method,headers:h,body:body===undefined?undefined:JSON.stringify(body),cache:'no-store'}),t=await r.text();let d;try{d=t?JSON.parse(t):null}catch{d=t}if(!r.ok)throw new Error(d?.message||d?.msg||d?.error_description||d?.error||'Gabim');return d}
 async function ensure(){if(!session)return false;if((session.expires_at||0)-Math.floor(Date.now()/1000)<60){try{const d=await raw('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:session.refresh_token}});saveSession(d)}catch{session=null;localStorage.removeItem(SESSION_KEY);return false}}return true}
@@ -274,11 +277,11 @@ function renderDashboard(){
  q('#partnerBusinessLogo')?.addEventListener('change',e=>{businessLogoFile=e.target.files?.[0]||null;if(!businessLogoFile)return;const reader=new FileReader();reader.onload=()=>{q('#partnerProfileLogoPreview').innerHTML='<img src="'+reader.result+'" alt="Logo preview">'};reader.readAsDataURL(businessLogoFile)});
  q('#partnerProfileForm')?.addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,btn=q('#partnerProfileSave'),x=Object.fromEntries(new FormData(f));btn.disabled=true;btn.textContent='Duke ruajtur…';try{let logo=s.logo_url||null;if(businessLogoFile)logo=await partnerAssetUpload(businessLogoFile,'logo');await rpc('partner_profile_update',{p_name:x.name,p_contact_name:x.contact_name,p_phone:x.phone,p_country:x.country,p_address:x.address,p_website_url:x.website_url||null,p_description:x.description||null,p_logo_url:logo});dashboard=await rpc('partner_dashboard',{});renderDashboard();setTimeout(()=>q('[data-partner-section="account"]')?.click(),30)}catch(err){q('#partnerProfileMsg').innerHTML='<div class="partner-msg error">'+esc(err.message)+'</div>';btn.disabled=false;btn.textContent='Ruaj profilin'}});
 
- q('#logout')?.addEventListener('click',()=>{localStorage.removeItem(SESSION_KEY);session=null;renderAuth()});
+ q('#logout')?.addEventListener('click',()=>{localStorage.removeItem(SESSION_KEY);session=null;setPartnerMarketingVisible(true);renderAuth()});
  const initial=location.hash.replace('#','');if(['overview','books','add','orders','settlements','reports','account','help'].includes(initial))openSection(initial);
 }
 window.ZemZemPartner={rpc,getDashboard:()=>dashboard,reload:async()=>{dashboard=await rpc('partner_dashboard',{});return dashboard},money,esc};
-async function boot(){loadSession();if(!await ensure()){renderAuth();return}try{status=await rpc('partner_my_status',{});if(!status.applied){renderApply();return}if(status.status!=='approved'||!status.enabled){renderPending();return}dashboard=await rpc('partner_dashboard',{});renderDashboard()}catch(err){q('#partnerApp').innerHTML='<div class="partner-card"><div class="partner-msg error">'+esc(err.message)+'</div></div>'}}
+async function boot(){loadSession();if(!await ensure()){setPartnerMarketingVisible(true);renderAuth();return}setPartnerMarketingVisible(false);try{status=await rpc('partner_my_status',{});if(!status.applied){renderApply();return}if(status.status!=='approved'||!status.enabled){renderPending();return}dashboard=await rpc('partner_dashboard',{});renderDashboard()}catch(err){q('#partnerApp').innerHTML='<div class="partner-card"><div class="partner-msg error">'+esc(err.message)+'</div></div>'}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{loadPartnerBranding();boot()});else{loadPartnerBranding();boot();}
 })();
 /* release: partner-center-pro-v2 */
