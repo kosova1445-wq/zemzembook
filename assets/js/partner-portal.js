@@ -171,8 +171,14 @@ function renderDashboard(){
    </section>
 
    <section data-partner-panel="settlements" hidden>
-    <div class="partner-page-head"><div><span class="partner-kicker" style="color:#547363">FINANCA</span><h2>Pasqyra financiare dhe pagesat</h2><p>Historiku i barazimeve mujore me ZemZem.</p></div></div>
-    <div class="partner-card" style="margin-top:0"><div class="partner-book-list"><table class="partner-table"><thead><tr><th>Periudha</th><th>Copë</th><th>Shitje bruto</th><th>Të takon</th><th>Fitim ZemZem</th><th>Statusi</th></tr></thead><tbody>${sets.map(x=>'<tr><td>'+esc(x.period_start)+' – '+esc(x.period_end)+'</td><td>'+x.quantity_total+'</td><td>'+money(x.gross_sales)+'</td><td><b>'+money(x.supplier_due)+'</b></td><td>'+money(x.zemzem_profit)+'</td><td><span class="status-pill '+(x.status==='paid'?'published':'')+'">'+(x.status==='paid'?'Paguar':'Hapur')+'</span></td></tr>').join('')||'<tr><td colspan="6">Ende nuk ka barazime.</td></tr>'}</tbody></table></div></div>
+    <div class="partner-page-head"><div><span class="partner-kicker" style="color:#547363">FINANCA</span><h2>Pasqyra financiare dhe pagesat</h2><p>Barazimet krijohen automatikisht nga porositë e dorëzuara. Këtu sheh vetëm shumën që të takon dhe statusin e pagesës.</p></div></div>
+    <div class="zz-fin-summary">
+      <div><span>Për barazim</span><strong>${money(sets.filter(x=>x.status==='open').reduce((a,x)=>a+Number(x.supplier_due||0),0))}</strong><small>${sets.filter(x=>x.status==='open').length} barazime të hapura</small></div>
+      <div><span>Paguar gjithsej</span><strong>${money(sets.filter(x=>x.status==='paid').reduce((a,x)=>a+Number(x.supplier_due||0),0))}</strong><small>${sets.filter(x=>x.status==='paid').length} pagesa</small></div>
+      <div><span>Këtë muaj</span><strong>${money(m.supplier_due)}</strong><small>nga porositë e dorëzuara</small></div>
+    </div>
+    <div class="partner-card zz-fin-note"><strong>Si funksionon?</strong><span>Kur një porosi dorëzohet, shuma jote futet automatikisht në barazimin e muajit. Kur ZemZem e shënon pagesën si të paguar, merr njoftim në portal.</span></div>
+    <div class="partner-card" style="margin-top:10px"><div class="partner-book-list"><table class="partner-table"><thead><tr><th>Periudha</th><th>Copë</th><th>Shitje bruto</th><th>Të takon</th><th>Fitim ZemZem</th><th>Statusi</th></tr></thead><tbody>${sets.map(x=>'<tr><td>'+esc(x.period_start)+' – '+esc(x.period_end)+'</td><td>'+x.quantity_total+'</td><td>'+money(x.gross_sales)+'</td><td><b>'+money(x.supplier_due)+'</b></td><td>'+money(x.zemzem_profit)+'</td><td><span class="status-pill '+(x.status==='paid'?'published':'')+'">'+(x.status==='paid'?'Paguar':'Gati për pagesë')+'</span></td></tr>').join('')||'<tr><td colspan="6">Ende nuk ka barazime. Barazimi i parë krijohet automatikisht pas një porosie të dorëzuar.</td></tr>'}</tbody></table></div></div>
    </section>
 
    <section data-partner-panel="reports" hidden>
