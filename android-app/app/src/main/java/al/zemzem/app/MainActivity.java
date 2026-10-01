@@ -45,6 +45,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.widget.ScrollView;
+import android.widget.Switch;
+import android.widget.CompoundButton;
 
 import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -70,6 +73,8 @@ public class MainActivity extends Activity {
     private static final String PREF_FAVORITES = "favorites";
     private static final String PREF_HISTORY = "history";
     private static final String PREF_DOWNLOADS = "downloads";
+    private static final String PREF_NOTIFICATIONS = "notifications_enabled";
+    private static final String PREF_ORDER_LOCK = "last_order_action";
 
     private WebView webView;
     private SwipeRefreshLayout swipeRefresh;
@@ -153,7 +158,7 @@ public class MainActivity extends Activity {
         settings.setSupportMultipleWindows(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        settings.setUserAgentString(settings.getUserAgentString() + " ZemZemAndroid/1.2.1");
+        settings.setUserAgentString(settings.getUserAgentString() + " ZemZemAndroid/1.3.0");
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
@@ -382,6 +387,7 @@ public class MainActivity extends Activity {
                 "window.ZemZemNative.notify=function(title,body){ZemZemAndroid.notify(title||'ZemZem',body||'');};" +
                 "window.ZemZemNative.favorite=function(title,url){ZemZemAndroid.favorite(title||document.title,url||location.href);};" +
                 "window.ZemZemNative.about=function(){ZemZemAndroid.about();};" +
+                "window.ZemZemNative.settings=function(){ZemZemAndroid.settings();};" +
                 "try{Object.defineProperty(navigator,'share',{configurable:true,value:function(d){ZemZemAndroid.share((d&&d.title)||document.title,(d&&d.url)||location.href);return Promise.resolve();}});}catch(e){}" +
                 "})();";
         webView.evaluateJavascript(script, null);
@@ -394,6 +400,18 @@ public class MainActivity extends Activity {
 
         if (("http".equals(scheme) || "https".equals(scheme)) && isZemZemUri(uri)) {
             return false;
+        }
+
+        if (("http".equals(scheme) || "https".equals(scheme)) && uri.getHost() != null) {
+            String host = uri.getHost().toLowerCase();
+            if (host.contains("paypal.com") || host.contains("paypalobjects.com")) {
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                    return true;
+                } catch (Exception ignored) {
+                    return false;
+                }
+            }
         }
 
         if ("intent".equals(scheme)) {
@@ -454,6 +472,7 @@ public class MainActivity extends Activity {
     }
 
     private void showLocalNotification(String title, String body) {
+        if (!getSharedPreferences(PREFS, MODE_PRIVATE).getBoolean(PREF_NOTIFICATIONS, true)) return;
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int number = getPreferences(MODE_PRIVATE).getInt("badge_number", 0) + 1;
         getPreferences(MODE_PRIVATE).edit().putInt("badge_number", number).apply();
@@ -504,6 +523,11 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void about() {
             runOnUiThread(MainActivity.this::showAboutDialog);
+        }
+
+        @JavascriptInterface
+        public void settings() {
+            runOnUiThread(MainActivity.this::showSettingsDialog);
         }
     }
 
@@ -560,10 +584,18 @@ public class MainActivity extends Activity {
         if (url == null) return;
         String lower = url.toLowerCase();
         if (lower.contains("paypal-return.html") || lower.contains("ebook-paypal-return.html")) {
+            long now = System.currentTimeMillis();
+            SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+            long last = prefs.getLong(PREF_ORDER_LOCK, 0L);
+            if (now - last < 2500L) return;
+            prefs.edit().putLong(PREF_ORDER_LOCK, now).apply();
+
             if (lower.contains("cancel") || lower.contains("status=cancel")) {
                 Toast.makeText(this, "Pagesa u anulua.", Toast.LENGTH_LONG).show();
+            } else if (lower.contains("error") || lower.contains("status=error")) {
+                Toast.makeText(this, "Pagesa nuk u përfundua.", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Kthim nga pagesa PayPal.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Pagesa u kthye në ZemZem. Po verifikohet porosia.", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -594,6 +626,7 @@ public class MainActivity extends Activity {
                 "Shpërndaje faqen",
                 "Të fundit",
                 "Shkarkimet",
+                "Cilësimet",
                 "Rreth aplikacionit"
         };
         new AlertDialog.Builder(this)
@@ -605,8 +638,9 @@ public class MainActivity extends Activity {
                         case 2: showSavedList("Të preferuarat", PREF_FAVORITES); break;
                         case 3: shareContent(webView.getTitle(), webView.getUrl()); break;
                         case 4: showSavedList("Të fundit", PREF_HISTORY); break;
-                        case 5: showSavedList("Shkarkimet", PREF_DOWNLOADS); break;
-                        case 6: showAboutDialog(); break;
+                        case 5: showDownloadCenter(); break;
+                        case 6: showSettingsDialog(); break;
+                        case 7: showAboutDialog(); break;
                     }
                 })
                 .show();
@@ -656,6 +690,82 @@ public class MainActivity extends Activity {
         prefs.edit().putStringSet(PREF_DOWNLOADS, set).apply();
     }
 
+    private void showDownloadCenter() {
+        SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        List<String> items = new ArrayList<>(prefs.getStringSet(PREF_DOWNLOADS, new LinkedHashSet<>()));
+
+        if (items.isEmpty()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Shkarkimet")
+                    .setMessage("Ende nuk ka shkarkime.")
+                    .setPositiveButton("Hap Downloads", (d,w) -> {
+                        try { startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)); } catch (Exception ignored) {}
+                    })
+                    .setNegativeButton("Mbyll", null)
+                    .show();
+            return;
+        }
+
+        String[] labels = items.toArray(new String[0]);
+        new AlertDialog.Builder(this)
+                .setTitle("Shkarkimet")
+                .setItems(labels, (dialog, which) -> {
+                    try { startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)); } catch (Exception ignored) {}
+                })
+                .setNeutralButton("Pastro listën", (d,w) -> {
+                    prefs.edit().remove(PREF_DOWNLOADS).apply();
+                    Toast.makeText(this, "Lista e shkarkimeve u pastrua.", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Mbyll", null)
+                .show();
+    }
+
+    private void showSettingsDialog() {
+        SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        int pad = (int) (20 * getResources().getDisplayMetrics().density);
+        box.setPadding(pad, pad, pad, pad);
+
+        Switch notifications = new Switch(this);
+        notifications.setText("Njoftimet");
+        notifications.setChecked(prefs.getBoolean(PREF_NOTIFICATIONS, true));
+        notifications.setOnCheckedChangeListener((buttonView, isChecked) ->
+                prefs.edit().putBoolean(PREF_NOTIFICATIONS, isChecked).apply()
+        );
+        box.addView(notifications);
+
+        Button clearFavorites = new Button(this);
+        clearFavorites.setText("Pastro të preferuarat");
+        clearFavorites.setOnClickListener(v -> {
+            prefs.edit().remove(PREF_FAVORITES).apply();
+            Toast.makeText(this, "Të preferuarat u pastruan.", Toast.LENGTH_SHORT).show();
+        });
+        box.addView(clearFavorites);
+
+        Button clearHistory = new Button(this);
+        clearHistory.setText("Pastro historikun");
+        clearHistory.setOnClickListener(v -> {
+            prefs.edit().remove(PREF_HISTORY).apply();
+            Toast.makeText(this, "Historiku u pastrua.", Toast.LENGTH_SHORT).show();
+        });
+        box.addView(clearHistory);
+
+        Button clearDownloads = new Button(this);
+        clearDownloads.setText("Pastro listën e shkarkimeve");
+        clearDownloads.setOnClickListener(v -> {
+            prefs.edit().remove(PREF_DOWNLOADS).apply();
+            Toast.makeText(this, "Lista e shkarkimeve u pastrua.", Toast.LENGTH_SHORT).show();
+        });
+        box.addView(clearDownloads);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Cilësimet")
+                .setView(box)
+                .setPositiveButton("Mbyll", null)
+                .show();
+    }
+
     private void showSavedList(String title, String key) {
         SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
         Set<String> raw = prefs.getStringSet(key, new LinkedHashSet<>());
@@ -680,13 +790,14 @@ public class MainActivity extends Activity {
                 .setTitle(title)
                 .setItems(labels, (dialog, which) -> {
                     String item = items.get(which);
-                    if (PREF_DOWNLOADS.equals(key)) {
-                        Intent downloads = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
-                        startActivity(downloads);
-                    } else if (item.contains("|")) {
+                    if (item.contains("|")) {
                         String url = item.substring(item.indexOf('|') + 1);
                         webView.loadUrl(url);
                     }
+                })
+                .setNeutralButton("Pastro", (d,w) -> {
+                    prefs.edit().remove(key).apply();
+                    Toast.makeText(this, title + " u pastrua.", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Mbyll", null)
                 .show();
@@ -700,7 +811,7 @@ public class MainActivity extends Activity {
                 "Kontakt"
         };
         new AlertDialog.Builder(this)
-                .setTitle("Rreth ZemZem · v1.2.1")
+                .setTitle("Rreth ZemZem · v1.3.0")
                 .setMessage("ZemZem.al\nShtëpi botuese dhe shpërndarëse")
                 .setItems(items, (d, which) -> {
                     switch (which) {
