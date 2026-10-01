@@ -42,6 +42,11 @@ import android.widget.Toast;
 import android.widget.ImageView;
 import android.widget.EditText;
 import android.app.AlertDialog;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import java.util.concurrent.Executor;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -64,7 +69,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import org.json.JSONObject;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
     private static final String HOME_URL = "https://www.zemzem.al/";
     private static final String CHANNEL_ID = "zemzem_updates";
     private static final int FILE_CHOOSER_REQUEST = 1001;
@@ -75,6 +80,7 @@ public class MainActivity extends Activity {
     private static final String PREF_DOWNLOADS = "downloads";
     private static final String PREF_NOTIFICATIONS = "notifications_enabled";
     private static final String PREF_ORDER_LOCK = "last_order_action";
+    private static final String PREF_BIOMETRIC = "biometric_lock";
 
     private WebView webView;
     private SwipeRefreshLayout swipeRefresh;
@@ -82,6 +88,8 @@ public class MainActivity extends Activity {
     private LinearLayout errorView;
     private LinearLayout splashView;
     private LinearLayout bottomNav;
+    private Button cartNavButton;
+    private Button accountNavButton;
     private ValueCallback<Uri[]> filePathCallback;
     private Uri cameraImageUri;
     private long lastBackPress = 0L;
@@ -388,6 +396,7 @@ public class MainActivity extends Activity {
                 "window.ZemZemNative.favorite=function(title,url){ZemZemAndroid.favorite(title||document.title,url||location.href);};" +
                 "window.ZemZemNative.about=function(){ZemZemAndroid.about();};" +
                 "window.ZemZemNative.settings=function(){ZemZemAndroid.settings();};" +
+                "try{var cart=JSON.parse(localStorage.getItem('zemzem_cart')||'[]');var cn=Array.isArray(cart)?cart.reduce(function(s,x){return s+(Number(x.qty)||0)},0):0;ZemZemAndroid.setBadge('cart',cn);}catch(e){}" +
                 "try{Object.defineProperty(navigator,'share',{configurable:true,value:function(d){ZemZemAndroid.share((d&&d.title)||document.title,(d&&d.url)||location.href);return Promise.resolve();}});}catch(e){}" +
                 "if(location.pathname.indexOf('product.html')>=0&&!document.getElementById('zz-native-product-actions')){" +
                 "var bar=document.createElement('div');bar.id='zz-native-product-actions';bar.style.cssText='position:fixed;right:12px;bottom:76px;z-index:2147483000;display:flex;gap:8px';" +
@@ -536,6 +545,11 @@ public class MainActivity extends Activity {
         public void settings() {
             runOnUiThread(MainActivity.this::showSettingsDialog);
         }
+
+        @JavascriptInterface
+        public void setBadge(String type, int count) {
+            runOnUiThread(() -> updateNativeBadge(type, count));
+        }
     }
 
 
@@ -547,17 +561,17 @@ public class MainActivity extends Activity {
         nav.setPadding(4, 4, 4, 4);
         nav.setElevation(18f);
 
-        addNavButton(nav, "Ballina", () -> webView.loadUrl(HOME_URL));
-        addNavButton(nav, "Shop", () -> webView.loadUrl("https://www.zemzem.al/shop.html"));
-        addNavButton(nav, "Kërko", this::showSearchDialog);
-        addNavButton(nav, "Shporta", () -> webView.loadUrl("https://www.zemzem.al/checkout.html"));
-        addNavButton(nav, "Llogaria", this::showAccountMenu);
+        addNavButton(nav, "⌂\nBallina", "Ballina", () -> webView.loadUrl(HOME_URL));
+        addNavButton(nav, "▦\nShop", "Shop", () -> webView.loadUrl("https://www.zemzem.al/shop.html"));
+        addNavButton(nav, "⌕\nKërko", "Kërko", this::showSearchDialog);
+        addNavButton(nav, "🛒\nShporta", "Shporta", () -> webView.loadUrl("https://www.zemzem.al/checkout.html"));
+        addNavButton(nav, "●\nLlogaria", "Llogaria", this::openAccountProtected);
         return nav;
     }
 
-    private void addNavButton(LinearLayout nav, String label, Runnable action) {
+    private void addNavButton(LinearLayout nav, String text, String label, Runnable action) {
         Button button = new Button(this);
-        button.setText(label);
+        button.setText(text);
         button.setTextSize(11);
         button.setAllCaps(false);
         button.setTag(label);
@@ -567,6 +581,8 @@ public class MainActivity extends Activity {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
         button.setLayoutParams(params);
         button.setOnClickListener(v -> action.run());
+        if ("Shporta".equals(label)) cartNavButton = button;
+        if ("Llogaria".equals(label)) accountNavButton = button;
         nav.addView(button);
     }
 
@@ -607,6 +623,59 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void updateNativeBadge(String type, int count) {
+        if ("cart".equals(type) && cartNavButton != null) {
+            cartNavButton.setText(count > 0 ? "🛒 " + count + "\nShporta" : "🛒\nShporta");
+        }
+        if ("partner".equals(type) && accountNavButton != null) {
+            accountNavButton.setText(count > 0 ? "● " + count + "\nLlogaria" : "●\nLlogaria");
+        }
+    }
+
+    private void openAccountProtected() {
+        SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        if (!prefs.getBoolean(PREF_BIOMETRIC, false)) {
+            showAccountMenu();
+            return;
+        }
+
+        BiometricManager manager = BiometricManager.from(this);
+        int can = manager.canAuthenticate(
+                BiometricManager.Authenticators.BIOMETRIC_STRONG |
+                BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        );
+        if (can != BiometricManager.BIOMETRIC_SUCCESS) {
+            showAccountMenu();
+            return;
+        }
+
+        Executor executor = ContextCompat.getMainExecutor(this);
+        BiometricPrompt prompt = new BiometricPrompt(this, executor,
+                new BiometricPrompt.AuthenticationCallback() {
+                    @Override
+                    public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
+                        super.onAuthenticationSucceeded(result);
+                        showAccountMenu();
+                    }
+
+                    @Override
+                    public void onAuthenticationError(int errorCode, CharSequence errString) {
+                        super.onAuthenticationError(errorCode, errString);
+                        Toast.makeText(MainActivity.this, "Hyrja u anulua.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        BiometricPrompt.PromptInfo info = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("ZemZem")
+                .setSubtitle("Konfirmo identitetin për të hapur llogarinë")
+                .setAllowedAuthenticators(
+                        BiometricManager.Authenticators.BIOMETRIC_STRONG |
+                        BiometricManager.Authenticators.DEVICE_CREDENTIAL
+                )
+                .build();
+        prompt.authenticate(info);
+    }
+
     private void showSearchDialog() {
         EditText input = new EditText(this);
         input.setHint("Kërko libra...");
@@ -642,10 +711,10 @@ public class MainActivity extends Activity {
                     switch (which) {
                         case 0: webView.loadUrl("https://www.zemzem.al/account.html"); break;
                         case 1: toggleFavorite(webView.getTitle(), webView.getUrl()); break;
-                        case 2: showSavedList("Të preferuarat", PREF_FAVORITES); break;
+                        case 2: openSavedItemsPage("favorites"); break;
                         case 3: shareContent(webView.getTitle(), webView.getUrl()); break;
-                        case 4: showSavedList("Të fundit", PREF_HISTORY); break;
-                        case 5: showDownloadCenter(); break;
+                        case 4: openSavedItemsPage("history"); break;
+                        case 5: openSavedItemsPage("downloads"); break;
                         case 6: showSettingsDialog(); break;
                         case 7: showAboutDialog(); break;
                     }
@@ -727,6 +796,12 @@ public class MainActivity extends Activity {
                 .show();
     }
 
+    private void openSavedItemsPage(String mode) {
+        Intent intent = new Intent(this, SavedItemsActivity.class);
+        intent.putExtra("mode", mode);
+        startActivity(intent);
+    }
+
     private void showSettingsDialog() {
         SharedPreferences prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
         LinearLayout box = new LinearLayout(this);
@@ -741,6 +816,14 @@ public class MainActivity extends Activity {
                 prefs.edit().putBoolean(PREF_NOTIFICATIONS, isChecked).apply()
         );
         box.addView(notifications);
+
+        Switch biometric = new Switch(this);
+        biometric.setText("Mbro llogarinë me fingerprint/Face/PIN");
+        biometric.setChecked(prefs.getBoolean(PREF_BIOMETRIC, false));
+        biometric.setOnCheckedChangeListener((buttonView, isChecked) ->
+                prefs.edit().putBoolean(PREF_BIOMETRIC, isChecked).apply()
+        );
+        box.addView(biometric);
 
         Button clearFavorites = new Button(this);
         clearFavorites.setText("Pastro të preferuarat");
