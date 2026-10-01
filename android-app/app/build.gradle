@@ -10,8 +10,8 @@ android {
         applicationId "al.zemzem.app"
         minSdk 24
         targetSdk 35
-        versionCode 3
-        versionName "1.1.0"
+        versionCode 4
+        versionName "1.2.0"
     }
 
     def keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
@@ -48,4 +48,5 @@ android {
 dependencies {
     implementation 'androidx.core:core:1.15.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'com.google.firebase:firebase-messaging:24.1.0'
 }
