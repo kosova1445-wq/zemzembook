@@ -570,7 +570,7 @@ public class MainActivity extends FragmentActivity {
         addNavButton(nav, "⌂\nBallina", "Ballina", () -> webView.loadUrl(HOME_URL));
         addNavButton(nav, "▦\nShop", "Shop", () -> webView.loadUrl("https://www.zemzem.al/shop.html"));
         addNavButton(nav, "⌕\nKërko", "Kërko", this::showSearchDialog);
-        addNavButton(nav, "🛒\nShporta", "Shporta", () -> webView.loadUrl("https://www.zemzem.al/checkout.html"));
+        addNavButton(nav, "🤝\nPartner", "Partner", () -> webView.loadUrl("https://www.zemzem.al/partner.html"));
         addNavButton(nav, "●\nLlogaria", "Llogaria", this::openAccountProtected);
         return nav;
     }
@@ -588,6 +588,7 @@ public class MainActivity extends FragmentActivity {
         button.setLayoutParams(params);
         button.setOnClickListener(v -> action.run());
         if ("Shporta".equals(label)) cartNavButton = button;
+        if ("Partner".equals(label)) partnerNavButton = button;
         if ("Llogaria".equals(label)) accountNavButton = button;
         nav.addView(button);
     }
@@ -603,6 +604,7 @@ public class MainActivity extends FragmentActivity {
                     ("Ballina".equals(label) && (url.endsWith("/") || url.endsWith("index.html"))) ||
                     ("Shop".equals(label) && url.contains("shop.html")) ||
                     ("Shporta".equals(label) && (url.contains("checkout.html") || url.contains("paypal-return.html"))) ||
+                    ("Partner".equals(label) && url.contains("partner.html")) ||
                     ("Llogaria".equals(label) && url.contains("account.html"));
             b.setTextColor(active ? 0xFF159DA8 : 0xFF173D2B);
             b.setTextSize(active ? 12 : 11);
@@ -633,8 +635,8 @@ public class MainActivity extends FragmentActivity {
         if ("cart".equals(type) && cartNavButton != null) {
             cartNavButton.setText(count > 0 ? "🛒 " + count + "\nShporta" : "🛒\nShporta");
         }
-        if ("partner".equals(type) && accountNavButton != null) {
-            accountNavButton.setText(count > 0 ? "● " + count + "\nLlogaria" : "●\nLlogaria");
+        if ("partner".equals(type) && partnerNavButton != null) {
+            partnerNavButton.setText(count > 0 ? "🤝 " + count + "\nPartner" : "🤝\nPartner");
         }
     }
 
