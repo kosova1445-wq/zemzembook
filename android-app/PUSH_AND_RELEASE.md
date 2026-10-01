@@ -39,3 +39,5 @@ Supported types:
 - Contact page: https://www.zemzem.al/contact.html
 
 For production Play Store release, configure the permanent upload keystore through the existing release signing environment variables and keep the keystore/private passwords out of the repository.
+
+<!-- Firebase secret verification trigger -->
