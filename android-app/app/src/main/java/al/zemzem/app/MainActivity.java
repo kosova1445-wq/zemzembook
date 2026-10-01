@@ -389,6 +389,13 @@ public class MainActivity extends Activity {
                 "window.ZemZemNative.about=function(){ZemZemAndroid.about();};" +
                 "window.ZemZemNative.settings=function(){ZemZemAndroid.settings();};" +
                 "try{Object.defineProperty(navigator,'share',{configurable:true,value:function(d){ZemZemAndroid.share((d&&d.title)||document.title,(d&&d.url)||location.href);return Promise.resolve();}});}catch(e){}" +
+                "if(location.pathname.indexOf('product.html')>=0&&!document.getElementById('zz-native-product-actions')){" +
+                "var bar=document.createElement('div');bar.id='zz-native-product-actions';bar.style.cssText='position:fixed;right:12px;bottom:76px;z-index:2147483000;display:flex;gap:8px';" +
+                "var fav=document.createElement('button');fav.textContent='♡ Ruaj';fav.style.cssText='border:0;border-radius:999px;padding:10px 14px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.18);font-weight:700';fav.onclick=function(){ZemZemAndroid.favorite(document.title,location.href)};" +
+                "var sh=document.createElement('button');sh.textContent='↗ Share';sh.style.cssText='border:0;border-radius:999px;padding:10px 14px;background:#159DA8;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.18);font-weight:700';sh.onclick=function(){ZemZemAndroid.share(document.title,location.href)};" +
+                "bar.appendChild(fav);bar.appendChild(sh);document.body.appendChild(bar)}" +
+                "if(location.pathname.indexOf('checkout.html')>=0){" +
+                "document.querySelectorAll('form').forEach(function(form){if(form.dataset.zzGuard)return;form.dataset.zzGuard='1';form.addEventListener('submit',function(){var btn=form.querySelector('button[type=submit],input[type=submit]');if(btn&&!btn.dataset.zzLocked){btn.dataset.zzLocked='1';btn.disabled=true;setTimeout(function(){btn.disabled=false;delete btn.dataset.zzLocked},5000)}})})}" +
                 "})();";
         webView.evaluateJavascript(script, null);
     }
