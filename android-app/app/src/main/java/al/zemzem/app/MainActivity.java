@@ -90,6 +90,7 @@ public class MainActivity extends FragmentActivity {
     private LinearLayout bottomNav;
     private Button cartNavButton;
     private Button accountNavButton;
+    private Button partnerNavButton;
     private ValueCallback<Uri[]> filePathCallback;
     private Uri cameraImageUri;
     private long lastBackPress = 0L;
