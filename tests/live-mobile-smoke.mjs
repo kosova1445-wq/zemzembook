@@ -69,9 +69,11 @@ await page.reload({waitUntil:'domcontentloaded',timeout:45000});
 await page.waitForTimeout(2500);
 const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
 if(overflow>2) throw new Error('checkout horizontal overflow '+overflow+'px');
-for(const sel of ['input[name="payment_method"][value="paypal"]','input[name="payment_method"][value="cod"]','#country']){
+for(const sel of ['input[name="payment_method"][value="cod"]','#country']){
   if(await page.locator(sel).count()===0) throw new Error('checkout missing '+sel);
 }
+const checkoutRuntime=await page.locator('script[src*="checkout-v2.js"]').count();
+if(checkoutRuntime===0) throw new Error('checkout missing Admin-controlled checkout runtime');
 const checkoutBody=await page.locator('body').innerText();
 if(/NaN|Nuk u llogarit porosia/i.test(checkoutBody)) throw new Error('checkout quote/total error visible');
 console.log('✓ /checkout.html live cart + payment methods + totals');
