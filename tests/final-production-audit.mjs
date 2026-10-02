@@ -21,7 +21,7 @@ for(const p of ['checkout.html','account.html','admin.html','partner.html']){
 const checkoutHtml=read('checkout.html');
 const checkoutJs=read('assets/js/checkout-v2.js');
 const checkout=checkoutHtml+'\n'+checkoutJs;
-ok(/name=["']payment_method["'][^>]*value=["']paypal["']/i.test(checkoutHtml),'Checkout exposes PayPal payment method');
+ok(/show_paypal===true/.test(checkoutJs) && /paypal-create/.test(checkoutJs) && /value=["']paypal["']/.test(checkoutJs),'Checkout supports Admin-controlled PayPal payment method');
 ok(/name=["']payment_method["'][^>]*value=["']cod["']/i.test(checkoutHtml),'Checkout exposes COD payment method');
 ok(/id=["']country["']/i.test(checkoutHtml),'Checkout has country selector');
 ok(/id=["']citySelect["']/i.test(checkoutHtml),'Checkout has city selector');
