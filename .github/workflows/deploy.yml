@@ -815,7 +815,7 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-partner-fulfillment-loader.html 'assets/js/admin-partner-fulfillment.js?v=' 'Admin partner fulfillment loader'
           require_live https://www.zemzem.al/assets/js/admin-partner-fulfillment.js /tmp/admin-partner-fulfillment.js '__zzAdminPartnerFulfillment' 'Admin partner fulfillment runtime'
           require_live https://www.zemzem.al/assets/js/admin-partner-fulfillment.js /tmp/admin-partner-fulfillment-loop-guard.js 'tableQueued' 'Admin fulfillment loop guard'
-          require_live https://www.zemzem.al/partner.html /tmp/partner-fulfillment-loader.html 'assets/js/partner-fulfillment.js?v=2' 'Partner fulfillment portal loader'
+          require_live https://www.zemzem.al/partner.html /tmp/partner-fulfillment-loader.html 'assets/js/partner-fulfillment.js?v=4' 'Partner fulfillment portal loader'
           require_live https://www.zemzem.al/assets/js/partner-fulfillment.js /tmp/partner-fulfillment.js '__zzPartnerFulfillment' 'Partner fulfillment portal runtime'
           require_live https://www.zemzem.al/partner.html /tmp/partner-invoice-loader.html 'assets/js/partner-invoice.js?v=2' 'Partner invoice loader'
           require_live https://www.zemzem.al/assets/js/partner-invoice.js /tmp/partner-invoice.js '__zzPartnerInvoice' 'Partner invoice runtime'
