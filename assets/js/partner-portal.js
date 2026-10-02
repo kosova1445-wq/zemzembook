@@ -2,7 +2,7 @@
 'use strict';
 const URL='https://ysvtrhizgcioyycwlkrk.supabase.co',KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD',SESSION_KEY='zemzem_customer_session';
 const q=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),money=v=>Number(v||0).toFixed(2)+' €';
-let session=null,status=null,dashboard=null;
+let session=null,status=null,dashboard=null,partnerRefreshTimer=null,partnerRefreshBusy=false;
 async function loadPartnerBranding(){
  try{
    const r=await fetch(URL+'/rest/v1/site_content?key=eq.branding&select=content&limit=1',{headers:{apikey:KEY,Accept:'application/json'},cache:'no-store'});
@@ -289,8 +289,23 @@ function renderDashboard(){
  q('#logout')?.addEventListener('click',()=>{localStorage.removeItem(SESSION_KEY);session=null;setPartnerMarketingVisible(true);renderAuth()});
  const initial=location.hash.replace('#','');if(['overview','books','add','orders','settlements','reports','account','help'].includes(initial))openSection(initial);
 }
+async function refreshPartnerDashboard(){
+ if(partnerRefreshBusy||document.hidden||!session||status?.status!=='approved'||!status?.enabled)return;
+ partnerRefreshBusy=true;
+ try{
+   dashboard=await rpc('partner_dashboard',{});
+   renderDashboard();
+ }catch(e){console.warn('Partner auto refresh:',e)}
+ finally{partnerRefreshBusy=false}
+}
+function startPartnerAutoRefresh(){
+ if(partnerRefreshTimer)return;
+ partnerRefreshTimer=setInterval(refreshPartnerDashboard,20000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshPartnerDashboard()});
+ window.addEventListener('focus',refreshPartnerDashboard);
+}
 window.ZemZemPartner={rpc,getDashboard:()=>dashboard,reload:async()=>{dashboard=await rpc('partner_dashboard',{});return dashboard},money,esc};
-async function boot(){loadSession();if(!await ensure()){setPartnerMarketingVisible(true);renderAuth();return}setPartnerMarketingVisible(false);try{status=await rpc('partner_my_status',{});if(!status.applied){renderApply();return}if(status.status!=='approved'||!status.enabled){renderPending();return}dashboard=await rpc('partner_dashboard',{});renderDashboard()}catch(err){q('#partnerApp').innerHTML='<div class="partner-card"><div class="partner-msg error">'+esc(err.message)+'</div></div>'}}
+async function boot(){loadSession();if(!await ensure()){setPartnerMarketingVisible(true);renderAuth();return}setPartnerMarketingVisible(false);try{status=await rpc('partner_my_status',{});if(!status.applied){renderApply();return}if(status.status!=='approved'||!status.enabled){renderPending();return}dashboard=await rpc('partner_dashboard',{});renderDashboard();startPartnerAutoRefresh()}catch(err){q('#partnerApp').innerHTML='<div class="partner-card"><div class="partner-msg error">'+esc(err.message)+'</div></div>'}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{loadPartnerBranding();boot()});else{loadPartnerBranding();boot();}
 })();
 /* release: partner-center-pro-v2 */
