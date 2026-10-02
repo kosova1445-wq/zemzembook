@@ -297,3 +297,72 @@
   .side-nav .zz-sector-item{min-height:45px!important}
   .side-nav .zz-sector-item>span:not(.side-menu-icon):not(.nav-badge){font-size:12.5px!important}
 }
+
+/* ===== Persistent colorful sidebar after Booksto rebuild ===== */
+/* admin-booksto.js rebuilds the sidebar after load. These rules target the rebuilt
+   .zz-sector-item elements so colors do not flash and disappear. */
+#adminApp>.sidebar .side-nav .zz-sector-item{
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.28)!important;
+  border-radius:10px!important;
+  text-shadow:0 1px 1px rgba(0,0,0,.12)!important;
+  box-shadow:0 4px 12px rgba(24,38,48,.10)!important;
+}
+#adminApp>.sidebar .side-nav .zz-sector-item:nth-child(8n+1){background:#6c5ce7!important}
+#adminApp>.sidebar .side-nav .zz-sector-item:nth-child(8n+2){background:#0984e3!important}
+#adminApp>.sidebar .side-nav .zz-sector-item:nth-child(8n+3){background:#00a8cc!important}
+#adminApp>.sidebar .side-nav .zz-sector-item:nth-child(8n+4){background:#00b894!important}
+#adminApp>.sidebar .side-nav .zz-sector-item:nth-child(8n+5){background:#27ae60!important}
+#adminApp>.sidebar .side-nav .zz-sector-item:nth-child(8n+6){background:#f39c12!important}
+#adminApp>.sidebar .side-nav .zz-sector-item:nth-child(8n+7){background:#e67e22!important}
+#adminApp>.sidebar .side-nav .zz-sector-item:nth-child(8n+8){background:#e84393!important}
+
+/* Keep specific important functions recognizable regardless of menu order. */
+#adminApp>.sidebar .side-nav [data-view="dashboard"]{background:#0984e3!important}
+#adminApp>.sidebar .side-nav [data-view="team-center"]{background:#6c5ce7!important}
+#adminApp>.sidebar .side-nav [data-view="orders"]{background:#00a8cc!important}
+#adminApp>.sidebar .side-nav [data-view="books"]{background:#16a085!important}
+#adminApp>.sidebar .side-nav [data-view="add-book"]{background:#27ae60!important}
+#adminApp>.sidebar .side-nav a[href="admin-ebooks.html"]{background:#5f27cd!important}
+#adminApp>.sidebar .side-nav [data-view="free-library"]{background:#82c91e!important}
+#adminApp>.sidebar .side-nav [data-view="catalog"]{background:#f1c40f!important;color:#27333b!important;text-shadow:none!important}
+#adminApp>.sidebar .side-nav [data-view="customers"]{background:#f39c12!important}
+#adminApp>.sidebar .side-nav [data-view="coupons"]{background:#e67e22!important}
+#adminApp>.sidebar .side-nav [data-view="reviews"]{background:#e17055!important}
+#adminApp>.sidebar .side-nav [data-view="admins"]{background:#e84393!important}
+#adminApp>.sidebar .side-nav [data-view="branding"]{background:#d63031!important}
+#adminApp>.sidebar .side-nav [data-view="media"]{background:#b33939!important}
+#adminApp>.sidebar .side-nav [data-view="operations"]{background:#8e44ad!important}
+#adminApp>.sidebar .side-nav [data-view="business-center"]{background:#34495e!important}
+#adminApp>.sidebar .side-nav [data-view="partners"]{background:#0f6b4d!important}
+#adminApp>.sidebar .side-nav [data-view="checkout-settings"]{background:#116b45!important}
+#adminApp>.sidebar .side-nav [data-view="security-release"]{background:#8a4f00!important}
+#adminApp>.sidebar .side-nav [data-view="control-center"]{background:#405266!important}
+#adminApp>.sidebar .side-nav [data-view="integrations"]{background:#00695c!important}
+#adminApp>.sidebar .side-nav [data-view="audit"]{background:#4a69bd!important}
+
+/* Dynamic buttons added by other admin modules also keep a color. */
+#adminApp>.sidebar .side-nav [data-super-view],
+#adminApp>.sidebar .side-nav [data-intel-view],
+#adminApp>.sidebar .side-nav [data-experience-view],
+#adminApp>.sidebar .side-nav [data-growth-view],
+#adminApp>.sidebar .side-nav [data-growth2-view],
+#adminApp>.sidebar .side-nav [data-pro20]{
+  background:#5f27cd!important;color:#fff!important;
+}
+
+/* Icon chips stay visible on vivid backgrounds. */
+#adminApp>.sidebar .side-nav .zz-sector-item .side-menu-icon{
+  background:rgba(255,255,255,.18)!important;
+  color:inherit!important;
+  border-color:rgba(255,255,255,.26)!important;
+}
+#adminApp>.sidebar .side-nav .zz-sector-item:hover{
+  filter:brightness(1.07)!important;
+  transform:translateX(3px)!important;
+}
+#adminApp>.sidebar .side-nav .zz-sector-item.active{
+  outline:2px solid rgba(255,255,255,.94)!important;
+  outline-offset:-4px!important;
+  box-shadow:0 7px 18px rgba(20,35,45,.20)!important;
+}
