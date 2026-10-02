@@ -342,3 +342,139 @@ button:disabled{cursor:not-allowed;opacity:.62}
 .zz-command-quick{padding:13px 16px;border-bottom:1px solid #edf1f2}.zz-command-label{font-size:9px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:#87959d;margin-bottom:9px}.zz-command-actions{display:flex;flex-wrap:wrap;gap:8px}.zz-command-actions button{display:flex;gap:7px;align-items:center;border:1px solid #e1e8eb;background:#fbfcfc;border-radius:10px;padding:8px 10px;color:#344a56;cursor:pointer}.zz-command-actions button:hover{border-color:#9dbfb4;background:#f4f8f6}
 .zz-command-results{overflow:auto;padding:8px}.zz-command-result{width:100%;display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;border:0;border-radius:11px;background:transparent;padding:10px;cursor:pointer}.zz-command-result:hover{background:#f3f7f6}.zz-command-result-icon{width:34px;height:34px;border-radius:9px;background:#edf4f2;display:grid;place-items:center}.zz-command-result-copy{min-width:0}.zz-command-result-copy strong,.zz-command-result-copy small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zz-command-result-copy strong{font-size:12px;color:#2e4350}.zz-command-result-copy small{font-size:9px;color:#809097;margin-top:3px}.zz-command-result-meta{font-size:9px;color:#718089;white-space:nowrap}.zz-command-empty,.zz-command-loading{padding:28px;text-align:center;color:#7d8b93;font-size:11px}.zz-command-empty.error{color:#ad3f3f}
 @media(max-width:700px){.zz-global-search-btn span,.zz-global-search-btn kbd{display:none}.zz-global-search-btn{min-width:38px!important}.zz-command-box{margin:4vh auto 0;max-height:90vh}.zz-command-result{grid-template-columns:34px 1fr}.zz-command-result-meta{grid-column:2}}
+
+/* ===== ZemZem Admin Color Spectrum v1 ===== */
+:root{
+  --zz-nav-01:#6c5ce7;--zz-nav-02:#0984e3;--zz-nav-03:#00a8cc;--zz-nav-04:#00b894;
+  --zz-nav-05:#16a085;--zz-nav-06:#27ae60;--zz-nav-07:#82c91e;--zz-nav-08:#f1c40f;
+  --zz-nav-09:#f39c12;--zz-nav-10:#e67e22;--zz-nav-11:#e17055;--zz-nav-12:#e84393;
+  --zz-nav-13:#d63031;--zz-nav-14:#b33939;--zz-nav-15:#8e44ad;--zz-nav-16:#5f27cd;
+  --zz-nav-17:#34495e;--zz-nav-18:#0f6b4d;--zz-nav-19:#00838f;--zz-nav-20:#4a69bd;
+}
+/* Sidebar: every Admin function has its own clear color. */
+#adminApp>.sidebar .side-nav .nav-item{
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.25)!important;
+  border-left:0!important;
+  border-radius:9px!important;
+  box-shadow:0 3px 10px rgba(31,45,55,.10)!important;
+  margin:2px 0!important;
+  font-weight:850!important;
+  text-shadow:0 1px 1px rgba(0,0,0,.10);
+}
+#adminApp>.sidebar .side-nav .nav-item:hover{
+  filter:brightness(1.07);
+  transform:translateX(3px);
+  box-shadow:0 6px 14px rgba(31,45,55,.16)!important;
+}
+#adminApp>.sidebar .side-nav .nav-item.active{
+  outline:2px solid rgba(255,255,255,.92)!important;
+  outline-offset:-4px!important;
+  box-shadow:0 7px 18px rgba(20,35,45,.20)!important;
+}
+#adminApp>.sidebar .side-nav .nav-item .nav-badge{
+  background:rgba(255,255,255,.94)!important;
+  color:#243746!important;
+  border:0!important;
+}
+
+/* Stable colors by function, independent of menu order. */
+#adminApp>.sidebar [data-view="dashboard"]{background:var(--zz-nav-02)!important}
+#adminApp>.sidebar [data-view="team-center"]{background:var(--zz-nav-01)!important}
+#adminApp>.sidebar [data-view="messages"]{background:var(--zz-nav-20)!important}
+#adminApp>.sidebar [data-view="orders"]{background:var(--zz-nav-03)!important}
+#adminApp>.sidebar [data-view="books"]{background:var(--zz-nav-05)!important}
+#adminApp>.sidebar [data-view="add-book"]{background:var(--zz-nav-06)!important}
+#adminApp>.sidebar a[href="admin-ebooks.html"]{background:var(--zz-nav-16)!important}
+#adminApp>.sidebar [data-view="free-library"]{background:var(--zz-nav-07)!important}
+#adminApp>.sidebar [data-view="catalog"]{background:var(--zz-nav-08)!important;color:#27333b!important;text-shadow:none!important}
+#adminApp>.sidebar [data-view="customers"]{background:var(--zz-nav-09)!important}
+#adminApp>.sidebar [data-view="coupons"]{background:var(--zz-nav-10)!important}
+#adminApp>.sidebar [data-view="reviews"]{background:var(--zz-nav-11)!important}
+#adminApp>.sidebar [data-view="admins"]{background:var(--zz-nav-12)!important}
+#adminApp>.sidebar [data-view="branding"]{background:var(--zz-nav-13)!important}
+#adminApp>.sidebar [data-view="media"]{background:var(--zz-nav-14)!important}
+#adminApp>.sidebar [data-view="operations"]{background:var(--zz-nav-15)!important}
+#adminApp>.sidebar [data-view="business-center"]{background:var(--zz-nav-17)!important}
+#adminApp>.sidebar [data-view="partners"]{background:var(--zz-nav-18)!important}
+#adminApp>.sidebar [data-view="security-release"]{background:#8a4f00!important}
+#adminApp>.sidebar [data-view="control-center"]{background:#405266!important}
+#adminApp>.sidebar [data-view="integrations"]{background:#00695c!important}
+#adminApp>.sidebar [data-view="checkout-settings"]{background:#116b45!important}
+
+/* When JS renders section labels, give each Admin group a soft matching ribbon. */
+#adminApp>.sidebar .side-section-label{
+  border-radius:7px!important;
+  padding:7px 9px!important;
+  margin:8px 0 3px!important;
+  background:linear-gradient(90deg,#eef4f7,#fafcfd)!important;
+  border:1px solid #e3ebef!important;
+  color:#657985!important;
+}
+
+/* More colorful content without sacrificing readability. */
+.admin-app .view .panel,
+.admin-app .view .stat-card,
+.admin-app .view .entity-card,
+.admin-app .view .customer-card,
+.admin-app .view .coupon-card,
+.admin-app .view .review-card,
+.admin-app .view .integration-card,
+.admin-app .view .site-editor-card{
+  overflow:hidden;
+}
+.admin-app .view .panel::before,
+.admin-app .view .stat-card::before,
+.admin-app .view .entity-card::before,
+.admin-app .view .customer-card::before,
+.admin-app .view .coupon-card::before,
+.admin-app .view .review-card::before,
+.admin-app .view .integration-card::before,
+.admin-app .view .site-editor-card::before{
+  height:6px!important;
+}
+
+/* Alternate vivid accent bars for repeated cards and panels. */
+.admin-app .view .panel:nth-of-type(8n+1)::before,
+.admin-app .view .stat-card:nth-of-type(8n+1)::before,
+.admin-app .view .entity-card:nth-of-type(8n+1)::before{background:#0984e3!important}
+.admin-app .view .panel:nth-of-type(8n+2)::before,
+.admin-app .view .stat-card:nth-of-type(8n+2)::before,
+.admin-app .view .entity-card:nth-of-type(8n+2)::before{background:#00b894!important}
+.admin-app .view .panel:nth-of-type(8n+3)::before,
+.admin-app .view .stat-card:nth-of-type(8n+3)::before,
+.admin-app .view .entity-card:nth-of-type(8n+3)::before{background:#f1c40f!important}
+.admin-app .view .panel:nth-of-type(8n+4)::before,
+.admin-app .view .stat-card:nth-of-type(8n+4)::before,
+.admin-app .view .entity-card:nth-of-type(8n+4)::before{background:#e67e22!important}
+.admin-app .view .panel:nth-of-type(8n+5)::before,
+.admin-app .view .stat-card:nth-of-type(8n+5)::before,
+.admin-app .view .entity-card:nth-of-type(8n+5)::before{background:#e84393!important}
+.admin-app .view .panel:nth-of-type(8n+6)::before,
+.admin-app .view .stat-card:nth-of-type(8n+6)::before,
+.admin-app .view .entity-card:nth-of-type(8n+6)::before{background:#6c5ce7!important}
+.admin-app .view .panel:nth-of-type(8n+7)::before,
+.admin-app .view .stat-card:nth-of-type(8n+7)::before,
+.admin-app .view .entity-card:nth-of-type(8n+7)::before{background:#00a8cc!important}
+.admin-app .view .panel:nth-of-type(8n+8)::before,
+.admin-app .view .stat-card:nth-of-type(8n+8)::before,
+.admin-app .view .entity-card:nth-of-type(8n+8)::before{background:#d63031!important}
+
+/* Color tabs/buttons by position while keeping primary actions readable. */
+.admin-app .admin-tabs button:nth-child(6n+1),
+.admin-app .zzcc-tabs button:nth-child(6n+1){border-top:3px solid #0984e3!important}
+.admin-app .admin-tabs button:nth-child(6n+2),
+.admin-app .zzcc-tabs button:nth-child(6n+2){border-top:3px solid #00b894!important}
+.admin-app .admin-tabs button:nth-child(6n+3),
+.admin-app .zzcc-tabs button:nth-child(6n+3){border-top:3px solid #f39c12!important}
+.admin-app .admin-tabs button:nth-child(6n+4),
+.admin-app .zzcc-tabs button:nth-child(6n+4){border-top:3px solid #e84393!important}
+.admin-app .admin-tabs button:nth-child(6n+5),
+.admin-app .zzcc-tabs button:nth-child(6n+5){border-top:3px solid #6c5ce7!important}
+.admin-app .admin-tabs button:nth-child(6n+6),
+.admin-app .zzcc-tabs button:nth-child(6n+6){border-top:3px solid #00a8cc!important}
+
+@media(max-width:760px){
+  #adminApp>.sidebar .side-nav .nav-item{min-height:46px!important;border-radius:10px!important}
+  #adminApp>.sidebar .side-nav .nav-item:hover{transform:none}
+}
