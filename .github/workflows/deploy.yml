@@ -496,8 +496,8 @@ jobs:
           grep -q "__zzAdminControlCenter" assets/js/admin-control-center.js
           grep -q "admin_control_center_snapshot" assets/js/admin-control-center.js
           grep -q "Central Settings" assets/js/admin-control-center.js
-          grep -q "tableQueued" assets/js/admin-partner-fulfillment.js
-          grep -q "drawerQueued" assets/js/admin-partner-fulfillment.js
+          grep -q "function decorateTable()" assets/js/admin-partner-fulfillment.js
+          grep -q "function decorateDrawer()" assets/js/admin-partner-fulfillment.js
           node --check assets/js/partner-fulfillment.js
           node --check assets/js/partner-invoice.js
           grep -q "JsBarcode" assets/js/partner-invoice.js
