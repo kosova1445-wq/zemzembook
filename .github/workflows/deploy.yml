@@ -380,7 +380,7 @@ jobs:
         if: steps.latest.outputs.deploy == 'true'
         shell: bash
         run: |
-          set -euo pipefail
+          set -euxo pipefail
           node --check assets/js/admin-collab.js
           node --check assets/js/admin-command-palette.js
           grep -q "__zzAdminCommandPaletteV1" assets/js/admin-command-palette.js
