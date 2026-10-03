@@ -1,4 +1,6 @@
 RewriteEngine On
+# Preserve existing eBook URLs while serving initial social metadata.
+RewriteRule ^ebook\.html$ ebook-preview.php [L]
 RewriteRule ^rss\.xml$ rss.php [L]
 
 ErrorDocument 404 /404.html
