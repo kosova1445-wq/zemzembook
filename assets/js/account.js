@@ -397,11 +397,21 @@ async function loadMyEbooks() {
   }
 }
 
+function ebookDeviceId() {
+  const key='zemzem_ebook_device_id';
+  let id=localStorage.getItem(key)||'';
+  if(!/^[a-zA-Z0-9._:-]{8,120}$/.test(id)){
+    id=(crypto.randomUUID?crypto.randomUUID():'dev-'+Date.now()+'-'+Math.random().toString(36).slice(2));
+    localStorage.setItem(key,id);
+  }
+  return id;
+}
+
 async function downloadOwnedEbook(entitlementId, button) {
   const old = button?.textContent;
   if (button) { button.disabled = true; button.textContent = 'Duke përgatitur…'; }
   try {
-    const d = await aedge('ebook-download', {entitlement_id: entitlementId});
+    const d = await aedge('ebook-download', {entitlement_id: entitlementId, device_id: ebookDeviceId(), device_label: /mobile|android|iphone|ipad/i.test(navigator.userAgent)?'Mobile / Tablet':'Desktop'});
     if (!d?.url) throw new Error('Linku i shkarkimit nuk u krijua.');
     const a = document.createElement('a');
     a.href = d.url;
@@ -428,7 +438,7 @@ async function sendOwnedEbookToKindle(entitlementId, button) {
   }
   if (button) { button.disabled = true; button.textContent = 'Duke përgatitur EPUB…'; }
   try {
-    const d = await aedge('ebook-download', {entitlement_id: entitlementId, format: 'epub'});
+    const d = await aedge('ebook-download', {entitlement_id: entitlementId, format: 'epub', device_id: ebookDeviceId(), device_label: /mobile|android|iphone|ipad/i.test(navigator.userAgent)?'Mobile / Tablet':'Desktop'});
     if (!d?.url) throw new Error('EPUB-i për Kindle nuk u krijua.');
     const a = document.createElement('a');
     a.href = d.url;
