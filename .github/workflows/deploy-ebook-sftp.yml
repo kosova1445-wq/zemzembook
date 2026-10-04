@@ -35,11 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      HOST: quebec.us.hostns.io
+      HOST: ${{ secrets.FTP_SERVER }}
       USERNAME: ${{ secrets.FTP_USERNAME }}
       PASSWORD: ${{ secrets.FTP_PASSWORD }}
       TARGET_DIR: ${{ secrets.FTP_SERVER_DIR }}
-      SFTP_PORT: 4747
+      SFTP_PORT: ${{ secrets.FTP_PORT }}
     steps:
       - uses: actions/checkout@v4
 
