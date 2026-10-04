@@ -515,16 +515,30 @@ async function deleteAddress(id) {
 }
 
 async function loadWishlist() {
-  const rows = await aapi(`wishlist_items?user_id=eq.${accSession.user.id}&select=book_id,created_at&order=created_at.desc`) || [];
-  const cat = await araw('/rest/v1/storefront_books?select=id,title,author_name,price,cover_url', {headers:{apikey:ACC_SB_KEY}});
+  const [rows, ebookRows, cat, ebookCat] = await Promise.all([
+    aapi(`wishlist_items?user_id=eq.${accSession.user.id}&select=book_id,created_at&order=created_at.desc`).catch(()=>[]),
+    aapi(`ebook_wishlist?user_id=eq.${accSession.user.id}&select=ebook_id,created_at&order=created_at.desc`).catch(()=>[]),
+    araw('/rest/v1/storefront_books?select=id,title,author_name,price,cover_url', {headers:{apikey:ACC_SB_KEY}}).catch(()=>[]),
+    araw('/rest/v1/storefront_ebooks?select=id,title,author_name,price,cover_url', {headers:{apikey:ACC_SB_KEY}}).catch(()=>[])
+  ]);
   const map = new Map((cat || []).map((b) => [String(b.id), b]));
-  const box = aq('#wishlistList');
-  box.innerHTML = rows.length ? rows.map((w) => {
+  const ebookMap = new Map((ebookCat || []).map((b) => [String(b.id), b]));
+  const physicalHtml=(rows||[]).map((w) => {
     const b = map.get(String(w.book_id));
     return b ? `<article class="wish-card"><div class="wish-main">${b.cover_url ? `<img class="book-thumb" src="${aesc(b.cover_url)}" alt="">` : '<div class="book-thumb"></div>'}<div><strong>${aesc(b.title)}</strong><div>${aesc(b.author_name || '')} · ${amoney(b.price)}</div></div></div><div><a class="btn btn-light compact" href="product.html?id=${encodeURIComponent(w.book_id)}">Hap</a> <button class="text-btn" data-remove-wish="${w.book_id}">Hiq</button></div></article>` : '';
-  }).join('') : '<div class="empty-state">Wishlist-i është bosh.</div>';
+  }).join('');
+  const ebookHtml=(ebookRows||[]).map((w) => {
+    const b=ebookMap.get(String(w.ebook_id));
+    return b ? `<article class="wish-card"><div class="wish-main">${b.cover_url ? `<img class="book-thumb" src="${aesc(b.cover_url)}" alt="">` : '<div class="book-thumb" style="display:grid;place-items:center;font-size:11px">eBook</div>'}<div><strong>${aesc(b.title)}</strong><div>${aesc(b.author_name || 'ZemZem')} · ${amoney(b.price)}</div><small style="color:#758189">eBook</small></div></div><div><a class="btn btn-light compact" href="ebook.html?id=${encodeURIComponent(w.ebook_id)}">Hap</a> <button class="text-btn" data-remove-ebook-wish="${w.ebook_id}">Hiq</button></div></article>` : '';
+  }).join('');
+  const box = aq('#wishlistList');
+  box.innerHTML = physicalHtml+ebookHtml || '<div class="empty-state">Wishlist-i është bosh.</div>';
   aqq('[data-remove-wish]').forEach((b) => b.onclick = async () => {
     await aapi(`wishlist_items?user_id=eq.${accSession.user.id}&book_id=eq.${b.dataset.removeWish}`, {method:'DELETE'});
+    await loadWishlist();
+  });
+  aqq('[data-remove-ebook-wish]').forEach((b) => b.onclick = async () => {
+    await aapi(`ebook_wishlist?user_id=eq.${accSession.user.id}&ebook_id=eq.${b.dataset.removeEbookWish}`, {method:'DELETE'});
     await loadWishlist();
   });
 }
