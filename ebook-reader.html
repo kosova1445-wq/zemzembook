@@ -1,0 +1,19 @@
+<!doctype html><html lang="sq"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#233a4a"><title>Lexuesi eBook — ZemZem</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="assets/css/style.css"><link rel="stylesheet" href="assets/css/brand.css?v=4"><link rel="stylesheet" href="assets/css/ebook-reader.css?v=1"></head><body class="ebook-reader-body">
+<header class="er-top"><a class="brand" href="index.html"><span class="brand-mark"></span><span>ZemZem</span></a><div class="er-title"><strong id="erBookTitle">Lexuesi eBook</strong><span id="erProgressText">Duke ngarkuar…</span></div><div class="er-actions"><button id="erTheme" type="button">◐</button><a href="account.html?view=ebooks">Biblioteka ime</a></div></header>
+<div class="er-shell">
+<aside id="erSidebar" class="er-sidebar">
+<div class="er-tabs"><button class="active" data-er-tab="contents">Faqet</button><button data-er-tab="bookmarks">Bookmarks</button><button data-er-tab="notes">Shënime</button><button data-er-tab="search">Kërko</button></div>
+<section id="erTab-contents" class="er-tab"><div class="er-side-head"><strong>Navigimi</strong></div><label class="er-field">Shko te faqja<input id="erPageInput" type="number" min="1" value="1"></label><button id="erGoPage" class="er-btn">Hap faqen</button></section>
+<section id="erTab-bookmarks" class="er-tab" hidden><div class="er-side-head"><strong>Bookmarks</strong><button id="erAddBookmark" class="er-btn small">+ Ruaj faqen</button></div><div id="erBookmarks"></div></section>
+<section id="erTab-notes" class="er-tab" hidden><div class="er-side-head"><strong>Shënime</strong></div><textarea id="erNoteText" rows="5" placeholder="Shkruaj shënim për faqen aktuale…"></textarea><button id="erSaveNote" class="er-btn">Ruaj shënimin</button><div id="erNotes"></div></section>
+<section id="erTab-search" class="er-tab" hidden><div class="er-side-head"><strong>Kërko në libër</strong></div><div class="er-search"><input id="erSearchInput" placeholder="Shkruaj fjalën…"><button id="erSearchBtn" class="er-btn">Kërko</button></div><div id="erSearchResults"></div></section>
+</aside>
+<main class="er-reader">
+<div class="er-toolbar"><button id="erToggleSidebar">☰</button><button id="erPrev">←</button><span>Faqja <strong id="erPageNow">1</strong> / <strong id="erPageTotal">—</strong></span><button id="erNext">→</button><span class="er-spacer"></span><button id="erZoomOut">−</button><span id="erZoomLabel">100%</span><button id="erZoomIn">＋</button><button id="erFit">Përshtat</button><button id="erAddHighlight">Nënvizo tekst</button></div>
+<div id="erMessage" class="er-message">Duke përgatitur librin…</div>
+<div id="erCanvasWrap" class="er-canvas-wrap"><canvas id="erCanvas"></canvas></div>
+<div id="erTextLayer" class="er-text-layer" aria-hidden="true"></div>
+</main>
+</div>
+<div id="erToast" class="er-toast" hidden></div>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script><script src="assets/js/ebook-reader.js?v=1"></script><script src="assets/js/branding.js?v=11"></script></body></html>
