@@ -2,6 +2,14 @@ name: Deploy ZemZem to cPanel
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'admin-ebooks.html'
+      - 'assets/js/admin-ebooks*.js'
+      - 'assets/css/admin-ebooks*.css'
+      - 'assets/css/ebook-mobile.css'
+      - '.github/workflows/deploy.yml'
 
 concurrency:
   group: zemzem-cpanel-production
@@ -331,6 +339,9 @@ jobs:
           admin-ebooks.html
           assets/js/admin-ebooks.js
           assets/js/admin-ebooks-orders.js
+          assets/js/admin-ebooks-pro.js
+          assets/js/admin-ebooks-coupons.js
+          assets/js/admin-ebooks-commerce.js
           assets/css/admin-ebooks.css
           assets/css/admin-ebooks-booksto.css
           assets/css/ebook-mobile.css
