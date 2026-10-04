@@ -2,29 +2,6 @@ name: Emergency eBook SFTP Deploy
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/deploy-ebook-sftp.yml'
-      - 'admin-ebooks.html'
-      - 'account.html'
-      - 'ebook.html'
-      - 'ebook-checkout.html'
-      - 'ebook-reader.html'
-      - 'assets/js/admin-ebooks.js'
-      - 'assets/js/admin-ebooks-orders.js'
-      - 'assets/js/admin-ebooks-pro.js'
-      - 'assets/js/admin-ebooks-coupons.js'
-      - 'assets/js/account.js'
-      - 'assets/js/ebooks.js'
-      - 'assets/js/ebook-checkout.js'
-      - 'assets/js/ebook-reader.js'
-      - 'assets/css/admin-ebooks.css'
-      - 'assets/css/admin-ebooks-booksto.css'
-      - 'assets/css/ebooks.css'
-      - 'assets/css/ebook-checkout.css'
-      - 'assets/css/ebook-mobile.css'
-      - 'assets/css/ebook-reader.css'
 
 concurrency:
   group: zemzem-ebook-sftp
