@@ -1,0 +1,135 @@
+name: Emergency eBook SFTP Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/deploy-ebook-sftp.yml'
+      - 'admin-ebooks.html'
+      - 'account.html'
+      - 'ebook.html'
+      - 'ebook-checkout.html'
+      - 'ebook-reader.html'
+      - 'assets/js/admin-ebooks.js'
+      - 'assets/js/admin-ebooks-orders.js'
+      - 'assets/js/admin-ebooks-pro.js'
+      - 'assets/js/admin-ebooks-coupons.js'
+      - 'assets/js/account.js'
+      - 'assets/js/ebooks.js'
+      - 'assets/js/ebook-checkout.js'
+      - 'assets/js/ebook-reader.js'
+      - 'assets/css/admin-ebooks.css'
+      - 'assets/css/admin-ebooks-booksto.css'
+      - 'assets/css/ebooks.css'
+      - 'assets/css/ebook-checkout.css'
+      - 'assets/css/ebook-mobile.css'
+      - 'assets/css/ebook-reader.css'
+
+concurrency:
+  group: zemzem-ebook-sftp
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HOST: quebec.us.hostns.io
+      USERNAME: ${{ secrets.FTP_USERNAME }}
+      PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      TARGET_DIR: ${{ secrets.FTP_SERVER_DIR }}
+      SFTP_PORT: 4747
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SFTP password helper
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq sshpass
+
+      - name: Validate credentials
+        run: |
+          test -n "$USERNAME"
+          test -n "$PASSWORD"
+          test -n "$TARGET_DIR"
+
+      - name: Deploy eBook updates over SFTP
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          target="$TARGET_DIR"
+          target="${target%/}"
+
+          cat > /tmp/probe.sftp <<EOF
+          pwd
+          ls
+          EOF
+
+          sshpass -p "$PASSWORD" sftp             -oBatchMode=no             -oStrictHostKeyChecking=no             -oUserKnownHostsFile=/dev/null             -oConnectTimeout=20             -P "$SFTP_PORT"             -b /tmp/probe.sftp "$USERNAME@$HOST"
+
+          files=(
+            admin-ebooks.html
+            account.html
+            ebook.html
+            ebook-checkout.html
+            ebook-reader.html
+            assets/js/admin-ebooks.js
+            assets/js/admin-ebooks-orders.js
+            assets/js/admin-ebooks-pro.js
+            assets/js/admin-ebooks-coupons.js
+            assets/js/account.js
+            assets/js/ebooks.js
+            assets/js/ebook-checkout.js
+            assets/js/ebook-reader.js
+            assets/css/admin-ebooks.css
+            assets/css/admin-ebooks-booksto.css
+            assets/css/ebooks.css
+            assets/css/ebook-checkout.css
+            assets/css/ebook-mobile.css
+            assets/css/ebook-reader.css
+          )
+
+          build_batch() {
+            local root="$1"
+            : > /tmp/deploy.sftp
+            echo "cd $root" >> /tmp/deploy.sftp
+            echo "-mkdir assets" >> /tmp/deploy.sftp
+            echo "-mkdir assets/js" >> /tmp/deploy.sftp
+            echo "-mkdir assets/css" >> /tmp/deploy.sftp
+            for f in "${files[@]}"; do
+              if [ -f "$f" ]; then
+                echo "put $f $f" >> /tmp/deploy.sftp
+              fi
+            done
+          }
+
+          build_batch "$target"
+          if ! sshpass -p "$PASSWORD" sftp             -oBatchMode=no             -oStrictHostKeyChecking=no             -oUserKnownHostsFile=/dev/null             -oConnectTimeout=20             -P "$SFTP_PORT"             -b /tmp/deploy.sftp "$USERNAME@$HOST"; then
+            alt="${target#/}"
+            echo "Primary target failed; retrying relative path: $alt"
+            build_batch "$alt"
+            sshpass -p "$PASSWORD" sftp               -oBatchMode=no               -oStrictHostKeyChecking=no               -oUserKnownHostsFile=/dev/null               -oConnectTimeout=20               -P "$SFTP_PORT"               -b /tmp/deploy.sftp "$USERNAME@$HOST"
+          fi
+
+      - name: Verify eBook files live
+        shell: bash
+        run: |
+          set -euo pipefail
+          check() {
+            url="$1"; needle="$2"
+            for n in 1 2 3 4 5; do
+              if curl -fsSL --connect-timeout 10 --max-time 20 "$url?deploy=$GITHUB_SHA-$n" | grep -Fq "$needle"; then
+                echo "OK: $url"
+                return 0
+              fi
+              sleep 4
+            done
+            echo "FAILED: $url missing $needle"
+            return 1
+          }
+          check "https://www.zemzem.al/admin-ebooks.html" "admin-ebooks-pro.js"
+          check "https://www.zemzem.al/ebook-reader.html" "ebook-reader.js"
+          check "https://www.zemzem.al/assets/js/account.js" "ebook-reader.html?entitlement="
+          check "https://www.zemzem.al/assets/js/ebooks.js" "loadEbookCommunity"
