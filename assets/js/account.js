@@ -140,7 +140,8 @@ async function aedge(name, body = {}) {
       ENTITLEMENT_INACTIVE: 'Qasja për këtë eBook nuk është aktive.',
       ORDER_NOT_PAID: 'Pagesa e këtij eBook-u nuk është konfirmuar.',
       EBOOK_FILE_NOT_AVAILABLE: 'Skedari i këtij eBook-u nuk është i disponueshëm.',
-      DOWNLOAD_TOO_FAST: 'Prit pak sekonda para shkarkimit tjetër.'
+      DOWNLOAD_TOO_FAST: 'Prit pak sekonda para shkarkimit tjetër.',
+      DEVICE_LIMIT_REACHED: 'Është arritur limiti i pajisjeve për këtë eBook. Kontakto ZemZem nëse ke ndërruar pajisjen.'
     };
     throw new Error(labels[code] || code);
   }
