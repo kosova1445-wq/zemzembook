@@ -114,13 +114,13 @@ function renderDashboard(){
     <div class="partner-kpis partner-kpis-four">
       <div class="partner-kpi"><span>Shitur këtë muaj</span><strong>${Number(m.quantity||0)}</strong><small>libra të dorëzuar</small></div>
       <div class="partner-kpi"><span>Shuma që të takon</span><strong>${money(m.supplier_due)}</strong><small>këtë muaj</small></div>
-      <div class="partner-kpi"><span>Marzhi ZemZem</span><strong>${money(m.zemzem_profit)}</strong><small>${s.margin_type==='fixed'?money(s.margin_value):Number(s.margin_value||0)+'%'} markup</small></div>
+      <div class="partner-kpi"><span>Marzhi ZemZem</span><strong>${money(m.zemzem_profit)}</strong><small>${s.margin_type==='fixed'?money(s.margin_value):Number(s.margin_value||0)+'%'} komision</small></div>
       <div class="partner-kpi"><span>Shitje bruto</span><strong>${money(m.gross_sales)}</strong><small>këtë muaj</small></div>
     </div>
     <div class="partner-dashboard-grid">
       <div class="partner-card"><div class="partner-card-head"><div><h3>Aktiviteti i katalogut</h3><p>Gjendja aktuale e librave.</p></div><button class="partner-text-btn" data-open-section="books">Shiko katalogun →</button></div><div class="partner-overview-stats"><div><span>Libra gjithsej</span><b>${bookCount}</b></div><div><span>Publikuar</span><b>${Number(stats.published_count||0)}</b></div><div><span>Copë në stok</span><b>${stockTotal}</b></div></div></div>
       <div class="partner-card"><div class="partner-card-head"><div><h3>Financat</h3><p>Ndarja e të ardhurave dhe barazimet.</p></div><button class="partner-text-btn" data-open-section="settlements">Barazimet →</button></div>
-      <div class="partner-finance-summary"><span>Marzhi aktual</span><strong>${s.margin_type==='fixed'?money(s.margin_value):Number(s.margin_value||0)+'%'}</strong><small>Çmimi publik llogaritet automatikisht.</small></div>
+      <div class="partner-finance-summary"><span>Marzhi aktual</span><strong>${s.margin_type==='fixed'?money(s.margin_value):Number(s.margin_value||0)+'%'}</strong><small>Komisioni i ZemZem është i përfshirë në çmimin final.</small></div>
       <div class="partner-overview-stats" style="margin-top:10px"><div><span>Partnerit</span><b>${money(m.supplier_due)}</b></div><div><span>ZemZem</span><b>${money(m.zemzem_profit)}</b></div><div><span>Bruto</span><b>${money(m.gross_sales)}</b></div></div>
       </div>
     </div>
@@ -129,7 +129,7 @@ function renderDashboard(){
 
    <section data-partner-panel="books" hidden>
     <div class="partner-page-head"><div><span class="partner-kicker" style="color:#547363">KATALOGU</span><h2>Menaxho katalogun e librarisë</h2><p>Shiko librat, çmimet, stokun dhe statusin e publikimit.</p></div><button class="btn primary" data-open-section="add">＋ Shto libër</button></div>
-    <div class="partner-card" style="margin-top:0"><div class="partner-book-list"><table class="partner-table"><thead><tr><th>Libri</th><th>Autori</th><th>ISBN</th><th>Çmimi yt</th><th>Publik</th><th>Stoku</th><th>Statusi</th><th>Veprime</th></tr></thead><tbody>${books.map(b=>'<tr><td><div class="book-title-cell">'+(b.cover_url?'<img class="book-cover-mini" src="'+esc(b.cover_url)+'" alt="">':'<div class="book-cover-placeholder">▥</div>')+'<div><b>'+esc(b.title)+'</b><br><small>'+esc(b.partner_publisher_name||'')+'</small></div></div></td><td>'+esc(b.partner_author_name||'—')+'</td><td>'+esc(b.isbn||'—')+'</td><td><span class="price-pill">'+money(b.cost_price)+'</span></td><td><b>'+money(b.price)+'</b></td><td>'+Number(b.stock_quantity||0)+'</td><td><span class="status-pill '+esc(b.partner_review_status==='pending'?'pending':(b.partner_review_status==='rejected'?'cancelled':b.status))+'">'+esc(b.partner_review_status==='pending'?'Në pritje për aprovim':(b.partner_review_status==='rejected'?'Refuzuar':statusSq(b.status)))+'</span>'+(b.partner_review_status==='rejected'&&b.partner_review_note?'<br><small class="partner-reject-note">'+esc(b.partner_review_note)+'</small>':'')+'</td><td><button type="button" class="btn secondary partner-edit-book" data-edit-book="'+esc(b.id)+'">✎ Edito</button></td></tr>').join('')||'<tr><td colspan="8">Ende nuk ke libra.</td></tr>'}</tbody></table></div></div>
+    <div class="partner-card" style="margin-top:0"><div class="partner-book-list"><table class="partner-table"><thead><tr><th>Libri</th><th>Autori</th><th>ISBN</th><th>Çmimi final</th><th>Të takon</th><th>Stoku</th><th>Statusi</th><th>Veprime</th></tr></thead><tbody>${books.map(b=>'<tr><td><div class="book-title-cell">'+(b.cover_url?'<img class="book-cover-mini" src="'+esc(b.cover_url)+'" alt="">':'<div class="book-cover-placeholder">▥</div>')+'<div><b>'+esc(b.title)+'</b><br><small>'+esc(b.partner_publisher_name||'')+'</small></div></div></td><td>'+esc(b.partner_author_name||'—')+'</td><td>'+esc(b.isbn||'—')+'</td><td><span class="price-pill">'+money(b.price)+'</span></td><td><b>'+money(b.cost_price)+'</b></td><td>'+Number(b.stock_quantity||0)+'</td><td><span class="status-pill '+esc(b.partner_review_status==='pending'?'pending':(b.partner_review_status==='rejected'?'cancelled':b.status))+'">'+esc(b.partner_review_status==='pending'?'Në pritje për aprovim':(b.partner_review_status==='rejected'?'Refuzuar':statusSq(b.status)))+'</span>'+(b.partner_review_status==='rejected'&&b.partner_review_note?'<br><small class="partner-reject-note">'+esc(b.partner_review_note)+'</small>':'')+'</td><td><button type="button" class="btn secondary partner-edit-book" data-edit-book="'+esc(b.id)+'">✎ Edito</button></td></tr>').join('')||'<tr><td colspan="8">Ende nuk ke libra.</td></tr>'}</tbody></table></div></div>
    </section>
 
    <section data-partner-panel="add" hidden>
@@ -152,7 +152,7 @@ function renderDashboard(){
         <label>Numri i faqeve<input name="pages" type="number" min="1" step="1" placeholder="p.sh. 320"></label><label>Viti i botimit<input name="publication_year" type="number" min="1000" max="2100" step="1" placeholder="2026"></label>
         <label>Botimi / Edicioni<input name="edition" placeholder="p.sh. Botimi i dytë"></label><label>Vendi i botimit<input name="country" placeholder="Kosovë, Shqipëri..."></label>
         <div class="partner-form-section full"><h3>3. Çmimi dhe stoku</h3></div>
-        <label>Çmimi yt € *<input name="cost_price" type="number" min="0" step=".01" required placeholder="8.00"></label><label>Stoku *<input name="stock" type="number" min="0" step="1" required value="0"></label>
+        <label>Çmimi final € *<input name="cost_price" type="number" min="0" step=".01" required placeholder="12.00"><small>Ky është çmimi që paguan klienti. Komisioni ZemZem është brenda këtij çmimi.</small></label><label>Stoku *<input name="stock" type="number" min="0" step="1" required value="0"></label>
         <label>Pesha (gram)<input name="weight_grams" type="number" min="0" step="1" placeholder="450"></label><label>Dimensionet<input name="dimensions" placeholder="14 × 21 cm"></label>
         <label>Gjendja<select name="condition"><option value="new">I ri</option><option value="used_like_new">Pothuajse i ri</option><option value="used_good">I përdorur - gjendje e mirë</option></select></label>
         <div class="partner-form-section full"><h3>4. Përshkrimi</h3></div>
@@ -162,7 +162,7 @@ function renderDashboard(){
         <div class="partner-submit-row full"><div><strong>Gati për dërgim</strong><small>Libri ruhet si draft derisa të kontrollohet.</small></div><button class="btn primary" id="partnerBookSubmit" type="submit">Ruaj librin</button></div>
        </form><div id="bookMsg"></div>
       </div>
-      <aside class="partner-price-card"><div class="partner-card" style="margin-top:0"><h3>Çmimi transparent</h3><p>Ti vendos çmimin tënd. ZemZem shton marzhin e dakorduar.</p><div class="partner-formula" style="background:#173d2b;color:#fff"><small>MARZHI AKTUAL</small><div class="formula-total"><span>ZemZem</span><strong>${s.margin_type==='fixed'?money(s.margin_value):Number(s.margin_value)+'%'}</strong></div></div><div class="partner-price-preview"><span>Çmimi yt</span><b id="partnerBasePrice">0.00 €</b><span>Çmimi publik</span><strong id="partnerPublicPrice">0.00 €</strong></div></div></aside>
+      <aside class="partner-price-card"><div class="partner-card" style="margin-top:0"><h3>Çmimi transparent</h3><p>Ti vendos çmimin final. Komisioni i ZemZem zbritet brenda këtij çmimi.</p><div class="partner-formula" style="background:#173d2b;color:#fff"><small>KOMISIONI AKTUAL</small><div class="formula-total"><span>ZemZem</span><strong>${s.margin_type==='fixed'?money(s.margin_value):Number(s.margin_value)+'%'}</strong></div></div><div class="partner-price-preview"><span>Klienti paguan</span><b id="partnerBasePrice">0.00 €</b><span>Ty të takon</span><strong id="partnerPublicPrice">0.00 €</strong></div></div></aside>
     </div>
    </section>
 
@@ -242,7 +242,7 @@ function renderDashboard(){
    f.publication_year.value=b.partner_publication_year||'';
    f.edition.value=b.partner_edition||'';
    f.country.value=b.country||'';
-   f.cost_price.value=b.cost_price??'';
+   f.cost_price.value=b.price??'';
    f.stock.value=b.stock_quantity??0;
    f.weight_grams.value=b.weight_grams||'';
    f.dimensions.value=b.dimensions||'';
@@ -277,7 +277,7 @@ function renderDashboard(){
  };
  bindPhotoPicker('#partnerPhoto1','#partnerPhotoPreview1',true);bindPhotoPicker('#partnerPhoto2','#partnerPhotoPreview2',false);
 
- const calcPrice=()=>{const base=Number(q('#partnerBookForm [name="cost_price"]')?.value||0);const pub=s.margin_type==='percent'?base*(1+Number(s.margin_value||0)/100):base+Number(s.margin_value||0);if(q('#partnerBasePrice'))q('#partnerBasePrice').textContent=money(base);if(q('#partnerPublicPrice'))q('#partnerPublicPrice').textContent=money(pub)};
+ const calcPrice=()=>{const finalPrice=Number(q('#partnerBookForm [name="cost_price"]')?.value||0),margin=Number(s.margin_value||0);const partnerDue=s.margin_type==='percent'?finalPrice*(1-Math.min(Math.max(margin,0),100)/100):Math.max(finalPrice-margin,0);if(q('#partnerBasePrice'))q('#partnerBasePrice').textContent=money(finalPrice);if(q('#partnerPublicPrice'))q('#partnerPublicPrice').textContent=money(partnerDue)};
  q('#partnerBookForm [name="cost_price"]')?.addEventListener('input',calcPrice);calcPrice();
 
  q('#partnerBookForm')?.addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,btn=q('#partnerBookSubmit'),x=Object.fromEntries(new FormData(f));const photo1=q('#partnerPhoto1')?.files?.[0],photo2=q('#partnerPhoto2')?.files?.[0],bookId=x.book_id||null,existingCover=f.dataset.existingCover||'',existingGallery=f.dataset.existingGallery||'';if(!photo1&&!existingCover){q('#bookMsg').innerHTML='<div class="partner-msg error">Foto 1 është e detyrueshme.</div>';return}btn.disabled=true;btn.textContent='Duke ruajtur…';q('#bookMsg').innerHTML='<div class="partner-msg">Duke ngarkuar fotografitë dhe ruajtur librin…</div>';try{const cover=photo1?await storageUpload(photo1,'main'):existingCover,gallery=photo2?await storageUpload(photo2,'extra'):(existingGallery||null);await rpc('partner_book_upsert_v2',{p_id:bookId,p_title:x.title,p_isbn:x.isbn,p_author_name:x.author_name||null,p_publisher_name:x.publisher_name||null,p_cost_price:Number(x.cost_price),p_stock:Number(x.stock||0),p_cover_url:cover,p_gallery_url:gallery,p_short_description:x.short_description||null,p_description:x.description||null,p_language:x.language||'sq',p_pages:x.pages?Number(x.pages):null,p_country:x.country||null,p_dimensions:x.dimensions||null,p_weight_grams:x.weight_grams?Number(x.weight_grams):null,p_edition:x.edition||null,p_publication_year:x.publication_year?Number(x.publication_year):null,p_condition:x.condition||'new',p_notes:x.notes||null});dashboard=await rpc('partner_dashboard',{});renderDashboard();setTimeout(()=>q('[data-partner-section="books"]')?.click(),30)}catch(err){q('#bookMsg').innerHTML='<div class="partner-msg error">'+esc(err.message)+'</div>';btn.disabled=false;btn.textContent='Ruaj librin'}});
