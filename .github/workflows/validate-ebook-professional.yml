@@ -1,0 +1,31 @@
+name: Validate eBook Professional Suite
+
+on:
+  push:
+    branches: [ebook-professional-suite]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax check
+        run: |
+          node --check assets/js/admin-ebooks.js
+          node --check assets/js/admin-ebooks-pro.js
+          node --check assets/js/admin-ebooks-coupons.js
+          node --check assets/js/admin-ebooks-commerce.js
+          node --check assets/js/ebook-experience.js
+          node --check assets/js/ebook-checkout.js
+          node --check assets/js/ebook-reader.js
+          node --check assets/js/ebooks.js
+          node --check assets/js/account.js
+      - name: Required professional modules
+        run: |
+          grep -q 'ebook-reader.js' ebook-reader.html
+          grep -q 'admin-ebooks-commerce.js' admin-ebooks.html
+          grep -q 'ebook-experience.js' ebook.html
+          grep -q 'ebook-experience.js' ebook-checkout.html
+          grep -q 'ebook-experience.js' account.html
+          grep -q 'ebook-experience.js' ebooks.html
