@@ -124,6 +124,28 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          ftp_probe() {
+            printf 'zemzem-ftp-probe-%s\n' "$GITHUB_RUN_ID" > /tmp/zemzem-ftp-probe.txt
+            echo "=== FTP probe: root/chroot info ==="
+            curl --show-error --verbose --ssl-reqd --disable-epsv --ftp-skip-pasv-ip \
+              --connect-timeout 20 --max-time 40 \
+              --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              --quote "PWD" \
+              "ftp://${FTP_SERVER}:${FTP_PORT}/" -o /tmp/ftp-root-list.txt || true
+            echo "=== FTP probe: configured target write ==="
+            curl --fail --show-error --verbose --ssl-reqd --disable-epsv --ftp-skip-pasv-ip \
+              --connect-timeout 20 --max-time 40 \
+              --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              --upload-file /tmp/zemzem-ftp-probe.txt \
+              "ftp://${FTP_SERVER}:${FTP_PORT}${FTP_SERVER_DIR}.zemzem-ftp-probe.txt"
+            curl --show-error --silent --ssl-reqd --disable-epsv --ftp-skip-pasv-ip \
+              --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              --quote "DELE .zemzem-ftp-probe.txt" \
+              "ftp://${FTP_SERVER}:${FTP_PORT}${FTP_SERVER_DIR}" -o /dev/null || true
+          }
+
+          ftp_probe
+
           upload() {
             local src="$1"
             echo "FTP upload diagnostic: $src"
