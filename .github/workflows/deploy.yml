@@ -43,13 +43,12 @@ jobs:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+          FTP_SERVER_DIR: /
         run: |
           test -n "$FTP_USERNAME"
           test -n "$FTP_PASSWORD"
           test -n "$FTP_PORT"
-          test -n "$FTP_SERVER_DIR"
-
+          
       - name: Generate dynamic sitemap
         if: steps.latest.outputs.deploy == 'true'
         shell: bash
@@ -111,11 +110,11 @@ jobs:
       - name: Deploy current protected release
         if: steps.latest.outputs.deploy == 'true'
         env:
-          FTP_SERVER: quebec.us.hostns.io
+          FTP_SERVER: ftp.zemzem.al
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+          FTP_SERVER_DIR: /
           BEFORE_SHA: ${{ github.event.before }}
         shell: bash
         run: |
