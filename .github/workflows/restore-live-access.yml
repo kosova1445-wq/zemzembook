@@ -1,0 +1,90 @@
+name: Restore ZemZem live access
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/restore-live-access.yml'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      FTP_SERVER: quebec.us.hostns.io
+      FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      FTP_PORT: ${{ secrets.FTP_PORT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probe previous web roots without touching PDFs
+        shell: bash
+        run: |
+          set -u
+          echo "zemzem-live-probe-${GITHUB_RUN_ID}" > zz-probe.txt
+
+          roots=(
+            "/public_html/"
+            "/domains/zemzem.al/public_html/"
+            "/zemzem.al/"
+            "/"
+          )
+
+          success=""
+          for root in "${roots[@]}"; do
+            echo "Trying candidate web root..."
+            if curl --fail --show-error --silent \
+              --connect-timeout 20 --max-time 60 \
+              --ssl-reqd --disable-epsv --ftp-skip-pasv-ip --ftp-create-dirs \
+              --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              --upload-file zz-probe.txt \
+              "ftp://${FTP_SERVER}:${FTP_PORT}${root}zz-probe.txt"; then
+              sleep 2
+              if curl -fsSL --connect-timeout 10 --max-time 20 \
+                "https://www.zemzem.al/zz-probe.txt?run=${GITHUB_RUN_ID}" | grep -Fq "zemzem-live-probe-${GITHUB_RUN_ID}"; then
+                echo "LIVE_ROOT_FOUND=${root}"
+                success="${root}"
+                break
+              fi
+            fi
+          done
+
+          if [ -z "$success" ]; then
+            echo "::error::No candidate web root accepted and surfaced the probe."
+            exit 1
+          fi
+
+          echo "ROOT=${success}" >> "$GITHUB_ENV"
+
+      - name: Restore only eBook admin frontend files
+        shell: bash
+        run: |
+          set -euo pipefail
+          upload() {
+            local src="$1"
+            curl --fail --show-error --silent \
+              --connect-timeout 20 --max-time 60 --retry 2 --retry-delay 2 \
+              --ssl-reqd --disable-epsv --ftp-skip-pasv-ip --ftp-create-dirs \
+              --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              --upload-file "$src" \
+              "ftp://${FTP_SERVER}:${FTP_PORT}${ROOT}${src}"
+            echo "Uploaded: $src"
+          }
+
+          upload admin-ebooks.html
+          upload assets/js/admin-ebooks.js
+          upload assets/js/admin-ebooks-orders.js
+          upload assets/css/admin-ebooks.css
+          upload assets/css/admin-ebooks-booksto.css
+          upload assets/css/ebook-mobile.css
+
+      - name: Verify admin login runtime is live
+        shell: bash
+        run: |
+          set -euo pipefail
+          sleep 3
+          curl -fsSL "https://www.zemzem.al/assets/js/admin-ebooks.js?run=${GITHUB_RUN_ID}" | grep -Fq "function login"
+          curl -fsSL "https://www.zemzem.al/admin-ebooks.html?run=${GITHUB_RUN_ID}" | grep -Fq "admin-ebooks.js"
+          echo "ZEMZEM_ADMIN_FRONTEND_LIVE=yes"
