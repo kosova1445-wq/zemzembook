@@ -43,12 +43,13 @@ jobs:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_SERVER_DIR: /
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
         run: |
           test -n "$FTP_USERNAME"
           test -n "$FTP_PASSWORD"
           test -n "$FTP_PORT"
-          
+          test -n "$FTP_SERVER_DIR"
+
       - name: Generate dynamic sitemap
         if: steps.latest.outputs.deploy == 'true'
         shell: bash
@@ -114,7 +115,7 @@ jobs:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_SERVER_DIR: /
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
           BEFORE_SHA: ${{ github.event.before }}
         shell: bash
         run: |
@@ -123,7 +124,7 @@ jobs:
             local src="$1"
             curl --fail --show-error --silent \
               --connect-timeout 20 --max-time 60 --retry 2 --retry-delay 2 \
-              --disable-epsv --ftp-skip-pasv-ip --ftp-create-dirs \
+              --ssl-reqd --disable-epsv --ftp-skip-pasv-ip --ftp-create-dirs \
               --user "$FTP_USERNAME:$FTP_PASSWORD" \
               --upload-file "$src" \
               "ftp://${FTP_SERVER}:${FTP_PORT}${FTP_SERVER_DIR}${src}"
