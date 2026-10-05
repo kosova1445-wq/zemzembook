@@ -108,6 +108,10 @@ jobs:
           print('Generated sitemap URLs:',len(seen))
           PY
 
+      - name: Validate eBook preview PHP
+        if: steps.latest.outputs.deploy == 'true'
+        run: php -l ebook-preview.php
+
       - name: Deploy current protected release
         if: steps.latest.outputs.deploy == 'true'
         env:
@@ -212,6 +216,7 @@ jobs:
           CHANGED="$CHANGED
           .htaccess
           rss.php
+          ebook-preview.php
           index.html
           404.html
           shop.html
@@ -362,6 +367,9 @@ jobs:
           assets/js/admin-free-library-integrated.js
           assets/css/free-library.css"
 
+          # Upload the handler before enabling its rewrite rule.
+          upload "ebook-preview.php"
+
           printf '%s
           ' "$CHANGED" | sed '/^[[:space:]]*$/d' | sort -u | while IFS= read -r file; do
             case "$file" in
@@ -375,6 +383,10 @@ jobs:
           # Release metadata is generated in this job and is not part of the repository file set.
           upload "release-history.json"
           upload "release.json"
+
+      - name: Verify initial eBook social previews
+        if: steps.latest.outputs.deploy == 'true'
+        run: python3 tests/verify-ebook-preview.py
 
       - name: Syntax check Admin advanced modules
         if: steps.latest.outputs.deploy == 'true'
