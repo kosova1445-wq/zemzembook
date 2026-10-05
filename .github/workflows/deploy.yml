@@ -110,7 +110,7 @@ jobs:
       - name: Deploy current protected release
         if: steps.latest.outputs.deploy == 'true'
         env:
-          FTP_SERVER: ftp.zemzem.al
+          FTP_SERVER: quebec.us.hostns.io
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PORT: ${{ secrets.FTP_PORT }}
