@@ -3,8 +3,33 @@
 const SB='https://ysvtrhizgcioyycwlkrk.supabase.co',KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD',SESSION='zemzem_admin_session';
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 let state={entitlements:[],books:[],devices:[],orders:[],rentals:[],preorders:[]};
-function token(){try{return JSON.parse(sessionStorage.getItem(SESSION)||'null')?.access_token||''}catch{return''}}
-async function call(action,body={}){const r=await fetch(SB+'/functions/v1/ebook-admin-licenses',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+token(),'Content-Type':'application/json'},body:JSON.stringify({action,...body}),cache:'no-store'});const t=await r.text();let d={};try{d=t?JSON.parse(t):{}}catch{}if(!r.ok)throw new Error(d?.message||d?.error||'Veprimi dështoi');return d}
+function readSession(){try{return JSON.parse(sessionStorage.getItem(SESSION)||'null')}catch{return null}}
+function saveSession(d){if(!d?.access_token)return null;const s={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+(Number(d.expires_in)||3600),user:d.user||null};sessionStorage.setItem(SESSION,JSON.stringify(s));return s}
+async function refreshSession(){
+  const s=readSession();if(!s?.refresh_token)return null;
+  const r=await fetch(SB+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:s.refresh_token}),cache:'no-store'});
+  if(!r.ok){sessionStorage.removeItem(SESSION);return null}
+  return saveSession(await r.json());
+}
+async function validToken(force=false){
+  let s=readSession();if(!s)return '';
+  if(force||(s.expires_at||0)-Math.floor(Date.now()/1000)<120)s=await refreshSession();
+  return s?.access_token||'';
+}
+async function call(action,body={}){
+  let tok=await validToken(false);if(!tok)throw new Error('LOGIN_REQUIRED');
+  const send=async token=>{
+    const r=await fetch(SB+'/functions/v1/ebook-admin-licenses',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({action,...body}),cache:'no-store'});
+    const t=await r.text();let d={};try{d=t?JSON.parse(t):{}}catch{}
+    return{r,d};
+  };
+  let x=await send(tok);
+  if(!x.r.ok&&(/INVALID_SESSION|LOGIN_REQUIRED/i.test(String(x.d?.error||x.d?.message||''))||x.r.status===401)){
+    tok=await validToken(true);if(!tok)throw new Error('LOGIN_REQUIRED');x=await send(tok);
+  }
+  if(!x.r.ok)throw new Error(x.d?.message||x.d?.error||'Veprimi dështoi');
+  return x.d;
+}
 function toast(msg,err=false){const e=$('#ebookAdminToast');if(!e)return alert(msg);e.textContent=msg;e.className='ebook-admin-toast'+(err?' error':'');e.hidden=false;clearTimeout(window.__licToast);window.__licToast=setTimeout(()=>e.hidden=true,2600)}
 function date(v){if(!v)return'—';try{return new Date(v).toLocaleString('sq-AL')}catch{return String(v)}}
 function short(v,n=14){const s=String(v||'');return s.length>n?s.slice(0,n)+'…':s}
@@ -33,6 +58,16 @@ function bindActions(){
  $$('[data-lic-action]').forEach(btn=>btn.onclick=async()=>{const id=btn.dataset.id,action=btn.dataset.licAction;try{btn.disabled=true;if(action==='revoke'){if(!confirm('Ta çaktivizoj këtë licencë?'))return;await call('revoke',{entitlement_id:id,reason:'admin_revoked'})}else if(action==='reactivate')await call('reactivate',{entitlement_id:id});else if(action==='reset_downloads'){if(!confirm('T’i kthej shkarkimet në 0?'))return;await call('reset_downloads',{entitlement_id:id})}else if(action==='deactivate_devices'){if(!confirm('T’i çaktivizoj të gjitha pajisjet e kësaj licence?'))return;await call('deactivate_devices',{entitlement_id:id})}else if(action==='devices'){const v=prompt('Limiti i pajisjeve (1–20):',btn.dataset.limit||'3');if(v===null)return;await call('set_device_limit',{entitlement_id:id,device_limit:Number(v)})}toast('Licenca u përditësua');await load()}catch(e){toast(e.message,true)}finally{btn.disabled=false}});
 }
 async function load(){const root=$('#ebookLicensesList');if(root)root.innerHTML='<div class="ebook-admin-empty">Po ngarkohen licencat…</div>';try{state=await call('overview');render()}catch(e){if(root)root.innerHTML='<div class="ebook-admin-empty">'+esc(e.message)+'</div>'}}
-function init(){if(!$('#ebookTab-licenses'))return;$('#refreshEbookLicenses')?.addEventListener('click',load);$('#ebookLicenseSearch')?.addEventListener('input',render);$('#ebookLicenseStatus')?.addEventListener('change',render);load()}
-document.addEventListener('DOMContentLoaded',()=>setTimeout(init,80));
+async function init(){
+  if(!$('#ebookTab-licenses'))return;
+  $('#refreshEbookLicenses')?.addEventListener('click',load);
+  $('#ebookLicenseSearch')?.addEventListener('input',render);
+  $('#ebookLicenseStatus')?.addEventListener('change',render);
+  for(let i=0;i<30;i++){
+    if(await validToken(false)){await load();return}
+    await new Promise(r=>setTimeout(r,200));
+  }
+  const root=$('#ebookLicensesList');if(root)root.innerHTML='<div class="ebook-admin-empty">LOGIN_REQUIRED</div>';
+}
+document.addEventListener('DOMContentLoaded',()=>setTimeout(init,150));
 })();
