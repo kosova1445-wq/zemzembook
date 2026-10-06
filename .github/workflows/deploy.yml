@@ -773,7 +773,7 @@ jobs:
           require_live https://www.zemzem.al/admin.html /tmp/admin-category-media.html 'data-f="image_url"' 'Homepage categories use Media Manager'
           require_live https://www.zemzem.al/assets/js/site-content.js /tmp/category-media-render.js 'safeImage' 'Homepage category media renderer'
           require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-media.html 'ebookMediaFrontBtn' 'eBook uses shared Media Manager'
-          require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-extras-manager.html 'admin-ebook-extras-manager.js?v=1' 'eBook series bundles Admin manager live'
+          require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-extras-manager.html 'admin-ebook-extras-manager.js?v=2' 'eBook series bundles Admin manager live'
           require_live https://www.zemzem.al/assets/js/admin-ebook-extras-manager.js /tmp/admin-ebook-extras-manager.js 'set_recommendations' 'eBook recommendation manager runtime live'
           require_live https://www.zemzem.al/assets/js/admin-ebooks.js /tmp/admin-ebook-media.js 'openEbookMediaPicker' 'eBook Media Manager picker'
           require_live https://www.zemzem.al/ebook-reader.html /tmp/ebook-reader.html 'readerBookmarks' 'eBook Reader page live'
