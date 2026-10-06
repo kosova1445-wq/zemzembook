@@ -594,11 +594,12 @@ function activateView(name) {
   aqq('.account-view').forEach((v) => v.classList.toggle('active', v.id === `view-${name}`));
   if (name === 'ebooks' && accSession?.user?.id) loadMyEbooks();
   if (name === 'ebook-center' && accSession?.user?.id) loadEbookCenter();
+  if (name === 'wallet' && accSession?.user?.id) window.ZemZemWallet?.load?.();
 }
 
 function openRequestedView() {
   const v = new URLSearchParams(location.search).get('view');
-  if (['orders','ebooks','ebook-center','profile','addresses','wishlist'].includes(v)) activateView(v);
+  if (['orders','ebooks','ebook-center','wallet','profile','addresses','wishlist'].includes(v)) activateView(v);
 }
 
 function bindViews() {

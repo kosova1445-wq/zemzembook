@@ -339,11 +339,15 @@ jobs:
           assets/js/admin-ebook-extras-manager.js
           assets/js/admin-ebook-licenses.js
           assets/js/admin-ebook-growth.js
+          assets/js/admin-wallet.js
           assets/css/admin-ebooks.css
           assets/css/admin-ebooks-booksto.css
           assets/css/ebook-mobile.css
           account.html
           assets/js/account.js
+          assets/js/wallet-checkout-return.js
+          assets/js/wallet-paypal-return.js
+          assets/js/wallet.js
           assets/js/account-enterprise.js
           assets/css/account.css
           ebooks.html
@@ -351,6 +355,8 @@ jobs:
           ebook-checkout.html
           ebook-paypal-return.html
           ebook-reader.html
+          wallet-checkout-return.html
+          wallet-paypal-return.html
           assets/js/ebooks.js
           assets/js/ebook-checkout.js
           assets/js/ebook-paypal-return.js
@@ -789,6 +795,16 @@ jobs:
           require_live https://www.zemzem.al/assets/js/ebook-reader.js /tmp/ebook-reader-v2.js 'buildReaderToc' 'eBook Reader v2 TOC live'
           require_live https://www.zemzem.al/assets/js/admin-ebook-licenses.js /tmp/admin-ebook-licenses.js 'ebook-admin-licenses' 'Admin eBook license runtime live'
           require_live https://www.zemzem.al/account.html /tmp/account-gift-redeem.html 'ebookGiftRedeemForm' 'eBook Gift Code redemption UI live'
+          require_live https://www.zemzem.al/account.html /tmp/account-wallet.html 'data-account-view="wallet"' 'ZemZem Wallet account UI live'
+          require_live https://www.zemzem.al/assets/js/wallet.js /tmp/wallet-account.js 'wallet-topup-create' 'ZemZem Wallet top-up runtime live'
+          require_live https://www.zemzem.al/wallet-paypal-return.html /tmp/wallet-topup-return.html 'walletReturnTitle' 'Wallet top-up return page live'
+          require_live https://www.zemzem.al/wallet-checkout-return.html /tmp/wallet-checkout-return.html 'walletCheckoutTitle' 'Wallet split checkout return live'
+          require_live https://www.zemzem.al/checkout.html /tmp/checkout-wallet.html 'assets/js/checkout-v2.js?v=20' 'Physical checkout Wallet cache live'
+          require_live https://www.zemzem.al/assets/js/checkout-v2.js /tmp/checkout-wallet-js.html 'wallet-checkout-create' 'Physical checkout Wallet runtime live'
+          require_live https://www.zemzem.al/ebook-checkout.html /tmp/ebook-wallet.html 'ebookWalletBtn' 'eBook Wallet checkout UI live'
+          require_live https://www.zemzem.al/assets/js/ebook-checkout.js /tmp/ebook-wallet-js.html 'wallet-checkout-create' 'eBook Wallet checkout runtime live'
+          require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-wallet.html 'data-ebook-tab="wallet"' 'Admin Wallet Center live'
+          require_live https://www.zemzem.al/assets/js/admin-wallet.js /tmp/admin-wallet-js.html 'wallet-admin' 'Admin Wallet runtime live'
           require_live https://www.zemzem.al/assets/js/account.js /tmp/account-gift-redeem.js 'redeem_ebook_gift' 'eBook Gift Code redemption runtime live'
           require_live https://www.zemzem.al/assets/js/admin-ebook-extras-manager.js /tmp/admin-ebook-extras-manager.js 'set_recommendations' 'eBook recommendation manager runtime live'
           require_live https://www.zemzem.al/assets/js/admin-ebooks.js /tmp/admin-ebook-media.js 'openEbookMediaPicker' 'eBook Media Manager picker'
