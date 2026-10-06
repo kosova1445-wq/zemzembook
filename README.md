@@ -20,3 +20,5 @@ Repository Secrets që duhen vendosur:
 - `FTP_SERVER_DIR`
 
 Mos vendos kredenciale reale në skedarët e repository-t.
+
+<!-- deploy trigger: re-enabled cPanel deployment -->
