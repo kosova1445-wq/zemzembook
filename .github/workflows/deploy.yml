@@ -1,4 +1,5 @@
 name: Deploy ZemZem to cPanel
+# cPanel deployment active
 
 on:
   push:
