@@ -8,7 +8,10 @@ const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
 let session=null,user=null,entitlementId='',ebook=null,pdf=null,currentPage=1,totalPages=0,zoom=1,theme='light';
-let bookmarks=[],notes=[],highlights=[],pageTextCache=new Map(),renderSeq=0,progressTimer=null;
+let bookmarks=[],notes=[],highlights=[],pageTextCache=new Map(),renderSeq=0,progressTimer=null,watermark={enabled:false},license={};
+const DEVICE_KEY='zemzem_ebook_device_id';
+function deviceId(){let v=localStorage.getItem(DEVICE_KEY)||'';if(!/^[a-z0-9-]{16,160}$/i.test(v)){v=(crypto.randomUUID?crypto.randomUUID():'zz-'+Date.now()+'-'+Math.random().toString(36).slice(2));localStorage.setItem(DEVICE_KEY,v)}return v}
+function deviceLabel(){const p=navigator.platform||'Pajisje',ua=navigator.userAgent||'';return /mobile|android|iphone|ipad/i.test(ua)?'Telefon / tablet · '+p:'Kompjuter · '+p}
 
 function readSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch{return null}}
 async function refreshSession(s){
@@ -112,9 +115,10 @@ async function renderPage(n){
   await page.render({canvasContext:ctx,viewport,transform:ratio===1?null:[ratio,0,0,ratio,0,0]}).promise;
   const text=await page.getTextContent();pageTextCache.set(currentPage,text.items.map(x=>x.str).join(' '));buildTextLayer(text,viewport);
   $('#readerPageInput').value=currentPage;$('#readerTotalPages').textContent=totalPages;
-  const pct=totalPages?Math.round(currentPage/totalPages*100):0;$('#readerProgressLabel').textContent=pct+'%';
+  const pct=totalPages?Math.round(currentPage/totalPages*100):0;$('#readerProgressLabel').textContent=pct+'%';renderWatermark();
   $('#readerPrev').disabled=currentPage<=1;$('#readerNext').disabled=currentPage>=totalPages;scheduleProgressSave();
 }
+function renderWatermark(){let w=$('#readerWatermark');if(!w){w=document.createElement('div');w.id='readerWatermark';w.className='reader-watermark';$('#readerPageWrap')?.appendChild(w)}const every=Math.max(1,Number(watermark?.every_pages||1)),show=watermark?.enabled&&((currentPage-1)%every===0);w.hidden=!show;if(show){w.textContent=watermark.text||'ZemZem.al';w.style.opacity=String(Math.max(.04,Math.min(.35,Number(watermark.opacity||.12))))}}
 function goPage(n){renderPage(n);$('.reader-stage').scrollIntoView({behavior:'smooth',block:'start'})}
 async function searchBook(){
   const q=$('#readerSearch').value.trim().toLowerCase();if(q.length<2){$('#readerSearchResults').innerHTML='Shkruaj të paktën 2 shkronja.';return}
@@ -144,9 +148,9 @@ async function boot(){
   if(!/^[0-9a-f-]{36}$/i.test(entitlementId))return fail('Mungon licenca e eBook-ut.');
   if(!await ensureSession())return fail('Duhet të kyçesh në llogarinë tënde.');
   try{
-    const d=await edge('ebook-reader-session',{entitlement_id:entitlementId});
+    const d=await edge('ebook-reader-session',{entitlement_id:entitlementId,device_id:deviceId(),device_label:deviceLabel()});
     if(!d?.url||!d?.ebook?.id)throw new Error('PDF-i nuk është i disponueshëm për lexim.');
-    ebook=d.ebook;$('#readerBookTitle').textContent=ebook.title||'eBook';$('#readerBookAuthor').textContent=ebook.author_name||'ZemZem';
+    ebook=d.ebook;watermark=d.watermark||{enabled:false};license=d.license||{};$('#readerBookTitle').textContent=ebook.title||'eBook';$('#readerBookAuthor').textContent=(ebook.author_name||'ZemZem')+(license.device_limit?' · '+license.device_limit+' pajisje':'');
     await loadReaderState();
     pdf=await pdfjsLib.getDocument({url:d.url,withCredentials:false}).promise;totalPages=pdf.numPages;currentPage=Math.min(currentPage,totalPages);
     $('#readerLoading').hidden=true;$('#readerApp').hidden=false;bind();await renderPage(currentPage);
