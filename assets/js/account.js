@@ -519,6 +519,32 @@ async function loadWishlist() {
 }
 
 
+async function redeemEbookGift(ev){
+  ev?.preventDefault();
+  const input=aq('#ebookGiftCode'),status=aq('#ebookGiftRedeemStatus'),form=aq('#ebookGiftRedeemForm');
+  const code=String(input?.value||'').trim();
+  if(!code)return;
+  const btn=form?.querySelector('button[type="submit"]'),old=btn?.textContent;
+  if(btn){btn.disabled=true;btn.textContent='Duke aktivizuar…'}
+  if(status){status.hidden=true;status.textContent=''}
+  try{
+    const d=await aapi('rpc/redeem_ebook_gift',{method:'POST',body:{p_code:code}});
+    if(status){status.hidden=false;status.classList.remove('error');status.textContent=d?.duplicate?'Ky eBook ishte tashmë aktiv në llogarinë tënde.':'Gift Code u aktivizua me sukses. eBook-u u shtua në bibliotekën tënde.'}
+    if(input)input.value='';
+    toast(d?.duplicate?'eBook-u është tashmë në bibliotekën tënde':'Gift Code u aktivizua');
+    await Promise.all([loadMyEbooks(),loadEbookCenter()]);
+  }catch(err){
+    const raw=String(err?.message||err||'');
+    let m='Gift Code nuk mund të aktivizohet.';
+    if(/GIFT_CODE_NOT_FOUND/i.test(raw))m='Kodi nuk u gjet.';
+    else if(/GIFT_CODE_NOT_ACTIVE/i.test(raw))m='Ky kod është përdorur ose nuk është më aktiv.';
+    else if(/GIFT_CODE_EXPIRED/i.test(raw))m='Ky Gift Code ka skaduar.';
+    else if(/GIFT_RECIPIENT_EMAIL_MISMATCH/i.test(raw))m='Ky Gift Code është caktuar për një email tjetër.';
+    if(status){status.hidden=false;status.classList.add('error');status.textContent=m}
+    toast(m,true);
+  }finally{if(btn){btn.disabled=false;btn.textContent=old||'Aktivizo eBook'}}
+}
+
 async function loadEbookCenter(){
   if(!accSession?.user?.id)return;
   const wishBox=aq('#ebookWishlistList'),devBox=aq('#ebookDevicesList'),updBox=aq('#ebookUpdatesList');
@@ -732,6 +758,7 @@ function bindForms() {
   aq('#refreshOrders').onclick = loadOrders;
   if(aq('#refreshEbookCenter'))aq('#refreshEbookCenter').onclick=loadEbookCenter;
   if(aq('#ebookNotifyPrefs'))aq('#ebookNotifyPrefs').addEventListener('submit',saveEbookNotificationPrefs);
+  aq('#ebookGiftRedeemForm')?.addEventListener('submit',redeemEbookGift);
 }
 
 async function initAccount() {

@@ -337,6 +337,7 @@ jobs:
           assets/js/admin-ebooks.js
           assets/js/admin-ebooks-orders.js
           assets/js/admin-ebook-extras-manager.js
+          assets/js/admin-ebook-licenses.js
           assets/css/admin-ebooks.css
           assets/css/admin-ebooks-booksto.css
           assets/css/ebook-mobile.css
@@ -774,6 +775,10 @@ jobs:
           require_live https://www.zemzem.al/assets/js/site-content.js /tmp/category-media-render.js 'safeImage' 'Homepage category media renderer'
           require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-media.html 'ebookMediaFrontBtn' 'eBook uses shared Media Manager'
           require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-extras-manager.html 'admin-ebook-extras-manager.js?v=2' 'eBook series bundles Admin manager live'
+          require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-licenses.html 'data-ebook-tab="licenses"' 'Admin eBook Licenses Center live'
+          require_live https://www.zemzem.al/assets/js/admin-ebook-licenses.js /tmp/admin-ebook-licenses.js 'ebook-admin-licenses' 'Admin eBook license runtime live'
+          require_live https://www.zemzem.al/account.html /tmp/account-gift-redeem.html 'ebookGiftRedeemForm' 'eBook Gift Code redemption UI live'
+          require_live https://www.zemzem.al/assets/js/account.js /tmp/account-gift-redeem.js 'redeem_ebook_gift' 'eBook Gift Code redemption runtime live'
           require_live https://www.zemzem.al/assets/js/admin-ebook-extras-manager.js /tmp/admin-ebook-extras-manager.js 'set_recommendations' 'eBook recommendation manager runtime live'
           require_live https://www.zemzem.al/assets/js/admin-ebooks.js /tmp/admin-ebook-media.js 'openEbookMediaPicker' 'eBook Media Manager picker'
           require_live https://www.zemzem.al/ebook-reader.html /tmp/ebook-reader.html 'readerBookmarks' 'eBook Reader page live'
