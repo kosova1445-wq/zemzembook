@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="sq">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#173d2b">
+  <title>ZemZem Reader</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/ebook-reader.css?v=1">
+</head>
+<body class="zz-reader">
+  <header class="reader-topbar">
+    <a class="reader-back" href="account.html?view=ebooks">← Biblioteka ime</a>
+    <div class="reader-title"><strong id="readerBookTitle">ZemZem Reader</strong><span id="readerBookAuthor"></span></div>
+    <div class="reader-actions">
+      <button id="readerTheme" type="button" title="Dark mode">◐</button>
+      <button id="readerZoomOut" type="button" title="Zoom out">−</button>
+      <span id="readerZoomLabel">100%</span>
+      <button id="readerZoomIn" type="button" title="Zoom in">＋</button>
+    </div>
+  </header>
+
+  <div id="readerLoading" class="reader-loading">Po përgatitet libri…</div>
+  <div id="readerError" class="reader-error" hidden></div>
+
+  <main id="readerApp" class="reader-app" hidden>
+    <aside class="reader-sidebar">
+      <div class="reader-tabs">
+        <button class="active" data-reader-tab="search">Kërko</button>
+        <button data-reader-tab="bookmarks">Shenja</button>
+        <button data-reader-tab="notes">Shënime</button>
+        <button data-reader-tab="highlights">Highlights</button>
+      </div>
+
+      <section class="reader-panel active" data-reader-panel="search">
+        <div class="reader-search-row"><input id="readerSearch" placeholder="Kërko në libër…"><button id="readerSearchBtn">Kërko</button></div>
+        <div id="readerSearchResults" class="reader-list muted">Shkruaj një fjalë ose frazë.</div>
+      </section>
+
+      <section class="reader-panel" data-reader-panel="bookmarks">
+        <button id="readerAddBookmark" class="reader-primary">＋ Ruaj këtë faqe</button>
+        <div id="readerBookmarks" class="reader-list"></div>
+      </section>
+
+      <section class="reader-panel" data-reader-panel="notes">
+        <textarea id="readerNoteText" rows="4" placeholder="Shënim për faqen aktuale…"></textarea>
+        <button id="readerSaveNote" class="reader-primary">Ruaj shënimin</button>
+        <div id="readerNotes" class="reader-list"></div>
+      </section>
+
+      <section class="reader-panel" data-reader-panel="highlights">
+        <p class="reader-help">Përzgjidh tekstin në faqe dhe kliko “Ruaj highlight”.</p>
+        <button id="readerSaveHighlight" class="reader-primary">Ruaj highlight</button>
+        <div id="readerHighlights" class="reader-list"></div>
+      </section>
+    </aside>
+
+    <section class="reader-stage">
+      <div class="reader-pagebar">
+        <button id="readerPrev">←</button>
+        <label>Faqja <input id="readerPageInput" type="number" min="1" value="1"> / <span id="readerTotalPages">–</span></label>
+        <button id="readerNext">→</button>
+        <span id="readerProgressLabel">0%</span>
+      </div>
+      <div id="readerPageWrap" class="reader-page-wrap">
+        <canvas id="readerCanvas"></canvas>
+        <div id="readerTextLayer" class="reader-text-layer"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="readerToast" class="reader-toast" hidden></div>
+
+  <script type="module" src="assets/js/ebook-reader.js?v=1"></script>
+</body>
+</html>
