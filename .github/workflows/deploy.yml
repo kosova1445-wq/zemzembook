@@ -338,6 +338,7 @@ jobs:
           assets/js/admin-ebooks-orders.js
           assets/js/admin-ebook-extras-manager.js
           assets/js/admin-ebook-licenses.js
+          assets/js/admin-ebook-growth.js
           assets/css/admin-ebooks.css
           assets/css/admin-ebooks-booksto.css
           assets/css/ebook-mobile.css
@@ -776,6 +777,16 @@ jobs:
           require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-media.html 'ebookMediaFrontBtn' 'eBook uses shared Media Manager'
           require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-extras-manager.html 'admin-ebook-extras-manager.js?v=2' 'eBook series bundles Admin manager live'
           require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-licenses.html 'data-ebook-tab="licenses"' 'Admin eBook Licenses Center live'
+          require_live https://www.zemzem.al/admin-ebooks.html /tmp/admin-ebook-growth.html 'data-ebook-tab="growth"' 'Admin eBook Growth Center live'
+          require_live https://www.zemzem.al/assets/js/admin-ebook-growth.js /tmp/admin-ebook-growth.js 'growth_dashboard' 'eBook Analytics runtime live'
+          require_live https://www.zemzem.al/assets/js/admin-ebook-growth.js /tmp/admin-ebook-coupons.js 'save_coupon' 'eBook Coupons Center runtime live'
+          require_live https://www.zemzem.al/assets/js/admin-ebook-growth.js /tmp/admin-ebook-reviews.js 'set_review_approval' 'eBook Reviews Center runtime live'
+          require_live https://www.zemzem.al/assets/js/admin-ebook-growth.js /tmp/admin-ebook-gifts.js 'create_gift_code' 'eBook Gift Center runtime live'
+          require_live https://www.zemzem.al/assets/js/admin-ebook-growth.js /tmp/admin-ebook-versions.js 'notify_version_update' 'eBook Version Management runtime live'
+          require_live https://www.zemzem.al/assets/js/admin-ebooks.js /tmp/admin-ebook-auto-version.js 'versionUploads.some' 'Automatic eBook version notifications live'
+          require_live https://www.zemzem.al/assets/js/ebook-extras.js /tmp/ebook-review-report.js 'ebook_review_reports' 'eBook review abuse reporting live'
+          require_live https://www.zemzem.al/ebook-reader.html /tmp/ebook-reader-v2.html 'readerFullscreen' 'eBook Reader v2 fullscreen live'
+          require_live https://www.zemzem.al/assets/js/ebook-reader.js /tmp/ebook-reader-v2.js 'buildReaderToc' 'eBook Reader v2 TOC live'
           require_live https://www.zemzem.al/assets/js/admin-ebook-licenses.js /tmp/admin-ebook-licenses.js 'ebook-admin-licenses' 'Admin eBook license runtime live'
           require_live https://www.zemzem.al/account.html /tmp/account-gift-redeem.html 'ebookGiftRedeemForm' 'eBook Gift Code redemption UI live'
           require_live https://www.zemzem.al/assets/js/account.js /tmp/account-gift-redeem.js 'redeem_ebook_gift' 'eBook Gift Code redemption runtime live'

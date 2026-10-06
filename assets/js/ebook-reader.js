@@ -8,7 +8,7 @@ const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
 let session=null,user=null,entitlementId='',ebook=null,pdf=null,currentPage=1,totalPages=0,zoom=1,theme='light';
-let bookmarks=[],notes=[],highlights=[],pageTextCache=new Map(),renderSeq=0,progressTimer=null,watermark={enabled:false},license={};
+let bookmarks=[],notes=[],highlights=[],pageTextCache=new Map(),renderSeq=0,progressTimer=null,watermark={enabled:false},license={},resumePage=1,touchStartX=null,touchStartY=null;
 const DEVICE_KEY='zemzem_ebook_device_id';
 function deviceId(){let v=localStorage.getItem(DEVICE_KEY)||'';if(!/^[a-z0-9-]{16,160}$/i.test(v)){v=(crypto.randomUUID?crypto.randomUUID():'zz-'+Date.now()+'-'+Math.random().toString(36).slice(2));localStorage.setItem(DEVICE_KEY,v)}return v}
 function deviceLabel(){const p=navigator.platform||'Pajisje',ua=navigator.userAgent||'';return /mobile|android|iphone|ipad/i.test(ua)?'Telefon / tablet · '+p:'Kompjuter · '+p}
@@ -60,7 +60,7 @@ async function loadReaderState(){
     api('ebook_notes?user_id=eq.'+uid+'&ebook_id=eq.'+eid+'&select=*&order=page_number.asc,created_at.desc'),
     api('ebook_highlights?user_id=eq.'+uid+'&ebook_id=eq.'+eid+'&select=*&order=page_number.asc,created_at.desc')
   ]);
-  const p=pr?.[0];if(p){currentPage=Math.max(1,Number(p.page_number)||1);zoom=Number(p.zoom)||1;theme=p.theme||'light'}
+  const p=pr?.[0];if(p){currentPage=Math.max(1,Number(p.page_number)||1);resumePage=currentPage;zoom=Number(p.zoom)||1;theme=p.theme||'light'}
   bookmarks=bm||[];notes=nt||[];highlights=hi||[];
   setTheme(theme);$('#readerZoomLabel').textContent=Math.round(zoom*100)+'%';renderSideLists();
 }
@@ -115,7 +115,7 @@ async function renderPage(n){
   await page.render({canvasContext:ctx,viewport,transform:ratio===1?null:[ratio,0,0,ratio,0,0]}).promise;
   const text=await page.getTextContent();pageTextCache.set(currentPage,text.items.map(x=>x.str).join(' '));buildTextLayer(text,viewport);
   $('#readerPageInput').value=currentPage;$('#readerTotalPages').textContent=totalPages;
-  const pct=totalPages?Math.round(currentPage/totalPages*100):0;$('#readerProgressLabel').textContent=pct+'%';renderWatermark();
+  const pct=totalPages?Math.round(currentPage/totalPages*100):0;$('#readerProgressLabel').textContent=pct+'%';const rb=$('#readerResume');if(rb){rb.hidden=resumePage<=1||resumePage===currentPage;rb.textContent='↩ Faqja '+resumePage}renderWatermark();
   $('#readerPrev').disabled=currentPage<=1;$('#readerNext').disabled=currentPage>=totalPages;scheduleProgressSave();
 }
 function renderWatermark(){let w=$('#readerWatermark');if(!w){w=document.createElement('div');w.id='readerWatermark';w.className='reader-watermark';$('#readerPageWrap')?.appendChild(w)}const every=Math.max(1,Number(watermark?.every_pages||1)),show=watermark?.enabled&&((currentPage-1)%every===0);w.hidden=!show;if(show){w.textContent=watermark.text||'ZemZem.al';w.style.opacity=String(Math.max(.04,Math.min(.35,Number(watermark.opacity||.12))))}}
@@ -133,6 +133,11 @@ async function searchBook(){
   root.innerHTML=hits.length?hits.map(x=>'<div class="reader-item" data-search-page="'+x.page+'"><b>Faqja '+x.page+'</b><small>'+esc(x.snippet)+'</small></div>').join(''):'Nuk u gjet rezultat.';
   document.querySelectorAll('[data-search-page]').forEach(el=>el.onclick=()=>goPage(Number(el.dataset.searchPage)));
 }
+async function buildReaderToc(){const root=$('#readerToc');if(!root||!pdf)return;try{const outline=await pdf.getOutline();if(!outline?.length){root.innerHTML='<div class="muted">Ky PDF nuk ka përmbajtje/TOC të integruar.</div>';return}const flat=[];const walk=(items,depth)=>{for(const it of items||[]){flat.push({item:it,depth});if(it.items?.length)walk(it.items,depth+1)}};walk(outline,0);const rows=[];for(const x of flat){let dest=x.item.dest,page=null;try{if(typeof dest==='string')dest=await pdf.getDestination(dest);if(Array.isArray(dest)&&dest[0])page=(await pdf.getPageIndex(dest[0]))+1}catch{}rows.push({title:x.item.title||'Pjesë',page,depth:x.depth})}root.innerHTML=rows.map(x=>'<button class="reader-toc-item" type="button" style="padding-left:'+(10+x.depth*14)+'px" '+(x.page?'data-toc-page="'+x.page+'"':'disabled')+'><span>'+esc(x.title)+'</span>'+(x.page?'<small>Faqja '+x.page+'</small>':'')+'</button>').join('');document.querySelectorAll('[data-toc-page]').forEach(b=>b.onclick=()=>goPage(Number(b.dataset.tocPage)))}catch(e){root.innerHTML='<div class="muted">Përmbajtja nuk u lexua.</div>'}}
+function toggleReaderSidebar(){document.body.classList.toggle('reader-sidebar-collapsed')}
+async function toggleReaderFullscreen(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch{}}
+function bindReaderKeyboard(){document.addEventListener('keydown',e=>{const tag=(e.target?.tagName||'').toLowerCase();if(['input','textarea','select'].includes(tag))return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();goPage(currentPage+1)}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goPage(currentPage-1)}else if(e.key==='+'||e.key==='='){e.preventDefault();setZoom(zoom+.1)}else if(e.key==='-'){e.preventDefault();setZoom(zoom-.1)}else if(e.key.toLowerCase()==='f'){e.preventDefault();toggleReaderFullscreen()}else if(e.key.toLowerCase()==='d'){e.preventDefault();setTheme(theme==='dark'?'light':'dark')}else if(e.key.toLowerCase()==='b'){e.preventDefault();addBookmark()}})}
+function bindReaderSwipe(){const el=$('#readerPageWrap');if(!el)return;el.addEventListener('touchstart',e=>{const t=e.changedTouches?.[0];if(t){touchStartX=t.clientX;touchStartY=t.clientY}},{passive:true});el.addEventListener('touchend',e=>{const t=e.changedTouches?.[0];if(!t||touchStartX===null)return;const dx=t.clientX-touchStartX,dy=t.clientY-touchStartY;touchStartX=touchStartY=null;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.25){if(dx<0)goPage(currentPage+1);else goPage(currentPage-1)}},{passive:true})}
 function bind(){
   document.querySelectorAll('[data-reader-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.readerTab));
   $('#readerPrev').onclick=()=>goPage(currentPage-1);$('#readerNext').onclick=()=>goPage(currentPage+1);
@@ -141,7 +146,7 @@ function bind(){
   $('#readerTheme').onclick=()=>setTheme(theme==='dark'?'light':'dark');
   $('#readerAddBookmark').onclick=addBookmark;$('#readerSaveNote').onclick=addNote;$('#readerSaveHighlight').onclick=addHighlight;
   $('#readerSearchBtn').onclick=searchBook;$('#readerSearch').onkeydown=e=>{if(e.key==='Enter')searchBook()};
-  window.addEventListener('beforeunload',()=>{saveProgress()});
+  $('#readerSidebarToggle').onclick=toggleReaderSidebar;$('#readerFullscreen').onclick=toggleReaderFullscreen;$('#readerResume').onclick=()=>goPage(resumePage);document.addEventListener('fullscreenchange',()=>{const b=$('#readerFullscreen');if(b)b.textContent=document.fullscreenElement?'⤢':'⛶'});bindReaderKeyboard();bindReaderSwipe();window.addEventListener('beforeunload',()=>{saveProgress()});
 }
 async function boot(){
   entitlementId=new URLSearchParams(location.search).get('entitlement')||'';
@@ -153,7 +158,7 @@ async function boot(){
     ebook=d.ebook;watermark=d.watermark||{enabled:false};license=d.license||{};$('#readerBookTitle').textContent=ebook.title||'eBook';$('#readerBookAuthor').textContent=(ebook.author_name||'ZemZem')+(license.device_limit?' · '+license.device_limit+' pajisje':'');
     await loadReaderState();
     pdf=await pdfjsLib.getDocument({url:d.url,withCredentials:false}).promise;totalPages=pdf.numPages;currentPage=Math.min(currentPage,totalPages);
-    $('#readerLoading').hidden=true;$('#readerApp').hidden=false;bind();await renderPage(currentPage);
+    $('#readerLoading').hidden=true;$('#readerApp').hidden=false;bind();await renderPage(currentPage);await buildReaderToc();if(resumePage>1)toast('Vazhduam nga faqja '+resumePage);
     edge('ebook-experience',{action:'track',event_type:'reader_open',ebook_id:ebook.id,session_id:'reader-'+Date.now()}).catch(()=>{});
   }catch(e){fail(e.message||'Reader-i nuk mund të hapet.')}
 }

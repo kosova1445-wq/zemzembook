@@ -7,13 +7,13 @@
   <meta name="theme-color" content="#173d2b">
   <title>ZemZem Reader</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/ebook-reader.css?v=1">
+  <link rel="stylesheet" href="assets/css/ebook-reader.css?v=2">
 </head>
 <body class="zz-reader">
   <header class="reader-topbar">
     <a class="reader-back" href="account.html?view=ebooks">← Biblioteka ime</a>
     <div class="reader-title"><strong id="readerBookTitle">ZemZem Reader</strong><span id="readerBookAuthor"></span></div>
-    <div class="reader-actions">
+    <div class="reader-actions"><button id="readerSidebarToggle" type="button" title="Fshih/shfaq panelin">☰</button><button id="readerFullscreen" type="button" title="Fullscreen">⛶</button>
       <button id="readerTheme" type="button" title="Dark mode">◐</button>
       <button id="readerZoomOut" type="button" title="Zoom out">−</button>
       <span id="readerZoomLabel">100%</span>
@@ -26,14 +26,14 @@
 
   <main id="readerApp" class="reader-app" hidden>
     <aside class="reader-sidebar">
-      <div class="reader-tabs">
+      <div class="reader-tabs"><button data-reader-tab="toc">Përmbajtja</button>
         <button class="active" data-reader-tab="search">Kërko</button>
         <button data-reader-tab="bookmarks">Shenja</button>
         <button data-reader-tab="notes">Shënime</button>
         <button data-reader-tab="highlights">Highlights</button>
       </div>
 
-      <section class="reader-panel active" data-reader-panel="search">
+      <section class="reader-panel" data-reader-panel="toc"><div id="readerToc" class="reader-list muted">Po ngarkohet përmbajtja…</div></section><section class="reader-panel active" data-reader-panel="search">
         <div class="reader-search-row"><input id="readerSearch" placeholder="Kërko në libër…"><button id="readerSearchBtn">Kërko</button></div>
         <div id="readerSearchResults" class="reader-list muted">Shkruaj një fjalë ose frazë.</div>
       </section>
@@ -61,7 +61,7 @@
         <button id="readerPrev">←</button>
         <label>Faqja <input id="readerPageInput" type="number" min="1" value="1"> / <span id="readerTotalPages">–</span></label>
         <button id="readerNext">→</button>
-        <span id="readerProgressLabel">0%</span>
+        <span id="readerProgressLabel">0%</span><button id="readerResume" type="button" hidden>↩ Vazhdo</button>
       </div>
       <div id="readerPageWrap" class="reader-page-wrap">
         <canvas id="readerCanvas"></canvas>
@@ -72,6 +72,6 @@
 
   <div id="readerToast" class="reader-toast" hidden></div>
 
-  <script type="module" src="assets/js/ebook-reader.js?v=1"></script>
+  <script type="module" src="assets/js/ebook-reader.js?v=2"></script>
 </body>
 </html>
