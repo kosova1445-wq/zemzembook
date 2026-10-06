@@ -350,6 +350,7 @@ jobs:
           assets/js/wallet.js
           assets/js/account-enterprise.js
           assets/css/account.css
+          assets/css/account-modern.css
           ebooks.html
           ebook.html
           ebook-checkout.html
@@ -796,6 +797,8 @@ jobs:
           require_live https://www.zemzem.al/assets/js/admin-ebook-licenses.js /tmp/admin-ebook-licenses.js 'ebook-admin-licenses' 'Admin eBook license runtime live'
           require_live https://www.zemzem.al/account.html /tmp/account-gift-redeem.html 'ebookGiftRedeemForm' 'eBook Gift Code redemption UI live'
           require_live https://www.zemzem.al/account.html /tmp/account-wallet.html 'data-account-view="wallet"' 'ZemZem Wallet account UI live'
+          require_live https://www.zemzem.al/account.html /tmp/account-modern.html 'assets/css/account-modern.css?v=1' 'ZemZem modern account design live'
+          require_live https://www.zemzem.al/assets/css/account-modern.css /tmp/account-modern.css '.wallet-balance-card' 'ZemZem professional Wallet design live'
           require_live https://www.zemzem.al/assets/js/wallet.js /tmp/wallet-account.js 'wallet-topup-create' 'ZemZem Wallet top-up runtime live'
           require_live https://www.zemzem.al/wallet-paypal-return.html /tmp/wallet-topup-return.html 'walletReturnTitle' 'Wallet top-up return page live'
           require_live https://www.zemzem.al/wallet-checkout-return.html /tmp/wallet-checkout-return.html 'walletCheckoutTitle' 'Wallet split checkout return live'
