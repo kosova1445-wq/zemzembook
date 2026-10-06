@@ -3,7 +3,7 @@
 const SB='https://ysvtrhizgcioyycwlkrk.supabase.co',KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD',SESSION='zemzem_admin_session';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 let data={series:[],series_items:[],bundles:[],bundle_items:[],recommendations:[],books:[]};
-function token(){try{return JSON.parse(localStorage.getItem(SESSION)||'null')?.access_token||''}catch{return''}}
+function token(){try{return JSON.parse(sessionStorage.getItem(SESSION)||'null')?.access_token||''}catch{return''}}
 async function call(action,body={}){const r=await fetch(SB+'/functions/v1/ebook-admin-extras',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+token(),'Content-Type':'application/json'},body:JSON.stringify({action,...body}),cache:'no-store'});const t=await r.text();let d={};try{d=t?JSON.parse(t):{}}catch{}if(!r.ok)throw new Error(d?.message||d?.error||'Veprimi dështoi');return d}
 function toast(msg,err=false){const el=$('#ebookAdminToast');if(el){el.textContent=msg;el.hidden=false;el.classList.toggle('error',err);setTimeout(()=>el.hidden=true,2400)}else alert(msg)}
 function optBooks(selected=[]){const set=new Set(selected.map(String));return data.books.map(b=>'<option value="'+b.id+'" '+(set.has(String(b.id))?'selected':'')+'>'+esc(b.title)+' — '+esc(b.author_name||'')+'</option>').join('')}
