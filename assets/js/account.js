@@ -193,7 +193,7 @@ async function loadAccount() {
     if (!user?.id) throw new Error('Sesioni nuk është valid.');
     showAccount();
     aq('#customerEmail').textContent = user.email || '';
-    await Promise.all([loadProfile(), loadOrders(), loadAddresses(), loadWishlist(), loadMyEbooks()]);
+    await Promise.all([loadProfile(), loadOrders(), loadAddresses(), loadWishlist(), loadMyEbooks(), loadEbookCenter()]);
     aq('#welcomeTitle').textContent = accProfile?.first_name ? `Përshëndetje, ${accProfile.first_name}` : 'Llogaria ime';
     const avatar = aq('#customerAvatar');
     if (avatar) {
@@ -518,17 +518,61 @@ async function loadWishlist() {
   });
 }
 
+
+async function loadEbookCenter(){
+  if(!accSession?.user?.id)return;
+  const wishBox=aq('#ebookWishlistList'),devBox=aq('#ebookDevicesList'),updBox=aq('#ebookUpdatesList');
+  try{
+    const [wish,books,overview]=await Promise.all([
+      aapi(`ebook_wishlist?user_id=eq.${encodeURIComponent(accSession.user.id)}&select=ebook_id,created_at&order=created_at.desc`).catch(()=>[]),
+      araw('/rest/v1/storefront_ebooks?select=id,title,author_name,price,cover_url,status',{headers:{apikey:ACC_SB_KEY}}).catch(()=>[]),
+      aedge('ebook-experience',{action:'account_overview'}).catch(()=>({entitlements:[],devices:[],updates:[],preferences:null}))
+    ]);
+    const map=new Map((books||[]).map(b=>[String(b.id),b]));
+    if(wishBox)wishBox.innerHTML=(wish||[]).length?(wish||[]).map(w=>{const b=map.get(String(w.ebook_id))||{};return `<article class="wish-card"><div class="wish-main">${b.cover_url?`<img class="book-thumb" src="${aesc(b.cover_url)}" alt="">`:'<div class="book-thumb"></div>'}<div><strong>${aesc(b.title||'eBook')}</strong><div>${aesc(b.author_name||'ZemZem')} · ${amoney(b.price||0)}</div></div></div><div><a class="btn btn-light compact" href="ebook.html?id=${encodeURIComponent(w.ebook_id)}">Hap</a> <button class="text-btn" data-remove-ebook-wish="${w.ebook_id}">Hiq</button></div></article>`}).join(''):'<div class="empty-state">Wishlist eBook është bosh.</div>';
+    aqq('[data-remove-ebook-wish]').forEach(btn=>btn.onclick=async()=>{await aapi(`ebook_wishlist?user_id=eq.${encodeURIComponent(accSession.user.id)}&ebook_id=eq.${encodeURIComponent(btn.dataset.removeEbookWish)}`,{method:'DELETE'});loadEbookCenter()});
+    const ents=overview?.entitlements||[],devices=overview?.devices||[];
+    if(devBox)devBox.innerHTML=ents.length?ents.map(e=>{
+      const b=map.get(String(e.ebook_id))||{},ds=devices.filter(d=>String(d.entitlement_id)===String(e.id)&&d.is_active);
+      return `<article class="address-card"><div><strong>${aesc(b.title||'eBook')}</strong><p>Licenca: ${aesc(e.license_code||'—')} · Limit pajisjesh: ${Number(e.device_limit||3)}${e.access_expires_at?` · Skadon: ${aday(e.access_expires_at)}`:' · Pa afat'}</p></div><div>${ds.length?ds.map(d=>`<div class="ebook-device-row"><span><b>${aesc(d.device_label||'Pajisje')}</b><small>${d.last_seen_at?' · '+aday(d.last_seen_at):''}</small></span><button class="text-btn" data-disable-ebook-device="${d.id}">Çaktivizo</button></div>`).join(''):'<div class="empty-state">Nuk ka pajisje aktive.</div>'}</div></article>`
+    }).join(''):'<div class="empty-state">Nuk ka licenca eBook.</div>';
+    aqq('[data-disable-ebook-device]').forEach(btn=>btn.onclick=async()=>{await aedge('ebook-experience',{action:'deactivate_device',device_row_id:btn.dataset.disableEbookDevice});toast('Pajisja u çaktivizua');loadEbookCenter()});
+    if(updBox)updBox.innerHTML=(overview?.updates||[]).length?(overview.updates||[]).map(x=>`<article class="order-card"><strong>${aesc(x.title||'Version i ri')}</strong><div class="order-meta"><span>v${aesc(x.version||'')}</span><span>${x.created_at?aday(x.created_at):''}</span></div><p>${aesc(x.message||'Ka një version të ri të eBook-ut.')}</p></article>`).join(''):'<div class="empty-state">Nuk ka njoftime të reja.</div>';
+    const p=overview?.preferences||{};
+    if(aq('#prefVersionUpdates'))aq('#prefVersionUpdates').checked=p.version_updates!==false;
+    if(aq('#prefWishlistDrops'))aq('#prefWishlistDrops').checked=p.wishlist_price_drops!==false;
+    if(aq('#prefRecommendations'))aq('#prefRecommendations').checked=p.recommendations!==false;
+    if(aq('#prefAbandonedCart'))aq('#prefAbandonedCart').checked=p.abandoned_cart_reminders!==false;
+  }catch(err){
+    if(wishBox)wishBox.innerHTML='<div class="empty-state">'+aesc(err.message||'eBook Center nuk u ngarkua.')+'</div>';
+  }
+}
+
+async function saveEbookNotificationPrefs(ev){
+  ev?.preventDefault();
+  try{
+    await aedge('ebook-experience',{action:'notification_preferences',preferences:{
+      version_updates:!!aq('#prefVersionUpdates')?.checked,
+      wishlist_price_drops:!!aq('#prefWishlistDrops')?.checked,
+      recommendations:!!aq('#prefRecommendations')?.checked,
+      abandoned_cart_reminders:!!aq('#prefAbandonedCart')?.checked
+    }});
+    toast('Preferencat e eBook u ruajtën');
+  }catch(err){toast(err.message||'Preferencat nuk u ruajtën',true)}
+}
+
 function activateView(name) {
   const btn = aq(`[data-account-view="${name}"]`);
   if (!btn) return;
   aqq('[data-account-view]').forEach((x) => x.classList.toggle('active', x === btn));
   aqq('.account-view').forEach((v) => v.classList.toggle('active', v.id === `view-${name}`));
   if (name === 'ebooks' && accSession?.user?.id) loadMyEbooks();
+  if (name === 'ebook-center' && accSession?.user?.id) loadEbookCenter();
 }
 
 function openRequestedView() {
   const v = new URLSearchParams(location.search).get('view');
-  if (['orders','ebooks','profile','addresses','wishlist'].includes(v)) activateView(v);
+  if (['orders','ebooks','ebook-center','profile','addresses','wishlist'].includes(v)) activateView(v);
 }
 
 function bindViews() {
@@ -686,6 +730,8 @@ function bindForms() {
   });
 
   aq('#refreshOrders').onclick = loadOrders;
+  if(aq('#refreshEbookCenter'))aq('#refreshEbookCenter').onclick=loadEbookCenter;
+  if(aq('#ebookNotifyPrefs'))aq('#ebookNotifyPrefs').addEventListener('submit',saveEbookNotificationPrefs);
 }
 
 async function initAccount() {
