@@ -3,6 +3,10 @@
 const URL='https://ysvtrhizgcioyycwlkrk.supabase.co',KEY='sb_publishable_HosI5ns0isB0FyQHrGbXwA_9LKzaFMD',SESSION_KEY='zemzem_customer_session';
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),money=v=>Number(v||0).toFixed(2)+' €';
 let session=null,user=null,wishlist=new Set(),detailId='';
+const MODE_KEY='zemzem_ebook_cart_modes';
+function modes(){try{return JSON.parse(localStorage.getItem(MODE_KEY)||'{}')||{}}catch{return{}}}
+function setMode(id,data){const m=modes();m[String(id)]=data;localStorage.setItem(MODE_KEY,JSON.stringify(m))}
+function addModeToCart(id,type,recipientEmail){const books=window.ZemZemEbooks?.books||[];const b=books.find(x=>String(x.id)===String(id));if(!b)return;setMode(id,{purchase_type:type,recipient_email:recipientEmail||null});const ids=window.ZemZemEbooks?.getEbookCart?.()||[];if(!ids.includes(String(id)))ids.push(String(id));window.ZemZemEbooks?.setEbookCart?.(ids);toast(type==='rental'?'Rental u shtua në shportë.':type==='preorder'?'Pre-order u shtua në shportë.':type==='gift'?'Dhurata u shtua në shportë.':'eBook u shtua në shportë.');setTimeout(()=>location.href='ebook-checkout.html',180)}
 function read(){try{return JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch{return null}}
 async function ensure(){session=read();if(!session?.access_token)return false;try{const r=await fetch(URL+'/auth/v1/user',{headers:{apikey:KEY,Authorization:'Bearer '+session.access_token},cache:'no-store'});if(!r.ok)return false;user=await r.json();return !!user?.id}catch{return false}}
 async function api(path,{method='GET',body,prefer,auth=true}={}){const h={apikey:KEY};if(auth&&session?.access_token)h.Authorization='Bearer '+session.access_token;if(body!==undefined)h['Content-Type']='application/json';if(prefer)h.Prefer=prefer;const r=await fetch(URL+'/rest/v1/'+path,{method,headers:h,body:body===undefined?undefined:JSON.stringify(body),cache:'no-store'});const t=await r.text();let d=null;try{d=t?JSON.parse(t):null}catch{d=t}if(!r.ok)throw new Error(d?.message||d?.error||'Gabim');return d}
@@ -56,6 +60,22 @@ async function renderRecommendationsAndExtras(){
   if(rec.rows?.length)html+='<section class="ebook-extra-block"><h2>eBook të ngjashëm</h2><div class="ebook-rec-grid">'+rec.rows.map(bookCard).join('')+'</div></section>';
   host.innerHTML=html;
 }
+function decorateCommerceOptions(){
+  if(!detailId)return;const books=window.ZemZemEbooks?.books||[],b=books.find(x=>String(x.id)===String(detailId));if(!b)return;
+  const panel=$('#ebookDetail .ebook-buy-panel');if(!panel||panel.querySelector('[data-ebook-commerce-options]')||wishlist.has('__owned__'+detailId))return;
+  const owned=window.ZemZemEbooks?.owned?.has?.(String(detailId));if(owned)return;
+  const rows=[];
+  rows.push('<button class="btn btn-primary" type="button" data-mode-buy>Bli tani</button>');
+  if(b.rental_enabled&&Number(b.rental_price||0)>0)rows.push('<button class="btn btn-light" type="button" data-mode-rental>Qira '+money(b.rental_price)+' · '+Number(b.rental_days||0)+' ditë</button>');
+  if(b.allow_preorder&&b.release_at&&new Date(b.release_at)>new Date())rows.push('<button class="btn btn-light" type="button" data-mode-preorder>Pre-order · '+new Date(b.release_at).toLocaleDateString('sq-AL')+'</button>');
+  rows.push('<button class="btn btn-light" type="button" data-mode-gift>🎁 Dhuro eBook</button>');
+  panel.insertAdjacentHTML('beforeend','<div data-ebook-commerce-options class="ebook-commerce-options">'+rows.join('')+'</div>');
+  panel.querySelector('[data-mode-buy]')?.addEventListener('click',()=>addModeToCart(detailId,'purchase'));
+  panel.querySelector('[data-mode-rental]')?.addEventListener('click',()=>addModeToCart(detailId,'rental'));
+  panel.querySelector('[data-mode-preorder]')?.addEventListener('click',()=>addModeToCart(detailId,'preorder'));
+  panel.querySelector('[data-mode-gift]')?.addEventListener('click',()=>{const email=prompt('Emaili i personit që do ta marrë eBook-un:','')?.trim().toLowerCase();if(email&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))addModeToCart(detailId,'gift',email);else if(email)toast('Emaili nuk është valid.')});
+}
+
 function ensureDetailSections(){
   if(!$('#ebookDetail')||$('#ebookCommunity'))return;
   const section=$('#ebookDetail').closest('.section')||$('#ebookDetail').parentElement;
@@ -64,7 +84,7 @@ function ensureDetailSections(){
 async function init(){
   await ensure();await loadWishlist().catch(()=>{});
   detailId=new URLSearchParams(location.search).get('id')||'';
-  const run=()=>{decorateCards();if(detailId){ensureDetailSections();decorateDetailWishlist();renderReviews().catch(()=>{});renderRecommendationsAndExtras().catch(()=>{});edge({action:'track',event_type:'view',ebook_id:detailId,session_id:'web-'+Date.now()}).catch(()=>{})}};
+  const run=()=>{decorateCards();if(detailId){ensureDetailSections();decorateDetailWishlist();decorateCommerceOptions();renderReviews().catch(()=>{});renderRecommendationsAndExtras().catch(()=>{});edge({action:'track',event_type:'view',ebook_id:detailId,session_id:'web-'+Date.now()}).catch(()=>{})}};
   window.addEventListener('zemzem:ebooks-ready',run);setTimeout(run,250);setTimeout(run,1000);
 }
 init();
