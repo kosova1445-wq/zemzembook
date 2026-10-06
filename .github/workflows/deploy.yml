@@ -347,12 +347,15 @@ jobs:
           ebook.html
           ebook-checkout.html
           ebook-paypal-return.html
+ebook-reader.html
           assets/js/ebooks.js
           assets/js/ebook-checkout.js
           assets/js/ebook-paypal-return.js
+assets/js/ebook-reader.js
           assets/js/seo-ebook.js
           assets/css/ebooks.css
           assets/css/ebook-checkout.css
+assets/css/ebook-reader.css
           free-library.html
           assets/js/admin-security-release.js
           assets/js/performance-vitals.js
