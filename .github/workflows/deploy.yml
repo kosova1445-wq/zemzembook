@@ -572,6 +572,16 @@ jobs:
           require_live() {
             local url="$1" out="$2" needle="$3" label="$4"
             local request_url="$url"
+            # EBOOK_ONLY_MODE: legacy physical storefront URLs must redirect to the eBook catalogue.
+            # Verify their new destination rather than searching for disabled storefront UI.
+            if [[ "$url" =~ /(shop|checkout|product|fe-edukim|histori|femije|gjuhe-te-huaja|collections|gift-card)\.html$ ]]; then
+              if fetch_live "$url" "$out" && grep -Fq 'eBook në shqip, me qasje të sigurt.' "$out"; then
+                echo "OK: EBOOK_ONLY redirect ($label)"
+                return 0
+              fi
+              echo "::error title=EBOOK_ONLY redirect failed::$url did not land on the eBook catalogue"
+              return 1
+            fi
             # Production audit: HTML can be served from hosting/browser edge cache after FTP.
             # Cache-bust every plain .html verification with the exact release SHA.
             if [[ "$request_url" == *.html ]]; then
