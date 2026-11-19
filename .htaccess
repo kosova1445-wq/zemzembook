@@ -1,4 +1,8 @@
 RewriteEngine On
+# EBOOK_ONLY_MODE_BEGIN — disable physical-store public routes, preserve existing data.
+# Remove this block to restore physical storefront. 302 prevents permanent browser caching.
+RewriteRule ^(shop|checkout|product|fe-edukim|histori|femije|gjuhe-te-huaja|collections|gift-card)\.html$ /ebooks.html [R=302,L,NC]
+# EBOOK_ONLY_MODE_END
 RewriteRule ^rss\.xml$ rss.php [L]
 
 ErrorDocument 404 /404.html
